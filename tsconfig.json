@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "jsx": "react",
+        "lib": ["esnext", "dom"],
+        "module": "es2022",
+        "target": "ES5",
+        "moduleResolution": "node",
+        "declaration": true,
+        "rootDir": "./src",
+        "outDir": "build",
+        "strict": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "types": ["node", "jest"],
+        "baseUrl": "./src",
+        "paths": {
+            "@lib/*": ["lib/*"],
+            "@app/*": ["app/*"]
+        }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "build"]
+}
