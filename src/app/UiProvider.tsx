@@ -1,10 +1,10 @@
-import React from "react";
-import {PropsWithChildren} from "react";
+import React from 'react';
+import type {PropsWithChildren} from 'react';
 interface Props {
-    nodes: BatchParameter[];
+    nodes?: BatchParameter[];
 }
 export function UiProvider({children, nodes}: Props & PropsWithChildren) {
-    return <>
-        {children}
-    </>
+	return <>
+		{children}
+	</>;
 }

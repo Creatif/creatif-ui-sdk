@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "jsx": "react",
-        "lib": ["esnext", "dom"],
+        "jsx": "react-jsx",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "module": "es2022",
         "target": "ES5",
         "moduleResolution": "node",
@@ -17,7 +17,8 @@
         "baseUrl": "./src",
         "paths": {
             "@lib/*": ["lib/*"],
-            "@app/*": ["app/*"]
+            "@app/*": ["app/*"],
+            "@root/*": ["./*"],
         }
     },
     "include": ["src/**/*"],
