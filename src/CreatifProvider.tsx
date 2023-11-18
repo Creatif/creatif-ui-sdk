@@ -5,6 +5,7 @@ import type { PropsWithChildren } from 'react';
 import 'normalize.css';
 import Authentication from '@app/components/authentication/Authentication';
 import 'primereact/resources/themes/lara-light-blue/theme.css';
+import {Initialize} from '@app/initialize';
 interface Props {
   primeReactProps?: Partial<APIOptions>;
   apiKey: string;
@@ -21,7 +22,10 @@ export function CreatifProvider({
 		<PrimeReactProvider value={primeReactProps}>
 			{isLoggedIn && <>{children}</>}
 
-			{!isLoggedIn && <Authentication apiKey={apiKey} projectId={projectId} />}
+			{!isLoggedIn && <Authentication apiKey={apiKey} projectId={projectId} onSuccess={() => {
+				Initialize.init(apiKey, projectId);
+				setIsLoggedIn(true);
+			}} />}
 		</PrimeReactProvider>
 	);
 }

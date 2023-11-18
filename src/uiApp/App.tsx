@@ -1,7 +1,7 @@
 import { CreatifProvider } from '@root/CreatifProvider';
 export default function App() {
 	return (
-		<CreatifProvider apiKey="$2a$10$0emQoy5Ry1eNtKYQOpnaZOx8gaLYUY/nIoOaIRJ7XAnKKcR6kdbiK" projectId="01HFF3VZ9XRR4XW98T2D4AYERZ">
+		<CreatifProvider apiKey="$2a$10$2PXxrVJqxYRavR8lLnselOgax1aNyHIO9Rr1z22JsKUh.LFfUVtGS" projectId="01HFH7W1YPGXA64EZXY0Y7TB53">
 			<p>Nothing</p>
 		</CreatifProvider>
 	);

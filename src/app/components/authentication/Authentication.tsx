@@ -4,6 +4,7 @@ import {Button} from 'primereact/button';
 interface Props {
 	apiKey: string;
 	projectId: string;
+	onSuccess: () => void;
 }
 function calcPosition(windowWidth: number, windowHeight: number) {
 	const height = window.innerHeight;
@@ -14,7 +15,7 @@ function calcPosition(windowWidth: number, windowHeight: number) {
 		top: Math.floor((height - windowHeight) / 2),
 	};
 }
-export default function Authentication({apiKey, projectId}: Props) {
+export default function Authentication({apiKey, projectId, onSuccess}: Props) {
 
 	const width = 480;
 	const height = 480;
@@ -24,32 +25,45 @@ export default function Authentication({apiKey, projectId}: Props) {
 		<Button onClick={async () => {
 			axios({
 				method: 'POST',
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				url: `${import.meta.env.VITE_API_HOST}${import.meta.env.VITE_API_VERSION}/app/auth/api-auth-session`,
 				headers: {
 					'X-CREATIF-API-KEY': apiKey,
 					'X-CREATIF-PROJECT-ID': projectId,
 				}
 			}).then((res) => {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				const openedWindow = window.open(`http://localhost:3000/auth/api/${res.data}?apiKey=${apiKey}&projectId=${projectId}`, import.meta.env.VITE_FRONTEND_HOST, `left=${left},top=${top},width=${width},height=${height}`);
 				if (openedWindow) {
 					const messageInterval = setInterval(() => {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						openedWindow.postMessage('poll', import.meta.env.VITE_FRONTEND_HOST);
 					}, 100);
 
 					let messageReceived = false;
 					window.addEventListener('message', (event) => {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
 						if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
 						if (messageReceived) return;
 						messageReceived = true;
 						clearInterval(messageInterval);
 
-						document.cookie = `api_authentication=${event.data};SameSite=Strict;Secure;path=/`;
-						//openedWindow.close();
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						document.cookie = `api_authentication=${event.data};SameSite=Strict;Secure;path=/;Domain=${import.meta.env.VITE_FRONTEND_HOST}`;
+						onSuccess();
+						openedWindow.close();
 					}, true);
 
 					const removeListenerInterval = setInterval(() => {
 						if (openedWindow.closed) {
 							window.removeEventListener('message', (event) => {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
 								if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
 								if (messageReceived) return;
 								messageReceived = true;
