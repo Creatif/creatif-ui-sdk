@@ -1,6 +1,6 @@
 import { declarations } from '@lib/http/axios';
 import { tryPut } from '@lib/http/tryPut';
-import type { CreateMapResponse, MapBlueprint } from '@root/types';
+import type { CreateMapResponse, MapBlueprint } from '@root/types/types';
 
 export async function createMap(blueprint: MapBlueprint) {
 	// validation goes here

@@ -1,0 +1,70 @@
+import styles from '@app/css/authentication/wrapper.module.css';
+import axios from 'axios';
+import {Button} from 'primereact/button';
+interface Props {
+	apiKey: string;
+	projectId: string;
+}
+function calcPosition(windowWidth: number, windowHeight: number) {
+	const height = window.innerHeight;
+	const width = window.innerWidth;
+
+	return {
+		left: Math.floor((width - windowWidth) / 2),
+		top: Math.floor((height - windowHeight) / 2),
+	};
+}
+export default function Authentication({apiKey, projectId}: Props) {
+
+	const width = 480;
+	const height = 480;
+	const {top, left} = calcPosition(width, height);
+
+	return <div className={styles.root}>
+		<Button onClick={async () => {
+			axios({
+				method: 'POST',
+				url: `${import.meta.env.VITE_API_HOST}${import.meta.env.VITE_API_VERSION}/app/auth/api-auth-session`,
+				headers: {
+					'X-CREATIF-API-KEY': apiKey,
+					'X-CREATIF-PROJECT-ID': projectId,
+				}
+			}).then((res) => {
+				const openedWindow = window.open(`http://localhost:3000/auth/api/${res.data}?apiKey=${apiKey}&projectId=${projectId}`, import.meta.env.VITE_FRONTEND_HOST, `left=${left},top=${top},width=${width},height=${height}`);
+				if (openedWindow) {
+					const messageInterval = setInterval(() => {
+						openedWindow.postMessage('poll', import.meta.env.VITE_FRONTEND_HOST);
+					}, 100);
+
+					let messageReceived = false;
+					window.addEventListener('message', (event) => {
+						if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
+						if (messageReceived) return;
+						messageReceived = true;
+						clearInterval(messageInterval);
+
+						document.cookie = `api_authentication=${event.data};SameSite=Strict;Secure;path=/`;
+						//openedWindow.close();
+					}, true);
+
+					const removeListenerInterval = setInterval(() => {
+						if (openedWindow.closed) {
+							window.removeEventListener('message', (event) => {
+								if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
+								if (messageReceived) return;
+								messageReceived = true;
+								clearInterval(messageInterval);
+
+								document.cookie = `api_authentication=${event.data};SameSite=Strict;Secure;path=/`;
+								openedWindow.close();
+							}, true);
+
+							clearInterval(removeListenerInterval);
+							clearInterval(messageInterval);
+						}
+					}, 100);
+				}
+			});
+		}} severity="secondary" className={styles.button} label="Authenticate" outlined />
+	</div>;
+}

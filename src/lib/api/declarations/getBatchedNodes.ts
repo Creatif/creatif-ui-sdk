@@ -1,6 +1,6 @@
 import { declarations } from '@lib/http/axios';
 import { tryPost } from '@lib/http/tryPost';
-import type { BatchRequestBlueprint, BatchResponse } from '@root/types';
+import type { BatchRequestBlueprint, BatchResponse } from '@root/types/types';
 
 export async function getBatchedNodes(nodes: BatchRequestBlueprint[]) {
 	// validation goes here

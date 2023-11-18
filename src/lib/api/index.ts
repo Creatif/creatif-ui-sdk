@@ -1,5 +1,3 @@
-import 'module-alias/register';
-
 export { createNode } from '@lib/api/declarations/createNode';
 export { getNode } from '@lib/api/declarations/getNode';
 export { createMap } from '@lib/api/declarations/createMap';

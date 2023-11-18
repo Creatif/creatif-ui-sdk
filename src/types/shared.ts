@@ -1,6 +1,6 @@
 export interface TryResult<T> {
-    result?: T;
-    error?: Error;
+  result?: T;
+  error?: Error;
 }
 export type ObjectType = Record<string, unknown>;
 export type TextValue = string;

@@ -1,13 +1,24 @@
 import { declarations } from '@lib/http/axios';
 import { tryGet } from '@lib/http/tryGet';
-import type { CustomMapNode, GetMapResponse, NamesOnlyMapNode, NodeWithValue } from '@root/types';
+import type {
+	CustomMapNode,
+	GetMapResponse,
+	NamesOnlyMapNode,
+	NodeWithValue,
+} from '@root/types/types';
 
-export async function getMap(id: string, ret?: 'full' | 'names', fields?: string[]) {
+export async function getMap(
+	id: string,
+	ret?: 'full' | 'names',
+	fields?: string[],
+) {
 	// validation goes here
 
 	const res = tryGet<NamesOnlyMapNode>(
 		declarations(),
-		`/map/${id}?return=${ret ? ret : 'names'}&fields=${Array.isArray(fields) ? fields?.join(',') : ''}`,
+		`/map/${id}?return=${ret ? ret : 'names'}&fields=${
+			Array.isArray(fields) ? fields?.join(',') : ''
+		}`,
 	);
 
 	if (fields && fields.length !== 0) {
