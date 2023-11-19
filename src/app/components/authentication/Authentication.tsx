@@ -1,6 +1,7 @@
 import styles from '@app/css/authentication/wrapper.module.css';
 import axios from 'axios';
 import {Button} from 'primereact/button';
+import Cookies from 'universal-cookie';
 interface Props {
 	apiKey: string;
 	projectId: string;
@@ -16,7 +17,6 @@ function calcPosition(windowWidth: number, windowHeight: number) {
 	};
 }
 export default function Authentication({apiKey, projectId, onSuccess}: Props) {
-
 	const width = 480;
 	const height = 480;
 	const {top, left} = calcPosition(width, height);
@@ -54,7 +54,6 @@ export default function Authentication({apiKey, projectId, onSuccess}: Props) {
 
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
-						document.cookie = `api_authentication=${event.data};SameSite=Strict;Secure;path=/;Domain=${import.meta.env.VITE_FRONTEND_HOST}`;
 						onSuccess();
 						openedWindow.close();
 					}, true);
@@ -69,7 +68,9 @@ export default function Authentication({apiKey, projectId, onSuccess}: Props) {
 								messageReceived = true;
 								clearInterval(messageInterval);
 
-								document.cookie = `api_authentication=${event.data};SameSite=Strict;Secure;path=/`;
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								onSuccess();
 								openedWindow.close();
 							}, true);
 

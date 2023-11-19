@@ -4,22 +4,24 @@ import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 
 let declarationsInstance: AxiosInstance | undefined;
-let assignmentsInstance: AxiosInstance | undefined;
+let appInstance: AxiosInstance | undefined;
 export const declarations = () => {
 	if (!declarationsInstance) {
 		declarationsInstance = axios.create({
 			baseURL: `${composeBaseUrl()}${Routes.DECLARATIONS}`,
+			withCredentials: true,
 		});
 	}
 
 	return declarationsInstance;
 };
-export const assignments = () => {
-	if (!assignmentsInstance) {
-		assignmentsInstance = axios.create({
-			baseURL: `${composeBaseUrl()}${Routes.ASSIGNMENTS}`,
+export const app = () => {
+	if (!appInstance) {
+		appInstance = axios.create({
+			baseURL: `${composeBaseUrl()}${Routes.APP}`,
+			withCredentials: true,
 		});
 	}
 
-	return assignmentsInstance;
+	return appInstance;
 };

@@ -1,14 +1,19 @@
 export class Initialize {
 	private static apiKey: string;
 	private static projectId: string;
-	static init(apiKey: string, projectId: string) {
+	private static locale: string;
+	static init(apiKey: string, projectId: string, locale: string) {
 		Initialize.apiKey = apiKey;
 		Initialize.projectId = projectId;
+		Initialize.locale = locale;
 	}
-	ApiKey(): string {
+	static ApiKey(): string {
 		return Initialize.apiKey;
 	}
-	ProjectID(): string {
+	static ProjectID(): string {
 		return Initialize.projectId;
+	}
+	static Locale(): string {
+		return Initialize.locale;
 	}
 }

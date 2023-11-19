@@ -1,9 +1,11 @@
 import { AxiosError } from 'axios';
-
 export function handleError(e: unknown) {
 	if (e instanceof AxiosError) {
 		if (e.response) {
-			const data = e.response.data;
+			let data = e.response.data;
+			if (!data) {
+				data = 'Unexpected error';
+			}
 
 			return {
 				error: data,
