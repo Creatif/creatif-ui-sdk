@@ -1,6 +1,7 @@
 import {notifications} from '@mantine/notifications';
-import {IconAlertTriangle, IconExclamationCircle, IconInfoCircle} from '@tabler/icons-react';
+import {IconAlertTriangle, IconConfetti, IconExclamationCircle, IconInfoCircle} from '@tabler/icons-react';
 import errStyles from './error.module.css';
+import successStyles from './success.module.css';
 import warnStyles from './warn.module.css';
 import infoStyles from './warn.module.css';
 
@@ -41,6 +42,17 @@ export default function useNotification() {
 				message: description,
 				icon: <IconInfoCircle color="gray" />,
 				classNames: infoStyles,
+			});
+		},
+		success: (title: string, description: React.ReactNode) => {
+			notifications.show({
+				withCloseButton: true,
+				autoClose: 10000,
+				withBorder: true,
+				title: title,
+				message: description,
+				icon: <IconConfetti color="white" />,
+				classNames: successStyles,
 			});
 		}
 	};

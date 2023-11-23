@@ -1,3 +1,4 @@
+import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
 	Button,
@@ -5,7 +6,6 @@ import {
 	Container,
 	Grid,
 	Group,
-	TextInput,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
@@ -15,30 +15,38 @@ export default function Content() {
 			<Center>
 				<Container size="lg" fluid>
 					<ListForm
+						bindings={{
+							name: 'title',
+						}}
 						listName="landing page"
 						defaultValues={{
-							name: 'title',
-							bannerOne: 'Banner one',
-							bannerTwo: 'Banner two',
+							title: '',
+							banner1: '',
+							banner2: '',
 						}}
-					>
-						<Grid align="center" justify="center">
+						inputs={(submitButton) => <Grid align="center" justify="center">
 							<Grid.Col span={12}>
-								<TextInput
+								<InputText
+									options={{
+										required: 'Title is required'
+									}}
+									structureName="landing page"
 									label="Title"
 									description="The title of this banner group"
 									name="title"
 								/>
 							</Grid.Col>
 							<Grid.Col span={6}>
-								<TextInput
+								<InputText
+									structureName="landing page"
 									label="Banner one"
 									description="Banner to the left"
 									name="banner1"
 								/>
 							</Grid.Col>
 							<Grid.Col span={6}>
-								<TextInput
+								<InputText
+									structureName="landing page"
 									label="Banner two"
 									description="Banner to the right"
 									name="banner2"
@@ -46,12 +54,10 @@ export default function Content() {
 							</Grid.Col>
 
 							<Grid.Col span={12}>
-								<Group justify="end">
-									<Button>Create</Button>
-								</Group>
+								{submitButton}
 							</Grid.Col>
-						</Grid>
-					</ListForm>
+						</Grid>}
+					/>
 				</Container>
 			</Center>
 		</div>
