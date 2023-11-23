@@ -5,7 +5,7 @@ import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
 	Button,
 	Center,
-	Container,
+	Container, Fieldset,
 	Grid,
 	Group,
 } from '@mantine/core';
@@ -22,61 +22,52 @@ export default function Content() {
 						}}
 						listName="landing page"
 						defaultValues={{
-							title: '',
-							banner1: '',
-							banner2: '',
-							acceptTerms: false,
+							name: '',
+							lastName: '',
+							email: '',
+							dob: '',
+							age: '',
 						}}
-						inputs={(submitButton) => <Grid align="center" justify="center">
-							<Grid.Col span={12}>
-								<InputText
-									options={{
-										required: 'Title is required'
-									}}
-									structureName="landing page"
-									label="Title"
-									description="The title of this banner group"
-									name="title"
-								/>
-							</Grid.Col>
-							<Grid.Col span={6}>
-								<InputTextarea
-									options={{
-										required: 'This field is required',
-									}}
-									structureName="landing page"
-									label="Banner one"
-									description="Banner to the left"
-									name="banner1"
-								/>
-							</Grid.Col>
-							<Grid.Col span={6}>
-								<InputTextarea
-									options={{
-										required: 'This field is required',
-									}}
-									structureName="landing page"
-									label="Banner two"
-									description="Banner to the right"
-									name="banner2"
-								/>
-							</Grid.Col>
-							<Grid.Col span={6}>
-								<InputCheckbox
-									options={{
-										required: 'This field is required',
-									}}
-									structureName="landing page"
-									label="Accept terms"
-									description="Accept this shitty terms"
-									name="acceptTerms"
-								/>
-							</Grid.Col>
-
-							<Grid.Col span={12}>
-								{submitButton}
-							</Grid.Col>
-						</Grid>}
+						inputs={(submitButton) => <Fieldset legend="Personal information">
+							<Grid align="center" justify="center">
+								<Grid.Col span={12}>
+									<InputText
+										options={{
+											required: 'Name is required',
+											validate: (value: string) => {
+												if (value !== 'mario') return 'It should say mario';
+											}
+										}}
+										structureName="user"
+										label="Name"
+										name="name"
+									/>
+								</Grid.Col>
+								<Grid.Col span={6}>
+									<InputText
+										options={{
+											required: 'Last name is required',
+										}}
+										structureName="user"
+										label="Last name"
+										name="lastName"
+									/>
+								</Grid.Col>
+								<Grid.Col span={6}>
+									<InputText
+										options={{
+											required: 'Email name is required',
+										}}
+										structureName="user"
+										label="Email"
+										name="email"
+									/>
+								</Grid.Col>
+								<Grid.Col span={12}>
+									{submitButton}
+								</Grid.Col>
+							</Grid>
+						</Fieldset>}
 					/>
 				</Container>
 			</Center>

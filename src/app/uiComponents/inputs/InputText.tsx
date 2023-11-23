@@ -1,3 +1,4 @@
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import {TextInput} from '@mantine/core';
 import { useFormContext} from 'react-hook-form';
 import type {TextInputProps} from '@mantine/core';
@@ -8,6 +9,7 @@ interface Props extends TextInputProps {
   options?: RegisterOptions;
 }
 export default function InputText({ structureName, name, options, ...rest }: Props) {
-	const {register, formState: {errors}} = useFormContext();
-	return <TextInput error={Boolean(errors[name])} {...register(name, options)} {...rest} />;
+	const {register} = useFormContext();
+
+	return <TextInput error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }

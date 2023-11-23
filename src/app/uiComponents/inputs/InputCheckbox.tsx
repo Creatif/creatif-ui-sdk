@@ -1,6 +1,7 @@
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import {Checkbox} from '@mantine/core';
 import { useFormContext} from 'react-hook-form';
-import type {TextInputProps, CheckboxProps} from '@mantine/core';
+import type {CheckboxProps} from '@mantine/core';
 import type { RegisterOptions} from 'react-hook-form';
 interface Props extends CheckboxProps {
     structureName: string;
@@ -8,6 +9,6 @@ interface Props extends CheckboxProps {
     options?: RegisterOptions;
 }
 export default function InputCheckbox({ structureName, name, options, ...rest }: Props) {
-	const {register, formState: {errors}} = useFormContext();
-	return <Checkbox error={Boolean(errors[name])} {...register(name, options)} {...rest} />;
+	const {register} = useFormContext();
+	return <Checkbox error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }

@@ -1,3 +1,4 @@
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import {Textarea} from '@mantine/core';
 import { useFormContext} from 'react-hook-form';
 import type {TextareaProps} from '@mantine/core';
@@ -8,6 +9,6 @@ interface Props extends TextareaProps {
     options?: RegisterOptions;
 }
 export default function InputTextarea({ structureName, name, options, ...rest }: Props) {
-	const {register, formState: {errors}} = useFormContext();
-	return <Textarea error={Boolean(errors[name])} {...register(name, options)} {...rest} />;
+	const {register} = useFormContext();
+	return <Textarea error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }
