@@ -10,7 +10,17 @@ export async function appendToList(blueprint: AppendToListBlueprint) {
 		}`,
 		{
 			name: blueprint.name,
-			variables: blueprint.variables,
+			variables: blueprint.variables.map((item) => {
+				if (item.value) {
+					item.value = JSON.stringify(item.value);
+				}
+
+				if (item.metadata) {
+					item.metadata = JSON.stringify(item.metadata);
+				}
+
+				return item;
+			}),
 		},
 	);
 }

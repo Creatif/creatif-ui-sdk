@@ -1,7 +1,7 @@
 import {TextInput} from '@mantine/core';
 import { useFormContext} from 'react-hook-form';
 import type {TextInputProps} from '@mantine/core';
-import type { ValidationRule,RegisterOptions} from 'react-hook-form';
+import type { RegisterOptions} from 'react-hook-form';
 interface Props extends TextInputProps {
   structureName: string;
   name: string;

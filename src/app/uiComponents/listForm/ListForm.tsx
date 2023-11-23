@@ -5,6 +5,7 @@ import { createList } from '@lib/api/declarations/lists/createList';
 import Storage from '@lib/storage/storage';
 import {Button, Group} from '@mantine/core';
 import React, {useEffect, useState} from 'react';
+import {Simulate} from 'react-dom/test-utils';
 import { FormProvider, useForm} from 'react-hook-form';
 import type { HTMLAttributes ,BaseSyntheticEvent} from 'react';
 import type {DefaultValues, FieldValues, SubmitHandler} from 'react-hook-form';
@@ -17,6 +18,8 @@ interface Props<T extends FieldValues> {
   locale?: string;
   form?: HTMLAttributes<HTMLFormElement>;
 }
+
+
 export default function ListForm<T extends FieldValues>({
 	listName,
 	locale,
@@ -92,6 +95,7 @@ export default function ListForm<T extends FieldValues>({
 					name: name,
 					behaviour: 'modifiable',
 					groups: groups,
+					value: value,
 				}]
 			}).then(({result, error}) => {
 				if (error) {
