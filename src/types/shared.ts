@@ -1,4 +1,4 @@
-import type {ApiError} from '@lib/http/apiError';
+import type { ApiError } from '@lib/http/apiError';
 
 export interface TryResult<T> {
   result?: T;

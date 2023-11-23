@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "vite --mode development",
     "build-dev": "vite build --mode development",
-    "build-prod": "yarn pretty && yarn es-lint && vite build --mode production",
+    "build": "yarn pretty && yarn es-lint && vite build --mode production",
     "pretty": "yarn prettier --loglevel='warn' --log-level='error' --write .",
     "es-lint": "yarn eslint --fix .",
     "preview": "vite preview"
@@ -62,6 +62,7 @@
     "@mantine/notifications": "^7.2.2",
     "@tabler/icons-react": "^2.42.0",
     "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "normalize.css": "^8.0.1",
     "react-hook-form": "^7.48.2",

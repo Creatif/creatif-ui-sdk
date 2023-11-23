@@ -3,12 +3,13 @@ import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
 import Storage from '@lib/storage/storage';
 import { MantineProvider, createTheme } from '@mantine/core';
-import {Notifications} from '@mantine/notifications';
+import { Notifications } from '@mantine/notifications';
 import React, { useCallback, useEffect, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import 'normalize.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/dates/styles.css';
 
 import '@app/css/reset.module.css';
 import '@app/css/global.module.css';

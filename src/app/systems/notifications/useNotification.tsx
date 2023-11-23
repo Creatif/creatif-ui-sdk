@@ -1,9 +1,14 @@
-import {notifications} from '@mantine/notifications';
-import {IconAlertTriangle, IconConfetti, IconExclamationCircle, IconInfoCircle} from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
+import {
+	IconAlertTriangle,
+	IconConfetti,
+	IconExclamationCircle,
+	IconInfoCircle,
+} from '@tabler/icons-react';
 import errStyles from './error.module.css';
+import infoStyles from './info.module.css';
 import successStyles from './success.module.css';
 import warnStyles from './warn.module.css';
-import infoStyles from './warn.module.css';
 
 export default function useNotification() {
 	return {
@@ -13,7 +18,7 @@ export default function useNotification() {
 				autoClose: 10000,
 				title: title,
 				message: description,
-				icon:  <IconExclamationCircle color="white" />,
+				icon: <IconExclamationCircle color="white" />,
 				color: 'orange',
 				classNames: warnStyles,
 			});
@@ -54,6 +59,6 @@ export default function useNotification() {
 				icon: <IconConfetti color="white" />,
 				classNames: successStyles,
 			});
-		}
+		},
 	};
 }

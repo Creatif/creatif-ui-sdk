@@ -1,9 +1,12 @@
-import type {Behaviour} from '@lib/api/declarations/sharedTypes';
+import type { Behaviour } from '@lib/api/declarations/sharedTypes';
 export interface CreateListBlueprint {
   name: string;
   locale?: string;
 }
-export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown> {
+export interface AppendingVariableBlueprint<
+  Value = unknown,
+  Metadata = unknown,
+> {
   name: string;
   behaviour: Behaviour;
   groups?: string[];

@@ -1,6 +1,6 @@
-import {ApiError} from '@lib/http/apiError';
+import { ApiError } from '@lib/http/apiError';
 import { AxiosError } from 'axios';
-export function handleError(e: unknown): {error: ApiError} {
+export function handleError(e: unknown): { error: ApiError } {
 	if (e instanceof AxiosError) {
 		if (e.response) {
 			let data = e.response.data;

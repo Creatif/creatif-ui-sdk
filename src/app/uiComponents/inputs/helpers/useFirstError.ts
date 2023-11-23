@@ -1,8 +1,8 @@
 import ucFirst from '@lib/helpers/ucFirst';
-import {useFormState} from 'react-hook-form';
+import { useFormState } from 'react-hook-form';
 
 export default function useFirstError(name: string): string | boolean {
-	const {errors} = useFormState();
+	const { errors } = useFormState();
 	const fieldError = errors[name];
 	if (!fieldError) return false;
 

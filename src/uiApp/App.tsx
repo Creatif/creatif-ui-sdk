@@ -1,6 +1,5 @@
 import SingleColumn from '@app/uiComponents/appShells/singleColumn/SingleColumn';
-import ListForm from '@app/uiComponents/listForm/ListForm';
-import { Center, Container, Input } from '@mantine/core';
+import { Container } from '@mantine/core';
 import { CreatifProvider } from '@root/CreatifProvider';
 import Content from '@root/uiApp/Content';
 import { IconClipboardList, IconHome, IconSearch } from '@tabler/icons-react';
