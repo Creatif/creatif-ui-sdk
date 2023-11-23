@@ -1,8 +1,6 @@
 .root {
-    background-color: var(--mantine-color-orange-5);
+    background-color: var(--mantine-color-orange-7);
     color: white;
-
-    border: 1px solid blue;
 
     &::before {
         background-color: var(--mantine-color-white);

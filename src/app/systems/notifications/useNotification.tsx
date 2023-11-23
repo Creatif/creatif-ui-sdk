@@ -6,22 +6,22 @@ import infoStyles from './warn.module.css';
 
 export default function useNotification() {
 	return {
-		warn: (title: string, description: string) => {
+		warn: (title: string, description: React.ReactNode) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 100000,
+				autoClose: 10000,
 				title: title,
 				message: description,
-				icon:  <IconExclamationCircle color="gray" />,
+				icon:  <IconExclamationCircle color="white" />,
 				color: 'orange',
 				classNames: warnStyles,
 			});
 		},
-		error: (title: string, description: string) => {
+		error: (title: string, description: React.ReactNode) => {
 			console.log(title, description);
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 100000,
+				autoClose: 10000,
 				styles: (theme) => ({
 					title: { color: theme.white },
 					description: { color: theme.white },
@@ -32,13 +32,14 @@ export default function useNotification() {
 				classNames: errStyles,
 			});
 		},
-		info: (title: string, description: string) => {
+		info: (title: string, description: React.ReactNode) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 5000,
+				autoClose: 10000,
+				withBorder: true,
 				title: title,
 				message: description,
-				icon: <IconInfoCircle />,
+				icon: <IconInfoCircle color="gray" />,
 				classNames: infoStyles,
 			});
 		}

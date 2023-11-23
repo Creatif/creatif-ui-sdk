@@ -1,6 +1,8 @@
+import type {ApiError} from '@lib/http/apiError';
+
 export interface TryResult<T> {
   result?: T;
-  error?: Error;
+  error?: ApiError;
 }
 export type ObjectType = Record<string, unknown>;
 export type TextValue = string;

@@ -21,7 +21,7 @@ export default function ListForm({
 		defaultValues: defaultValues,
 	});
 
-	const {error: notificationError, info} = useNotification();
+	const {error: notificationError, warn} = useNotification();
 
 	useEffect(() => {
 		const chosenLocale = locale ? locale : Initialize.Locale();
@@ -30,8 +30,14 @@ export default function ListForm({
 				name: listName,
 				locale: chosenLocale,
 			}).then(({ result, error }) => {
+				if (error && error.error?.data && error.error.data['nameExists']) {
+					Storage.instance.addList(listName, chosenLocale);
+					warn('An error occurred.', <span>List with name <strong>{listName}</strong> already exists. If locale storage was the deleted before this action, this warning will show only once.</span>);
+					return;
+				}
+
 				if (error) {
-					info('An error occurred.', `List with name '${listName}' has failed to be created. If it is already created, you are probably fine. If not, please try again later.`);
+					notificationError('Something wrong happened.', 'We are working to resolve this problem. Please, try again later.');
 					return;
 				}
 

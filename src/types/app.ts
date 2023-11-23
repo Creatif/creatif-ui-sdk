@@ -6,3 +6,6 @@ export interface HttpState<T> {
   isCacheHit: boolean;
   error: Error | undefined;
 }
+export interface APIError {
+  data: Record<string, string>;
+}
