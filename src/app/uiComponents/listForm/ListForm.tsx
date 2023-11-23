@@ -1,23 +1,27 @@
-import {useToast} from '@app/components/Alert';
-import {Initialize} from '@app/initialize';
-import {createList} from '@lib/api/declarations/lists/createList';
+import { Initialize } from '@app/initialize';
+import useNotification from '@app/systems/notifications/useNotification';
+import { createList } from '@lib/api/declarations/lists/createList';
 import Storage from '@lib/storage/storage';
-import {InputText} from 'primereact/inputtext';
-import {useEffect} from 'react';
-import {FormProvider, useForm} from 'react-hook-form';
-import type {HTMLAttributes} from 'react';
+import { useEffect } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import type { HTMLAttributes, PropsWithChildren } from 'react';
 interface Props {
-    listName: string;
-    defaultValues: Record<string, any>;
-	locale?: string;
-    form?: HTMLAttributes<HTMLFormElement>;
+  listName: string;
+  defaultValues: Record<string, any>;
+  locale?: string;
+  form?: HTMLAttributes<HTMLFormElement>;
 }
-export default function ListForm({listName, locale, defaultValues}: Props) {
+export default function ListForm({
+	listName,
+	locale,
+	defaultValues,
+	children,
+}: Props & PropsWithChildren) {
 	const methods = useForm({
 		defaultValues: defaultValues,
 	});
 
-	const notification = useToast((state) => state.show);
+	const {error: notificationError, info} = useNotification();
 
 	useEffect(() => {
 		const chosenLocale = locale ? locale : Initialize.Locale();
@@ -25,31 +29,18 @@ export default function ListForm({listName, locale, defaultValues}: Props) {
 			createList({
 				name: listName,
 				locale: chosenLocale,
-			}).then(({result, error}) => {
+			}).then(({ result, error }) => {
 				if (error) {
-					notification({
-						severity: 'error',
-						summary: <span>Cannot create list <strong>listName</strong></span>,
-						detail: 'Please, try again later.',
-						life: 5000,
-					});
-
+					info('An error occurred.', `List with name '${listName}' has failed to be created. If it is already created, you are probably fine. If not, please try again later.`);
 					return;
 				}
 
 				if (result) {
 					Storage.instance.addList(listName, chosenLocale);
-					notification({
-						severity: 'info',
-						summary:  <span><strong>listName</strong> has been successfully created.</span>,
-						detail: 'This list will be created only once.',
-					});
 				}
 			});
 		}
 	}, []);
 
-	return <FormProvider {...methods}>
-		<InputText />
-	</FormProvider>;
+	return <FormProvider {...methods}>{children}</FormProvider>;
 }

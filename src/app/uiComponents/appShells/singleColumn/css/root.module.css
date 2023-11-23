@@ -1,0 +1,58 @@
+.root {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  font-family: var(--mantine-font-family);
+}
+
+.header {
+  width: 100%;
+}
+
+.logo {
+  padding: 3rem 0 3rem 0;
+}
+
+.contentGrid {
+  height: 100vh;
+  background-color: var(--mantine-color-indigo-9);
+}
+
+.navItem {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  text-decoration: none;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--mantine-color-indigo-2);
+  border-left: 3px solid var(--mantine-color-indigo-9);
+
+  padding: 1rem 1rem 1rem 0;
+
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border 0.2s;
+}
+
+.navItem:hover {
+  background-color: var(--mantine-color-indigo-7);
+  color: white;
+  border-left: 3px solid white;
+}
+
+.navItem:hover .navItemIcon {
+  color: var(--mantine-color-indigo-0);
+}
+
+.navItemIcon {
+  display: inline-block;
+  margin-left: 1rem;
+  color: var(--mantine-color-indigo-4);
+}
+
+.navItemText {
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}

@@ -1,11 +1,10 @@
 import styles from '@app/css/authentication/wrapper.module.css';
+import { Button } from '@mantine/core';
 import axios from 'axios';
-import {Button} from 'primereact/button';
-import Cookies from 'universal-cookie';
 interface Props {
-	apiKey: string;
-	projectId: string;
-	onSuccess: () => void;
+  apiKey: string;
+  projectId: string;
+  onSuccess: () => void;
 }
 function calcPosition(windowWidth: number, windowHeight: number) {
 	const height = window.innerHeight;
@@ -16,70 +15,103 @@ function calcPosition(windowWidth: number, windowHeight: number) {
 		top: Math.floor((height - windowHeight) / 2),
 	};
 }
-export default function Authentication({apiKey, projectId, onSuccess}: Props) {
+export default function Authentication({
+	apiKey,
+	projectId,
+	onSuccess,
+}: Props) {
 	const width = 480;
 	const height = 480;
-	const {top, left} = calcPosition(width, height);
+	const { top, left } = calcPosition(width, height);
 
-	return <div className={styles.root}>
-		<Button onClick={async () => {
-			axios({
-				method: 'POST',
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				url: `${import.meta.env.VITE_API_HOST}${import.meta.env.VITE_API_VERSION}/app/auth/api-auth-session`,
-				headers: {
-					'X-CREATIF-API-KEY': apiKey,
-					'X-CREATIF-PROJECT-ID': projectId,
-				}
-			}).then((res) => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const openedWindow = window.open(`http://localhost:3000/auth/api/${res.data}?apiKey=${apiKey}&projectId=${projectId}`, import.meta.env.VITE_FRONTEND_HOST, `left=${left},top=${top},width=${width},height=${height}`);
-				if (openedWindow) {
-					const messageInterval = setInterval(() => {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						openedWindow.postMessage('poll', import.meta.env.VITE_FRONTEND_HOST);
-					}, 100);
+	return (
+		<div className={styles.root}>
+			<div className={styles.button}>
+				<Button
+					onClick={async () => {
+						axios({
+							method: 'POST',
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							// @ts-ignore
+							url: `${import.meta.env.VITE_API_HOST}${
+								import.meta.env.VITE_API_VERSION
+							}/app/auth/api-auth-session`,
+							headers: {
+								'X-CREATIF-API-KEY': apiKey,
+								'X-CREATIF-PROJECT-ID': projectId,
+							},
+						}).then((res) => {
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							// @ts-ignore
+							const openedWindow = window.open(
+								`http://localhost:3000/auth/api/${res.data}?apiKey=${apiKey}&projectId=${projectId}`,
+								import.meta.env.VITE_FRONTEND_HOST,
+								`left=${left},top=${top},width=${width},height=${height}`,
+							);
+							if (openedWindow) {
+								const messageInterval = setInterval(() => {
+									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+									// @ts-ignore
+									openedWindow.postMessage(
+										'poll',
+										import.meta.env.VITE_FRONTEND_HOST,
+									);
+								}, 100);
 
-					let messageReceived = false;
-					window.addEventListener('message', (event) => {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
-						if (messageReceived) return;
-						messageReceived = true;
-						clearInterval(messageInterval);
+								let messageReceived = false;
+								window.addEventListener(
+									'message',
+									(event) => {
+										// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+										// @ts-ignore
+										if (event.origin !== import.meta.env.VITE_FRONTEND_HOST)
+											return;
+										if (messageReceived) return;
+										messageReceived = true;
+										clearInterval(messageInterval);
 
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						onSuccess();
-						openedWindow.close();
-					}, true);
+										// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+										// @ts-ignore
+										onSuccess();
+										openedWindow.close();
+									},
+									true,
+								);
 
-					const removeListenerInterval = setInterval(() => {
-						if (openedWindow.closed) {
-							window.removeEventListener('message', (event) => {
-								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-								// @ts-ignore
-								if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
-								if (messageReceived) return;
-								messageReceived = true;
-								clearInterval(messageInterval);
+								const removeListenerInterval = setInterval(() => {
+									if (openedWindow.closed) {
+										window.removeEventListener(
+											'message',
+											(event) => {
+												// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+												// @ts-ignore
+												if (event.origin !== import.meta.env.VITE_FRONTEND_HOST)
+													return;
+												if (messageReceived) return;
+												messageReceived = true;
+												clearInterval(messageInterval);
 
-								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-								// @ts-ignore
-								onSuccess();
-								openedWindow.close();
-							}, true);
+												// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+												// @ts-ignore
+												onSuccess();
+												openedWindow.close();
+											},
+											true,
+										);
 
-							clearInterval(removeListenerInterval);
-							clearInterval(messageInterval);
-						}
-					}, 100);
-				}
-			});
-		}} severity="secondary" className={styles.button} label="Authenticate" outlined />
-	</div>;
+										clearInterval(removeListenerInterval);
+										clearInterval(messageInterval);
+									}
+								}, 100);
+							}
+						});
+					}}
+					variant="light"
+					size="xl"
+				>
+          Authenticate
+				</Button>
+			</div>
+		</div>
+	);
 }

@@ -1,16 +1,15 @@
 .root {
-    width: 100%;
-    min-height: 100vh;
-    position: relative;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
 }
 
 .button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-    background-color: transparent;
-    border: 1px solid gray;
-    padding: 12px;
+  background-color: transparent;
+  padding: 12px;
 }

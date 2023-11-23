@@ -43,6 +43,9 @@
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-react": "7.32.2",
+    "postcss": "^8.4.31",
+    "postcss-preset-mantine": "^1.11.0",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "3.0.0",
     "rollup": "3.26.2",
     "rollup-plugin-typescript2": "0.35.0",
@@ -52,10 +55,15 @@
     "vite-plugin-dts": "^3.5.3"
   },
   "dependencies": {
+    "@mantine/core": "^7.2.2",
+    "@mantine/dates": "^7.2.2",
+    "@mantine/dropzone": "^7.2.2",
+    "@mantine/hooks": "^7.2.2",
+    "@mantine/notifications": "^7.2.2",
+    "@tabler/icons-react": "^2.42.0",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.10",
     "normalize.css": "^8.0.1",
-    "primeicons": "^6.0.1",
-    "primereact": "^10.0.9",
     "react-hook-form": "^7.48.2",
     "universal-cookie": "^6.1.1",
     "zustand": "^4.4.6"

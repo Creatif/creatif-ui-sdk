@@ -1,4 +1,4 @@
 export interface CreateListBlueprint {
-    name: string;
-    locale?: string;
+  name: string;
+  locale?: string;
 }

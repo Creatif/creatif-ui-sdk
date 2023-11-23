@@ -1,0 +1,33 @@
+.root {
+    background-color: var(--mantine-color-orange-5);
+    color: white;
+
+    border: 1px solid blue;
+
+    &::before {
+        background-color: var(--mantine-color-white);
+    }
+}
+
+.root div:first-of-type {
+    background-color: transparent;
+}
+
+.description,
+.title {
+    color: var(--mantine-color-white);
+}
+
+.title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.closeButton {
+    color: var(--mantine-color-white);
+}
+
+.closeButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}

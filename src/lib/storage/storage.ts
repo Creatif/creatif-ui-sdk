@@ -1,18 +1,18 @@
-import {Initialize} from '@app/initialize';
+import { Initialize } from '@app/initialize';
 interface InternalVariable {
-    name: string;
+  name: string;
 }
 interface InternalMap {
-    name: string;
-    variables: string[];
+  name: string;
+  variables: string[];
 }
 interface InternalList {
-	name: string;
+  name: string;
 }
 interface InternalStorage {
-    variables: Record<string, InternalVariable[]>;
-    maps: Record<string, InternalMap[]>;
-    lists: Record<string, InternalList[]>;
+  variables: Record<string, InternalVariable[]>;
+  maps: Record<string, InternalMap[]>;
+  lists: Record<string, InternalList[]>;
 }
 export default class Storage {
 	public static instance: Storage;
@@ -57,7 +57,9 @@ export default class Storage {
 	}
 	hasList(name: string, locale: string): boolean {
 		if (!this.storage.lists[locale]) return false;
-		return Boolean(this.storage.lists[locale].find(item => item.name === name));
+		return Boolean(
+			this.storage.lists[locale].find((item) => item.name === name),
+		);
 	}
 	private persist() {
 		localStorage.setItem(Storage.key, JSON.stringify(this.storage));

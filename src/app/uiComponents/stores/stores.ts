@@ -1,15 +1,15 @@
-import {create} from 'zustand';
-import type { StoreApi, UseBoundStore} from 'zustand';
+import { create } from 'zustand';
+import type { StoreApi, UseBoundStore } from 'zustand';
 interface FieldsStore {
-    fieldStore: {
-        fields: string[];
-    }
+  fieldStore: {
+    fields: string[];
+  };
 }
 interface Props {
-    name: string;
+  name: string;
 }
 const stores: Record<string, UseBoundStore<StoreApi<FieldsStore>>> = {};
-export function getOrCreateStore({name}: Props) {
+export function getOrCreateStore({ name }: Props) {
 	const useFieldsStore = create<FieldsStore>((set) => ({
 		fieldStore: {
 			fields: [],
@@ -25,6 +25,3 @@ export function getOrCreateStore({name}: Props) {
 
 	return stores[name];
 }
-
-
-

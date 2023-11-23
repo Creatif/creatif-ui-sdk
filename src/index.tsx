@@ -1,5 +1,5 @@
 export { CreatifProvider } from './CreatifProvider';
-export {Initialize} from './app/initialize';
+export { Initialize } from './app/initialize';
 
 /*
 const rootElement = document.getElementById('root');

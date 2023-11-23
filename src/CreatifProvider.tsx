@@ -1,31 +1,37 @@
 import Authentication from '@app/components/authentication/Authentication';
-import {Initialize} from '@app/initialize';
+import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
 import Storage from '@lib/storage/storage';
-import { PrimeReactProvider } from 'primereact/api';
-import React, {useCallback, useEffect, useState} from 'react';
-import type { APIOptions } from 'primereact/api';
+import { MantineProvider, createTheme } from '@mantine/core';
+import {Notifications} from '@mantine/notifications';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import 'normalize.css';
-import 'primeicons/primeicons.css';
-import 'primereact/resources/themes/lara-light-blue/theme.css';
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+
+import '@app/css/reset.module.css';
 import '@app/css/global.module.css';
-import {Notification} from '@app/components/Alert';
+
 interface Props {
-  primeReactProps?: Partial<APIOptions>;
   apiKey: string;
   projectId: string;
   locale?: string;
 }
+
+const theme = createTheme({
+	/** Put your mantine theme override here */
+});
 export function CreatifProvider({
-	primeReactProps,
 	apiKey,
 	projectId,
 	locale = 'eng',
 	children,
 }: Props & PropsWithChildren) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>('idle');
+	const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>(
+		'idle',
+	);
 
 	const init = useCallback(() => {
 		Initialize.init(apiKey, projectId, locale);
@@ -45,17 +51,20 @@ export function CreatifProvider({
 	}, []);
 
 	return (
-		<PrimeReactProvider value={primeReactProps}>
-			{isLoggedIn && <>
-				{children}
+		<MantineProvider theme={theme}>
+			{isLoggedIn && <Notifications />}
+			{isLoggedIn && <>{children}</>}
 
-				<Notification />
-			</>}
-
-			{!isLoggedIn && checkedAuth === 'fail' && <Authentication apiKey={apiKey} projectId={projectId} onSuccess={() => {
-				init();
-				setIsLoggedIn(true);
-			}} />}
-		</PrimeReactProvider>
+			{!isLoggedIn && checkedAuth === 'fail' && (
+				<Authentication
+					apiKey={apiKey}
+					projectId={projectId}
+					onSuccess={() => {
+						init();
+						setIsLoggedIn(true);
+					}}
+				/>
+			)}
+		</MantineProvider>
 	);
 }
