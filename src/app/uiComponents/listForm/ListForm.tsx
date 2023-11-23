@@ -1,4 +1,5 @@
 import { Initialize } from '@app/initialize';
+import {getOrCreateStore} from '@app/systems/fields/stores';
 import useNotification from '@app/systems/notifications/useNotification';
 import {appendToList} from '@lib/api/declarations/lists/appendToList';
 import { createList } from '@lib/api/declarations/lists/createList';
@@ -35,6 +36,10 @@ export default function ListForm<T extends FieldValues>({
 	const {error: notificationError, warn, info, success} = useNotification();
 
 	useEffect(() => {
+		getOrCreateStore({
+			structureName: listName,
+		});
+
 		const chosenLocale = locale ? locale : Initialize.Locale();
 		if (!Storage.instance.hasList(listName, chosenLocale)) {
 			createList({

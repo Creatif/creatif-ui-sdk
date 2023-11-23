@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand';
 interface FieldsStore {
 	currentFields: string[],
+	structureName: string;
   	addField: (field: string) => void;
 }
 interface Props {
@@ -16,6 +17,7 @@ export function getOrCreateStore({ structureName }: Props) {
 
 	stores[structureName] = create<FieldsStore>((set) => ({
 		currentFields: [],
+		structureName: structureName,
 		addField: (field: string) => set((state) => ({
 			...state,
 			currentFields: [...state.currentFields, field],
@@ -26,6 +28,5 @@ export function getOrCreateStore({ structureName }: Props) {
 }
 export function useAddField(name: string, store: UseBoundStore<StoreApi<FieldsStore>>) {
 	const {addField, currentFields} = store();
-	console.log(currentFields);
 	return () => addField(name);
 }
