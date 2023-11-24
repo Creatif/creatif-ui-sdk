@@ -1,5 +1,7 @@
+import InputCheckbox from '@app/uiComponents/inputs/InputCheckbox';
+import InputCheckboxControlled from '@app/uiComponents/inputs/InputCheckboxControlled';
 import InputChipControlled from '@app/uiComponents/inputs/InputChipControlled';
-import InputDate from '@app/uiComponents/inputs/InputDate';
+import InputDateControlled from '@app/uiComponents/inputs/InputDateControlled';
 import InputEmail from '@app/uiComponents/inputs/InputEmail';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
@@ -18,6 +20,9 @@ export default function Content() {
 						dob: string;
 						eligible: boolean;
 						uncontrolledEligible: boolean;
+						checkboxControlled: boolean;
+						checkbox: boolean;
+						chipUncontrolled: boolean;
           			}>
 						beforeSave={(values) => {
 							console.log(values);
@@ -73,7 +78,7 @@ export default function Content() {
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputDate
+										<InputDateControlled
 											validation={{
 												required: 'Date of birth is required.',
 											}}
@@ -91,6 +96,23 @@ export default function Content() {
 										>
 											Are you eligible?
 										</InputChipControlled>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputCheckboxControlled
+											validation={{
+												required: 'Controlled checkbox field is required.',
+											}}
+											label="Controlled checkbox"
+											name="checkboxControlled"
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputCheckbox
+											label="Checkbox"
+											name="checkbox"
+										/>
 									</Grid.Col>
 									<Grid.Col span={12}>{submitButton}</Grid.Col>
 								</Grid>

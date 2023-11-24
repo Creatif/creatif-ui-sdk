@@ -4,8 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import type { CheckboxProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends CheckboxProps {
-  name: string;
-  options?: RegisterOptions;
+	name: string;
+	options?: RegisterOptions;
 }
 export default function InputCheckbox({ name, options, ...rest }: Props) {
 	const { register } = useFormContext();

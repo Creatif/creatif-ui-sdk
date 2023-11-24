@@ -14,7 +14,7 @@ interface Props extends DateInputProps {
   >;
   onInputChange?: (date: string) => void;
 }
-export default function InputDate({
+export default function InputDateControlled({
 	name,
 	format,
 	validation,

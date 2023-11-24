@@ -12,7 +12,7 @@ interface Props extends NumberInputProps {
     >;
     onInputChange?: (checked: string | number) => void;
 }
-export default function InputNumber({name, onInputChange, validation, ...rest}: Props) {
+export default function InputNumberControlled({name, onInputChange, validation, ...rest}: Props) {
 	const { control, getValues } = useFormContext();
 	const [value, setValue] = useState<string | number>(getValues(name));
 	const err = useFirstError(name);
