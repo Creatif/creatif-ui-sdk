@@ -1,3 +1,4 @@
+import InputChipControlled from '@app/uiComponents/inputs/InputChipControlled';
 import InputDate from '@app/uiComponents/inputs/InputDate';
 import InputEmail from '@app/uiComponents/inputs/InputEmail';
 import InputText from '@app/uiComponents/inputs/InputText';
@@ -11,16 +12,18 @@ export default function Content() {
 			<Center>
 				<Container size="lg" fluid>
 					<ListForm<{
-            name: string;
-            lastName: string;
-            email: string;
-            dob: string;
-          }>
-						beforeSave={(values) => ({
-							...values,
-							name: 'Changed name',
-							addedField: 'someting new',
-						})}
+						name: string;
+						lastName: string;
+						email: string;
+						dob: string;
+						eligible: boolean;
+						uncontrolledEligible: boolean;
+          			}>
+						beforeSave={(values) => {
+							console.log(values);
+
+							return values;
+						}}
 						afterSave={(values) => {
 							console.log(values);
 						}}
@@ -35,6 +38,8 @@ export default function Content() {
 								lastName: '',
 								email: '',
 								dob: '',
+								eligible: false,
+								uncontrolledEligible: false,
 							},
 						}}
 						inputs={(submitButton) => (
@@ -75,6 +80,17 @@ export default function Content() {
 											label="Date of birth"
 											name="dob"
 										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputChipControlled
+											validation={{
+												required: 'Eligible field is required.',
+											}}
+											name="eligible"
+										>
+											Are you eligible?
+										</InputChipControlled>
 									</Grid.Col>
 									<Grid.Col span={12}>{submitButton}</Grid.Col>
 								</Grid>
