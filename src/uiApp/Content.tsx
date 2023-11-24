@@ -1,11 +1,12 @@
 import InputCheckbox from '@app/uiComponents/inputs/InputCheckbox';
 import InputCheckboxControlled from '@app/uiComponents/inputs/InputCheckboxControlled';
+import InputCheckboxGroupControlled from '@app/uiComponents/inputs/InputCheckboxGroupControlled';
 import InputChipControlled from '@app/uiComponents/inputs/InputChipControlled';
 import InputDateControlled from '@app/uiComponents/inputs/InputDateControlled';
 import InputEmail from '@app/uiComponents/inputs/InputEmail';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
-import { Center, Container, Fieldset, Grid } from '@mantine/core';
+import {Center, Checkbox, Container, Fieldset, Grid, Group} from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
 export default function Content() {
@@ -23,8 +24,13 @@ export default function Content() {
 						checkboxControlled: boolean;
 						checkbox: boolean;
 						chipUncontrolled: boolean;
+						checkboxGroup: [],
           			}>
 						beforeSave={(values) => {
+							if (!values.checkboxGroup) {
+								values.checkboxGroup = [];
+							}
+
 							console.log(values);
 
 							return values;
@@ -112,6 +118,22 @@ export default function Content() {
 										<InputCheckbox
 											label="Checkbox"
 											name="checkbox"
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputCheckboxGroupControlled
+											validation={{
+												required: 'Checkbox group is required',
+											}}
+											label="Checkbox group"
+											name="checkboxGroup"
+											component={({formState: {errors}}) => <Group mt="xs">
+												<Checkbox error={Boolean(errors['checkboxGroup'])} value="react" label="React" />
+												<Checkbox error={Boolean(errors['checkboxGroup'])} value="svelte" label="Svelte" />
+												<Checkbox error={Boolean(errors['checkboxGroup'])} value="ng" label="Angular" />
+												<Checkbox error={Boolean(errors['checkboxGroup'])} value="vue" label="Vue" />
+											</Group>}
 										/>
 									</Grid.Col>
 									<Grid.Col span={12}>{submitButton}</Grid.Col>
