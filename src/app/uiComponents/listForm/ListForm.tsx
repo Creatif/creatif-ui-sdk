@@ -8,7 +8,21 @@ import { Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
-import type { FieldValues, SubmitHandler, UseFormProps } from 'react-hook-form';
+import type {
+	FieldValues,
+	SubmitHandler,
+	UseFormProps,
+	UseFormGetFieldState,
+	UseFormGetValues,
+	UseFormReset,
+	UseFormResetField,
+	UseFormSetError,
+	UseFormSetFocus,
+	UseFormSetValue,
+	UseFormTrigger,
+	UseFormUnregister,
+	UseFormWatch,
+} from 'react-hook-form';
 
 type Bindings<T> = { name: NameBinding<T>; groups?: GroupBinding<T> };
 type NameBinding<T> = string | ((values: T) => string);
@@ -16,8 +30,20 @@ type GroupBinding<T> = string | ((values: T) => string | string[]);
 interface Props<T extends FieldValues> {
   listName: string;
   bindings: Bindings<T>;
-  formProps: UseFormProps;
-  inputs: (submitButton: React.ReactNode) => React.ReactNode;
+  formProps: UseFormProps<T>;
+  inputs: (
+    submitButton: React.ReactNode,
+    setValue: UseFormSetValue<T>,
+    getValues: UseFormGetValues<T>,
+    setFocus: UseFormSetFocus<T>,
+    setError: UseFormSetError<T>,
+    reset: UseFormReset<T>,
+    resetField: UseFormResetField<T>,
+    unregister: UseFormUnregister<T>,
+    watch: UseFormWatch<T>,
+    trigger: UseFormTrigger<T>,
+    getFieldState: UseFormGetFieldState<T>,
+  ) => React.ReactNode;
   onSubmit?: SubmitHandler<T>;
   locale?: string;
   form?: HTMLAttributes<HTMLFormElement>;
@@ -57,6 +83,19 @@ export default function ListForm<T extends FieldValues>({
 	const methods = useForm(formProps);
 	const [isSaving, setIsSaving] = useState(false);
 	const { error: notificationError, warn, info, success } = useNotification();
+
+	const {
+		setValue,
+		getValues,
+		setError,
+		setFocus,
+		reset,
+		resetField,
+		unregister,
+		watch,
+		trigger,
+		getFieldState,
+	} = methods;
 
 	useEffect(() => {
 		getOrCreateStore({
@@ -185,9 +224,6 @@ export default function ListForm<T extends FieldValues>({
 
 	return (
 		<FormProvider {...methods}>
-			{/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-			{/*
-			// @ts-ignore */}
 			<form onSubmit={methods.handleSubmit(onInternalSubmit)}>
 				{inputs(
 					<Group justify="end">
@@ -199,6 +235,16 @@ export default function ListForm<T extends FieldValues>({
 							{isSaving ? 'Creating' : 'Create'}
 						</Button>
 					</Group>,
+					setValue,
+					getValues,
+					setFocus,
+					setError,
+					reset,
+					resetField,
+					unregister,
+					watch,
+					trigger,
+					getFieldState,
 				)}
 			</form>
 		</FormProvider>
