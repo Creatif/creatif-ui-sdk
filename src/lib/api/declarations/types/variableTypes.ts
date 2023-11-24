@@ -1,4 +1,4 @@
-import type { Behaviour } from '@lib/api/declarations/sharedTypes';
+import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 
 export interface CreateVariableBlueprint {
   name: string;

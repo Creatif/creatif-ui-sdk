@@ -1,9 +1,12 @@
 import { Initialize } from '@app/initialize';
 import { declarations } from '@lib/http/axios';
 import { tryPut } from '@lib/http/tryPut';
-import type { AppendToListBlueprint } from '@lib/api/declarations/listTypes';
+import type {
+	AppendedListResult,
+	AppendToListBlueprint,
+} from '@lib/api/declarations/types/listTypes';
 export async function appendToList(blueprint: AppendToListBlueprint) {
-	return tryPut(
+	return tryPut<AppendedListResult>(
 		declarations(),
 		`/list/append/${Initialize.ProjectID()}/${
 			blueprint.locale ? blueprint.locale : Initialize.Locale()

@@ -7,10 +7,10 @@ import Storage from '@lib/storage/storage';
 import { Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import type { AppendedListResult } from '@lib/api/declarations/types/listTypes';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
 import type {
 	FieldValues,
-	SubmitHandler,
 	UseFormProps,
 	UseFormGetFieldState,
 	UseFormGetValues,
@@ -44,7 +44,11 @@ interface Props<T extends FieldValues> {
     trigger: UseFormTrigger<T>,
     getFieldState: UseFormGetFieldState<T>,
   ) => React.ReactNode;
-  onSubmit?: SubmitHandler<T>;
+  beforeSave?: (values: T, e: BaseSyntheticEvent | undefined) => T;
+  afterSave?: (
+    result: AppendedListResult,
+    e: BaseSyntheticEvent | undefined,
+  ) => void;
   locale?: string;
   form?: HTMLAttributes<HTMLFormElement>;
 }
@@ -78,7 +82,8 @@ export default function ListForm<T extends FieldValues>({
 	formProps,
 	bindings,
 	inputs,
-	onSubmit,
+	beforeSave,
+	afterSave,
 }: Props<T>) {
 	const methods = useForm(formProps);
 	const [isSaving, setIsSaving] = useState(false);
@@ -185,38 +190,41 @@ export default function ListForm<T extends FieldValues>({
 			}
 
 			setIsSaving(true);
-			appendToList({
-				name: listName,
-				variables: [
-					{
-						name: name,
-						behaviour: 'modifiable',
-						groups: groups,
-						value: value,
-					},
-				],
-			}).then(({ result, error }) => {
-				if (error) {
-					notificationError(
-						'An error occurred.',
-						<span>
-              List variable with name <strong>{name}</strong> could not be
-              created. See the development bar for more details.
-						</span>,
-					);
-				}
 
-				if (result) {
-					onSubmit?.(value, e);
-					success(
-						'List variable created',
-						<span>
-              List variable <strong>{name}</strong> has been created.
-						</span>,
-					);
-				}
+			Promise.resolve(beforeSave?.(value, e)).then((result) => {
+				appendToList({
+					name: listName,
+					variables: [
+						{
+							name: name,
+							behaviour: 'modifiable',
+							groups: groups,
+							value: result,
+						},
+					],
+				}).then(({ result, error }) => {
+					if (error) {
+						notificationError(
+							'An error occurred.',
+							<span>
+                List variable with name <strong>{name}</strong> could not be
+                created. See the development bar for more details.
+							</span>,
+						);
+					}
 
-				setIsSaving(false);
+					if (result) {
+						afterSave?.(result, e);
+						success(
+							'List variable created',
+							<span>
+                List variable <strong>{name}</strong> has been created.
+							</span>,
+						);
+					}
+
+					setIsSaving(false);
+				});
 			});
 		},
 		[],

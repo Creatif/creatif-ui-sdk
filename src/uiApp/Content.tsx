@@ -16,6 +16,14 @@ export default function Content() {
             email: string;
             dob: string;
           }>
+						beforeSave={(values) => ({
+							...values,
+							name: 'Changed name',
+							addedField: 'someting new',
+						})}
+						afterSave={(values) => {
+							console.log(values);
+						}}
 						bindings={{
 							name: (values) => values.email,
 							groups: (values) => [values.name, values.lastName, values.email],
