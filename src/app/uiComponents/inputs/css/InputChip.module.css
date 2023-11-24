@@ -1,11 +1,11 @@
 .root label:first-of-type {
-    border: 1px solid var(--mantine-color-error);
+  border: 1px solid var(--mantine-color-error);
 }
 
 .errorMessage {
-    display: inline-block;
-    font-size: 0.8rem;
-    color: var(--mantine-color-error);
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--mantine-color-error);
 
-    margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }

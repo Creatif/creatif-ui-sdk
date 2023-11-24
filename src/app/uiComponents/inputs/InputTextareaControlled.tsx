@@ -1,41 +1,39 @@
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
-import { Checkbox } from '@mantine/core';
+import { Textarea } from '@mantine/core';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { CheckboxProps } from '@mantine/core';
+import type { TextareaProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
-interface Props extends CheckboxProps {
+interface Props extends TextareaProps {
   name: string;
-  onInputChange?: (value: boolean) => void;
   validation?: Omit<
     RegisterOptions,
     'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
   >;
-  options?: RegisterOptions;
+  onInputChange?: (value: string) => void;
 }
-export default function InputCheckboxControlled({
+export default function InputTextareaControlled({
 	name,
 	validation,
-	defaultChecked,
 	onInputChange,
 	...rest
 }: Props) {
-	const [checked, setChecked] = useState(defaultChecked);
+	const [value, setValue] = useState<string>();
 	const { control } = useFormContext();
 
 	return (
 		<Controller
+			name={name}
 			rules={validation}
 			control={control}
-			name={name}
-			render={({ field: { onChange: onChange } }) => (
-				<Checkbox
-					defaultChecked={checked}
+			render={({ field: { onChange } }) => (
+				<Textarea
+					value={value}
 					error={useFirstError(name)}
 					onChange={(event) => {
-						onChange(event.currentTarget.checked);
-						onInputChange?.(event.currentTarget.checked);
-						setChecked(event.currentTarget.checked);
+						onChange(event.currentTarget.value);
+						onInputChange?.(event.currentTarget.value);
+						setValue(event.currentTarget.value);
 					}}
 					{...rest}
 				/>
