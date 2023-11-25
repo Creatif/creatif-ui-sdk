@@ -29,6 +29,7 @@ export default function InputRadioControlled({
 			name={name}
 			render={({ field: { onChange: onChange } }) => (
 				<Radio
+					checked={checked}
 					defaultChecked={checked}
 					error={useFirstError(name)}
 					onChange={(event) => {

@@ -24,6 +24,7 @@ export default function InputCheckboxGroupControlled({
 	name,
 	validation,
 	onInputChange,
+	defaultValue,
 	children,
 	component,
 	...rest
@@ -33,7 +34,7 @@ export default function InputCheckboxGroupControlled({
 			`InputCheckboxGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
 		);
 	const { control, formState } = useFormContext();
-	const [value, setValue] = useState<string[]>([]);
+	const [value, setValue] = useState<string[]>(defaultValue || []);
 
 	return (
 		<Controller

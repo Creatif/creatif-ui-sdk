@@ -9,6 +9,7 @@ import InputRadio from '@app/uiComponents/inputs/InputRadio';
 import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled';
 import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
 import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlled';
+import InputSegmentedControlControlled from '@app/uiComponents/inputs/InputSegmentedControlControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -43,6 +44,7 @@ export default function Content() {
             radioGroup: string;
             pin: string;
             rating: string;
+						segmentedControl: string;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -63,17 +65,19 @@ export default function Content() {
 						listName="landing page"
 						formProps={{
 							defaultValues: {
-								name: '',
-								lastName: '',
-								email: '',
+								name: 'name',
+								lastName: 'sdfasfd',
+								email: 'marioskrlec222@gmail.com',
 								dob: '',
-								eligible: false,
-								radio: '',
-								uncontrolledEligible: false,
-								controlledRadio: '',
+								eligible: true,
+								radio: 'on',
+								uncontrolledEligible: true,
+								controlledRadio: 'on',
 								radioGroup: '',
-								pin: '',
-								rating: '',
+								pin: '1234',
+								checkboxGroup: ['react', 'svelte'],
+								rating: '3',
+								segmentedControl: 'ng',
 							},
 						}}
 						inputs={(submitButton) => (
@@ -132,6 +136,15 @@ export default function Content() {
 									</Grid.Col>
 
 									<Grid.Col span={6}>
+										<InputSegmentedControlControlled data={[
+											{ label: 'React', value: 'react' },
+											{ label: 'Angular', value: 'ng' },
+											{ label: 'Vue', value: 'vue' },
+											{ label: 'Svelte', value: 'svelte' },
+										]} name="segmentedControl" />
+									</Grid.Col>
+
+									<Grid.Col span={6}>
 										<InputCheckboxControlled
 											validation={{
 												required: 'Controlled checkbox field is required.',
@@ -186,6 +199,7 @@ export default function Content() {
 											}}
 											label="Checkbox group"
 											name="checkboxGroup"
+											defaultValue={['svelte', 'ng']}
 											component={({ formState: { errors } }) => (
 												<Group mt="xs">
 													<Checkbox
