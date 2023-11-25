@@ -44,7 +44,7 @@ interface Props<T extends FieldValues> {
     trigger: UseFormTrigger<T>,
     getFieldState: UseFormGetFieldState<T>,
   ) => React.ReactNode;
-  beforeSave?: (values: T, e: BaseSyntheticEvent | undefined) => T;
+  beforeSave?: (values: T, e: BaseSyntheticEvent | undefined) => any;
   afterSave?: (
     result: AppendedListResult,
     e: BaseSyntheticEvent | undefined,

@@ -11,7 +11,6 @@ interface Props extends RadioProps {
         RegisterOptions,
         'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
     >;
-    options?: RegisterOptions;
 }
 export default function InputRadioControlled({
 	name,

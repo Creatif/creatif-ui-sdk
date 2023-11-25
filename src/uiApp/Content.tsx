@@ -8,6 +8,7 @@ import InputPinControlled from '@app/uiComponents/inputs/InputPinControlled';
 import InputRadio from '@app/uiComponents/inputs/InputRadio';
 import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled';
 import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
+import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -40,6 +41,7 @@ export default function Content() {
 						controlledRadio: string;
 						radioGroup: string;
 						pin: string;
+						rating: string;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -70,6 +72,7 @@ export default function Content() {
 								controlledRadio: '',
 								radioGroup: '',
 								pin: '',
+								rating: '',
 							},
 						}}
 						inputs={(submitButton) => (
@@ -109,6 +112,12 @@ export default function Content() {
 											}}
 											label="Date of birth"
 											name="dob"
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputRatingControlled
+											name="rating"
 										/>
 									</Grid.Col>
 
