@@ -1,6 +1,6 @@
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { Checkbox } from '@mantine/core';
-import {useState} from 'react';
+import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { CheckboxProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
@@ -23,21 +23,23 @@ export default function InputCheckboxControlled({
 	const [checked, setChecked] = useState(defaultChecked);
 	const { control } = useFormContext();
 
-	return <Controller
-		rules={validation}
-		control={control}
-		name={name}
-		render={({ field: { onChange: onChange } }) => (
-			<Checkbox
-				defaultChecked={checked}
-				error={useFirstError(name)}
-				onChange={(event) => {
-					onChange(event.currentTarget.checked);
-					onInputChange?.(event.currentTarget.checked);
-					setChecked(event.currentTarget.checked);
-				}}
-				{...rest}
-			/>
-		)}
-	/>;
+	return (
+		<Controller
+			rules={validation}
+			control={control}
+			name={name}
+			render={({ field: { onChange: onChange } }) => (
+				<Checkbox
+					defaultChecked={checked}
+					error={useFirstError(name)}
+					onChange={(event) => {
+						onChange(event.currentTarget.checked);
+						onInputChange?.(event.currentTarget.checked);
+						setChecked(event.currentTarget.checked);
+					}}
+					{...rest}
+				/>
+			)}
+		/>
+	);
 }

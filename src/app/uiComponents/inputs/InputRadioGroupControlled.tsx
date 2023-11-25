@@ -1,24 +1,24 @@
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
-import {Checkbox, Radio} from '@mantine/core';
+import { Radio } from '@mantine/core';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { CheckboxGroupProps , RadioGroupProps} from '@mantine/core';
+import type { RadioGroupProps } from '@mantine/core';
 import type { PropsWithChildren, ReactNode } from 'react';
 import type { RegisterOptions, FieldValues, FormState } from 'react-hook-form';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 interface Props extends RadioGroupProps {
-    name: string;
-    validation?: Omit<
-        RegisterOptions,
-        'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-    >;
-    onInputChange?: (value: string) => void;
-    component?: (data: {
-        value: string;
-        formState: FormState<FieldValues>;
-    }) => React.ReactNode;
-    children?: ReactNode;
+  name: string;
+  validation?: Omit<
+    RegisterOptions,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >;
+  onInputChange?: (value: string) => void;
+  component?: (data: {
+    value: string;
+    formState: FormState<FieldValues>;
+  }) => React.ReactNode;
+  children?: ReactNode;
 }
 export default function InputRadioGroupControlled({
 	name,

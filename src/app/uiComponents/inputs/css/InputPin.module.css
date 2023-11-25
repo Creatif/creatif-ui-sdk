@@ -1,7 +1,7 @@
 .errorMessage {
-    display: inline-block;
-    font-size: 0.8rem;
-    color: var(--mantine-color-error);
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--mantine-color-error);
 
-    margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }

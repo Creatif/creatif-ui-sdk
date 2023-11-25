@@ -17,7 +17,8 @@ import {
 	Container,
 	Fieldset,
 	Grid,
-	Group, Radio, Tooltip,
+	Group,
+	Radio,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
@@ -37,11 +38,11 @@ export default function Content() {
             checkbox: boolean;
             chipUncontrolled: boolean;
             checkboxGroup: [];
-						radio: string;
-						controlledRadio: string;
-						radioGroup: string;
-						pin: string;
-						rating: string;
+            radio: string;
+            controlledRadio: string;
+            radioGroup: string;
+            pin: string;
+            rating: string;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -116,9 +117,7 @@ export default function Content() {
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputRatingControlled
-											name="rating"
-										/>
+										<InputRatingControlled name="rating" />
 									</Grid.Col>
 
 									<Grid.Col span={6}>
@@ -143,7 +142,10 @@ export default function Content() {
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputRadioGroupControlled label="Radio group" name="radioGroup">
+										<InputRadioGroupControlled
+											label="Radio group"
+											name="radioGroup"
+										>
 											<Radio value="react" label="React" />
 											<Radio value="svelte" label="Svelte" />
 											<Radio value="ng" label="Angular" />
@@ -156,15 +158,25 @@ export default function Content() {
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputRadio defaultChecked={true} label="Radio" name="radio" />
+										<InputRadio
+											defaultChecked={true}
+											label="Radio"
+											name="radio"
+										/>
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputRadioControlled label="Controlled radio" name="controlledRadio" />
+										<InputRadioControlled
+											label="Controlled radio"
+											name="controlledRadio"
+										/>
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputPinControlled name="pin" validation={{required: true}} />
+										<InputPinControlled
+											name="pin"
+											validation={{ required: true }}
+										/>
 									</Grid.Col>
 
 									<Grid.Col span={6}>
