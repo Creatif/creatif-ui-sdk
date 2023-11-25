@@ -38,7 +38,7 @@ export default function Content() {
             checkboxControlled: boolean;
             checkbox: boolean;
             chipUncontrolled: boolean;
-            checkboxGroup: [];
+            checkboxGroup: string[];
             radio: string;
             controlledRadio: string;
             radioGroup: string;
