@@ -6,6 +6,7 @@ import InputDateControlled from '@app/uiComponents/inputs/InputDateControlled';
 import InputEmail from '@app/uiComponents/inputs/InputEmail';
 import InputRadio from '@app/uiComponents/inputs/InputRadio';
 import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled';
+import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -14,7 +15,7 @@ import {
 	Container,
 	Fieldset,
 	Grid,
-	Group, Tooltip,
+	Group, Radio, Tooltip,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
@@ -34,8 +35,9 @@ export default function Content() {
             checkbox: boolean;
             chipUncontrolled: boolean;
             checkboxGroup: [];
-						radio: boolean;
-						controlledRadio: boolean;
+						radio: string;
+						controlledRadio: string;
+						radioGroup: string;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -61,9 +63,10 @@ export default function Content() {
 								email: '',
 								dob: '',
 								eligible: false,
-								radio: false,
+								radio: '',
 								uncontrolledEligible: false,
-								controlledRadio: false,
+								controlledRadio: '',
+								radioGroup: '',
 							},
 						}}
 						inputs={(submitButton) => (
@@ -125,6 +128,15 @@ export default function Content() {
 											label="Controlled checkbox"
 											name="checkboxControlled"
 										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputRadioGroupControlled label="Radio group" name="radioGroup">
+											<Radio value="react" label="React" />
+											<Radio value="svelte" label="Svelte" />
+											<Radio value="ng" label="Angular" />
+											<Radio value="vue" label="Vue" />
+										</InputRadioGroupControlled>
 									</Grid.Col>
 
 									<Grid.Col span={6}>
