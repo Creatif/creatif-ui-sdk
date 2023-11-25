@@ -4,6 +4,7 @@ import InputCheckboxGroupControlled from '@app/uiComponents/inputs/InputCheckbox
 import InputChipControlled from '@app/uiComponents/inputs/InputChipControlled';
 import InputDateControlled from '@app/uiComponents/inputs/InputDateControlled';
 import InputEmail from '@app/uiComponents/inputs/InputEmail';
+import InputPinControlled from '@app/uiComponents/inputs/InputPinControlled';
 import InputRadio from '@app/uiComponents/inputs/InputRadio';
 import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled';
 import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
@@ -38,6 +39,7 @@ export default function Content() {
 						radio: string;
 						controlledRadio: string;
 						radioGroup: string;
+						pin: string;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -67,6 +69,7 @@ export default function Content() {
 								uncontrolledEligible: false,
 								controlledRadio: '',
 								radioGroup: '',
+								pin: '',
 							},
 						}}
 						inputs={(submitButton) => (
@@ -149,6 +152,10 @@ export default function Content() {
 
 									<Grid.Col span={6}>
 										<InputRadioControlled label="Controlled radio" name="controlledRadio" />
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputPinControlled name="pin" validation={{required: true}} />
 									</Grid.Col>
 
 									<Grid.Col span={6}>

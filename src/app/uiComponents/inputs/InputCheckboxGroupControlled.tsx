@@ -9,7 +9,6 @@ import type { RegisterOptions, FieldValues, FormState } from 'react-hook-form';
 // @ts-ignore
 interface Props extends CheckboxGroupProps {
   name: string;
-  format?: string;
   validation?: Omit<
     RegisterOptions,
     'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
