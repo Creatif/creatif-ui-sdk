@@ -12,7 +12,7 @@ import {
 	Container,
 	Fieldset,
 	Grid,
-	Group,
+	Group, Tooltip,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
