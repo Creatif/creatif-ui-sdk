@@ -4,6 +4,8 @@ import InputCheckboxGroupControlled from '@app/uiComponents/inputs/InputCheckbox
 import InputChipControlled from '@app/uiComponents/inputs/InputChipControlled';
 import InputDateControlled from '@app/uiComponents/inputs/InputDateControlled';
 import InputEmail from '@app/uiComponents/inputs/InputEmail';
+import InputRadio from '@app/uiComponents/inputs/InputRadio';
+import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -32,6 +34,8 @@ export default function Content() {
             checkbox: boolean;
             chipUncontrolled: boolean;
             checkboxGroup: [];
+						radio: boolean;
+						controlledRadio: boolean;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -57,7 +61,9 @@ export default function Content() {
 								email: '',
 								dob: '',
 								eligible: false,
+								radio: false,
 								uncontrolledEligible: false,
+								controlledRadio: false,
 							},
 						}}
 						inputs={(submitButton) => (
@@ -123,6 +129,14 @@ export default function Content() {
 
 									<Grid.Col span={6}>
 										<InputCheckbox label="Checkbox" name="checkbox" />
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputRadio defaultChecked={true} label="Radio" name="radio" />
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputRadioControlled label="Controlled radio" name="controlledRadio" />
 									</Grid.Col>
 
 									<Grid.Col span={6}>
