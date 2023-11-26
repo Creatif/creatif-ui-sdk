@@ -12,6 +12,7 @@ import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlle
 import InputSegmentedControlControlled from '@app/uiComponents/inputs/InputSegmentedControlControlled';
 import InputSwitch from '@app/uiComponents/inputs/InputSwitch';
 import InputSwitchControlled from '@app/uiComponents/inputs/InputSwitchControlled';
+import InputSwitchGroupControlled from '@app/uiComponents/inputs/InputSwitchGroupControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -21,7 +22,7 @@ import {
 	Fieldset,
 	Grid,
 	Group,
-	Radio,
+	Radio, Switch,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
@@ -49,6 +50,7 @@ export default function Content() {
             segmentedControl: string;
 						switch: boolean;
 						switchControlled: boolean;
+						switchGroup: [];
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -84,6 +86,7 @@ export default function Content() {
 								segmentedControl: '',
 								switch: false,
 								switchControlled: false,
+								switchGroup: [],
 							},
 						}}
 						inputs={(submitButton) => (
@@ -245,6 +248,25 @@ export default function Content() {
 														value="vue"
 														label="Vue"
 													/>
+												</Group>
+											)}
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputSwitchGroupControlled
+											defaultValue={['svelte', 'ng']}
+											validation={{
+												required: 'Switch group is required',
+											}}
+											label="Switch group"
+											name="switchGroup"
+											component={({ formState: { errors } }) => (
+												<Group mt="xs">
+													<Switch error={Boolean(errors['switchGroup'])} value="react" label="React" />
+													<Switch error={Boolean(errors['switchGroup'])} value="svelte" label="Svelte" />
+													<Switch error={Boolean(errors['switchGroup'])} value="ng" label="Angular" />
+													<Switch error={Boolean(errors['switchGroup'])} value="vue" label="Vue" />
 												</Group>
 											)}
 										/>
