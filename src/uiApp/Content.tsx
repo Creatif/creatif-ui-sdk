@@ -11,6 +11,7 @@ import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupC
 import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlled';
 import InputSegmentedControlControlled from '@app/uiComponents/inputs/InputSegmentedControlControlled';
 import InputSwitch from '@app/uiComponents/inputs/InputSwitch';
+import InputSwitchControlled from '@app/uiComponents/inputs/InputSwitchControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -47,6 +48,7 @@ export default function Content() {
             rating: string;
             segmentedControl: string;
 						switch: boolean;
+						switchControlled: boolean;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -81,6 +83,7 @@ export default function Content() {
 								rating: '',
 								segmentedControl: '',
 								switch: false,
+								switchControlled: false,
 							},
 						}}
 						inputs={(submitButton) => (
@@ -202,6 +205,13 @@ export default function Content() {
 										<InputSwitch
 											name="switch"
 											label="Switch"
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputSwitchControlled
+											name="switchControlled"
+											label="Switch controlled"
 										/>
 									</Grid.Col>
 
