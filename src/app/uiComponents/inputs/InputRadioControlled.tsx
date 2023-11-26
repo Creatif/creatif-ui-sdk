@@ -15,12 +15,11 @@ interface Props extends RadioProps {
 export default function InputRadioControlled({
 	name,
 	validation,
-	defaultChecked,
 	onInputChange,
 	...rest
 }: Props) {
-	const [checked, setChecked] = useState(defaultChecked);
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	const [checked, setChecked] = useState(getValues(name));
 
 	return (
 		<Controller
@@ -30,7 +29,6 @@ export default function InputRadioControlled({
 			render={({ field: { onChange: onChange } }) => (
 				<Radio
 					checked={checked}
-					defaultChecked={checked}
 					error={useFirstError(name)}
 					onChange={(event) => {
 						onChange(event.currentTarget.checked);

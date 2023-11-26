@@ -24,7 +24,7 @@ import {
 	Fieldset,
 	Grid,
 	Group,
-	Radio, Slider, Switch,
+	Radio, Switch,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
@@ -52,7 +52,7 @@ export default function Content() {
             segmentedControl: string;
 						switch: boolean;
 						switchControlled: boolean;
-						switchGroup: [];
+						switchGroup: string[];
 						slider: number;
 						rangeSlider: [number, number];
           }>
@@ -75,24 +75,26 @@ export default function Content() {
 						listName="landing page"
 						formProps={{
 							defaultValues: {
-								name: '',
-								lastName: '',
-								email: '',
-								dob: '',
-								eligible: false,
-								radio: '',
-								uncontrolledEligible: false,
-								controlledRadio: '',
-								radioGroup: '',
-								pin: '',
-								checkboxGroup: [],
-								rating: '',
-								segmentedControl: '',
-								switch: false,
-								switchControlled: false,
-								switchGroup: [],
-								slider: 0,
-								rangeSlider: [],
+								name: 'mario',
+								lastName: 'skrlec',
+								email: 'marioskrlec222@gmail.com',
+								dob: 'November 25, 2023',
+								eligible: true,
+								radio: 'on',
+								uncontrolledEligible: true,
+								controlledRadio: 'on',
+								checkboxControlled: true,
+								checkbox: true,
+								radioGroup: 'ng',
+								pin: '1234',
+								checkboxGroup: ['react', 'svelte'],
+								rating: '3',
+								segmentedControl: 'svelte',
+								switch: true,
+								switchControlled: true,
+								switchGroup: ['react', 'ng'],
+								slider: 5,
+								rangeSlider: [12, 25],
 							},
 						}}
 						inputs={(submitButton) => (
@@ -190,7 +192,6 @@ export default function Content() {
 
 									<Grid.Col span={6}>
 										<InputRadio
-											defaultChecked={true}
 											label="Radio"
 											name="radio"
 										/>
@@ -228,7 +229,6 @@ export default function Content() {
 										<InputSliderControlled
 											name="slider"
 											label="Slider"
-											defaultValue={18}
 											marks={[
 												{ value: 20, label: '20%' },
 												{ value: 50, label: '50%' },
@@ -256,7 +256,6 @@ export default function Content() {
 											}}
 											label="Checkbox group"
 											name="checkboxGroup"
-											defaultValue={['svelte', 'ng']}
 											component={({ formState: { errors } }) => (
 												<Group mt="xs">
 													<Checkbox
@@ -286,7 +285,6 @@ export default function Content() {
 
 									<Grid.Col span={6}>
 										<InputSwitchGroupControlled
-											defaultValue={['svelte', 'ng']}
 											validation={{
 												required: 'Switch group is required',
 											}}

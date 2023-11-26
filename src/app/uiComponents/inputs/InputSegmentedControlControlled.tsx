@@ -11,7 +11,6 @@ interface Props extends SegmentedControlProps {
 }
 export default function InputSegmentedControlControlled({
 	name,
-	defaultValue,
 	onInputChange,
 	data,
 	...rest
@@ -19,15 +18,18 @@ export default function InputSegmentedControlControlled({
 	if (data.length === 0)
 		throw new Error('\'data\' cannot be an empty array. It must be a string[]');
 
-	const { control, setValue: setFormValue } = useFormContext();
+	const { control, getValues, setValue: setFormValue } = useFormContext();
+
+	const def: string | undefined = getValues(name);
+
 	const [value, setValue] = useState<string | undefined>(
-		defaultValue ? defaultValue : (data[0] as SegmentedControlItem).value,
+		def ? def : (data[0] as SegmentedControlItem).value,
 	);
 
 	useEffect(() => {
 		setFormValue(
 			name,
-			defaultValue ? defaultValue : (data[0] as SegmentedControlItem).value,
+			def ? def : (data[0] as SegmentedControlItem).value,
 		);
 	}, []);
 	return (

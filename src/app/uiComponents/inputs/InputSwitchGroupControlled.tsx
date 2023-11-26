@@ -24,7 +24,6 @@ export default function InputSwitchGroupControlled({
 	name,
 	validation,
 	onInputChange,
-	defaultValue,
 	children,
 	component,
 	...rest
@@ -33,8 +32,8 @@ export default function InputSwitchGroupControlled({
 		throw new Error(
 			`InputSwitchGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
 		);
-	const { control, formState, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<string[]>(defaultValue || []);
+	const { control, getValues, formState, setValue: setFormValue } = useFormContext();
+	const [value, setValue] = useState<string[]>(getValues(name));
 
 	useEffect(() => {
 		setFormValue(name, value);

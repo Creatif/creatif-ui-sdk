@@ -12,8 +12,8 @@ export default function InputRatingControlled({
 	onInputChange,
 	...rest
 }: Props) {
-	const [value, setValue] = useState(defaultValue);
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	const [value, setValue] = useState(defaultValue || getValues(name));
 
 	return (
 		<Controller

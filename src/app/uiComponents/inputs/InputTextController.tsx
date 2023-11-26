@@ -18,8 +18,8 @@ export default function InputTextControlled({
 	onInputChange,
 	...rest
 }: Props) {
-	const [value, setValue] = useState<string>();
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	const [value, setValue] = useState<string>(getValues(name));
 
 	return (
 		<Controller
@@ -36,7 +36,6 @@ export default function InputTextControlled({
 					}}
 					name={name}
 					{...rest}
-					options={optionsCopy}
 				/>
 			)}
 		/>

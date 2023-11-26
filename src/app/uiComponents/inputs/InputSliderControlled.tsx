@@ -17,11 +17,10 @@ export default function InputSliderControlled({
 	name,
 	validation,
 	onInputChange,
-	defaultValue,
 	...rest
 }: Props) {
-	const [value, setValue] = useState<number | undefined>(defaultValue);
-	const { control, setValue: setFormValue } = useFormContext();
+	const { control, getValues, setValue: setFormValue } = useFormContext();
+	const [value, setValue] = useState<number | undefined>(getValues(name));
 	const error = useFirstError(name);
 
 	useEffect(() => {
@@ -37,6 +36,7 @@ export default function InputSliderControlled({
 				render={({ field: { onChange } }) => (
 					<Slider
 						name={name}
+						value={value}
 						onChange={(value) => {
 							setValue(value);
 						}}

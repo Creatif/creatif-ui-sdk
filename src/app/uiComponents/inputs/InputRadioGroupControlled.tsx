@@ -25,6 +25,7 @@ export default function InputRadioGroupControlled({
 	validation,
 	onInputChange,
 	children,
+	defaultValue,
 	component,
 	...rest
 }: Props & PropsWithChildren) {
@@ -32,8 +33,8 @@ export default function InputRadioGroupControlled({
 		throw new Error(
 			`InputRadioGroupControlled component with name '${name}' did not provide either children or component(). You must provide either children or component().`,
 		);
-	const { control, formState } = useFormContext();
-	const [value, setValue] = useState<string>('');
+	const { control, getValues, formState } = useFormContext();
+	const [value, setValue] = useState<string>(defaultValue || getValues(name));
 
 	return (
 		<Controller

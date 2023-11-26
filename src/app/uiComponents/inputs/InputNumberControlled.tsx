@@ -2,6 +2,7 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { NumberInput } from '@mantine/core';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import styles from './css/InputNumber.module.css';
 import type { NumberInputProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 interface Props extends NumberInputProps {

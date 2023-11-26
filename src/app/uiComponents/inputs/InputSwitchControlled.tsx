@@ -16,12 +16,11 @@ interface Props extends SwitchProps {
 export default function InputSwitchControlled({
 	name,
 	validation,
-	defaultChecked,
 	onInputChange,
 	...rest
 }: Props) {
-	const [checked, setChecked] = useState(defaultChecked);
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	const [checked, setChecked] = useState(getValues(name));
 
 	return (
 		<Controller

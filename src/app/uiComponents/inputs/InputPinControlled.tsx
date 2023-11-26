@@ -20,8 +20,8 @@ export default function InputPinControlled({
 	defaultValue,
 	...rest
 }: Props) {
-	const [value, setValue] = useState<string | undefined>(defaultValue);
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	const [value, setValue] = useState<string | undefined>(defaultValue || getValues(name));
 	const error = useFirstError(name);
 	return (
 		<>

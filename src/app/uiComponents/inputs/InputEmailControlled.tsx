@@ -19,8 +19,8 @@ export default function InputEmailControlled({
 	onInputChange,
 	...rest
 }: Props) {
-	const [value, setValue] = useState<string>();
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	const [value, setValue] = useState<string>(getValues(name));
 	let optionsCopy = {};
 	if (validation) {
 		optionsCopy = validation;

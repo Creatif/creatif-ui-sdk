@@ -33,8 +33,8 @@ export default function InputCheckboxGroupControlled({
 		throw new Error(
 			`InputCheckboxGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
 		);
-	const { control, formState, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<string[]>(defaultValue || []);
+	const { control, getValues, formState, setValue: setFormValue } = useFormContext();
+	const [value, setValue] = useState<string[]>(defaultValue || getValues(name));
 
 	useEffect(() => {
 		setFormValue(name, value);

@@ -20,11 +20,10 @@ export default function InputChipControlled({
 	validation,
 	onInputChange,
 	children,
-	defaultChecked,
 	...rest
 }: Props & PropsWithChildren) {
-	const { control } = useFormContext();
-	const [checked, setChecked] = useState<boolean | undefined>(defaultChecked);
+	const { control, getValues } = useFormContext();
+	const [checked, setChecked] = useState<boolean | undefined>(getValues(name));
 	const err = useFirstError(name);
 
 	return (

@@ -20,8 +20,8 @@ export default function InputRangeSliderControlled({
 	defaultValue,
 	...rest
 }: Props) {
-	const [value, setValue] = useState<[number, number] | undefined>(defaultValue);
-	const { control, setValue: setFormValue } = useFormContext();
+	const { control, getValues, setValue: setFormValue } = useFormContext();
+	const [value, setValue] = useState<[number, number] | undefined>(defaultValue || getValues(name));
 	const error = useFirstError(name);
 
 	useEffect(() => {

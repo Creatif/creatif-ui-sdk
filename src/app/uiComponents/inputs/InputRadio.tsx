@@ -7,7 +7,6 @@ interface Props extends RadioProps {
   name: string;
   options?: RegisterOptions;
 }
-
 /**
  * TODO: mention that when selected, value is 'on'.
  */

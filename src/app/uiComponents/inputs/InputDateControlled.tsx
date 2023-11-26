@@ -21,8 +21,13 @@ export default function InputDateControlled({
 	onInputChange,
 	...rest
 }: Props) {
-	const [value, setValue] = useState<Date | null>(null);
-	const { control } = useFormContext();
+	const { control, getValues } = useFormContext();
+	let def = getValues(name);
+	if (typeof def === 'string') {
+		def = new Date(def);
+	}
+
+	const [value, setValue] = useState<Date | null>(def);
 
 	return (
 		<Controller
