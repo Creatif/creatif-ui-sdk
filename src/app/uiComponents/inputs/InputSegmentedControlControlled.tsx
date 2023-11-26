@@ -1,10 +1,13 @@
-import {SegmentedControl} from '@mantine/core';
-import {useEffect, useState} from 'react';
+import { SegmentedControl } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { SegmentedControlProps, SegmentedControlItem} from '@mantine/core';
+import type {
+	SegmentedControlProps,
+	SegmentedControlItem,
+} from '@mantine/core';
 interface Props extends SegmentedControlProps {
-    name: string;
-    onInputChange?: (value: string) => void;
+  name: string;
+  onInputChange?: (value: string) => void;
 }
 export default function InputSegmentedControlControlled({
 	name,
@@ -13,13 +16,19 @@ export default function InputSegmentedControlControlled({
 	data,
 	...rest
 }: Props) {
-	if (data.length === 0) throw new Error('\'data\' cannot be an empty array. It must be a string[]');
+	if (data.length === 0)
+		throw new Error('\'data\' cannot be an empty array. It must be a string[]');
 
 	const { control, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<string | undefined>(defaultValue ? defaultValue : (data[0] as SegmentedControlItem).value);
+	const [value, setValue] = useState<string | undefined>(
+		defaultValue ? defaultValue : (data[0] as SegmentedControlItem).value,
+	);
 
 	useEffect(() => {
-		setFormValue(name, defaultValue ? defaultValue : (data[0] as SegmentedControlItem).value);
+		setFormValue(
+			name,
+			defaultValue ? defaultValue : (data[0] as SegmentedControlItem).value,
+		);
 	}, []);
 	return (
 		<Controller

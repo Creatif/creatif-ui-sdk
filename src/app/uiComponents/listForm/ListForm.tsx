@@ -34,19 +34,19 @@ interface Props<T extends FieldValues> {
   formProps: UseFormProps<T>;
   inputs: (
     submitButton: React.ReactNode,
-	actions: {
-		setValue: UseFormSetValue<T>,
-		getValues: UseFormGetValues<T>,
-		setFocus: UseFormSetFocus<T>,
-		setError: UseFormSetError<T>,
-		reset: UseFormReset<T>,
-		resetField: UseFormResetField<T>,
-		unregister: UseFormUnregister<T>,
-		watch: UseFormWatch<T>,
-		trigger: UseFormTrigger<T>,
-		getFieldState: UseFormGetFieldState<T>,
-		defaultValues: T,
-	}
+    actions: {
+      setValue: UseFormSetValue<T>;
+      getValues: UseFormGetValues<T>;
+      setFocus: UseFormSetFocus<T>;
+      setError: UseFormSetError<T>;
+      reset: UseFormReset<T>;
+      resetField: UseFormResetField<T>;
+      unregister: UseFormUnregister<T>;
+      watch: UseFormWatch<T>;
+      trigger: UseFormTrigger<T>;
+      getFieldState: UseFormGetFieldState<T>;
+      defaultValues: T;
+    },
   ) => React.ReactNode;
   beforeSave?: (values: T, e: BaseSyntheticEvent | undefined) => any;
   afterSave?: (
@@ -104,7 +104,7 @@ export default function ListForm<T extends FieldValues>({
 		watch,
 		trigger,
 		getFieldState,
-		formState: {isLoading}
+		formState: { isLoading },
 	} = methods;
 
 	useEffect(() => {
@@ -239,30 +239,31 @@ export default function ListForm<T extends FieldValues>({
 		<FormProvider {...methods}>
 			<form onSubmit={methods.handleSubmit(onInternalSubmit)}>
 				<Loading isLoading={isLoading} />
-				{!isLoading && inputs(
-					<Group justify="end">
-						<Button
-							loaderProps={{ type: 'dots' }}
-							loading={isSaving}
-							type="submit"
-						>
-							{isSaving ? 'Creating' : 'Create'}
-						</Button>
-					</Group>,
-					{
-						setValue: setValue,
-						getValues: getValues,
-						setFocus: setFocus,
-						setError: setError,
-						reset: reset,
-						resetField: resetField,
-						unregister: unregister,
-						watch: watch,
-						trigger: trigger,
-						getFieldState: getFieldState,
-						defaultValues: getValues(),
-					}
-				)}
+				{!isLoading &&
+          inputs(
+          	<Group justify="end">
+          		<Button
+          			loaderProps={{ type: 'dots' }}
+          			loading={isSaving}
+          			type="submit"
+          		>
+          			{isSaving ? 'Creating' : 'Create'}
+          		</Button>
+          	</Group>,
+          	{
+          		setValue: setValue,
+          		getValues: getValues,
+          		setFocus: setFocus,
+          		setError: setError,
+          		reset: reset,
+          		resetField: resetField,
+          		unregister: unregister,
+          		watch: watch,
+          		trigger: trigger,
+          		getFieldState: getFieldState,
+          		defaultValues: getValues(),
+          	},
+          )}
 			</form>
 		</FormProvider>
 	);

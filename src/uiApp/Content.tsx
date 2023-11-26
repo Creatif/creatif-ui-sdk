@@ -10,6 +10,7 @@ import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled'
 import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
 import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlled';
 import InputSegmentedControlControlled from '@app/uiComponents/inputs/InputSegmentedControlControlled';
+import InputSwitch from '@app/uiComponents/inputs/InputSwitch';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import {
@@ -44,7 +45,8 @@ export default function Content() {
             radioGroup: string;
             pin: string;
             rating: string;
-						segmentedControl: string;
+            segmentedControl: string;
+						switch: boolean;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -65,19 +67,20 @@ export default function Content() {
 						listName="landing page"
 						formProps={{
 							defaultValues: {
-								name: 'name',
-								lastName: 'sdfasfd',
-								email: 'marioskrlec222@gmail.com',
+								name: '',
+								lastName: '',
+								email: '',
 								dob: '',
-								eligible: true,
-								radio: 'on',
-								uncontrolledEligible: true,
-								controlledRadio: 'on',
+								eligible: false,
+								radio: '',
+								uncontrolledEligible: false,
+								controlledRadio: '',
 								radioGroup: '',
-								pin: '1234',
-								checkboxGroup: ['react', 'svelte'],
-								rating: '3',
-								segmentedControl: 'ng',
+								pin: '',
+								checkboxGroup: [],
+								rating: '',
+								segmentedControl: '',
+								switch: false,
 							},
 						}}
 						inputs={(submitButton) => (
@@ -136,12 +139,15 @@ export default function Content() {
 									</Grid.Col>
 
 									<Grid.Col span={6}>
-										<InputSegmentedControlControlled data={[
-											{ label: 'React', value: 'react' },
-											{ label: 'Angular', value: 'ng' },
-											{ label: 'Vue', value: 'vue' },
-											{ label: 'Svelte', value: 'svelte' },
-										]} name="segmentedControl" />
+										<InputSegmentedControlControlled
+											data={[
+												{ label: 'React', value: 'react' },
+												{ label: 'Angular', value: 'ng' },
+												{ label: 'Vue', value: 'vue' },
+												{ label: 'Svelte', value: 'svelte' },
+											]}
+											name="segmentedControl"
+										/>
 									</Grid.Col>
 
 									<Grid.Col span={6}>
@@ -189,6 +195,13 @@ export default function Content() {
 										<InputPinControlled
 											name="pin"
 											validation={{ required: true }}
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputSwitch
+											name="switch"
+											label="Switch"
 										/>
 									</Grid.Col>
 
