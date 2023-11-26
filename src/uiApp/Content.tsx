@@ -10,6 +10,7 @@ import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled'
 import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
 import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlled';
 import InputSegmentedControlControlled from '@app/uiComponents/inputs/InputSegmentedControlControlled';
+import InputSliderControlled from '@app/uiComponents/inputs/InputSliderControlled';
 import InputSwitch from '@app/uiComponents/inputs/InputSwitch';
 import InputSwitchControlled from '@app/uiComponents/inputs/InputSwitchControlled';
 import InputSwitchGroupControlled from '@app/uiComponents/inputs/InputSwitchGroupControlled';
@@ -51,6 +52,7 @@ export default function Content() {
 						switch: boolean;
 						switchControlled: boolean;
 						switchGroup: [];
+						slider: number;
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -87,6 +89,7 @@ export default function Content() {
 								switch: false,
 								switchControlled: false,
 								switchGroup: [],
+								slider: 0,
 							},
 						}}
 						inputs={(submitButton) => (
@@ -215,6 +218,19 @@ export default function Content() {
 										<InputSwitchControlled
 											name="switchControlled"
 											label="Switch controlled"
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputSliderControlled
+											name="slider"
+											label="Slider"
+											defaultValue={18}
+											marks={[
+												{ value: 20, label: '20%' },
+												{ value: 50, label: '50%' },
+												{ value: 80, label: '80%' },
+											]}
 										/>
 									</Grid.Col>
 

@@ -1,0 +1,54 @@
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
+import {Slider} from '@mantine/core';
+import {useEffect, useState} from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import styles from './css/InputSlider.module.css';
+import type { SliderProps} from '@mantine/core';
+import type { RegisterOptions } from 'react-hook-form';
+interface Props extends SliderProps {
+    name: string;
+    onInputChange?: (value: number) => void;
+    validation?: Omit<
+        RegisterOptions,
+        'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+    >;
+}
+export default function InputSliderControlled({
+	name,
+	validation,
+	onInputChange,
+	defaultValue,
+	...rest
+}: Props) {
+	const [value, setValue] = useState<number | undefined>(defaultValue);
+	const { control, setValue: setFormValue } = useFormContext();
+	const error = useFirstError(name);
+
+	useEffect(() => {
+		setFormValue(name, value);
+	}, []);
+    
+	return (
+		<>
+			<Controller
+				rules={validation}
+				control={control}
+				name={name}
+				render={({ field: { onChange } }) => (
+					<Slider
+						value={value}
+						name={name}
+						onChangeEnd={(value) => {
+							onChange(value);
+							onInputChange?.(value);
+							setValue(value);
+						}}
+						{...rest}
+					/>
+				)}
+			/>
+
+			{error && <span className={styles.errorMessage}>{error}</span>}
+		</>
+	);
+}
