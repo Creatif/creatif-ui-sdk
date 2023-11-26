@@ -8,6 +8,7 @@ import InputPinControlled from '@app/uiComponents/inputs/InputPinControlled';
 import InputRadio from '@app/uiComponents/inputs/InputRadio';
 import InputRadioControlled from '@app/uiComponents/inputs/InputRadioControlled';
 import InputRadioGroupControlled from '@app/uiComponents/inputs/InputRadioGroupControlled';
+import InputRangeSliderControlled from '@app/uiComponents/inputs/InputRangeSliderControlled';
 import InputRatingControlled from '@app/uiComponents/inputs/InputRatingControlled';
 import InputSegmentedControlControlled from '@app/uiComponents/inputs/InputSegmentedControlControlled';
 import InputSliderControlled from '@app/uiComponents/inputs/InputSliderControlled';
@@ -23,7 +24,7 @@ import {
 	Fieldset,
 	Grid,
 	Group,
-	Radio, Switch,
+	Radio, Slider, Switch,
 } from '@mantine/core';
 import contentStyles from './css/content.module.css';
 
@@ -53,6 +54,7 @@ export default function Content() {
 						switchControlled: boolean;
 						switchGroup: [];
 						slider: number;
+						rangeSlider: [number, number];
           }>
 						beforeSave={(values) => {
 							if (!values.checkboxGroup) {
@@ -90,6 +92,7 @@ export default function Content() {
 								switchControlled: false,
 								switchGroup: [],
 								slider: 0,
+								rangeSlider: [],
 							},
 						}}
 						inputs={(submitButton) => (
@@ -226,6 +229,18 @@ export default function Content() {
 											name="slider"
 											label="Slider"
 											defaultValue={18}
+											marks={[
+												{ value: 20, label: '20%' },
+												{ value: 50, label: '50%' },
+												{ value: 80, label: '80%' },
+											]}
+										/>
+									</Grid.Col>
+
+									<Grid.Col span={6}>
+										<InputRangeSliderControlled
+											name="rangeSlider"
+											label="Range slider"
 											marks={[
 												{ value: 20, label: '20%' },
 												{ value: 50, label: '50%' },
