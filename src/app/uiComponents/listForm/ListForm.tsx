@@ -9,6 +9,7 @@ import { Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { AppendedListResult } from '@lib/api/declarations/types/listTypes';
+import type {Behaviour} from '@lib/api/declarations/types/sharedTypes';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
 import type {
 	FieldValues,
@@ -25,8 +26,9 @@ import type {
 	UseFormWatch,
 } from 'react-hook-form';
 
-type Bindings<T> = { name: NameBinding<T>; groups?: GroupBinding<T> };
+type Bindings<T> = { name: NameBinding<T>; groups?: GroupBinding<T>, behaviour?: BehaviourBinding<T>};
 type NameBinding<T> = string | ((values: T) => string);
+type BehaviourBinding<T> = string | ((values: T) => Behaviour);
 type GroupBinding<T> = string | ((values: T) => string | string[]);
 interface Props<T extends FieldValues> {
   listName: string;
@@ -194,6 +196,20 @@ export default function ListForm<T extends FieldValues>({
 				groups = [...groups, ...g];
 			}
 
+			const b = resolveBindings(value, bindings, 'behaviour');
+			if (bindings.behaviour && !b) {
+				notificationError(
+					'Cannot determine behaviour binding',
+					'Behaviour binding cannot be determined. If a field name is provided, be sure that it exists as a field in your form. If a function is provided, be sure to return either a string',
+				);
+				return;
+			}
+
+			let behaviour: Behaviour = 'modifiable';
+			if (b) {
+				behaviour = b;
+			}
+
 			setIsSaving(true);
 
 			Promise.resolve(beforeSave?.(value, e)).then((result) => {
@@ -202,7 +218,7 @@ export default function ListForm<T extends FieldValues>({
 					variables: [
 						{
 							name: name,
-							behaviour: 'modifiable',
+							behaviour: behaviour,
 							groups: groups,
 							value: result,
 						},
