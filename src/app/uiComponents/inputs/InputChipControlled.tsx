@@ -38,7 +38,6 @@ export default function InputChipControlled({
 						checked={checked}
 						className={err ? styles.root : undefined}
 						onChange={(value) => {
-							console.log(value);
 							onChange(value);
 							onInputChange?.(value);
 							setChecked((value) => !value);

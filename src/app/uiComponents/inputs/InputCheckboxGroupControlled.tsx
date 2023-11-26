@@ -1,6 +1,6 @@
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { Checkbox } from '@mantine/core';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { CheckboxGroupProps } from '@mantine/core';
 import type { PropsWithChildren, ReactNode } from 'react';
@@ -33,8 +33,12 @@ export default function InputCheckboxGroupControlled({
 		throw new Error(
 			`InputCheckboxGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
 		);
-	const { control, formState } = useFormContext();
+	const { control, formState, setValue: setFormValue } = useFormContext();
 	const [value, setValue] = useState<string[]>(defaultValue || []);
+
+	useEffect(() => {
+		setFormValue(name, value);
+	}, []);
 
 	return (
 		<Controller
