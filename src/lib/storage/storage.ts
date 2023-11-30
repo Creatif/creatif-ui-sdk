@@ -1,18 +1,9 @@
 import { Initialize } from '@app/initialize';
-interface InternalVariable {
-  name: string;
-}
-interface InternalMap {
-  name: string;
-  variables: string[];
-}
-interface InternalList {
-  name: string;
-}
+import type {ProjectMetadata} from '@lib/api/project/types/ProjectMetadata';
 interface InternalStorage {
-  variables: Record<string, InternalVariable[]>;
-  maps: Record<string, InternalMap[]>;
-  lists: Record<string, InternalList[]>;
+  variables: Record<string, string[]> | null;
+  maps: Record<string, string[]> | null;
+  lists: Record<string, string[]> | null;
 }
 export default class Storage {
 	public static instance: Storage;
@@ -21,48 +12,49 @@ export default class Storage {
 	private constructor(storage: InternalStorage) {
 		this.storage = storage;
 	}
-	static init() {
+	static init(projectMetadata: ProjectMetadata) {
 		Storage.key = `creatif-${Initialize.ProjectID()}-${Initialize.ApiKey().substring(0, 10)}`;
-		const s = localStorage.getItem(Storage.key);
-		if (!s) {
-			const internalStorage = {
-				variables: {
-					[Initialize.Locale()]: [],
-				},
-				maps: {
-					[Initialize.Locale()]: [],
-				},
-				lists: {
-					[Initialize.Locale()]: [],
-				},
-			};
-
-			localStorage.setItem(Storage.key, JSON.stringify(internalStorage));
-			Storage.instance = new Storage(internalStorage);
-
-			return;
+		// remove previous project keys. This is to reduce the load on local storage if localhost
+		// is used with multiple project
+		const keys = Object.keys(localStorage);
+		for (const key of keys) {
+			if (key !== Storage.key) {
+				localStorage.removeItem(key);
+			}
 		}
 
-		Storage.instance = new Storage(JSON.parse(s));
+		const locale = Initialize.Locale();
+		const internalStorage: InternalStorage = {
+			variables: projectMetadata.variables || {[locale]: []},
+			maps: projectMetadata.maps ? projectMetadata.maps : {[locale]: []},
+			lists: projectMetadata.lists ? projectMetadata.lists : {[locale]: []},
+		};
+
+		localStorage.setItem(Storage.key, JSON.stringify(internalStorage));
+		Storage.instance = new Storage(internalStorage);
 	}
 	addList(name: string, locale: string) {
-		if (!this.storage.lists[locale]) {
-			this.storage.lists[locale] = [];
+		if (this.storage.lists) {
+			if (!this.storage.lists[locale]) {
+				this.storage.lists[locale] = [];
+			}
+
+			this.storage.lists[locale].push(name);
+
+			this.persist();
 		}
-
-		this.storage.lists[locale].push({
-			name: name,
-		});
-
-		this.persist();
 	}
 	hasList(name: string, locale: string): boolean {
+		if (!this.storage.lists) return false;
+
 		if (!this.storage.lists[locale]) return false;
 		return Boolean(
-			this.storage.lists[locale].find((item) => item.name === name),
+			this.storage.lists[locale].find((item) => item === name),
 		);
 	}
 	private persist() {
 		localStorage.setItem(Storage.key, JSON.stringify(this.storage));
 	}
+
+
 }

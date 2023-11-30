@@ -1,6 +1,7 @@
 import Authentication from '@app/components/authentication/Authentication';
 import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
+import {getProjectMetadata} from '@lib/api/project/getProjectMetadata';
 import Storage from '@lib/storage/storage';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
@@ -34,20 +35,26 @@ export function CreatifProvider({
 		'idle',
 	);
 
-	const init = useCallback(() => {
-		Initialize.init(apiKey, projectId, locale);
-		Storage.init();
+	const init = useCallback(async () => {
+		const {result, error} = await getProjectMetadata();
+
+		console.log(result, error);
+
+		if (result) {
+			Initialize.init(apiKey, projectId, locale);
+			Storage.init(result);
+			setIsLoggedIn(true);
+		}
 	}, []);
 
 	useEffect(() => {
-		authCheck().then((res) => {
+		authCheck().then(async (res) => {
 			if (res.error) {
 				setIsAuthCheck('fail');
 				return;
 			}
 
 			init();
-			setIsLoggedIn(true);
 		});
 	}, []);
 
@@ -60,10 +67,7 @@ export function CreatifProvider({
 				<Authentication
 					apiKey={apiKey}
 					projectId={projectId}
-					onSuccess={() => {
-						init();
-						setIsLoggedIn(true);
-					}}
+					onSuccess={init}
 				/>
 			)}
 		</MantineProvider>

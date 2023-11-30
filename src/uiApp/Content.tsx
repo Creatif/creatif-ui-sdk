@@ -34,13 +34,15 @@ export default function Content() {
 		<div className={contentStyles.root}>
 			<Center>
 
+				{/*
 				<List listName="landing page" />
+*/}
 
 
 
 
 
-				{/*				<ListForm<{
+				<ListForm<{
             name: string;
             lastName: string;
             email: string;
@@ -309,7 +311,7 @@ export default function Content() {
 							<Grid.Col span={12}>{submitButton}</Grid.Col>
 						</Grid>
 					)}
-				/>*/}
+				/>
 			</Center>
 		</div>
 	);

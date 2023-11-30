@@ -1,5 +1,6 @@
 import Loading from '@app/components/Loading';
 import {paginateListItems} from '@lib/api/declarations/lists/paginateListItems';
+import {getProjectMetadata} from '@lib/api/project/getProjectMetadata';
 import {Pill} from '@mantine/core';
 import {IconChevronRight, IconDots, IconPlus, IconReplace, IconWorld} from '@tabler/icons-react';
 import {useEffect, useState} from 'react';
@@ -13,6 +14,8 @@ export default function List({listName}: Props) {
 	const [isFetching, setIsFetching] = useState(true);
 	const [page, setPage] = useState(1);
 	const limit = 15;
+
+
 
 	useEffect(() => {
 		paginateListItems<any, any>({
