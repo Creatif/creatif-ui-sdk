@@ -1,3 +1,4 @@
+import Navigation from '@app/uiComponents/appShells/singleColumn/Navigation';
 import React from 'react';
 import styles from './css/root.module.css';
 import type { PropsWithChildren } from 'react';
@@ -18,27 +19,16 @@ export default function SingleColumn({
 }: Props & PropsWithChildren) {
 	return (
 		<div className={styles.root}>
-			<div className={styles.contentGrid}>
-				{logo && <div className={styles.logo}>{logo}</div>}
-
-				{navItems && (
-					<nav>
-						{navItems.map((item, index) => (
-							<a key={index} className={styles.navItem} href={item.navigateTo}>
-								{item.icon && (
-									<span className={styles.navItemIcon}>{item.icon}</span>
-								)}
-								<span className={styles.navItemText}>{item.text}</span>
-							</a>
-						))}
-					</nav>
-				)}
-			</div>
+			{navItems && (
+				<Navigation navItems={navItems} logo={logo} />
+			)}
 
 			<div>
 				{header && <header className={styles.header}>{header}</header>}
 
-				{children}
+				<div className={styles.content}>
+					{children}
+				</div>
 			</div>
 		</div>
 	);

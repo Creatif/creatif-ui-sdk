@@ -123,11 +123,10 @@ export default function ListForm<T extends FieldValues>({
 				if (error && error.error?.data && error.error.data['nameExists']) {
 					Storage.instance.addList(listName, chosenLocale);
 					warn(
-						'An error occurred.',
+						'Warning.',
 						<span>
-              List with name <strong>{listName}</strong> already exists. If
-              locale storage was the deleted before this action, this warning
-              will show only once.
+              List with name <strong>{listName}</strong> already exists and has not been recreated. You can ignore this message
+							if you deleted the cache in your browser or you are running multiple applications on localhost.
 						</span>,
 					);
 					return;

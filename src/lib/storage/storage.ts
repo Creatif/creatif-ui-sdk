@@ -17,11 +17,12 @@ interface InternalStorage {
 export default class Storage {
 	public static instance: Storage;
 	private storage: InternalStorage;
-	private static key = 'creatif';
+	private static key = '';
 	private constructor(storage: InternalStorage) {
 		this.storage = storage;
 	}
 	static init() {
+		Storage.key = `creatif-${Initialize.ProjectID()}-${Initialize.ApiKey().substring(0, 10)}`;
 		const s = localStorage.getItem(Storage.key);
 		if (!s) {
 			const internalStorage = {

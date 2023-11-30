@@ -1,3 +1,5 @@
+import {Center, Loader} from '@mantine/core';
+
 interface Props {
   isLoading: boolean;
 }
@@ -5,8 +7,11 @@ export default function Loading({ isLoading }: Props) {
 	if (!isLoading) return null;
 
 	return (
-		<div className="center">
-			<i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>
-		</div>
+		<Loader size="md" style={{
+			position: 'absolute',
+			top: '50%',
+			left: '50%',
+			transform: 'translate(-50%, -50%)',
+		}} />
 	);
 }

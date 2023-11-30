@@ -6,13 +6,14 @@ import { IconClipboardList, IconHome, IconSearch } from '@tabler/icons-react';
 export default function App() {
 	return (
 		<CreatifProvider
-			apiKey="$2a$10$gWY4A0NtaatYt3FngpNoLOIfsJR34EsLji8/6Y.Z8f6VpxNcOKEp."
-			projectId="01HFSJ6D1PBS4M86QHS8CTQYM4"
+			apiKey="$2a$10$X5cR4UOKnIMAtzEaMPj.4ed1CYpYxkArKyil08C1Y6Nza71R1.Aqa"
+			projectId="01HGFD0FD01JAYSRECR5T4ZH8R"
 			locale="hrv"
 		>
 			<Container fluid m={0} p={0}>
 				<SingleColumn
 					logo={<p>BEACH FRONT</p>}
+					header={<p>header</p>}
 					navItems={[
 						{
 							text: 'Landing page',
