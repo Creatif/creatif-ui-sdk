@@ -3,16 +3,19 @@ import {queryConstructor} from '@lib/api/declarations/queryConstructor';
 import {declarations} from '@lib/http/axios';
 import useHttpQuery from '@lib/http/useHttpQuery';
 import {useQueryClient} from 'react-query';
+import type {Behaviour} from '@lib/api/declarations/types/sharedTypes';
 interface Props {
     listName: string;
     locale?: string;
     limit?: number;
     page?: number;
+	behaviour?: Behaviour | undefined;
     groups?: string[];
     orderBy?: string;
+	search?: string;
     direction?: 'desc' | 'asc';
 }
-export default function useHttpPaginationQuery<Response>({listName, limit = 15, page = 1, groups = [], orderBy = 'created_at', direction = 'desc', locale}: Props) {
+export default function useHttpPaginationQuery<Response>({listName, search = '', limit = 15, page = 1, groups = [], orderBy = 'created_at', direction = 'desc', behaviour = undefined, locale}: Props) {
 	const queryClient = useQueryClient();
 
 	return {
@@ -22,18 +25,22 @@ export default function useHttpPaginationQuery<Response>({listName, limit = 15, 
 				page: page,
 				limit: limit,
 				groups: groups,
+				behaviour: behaviour,
 				orderBy: orderBy,
 				direction: direction,
+				search: search,
 			}],
-			`/lists/${Initialize.ProjectID()}/${locale ? locale : Initialize.Locale()}/${listName}${queryConstructor(page, limit, groups, orderBy, direction)}`,
+			`/lists/${Initialize.ProjectID()}/${locale ? locale : Initialize.Locale()}/${listName}${queryConstructor(page, limit, groups, orderBy, direction, search, behaviour)}`,
 		),
-		invalidateQuery(listName: string, page = 1, limit = 15, groups = [], orderBy = 'created_at', direction = 'desc') {
+		invalidateQuery(listName: string, page = 1, limit = 15, groups: string[] = [], orderBy = 'created_at', direction = 'desc') {
 			queryClient.invalidateQueries([listName, {
 				page: page,
 				limit: limit,
 				groups: groups,
+				behaviour: behaviour,
 				orderBy: orderBy,
 				direction: direction,
+				search: search,
 			}]);
 		}
 	};

@@ -19,18 +19,15 @@ import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
 import UnstructuredList from '@app/uiComponents/listing/UnstructuredList';
 import {Center, Checkbox, Grid, Group, Radio, Switch} from '@mantine/core';
-import React from "react";
+import React from 'react';
 import contentStyles from './css/content.module.css';
 
 export default function Content() {
 	return (
 		<div className={contentStyles.root}>
-			<Center>
+			<UnstructuredList listName="landing page 3" />
 
-				<UnstructuredList listName="landing page 3" />
-
-
-				{/*				<ListForm<{
+			{/*				<ListForm<{
             name: string;
             lastName: string;
             email: string;
@@ -300,7 +297,6 @@ export default function Content() {
 						</Grid>
 					)}
 				/>*/}
-			</Center>
 		</div>
 	);
 }
