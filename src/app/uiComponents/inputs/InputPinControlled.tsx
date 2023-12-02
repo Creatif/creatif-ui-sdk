@@ -21,7 +21,9 @@ export default function InputPinControlled({
 	...rest
 }: Props) {
 	const { control, getValues } = useFormContext();
-	const [value, setValue] = useState<string | undefined>(defaultValue || getValues(name));
+	const [value, setValue] = useState<string | undefined>(
+		defaultValue || getValues(name),
+	);
 	const error = useFirstError(name);
 	return (
 		<>

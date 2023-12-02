@@ -1,9 +1,10 @@
-import type { APIError } from '@root/types/app';
-
+export interface APIError {
+  data: Record<string, string>;
+}
 export class ApiError extends Error {
 	constructor(
 		message: string,
-    public error: APIError | null,
+    public error: APIError,
 	) {
 		super();
 	}

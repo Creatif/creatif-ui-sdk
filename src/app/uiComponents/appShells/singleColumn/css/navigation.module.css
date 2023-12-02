@@ -1,49 +1,49 @@
 .root {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .navigationGrid {
-    min-height: 98vh;
-    border: 1px solid var(--mantine-color-gray-1);
-    padding: 2rem;
-    border-radius: 1rem;
+  min-height: 98vh;
+  border: 1px solid var(--mantine-color-gray-1);
+  padding: 2rem;
+  border-radius: 1rem;
 
-    background-color: white;
+  background-color: white;
 }
 
 .logo {
 }
 
 .navItem {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 
-    text-decoration: none;
-    font-size: 1rem;
-    text-align: left;
-    color: var(--mantine-color-gray-7);
+  text-decoration: none;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--mantine-color-gray-7);
 
-    padding: 1rem 1rem 1rem 0;
-    border-radius: 1rem;
+  padding: 1rem 1rem 1rem 0;
+  border-radius: 1rem;
 
-    transition:
-            background-color 0.2s,
-            color 0.2s,
-            border 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border 0.2s;
 }
 
 .navItem:hover {
-    background-color: var(--mantine-color-gray-2);
+  background-color: var(--mantine-color-gray-2);
 }
 
 .navItemIcon {
-    display: inline-block;
-    margin-left: 1rem;
-    color: var(--mantine-color-gray-7);
+  display: inline-block;
+  margin-left: 1rem;
+  color: var(--mantine-color-gray-7);
 }
 
 .navItemText {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }

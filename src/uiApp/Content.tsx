@@ -17,16 +17,9 @@ import InputSwitchControlled from '@app/uiComponents/inputs/InputSwitchControlle
 import InputSwitchGroupControlled from '@app/uiComponents/inputs/InputSwitchGroupControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
-import List from '@app/uiComponents/listing/List';
-import {
-	Center,
-	Checkbox,
-	Container,
-	Fieldset,
-	Grid,
-	Group,
-	Radio, Switch,
-} from '@mantine/core';
+import UnstructuredList from '@app/uiComponents/listing/UnstructuredList';
+import {Center, Checkbox, Grid, Group, Radio, Switch} from '@mantine/core';
+import React from "react";
 import contentStyles from './css/content.module.css';
 
 export default function Content() {
@@ -34,15 +27,10 @@ export default function Content() {
 		<div className={contentStyles.root}>
 			<Center>
 
-				{/*
-				<List listName="landing page" />
-*/}
+				<UnstructuredList listName="landing page 3" />
 
 
-
-
-
-				<ListForm<{
+				{/*				<ListForm<{
             name: string;
             lastName: string;
             email: string;
@@ -81,7 +69,7 @@ export default function Content() {
 						name: (values) => values.email,
 						groups: (values) => [values.name, values.lastName, values.email, values.name, values.lastName, values.email],
 					}}
-					listName="landing page"
+					listName="landing page 3"
 					formProps={{
 						defaultValues: {
 							name: 'mario',
@@ -311,7 +299,7 @@ export default function Content() {
 							<Grid.Col span={12}>{submitButton}</Grid.Col>
 						</Grid>
 					)}
-				/>
+				/>*/}
 			</Center>
 		</div>
 	);

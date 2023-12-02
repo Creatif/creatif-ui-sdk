@@ -1,4 +1,7 @@
-import type {Behaviour, PaginationBlueprint} from '@lib/api/declarations/types/sharedTypes';
+import type {
+	Behaviour,
+	PaginationBlueprint,
+} from '@lib/api/declarations/types/sharedTypes';
 export interface CreateListBlueprint {
   name: string;
   locale?: string;
@@ -14,6 +17,7 @@ export interface AppendingVariableBlueprint<
   metadata?: Metadata;
 }
 export interface PaginatedVariableResult<Value, Metadata> {
+  id: string;
   name: string;
   behaviour: Behaviour;
   locale: string;
@@ -23,7 +27,7 @@ export interface PaginatedVariableResult<Value, Metadata> {
 }
 export interface PaginationResult<Value, Metadata> {
   total: number;
-  data: PaginatedVariableResult<Value, Metadata>[]
+  data: PaginatedVariableResult<Value, Metadata>[];
 }
 export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
   name: string;
@@ -40,5 +44,13 @@ export interface AppendedListResult {
 }
 export interface ListingPagination extends PaginationBlueprint {
   name: string;
+  locale?: string;
+}
+export interface DeleteListItemBlueprint {
+  name?: string;
+  id?: string;
+  shortId?: string;
+  itemId?: string;
+  itemShortId?: string;
   locale?: string;
 }

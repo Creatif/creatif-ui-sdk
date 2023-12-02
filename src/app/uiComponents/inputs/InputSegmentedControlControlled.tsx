@@ -27,10 +27,7 @@ export default function InputSegmentedControlControlled({
 	);
 
 	useEffect(() => {
-		setFormValue(
-			name,
-			def ? def : (data[0] as SegmentedControlItem).value,
-		);
+		setFormValue(name, def ? def : (data[0] as SegmentedControlItem).value);
 	}, []);
 	return (
 		<Controller

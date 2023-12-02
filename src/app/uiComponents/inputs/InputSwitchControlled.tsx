@@ -1,17 +1,17 @@
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
-import {Checkbox, Switch} from '@mantine/core';
+import { Switch } from '@mantine/core';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { SwitchProps} from '@mantine/core';
+import type { SwitchProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends SwitchProps {
-    name: string;
-    onInputChange?: (value: boolean) => void;
-    validation?: Omit<
-        RegisterOptions,
-        'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-    >;
-    options?: RegisterOptions;
+  name: string;
+  onInputChange?: (value: boolean) => void;
+  validation?: Omit<
+    RegisterOptions,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >;
+  options?: RegisterOptions;
 }
 export default function InputSwitchControlled({
 	name,

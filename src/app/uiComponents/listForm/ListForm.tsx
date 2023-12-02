@@ -9,7 +9,7 @@ import { Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { AppendedListResult } from '@lib/api/declarations/types/listTypes';
-import type {Behaviour} from '@lib/api/declarations/types/sharedTypes';
+import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
 import type {
 	FieldValues,
@@ -26,7 +26,11 @@ import type {
 	UseFormWatch,
 } from 'react-hook-form';
 
-type Bindings<T> = { name: NameBinding<T>; groups?: GroupBinding<T>, behaviour?: BehaviourBinding<T>};
+type Bindings<T> = {
+  name: NameBinding<T>;
+  groups?: GroupBinding<T>;
+  behaviour?: BehaviourBinding<T>;
+};
 type NameBinding<T> = string | ((values: T) => string);
 type BehaviourBinding<T> = string | ((values: T) => Behaviour);
 type GroupBinding<T> = string | ((values: T) => string | string[]);
@@ -125,8 +129,10 @@ export default function ListForm<T extends FieldValues>({
 					warn(
 						'Warning.',
 						<span>
-              List with name <strong>{listName}</strong> already exists and has not been recreated. You can ignore this message
-							if you deleted the cache in your browser or you are running multiple applications on localhost.
+              List with name <strong>{listName}</strong> already exists and has
+              not been recreated. You can ignore this message if you deleted the
+              cache in your browser or you are running multiple applications on
+              localhost.
 						</span>,
 					);
 					return;
@@ -143,7 +149,7 @@ export default function ListForm<T extends FieldValues>({
 				if (result) {
 					Storage.instance.addList(listName, chosenLocale);
 					info(
-						'List created',
+						'UnstructuredList created',
 						<span>
               List <strong>{listName}</strong> has been successfully created.
               This message will only appear once.
@@ -236,7 +242,7 @@ export default function ListForm<T extends FieldValues>({
 					if (result) {
 						afterSave?.(result, e);
 						success(
-							'List variable created',
+							'UnstructuredList variable created',
 							<span>
                 List variable <strong>{name}</strong> has been created.
 							</span>,

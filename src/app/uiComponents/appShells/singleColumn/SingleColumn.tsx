@@ -19,16 +19,12 @@ export default function SingleColumn({
 }: Props & PropsWithChildren) {
 	return (
 		<div className={styles.root}>
-			{navItems && (
-				<Navigation navItems={navItems} logo={logo} />
-			)}
+			{navItems && <Navigation navItems={navItems} logo={logo} />}
 
 			<div>
 				{header && <header className={styles.header}>{header}</header>}
 
-				<div className={styles.content}>
-					{children}
-				</div>
+				<div className={styles.content}>{children}</div>
 			</div>
 		</div>
 	);

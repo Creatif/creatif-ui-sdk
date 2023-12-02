@@ -1,17 +1,17 @@
 import Authentication from '@app/components/authentication/Authentication';
 import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
-import {getProjectMetadata} from '@lib/api/project/getProjectMetadata';
+import { getProjectMetadata } from '@lib/api/project/getProjectMetadata';
 import Storage from '@lib/storage/storage';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import React, { useCallback, useEffect, useState } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import type { PropsWithChildren } from 'react';
 import 'normalize.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
-
 import '@app/css/reset.module.css';
 import '@app/css/global.module.css';
 
@@ -36,7 +36,7 @@ export function CreatifProvider({
 	);
 
 	const init = useCallback(async () => {
-		const {result, error} = await getProjectMetadata();
+		const { result, error } = await getProjectMetadata();
 
 		console.log(result, error);
 
@@ -61,7 +61,13 @@ export function CreatifProvider({
 	return (
 		<MantineProvider theme={theme}>
 			{isLoggedIn && <Notifications />}
-			{isLoggedIn && <>{children}</>}
+			{isLoggedIn && (
+				<>
+					<QueryClientProvider client={new QueryClient()}>
+						{children}
+					</QueryClientProvider>
+				</>
+			)}
 
 			{!isLoggedIn && checkedAuth === 'fail' && (
 				<Authentication

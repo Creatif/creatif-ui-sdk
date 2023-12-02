@@ -1,5 +1,5 @@
 import { Initialize } from '@app/initialize';
-import type {ProjectMetadata} from '@lib/api/project/types/ProjectMetadata';
+import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 interface InternalStorage {
   variables: Record<string, string[]> | null;
   maps: Record<string, string[]> | null;
@@ -13,7 +13,10 @@ export default class Storage {
 		this.storage = storage;
 	}
 	static init(projectMetadata: ProjectMetadata) {
-		Storage.key = `creatif-${Initialize.ProjectID()}-${Initialize.ApiKey().substring(0, 10)}`;
+		Storage.key = `creatif-${Initialize.ProjectID()}-${Initialize.ApiKey().substring(
+			0,
+			10,
+		)}`;
 		// remove previous project keys. This is to reduce the load on local storage if localhost
 		// is used with multiple project
 		const keys = Object.keys(localStorage);
@@ -25,9 +28,9 @@ export default class Storage {
 
 		const locale = Initialize.Locale();
 		const internalStorage: InternalStorage = {
-			variables: projectMetadata.variables || {[locale]: []},
-			maps: projectMetadata.maps ? projectMetadata.maps : {[locale]: []},
-			lists: projectMetadata.lists ? projectMetadata.lists : {[locale]: []},
+			variables: projectMetadata.variables || { [locale]: [] },
+			maps: projectMetadata.maps ? projectMetadata.maps : { [locale]: [] },
+			lists: projectMetadata.lists ? projectMetadata.lists : { [locale]: [] },
 		};
 
 		localStorage.setItem(Storage.key, JSON.stringify(internalStorage));
@@ -48,13 +51,9 @@ export default class Storage {
 		if (!this.storage.lists) return false;
 
 		if (!this.storage.lists[locale]) return false;
-		return Boolean(
-			this.storage.lists[locale].find((item) => item === name),
-		);
+		return Boolean(this.storage.lists[locale].find((item) => item === name));
 	}
 	private persist() {
 		localStorage.setItem(Storage.key, JSON.stringify(this.storage));
 	}
-
-
 }

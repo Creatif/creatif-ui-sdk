@@ -11,6 +11,7 @@ export async function tryGet<ReturnType>(
 
 		return {
 			result: res.data as ReturnType,
+			status: res.status,
 		};
 	} catch (e) {
 		return handleError(e);

@@ -13,6 +13,7 @@ export async function tryPut<ReturnType, Body = unknown>(
 
 		return {
 			result: res.data as ReturnType,
+			status: res.status,
 		};
 	} catch (e) {
 		return handleError(e);

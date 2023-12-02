@@ -6,8 +6,8 @@ import { IconClipboardList, IconHome, IconSearch } from '@tabler/icons-react';
 export default function App() {
 	return (
 		<CreatifProvider
-			apiKey="$2a$10$Nf8XCUF0ebsm0J60LgcxZO2MrS5IK0In6xVSjWUCCt0LlBVfGx.u2"
-			projectId="01HGFF5T82PZ2V2X129F8B23GJ"
+			apiKey="$2a$10$4KepIYnP29rKospQ4P8TvuOz/7lQtoch1/cblqn.Iz79Avpc9EOPq"
+			projectId="01HGGNR6D3T5X8RQ4XA96232J1"
 			locale="hrv"
 		>
 			<Container fluid m={0} p={0}>
