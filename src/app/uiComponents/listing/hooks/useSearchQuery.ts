@@ -1,6 +1,6 @@
-import {useSearchParams} from 'react-router-dom';
-import type {CurrentSortType} from '@app/uiComponents/listing/types/components';
-import type {Behaviour} from '@lib/api/declarations/types/sharedTypes';
+import { useSearchParams } from 'react-router-dom';
+import type { CurrentSortType } from '@app/uiComponents/listing/types/components';
+import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 
 class QueryParams {
 	public readonly page: number = 1;
@@ -9,13 +9,14 @@ class QueryParams {
 	public readonly behaviour: Behaviour | undefined = undefined;
 	public readonly orderBy: CurrentSortType = 'index';
 	constructor(
-        private readonly hiddenPage: string | null,
-        readonly limit: string | null,
-        private readonly hiddenDirection: string | null,
-        private readonly hiddenOrderBy: string | null,
-        private readonly hiddenGroups: string | null,
-        private readonly hiddenBehaviour: string | null,
-        readonly search: string | null) {
+    private readonly hiddenPage: string | null,
+    readonly limit: string | null,
+    private readonly hiddenDirection: string | null,
+    private readonly hiddenOrderBy: string | null,
+    private readonly hiddenGroups: string | null,
+    private readonly hiddenBehaviour: string | null,
+    readonly search: string | null,
+	) {
 		if (!hiddenPage) {
 			this.page = 1;
 		} else {
@@ -45,7 +46,10 @@ class QueryParams {
 			this.direction = hiddenDirection as 'desc' | 'asc' | undefined;
 		}
 
-		if (this.hiddenBehaviour !== 'modifiable' && this.hiddenBehaviour !== 'readonly') {
+		if (
+			this.hiddenBehaviour !== 'modifiable' &&
+      this.hiddenBehaviour !== 'readonly'
+		) {
 			this.behaviour = undefined;
 		} else {
 			this.behaviour = hiddenBehaviour as Behaviour | undefined;
@@ -55,13 +59,21 @@ class QueryParams {
 export default function useSearchQuery() {
 	const [params, setParams] = useSearchParams();
 
-	const q = new QueryParams(params.get('page'), params.get('limit'), params.get('direction'), params.get('orderBy'), params.get('groups'), params.get('behaviour'), params.get('search'));
+	const q = new QueryParams(
+		params.get('page'),
+		params.get('limit'),
+		params.get('direction'),
+		params.get('orderBy'),
+		params.get('groups'),
+		params.get('behaviour'),
+		params.get('search'),
+	);
 	return {
 		queryParams: q,
 		setParam: (key: string, value: string) => {
 			setParams({
-				page: q.page+'',
-				limit: q.limit+'',
+				page: q.page + '',
+				limit: q.limit + '',
 				groups: Array.isArray(q.groups) ? q.groups.join(',') : '',
 				direction: q.direction ? q.direction : '',
 				orderBy: q.orderBy,
@@ -69,6 +81,6 @@ export default function useSearchQuery() {
 				search: q.search ? q.search : '',
 				[key]: value,
 			});
-		}
+		},
 	};
 }

@@ -1,18 +1,17 @@
 import Loading from '@app/components/Loading';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
-import {getOptions} from '@app/systems/stores/options';
+import { getOptions } from '@app/systems/stores/options';
+import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import { appendToList } from '@lib/api/declarations/lists/appendToList';
-import { createList } from '@lib/api/declarations/lists/createList';
-import {declarations} from '@lib/http/axios';
+import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
 import Storage from '@lib/storage/storage';
 import { Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import {useQueryClient} from 'react-query';
-import {useNavigate} from 'react-router-dom';
-import contentContainerStyles from '../css/ContentContainer.module.css';
+import { useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import type { AppendedListResult } from '@lib/api/declarations/types/listTypes';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
@@ -100,7 +99,8 @@ export default function ListForm<T extends FieldValues>({
 	beforeSave,
 	afterSave,
 }: Props<T>) {
-	const {success: successNotification, error: errorNotification} = useNotification();
+	const { success: successNotification, error: errorNotification } =
+    useNotification();
 
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
@@ -108,14 +108,25 @@ export default function ListForm<T extends FieldValues>({
 	const methods = useForm(formProps);
 	const [isSaving, setIsSaving] = useState(false);
 	const { error: notificationError, success } = useNotification();
-	const {mutate} = useHttpMutation(declarations(), 'put', `/list/${Initialize.ProjectID()}/${Initialize.Locale()}`, {
-		onSuccess() {
-			successNotification(`List with name ${listName} created.`, `List '${listName}' has been successfully created. This message will only appear once.`);
+	const { mutate } = useHttpMutation(
+		declarations(),
+		'put',
+		`/list/${Initialize.ProjectID()}/${Initialize.Locale()}`,
+		{
+			onSuccess() {
+				successNotification(
+					`List with name ${listName} created.`,
+					`List '${listName}' has been successfully created. This message will only appear once.`,
+				);
+			},
+			onError() {
+				errorNotification(
+					'Something wrong happened.',
+					'We are working to resolve this problem. Please, try again later.',
+				);
+			},
 		},
-		onError() {
-			errorNotification('Something wrong happened.', 'We are working to resolve this problem. Please, try again later.');
-		}
-	});
+	);
 
 	const {
 		setValue,
@@ -229,7 +240,6 @@ export default function ListForm<T extends FieldValues>({
 						);
 					}
 
-
 					queryClient.invalidateQueries(listName);
 					setIsSaving(false);
 					navigate(useStructureOptionsStore.getState().paths.listing);
@@ -245,30 +255,30 @@ export default function ListForm<T extends FieldValues>({
 				<form onSubmit={methods.handleSubmit(onInternalSubmit)}>
 					<Loading isLoading={isLoading} />
 					{!isLoading &&
-						inputs(
-							<Group justify="end">
-								<Button
-									loaderProps={{ type: 'dots' }}
-									loading={isSaving}
-									type="submit"
-								>
-									{isSaving ? 'Creating' : 'Create'}
-								</Button>
-							</Group>,
-							{
-								setValue: setValue,
-								getValues: getValues,
-								setFocus: setFocus,
-								setError: setError,
-								reset: reset,
-								resetField: resetField,
-								unregister: unregister,
-								watch: watch,
-								trigger: trigger,
-								getFieldState: getFieldState,
-								defaultValues: getValues(),
-							},
-						)}
+            inputs(
+            	<Group justify="end">
+            		<Button
+            			loaderProps={{ type: 'dots' }}
+            			loading={isSaving}
+            			type="submit"
+            		>
+            			{isSaving ? 'Creating' : 'Create'}
+            		</Button>
+            	</Group>,
+            	{
+            		setValue: setValue,
+            		getValues: getValues,
+            		setFocus: setFocus,
+            		setError: setError,
+            		reset: reset,
+            		resetField: resetField,
+            		unregister: unregister,
+            		watch: watch,
+            		trigger: trigger,
+            		getFieldState: getFieldState,
+            		defaultValues: getValues(),
+            	},
+            )}
 				</form>
 			</FormProvider>
 		</div>

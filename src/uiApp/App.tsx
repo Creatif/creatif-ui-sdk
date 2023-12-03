@@ -25,10 +25,10 @@ export default function App() {
 								structure: {
 									name: 'landing page',
 									type: 'list',
-								}
-							}
+								},
+							},
 						},
-					]
+					],
 				}}
 			/>
 		</CreatifProvider>

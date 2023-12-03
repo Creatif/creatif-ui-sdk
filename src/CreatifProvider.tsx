@@ -36,7 +36,7 @@ export function CreatifProvider({
 	);
 
 	const init = useCallback(async () => {
-		const { result, error } = await getProjectMetadata();
+		const { result } = await getProjectMetadata();
 
 		if (result) {
 			Initialize.init(apiKey, projectId, locale);

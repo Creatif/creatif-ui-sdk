@@ -1,7 +1,7 @@
 import styles from '@app/uiComponents/appShells/singleColumn/css/navigation.module.css';
 import React from 'react';
-import {Link} from 'react-router-dom';
-import type {AppShellItem} from '@app/uiComponents/appShells/types/AppShellItems';
+import { Link } from 'react-router-dom';
+import type { AppShellItem } from '@app/uiComponents/appShells/types/AppShellItems';
 interface Props {
   logo?: React.ReactNode;
   navItems: AppShellItem[];
