@@ -100,6 +100,8 @@ export default function ListForm<T extends FieldValues>({
 	beforeSave,
 	afterSave,
 }: Props<T>) {
+	const {success: successNotification, error: errorNotification} = useNotification();
+
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const useStructureOptionsStore = getOptions(listName);
@@ -107,13 +109,11 @@ export default function ListForm<T extends FieldValues>({
 	const [isSaving, setIsSaving] = useState(false);
 	const { error: notificationError, success } = useNotification();
 	const {mutate} = useHttpMutation(declarations(), 'put', `/list/${Initialize.ProjectID()}/${Initialize.Locale()}`, {
-		onSuccess: {
-			title: `List with name ${listName} created.`,
-			message: `List '${listName}' has been successfully created. This message will only appear once.`
+		onSuccess() {
+			successNotification(`List with name ${listName} created.`, `List '${listName}' has been successfully created. This message will only appear once.`);
 		},
-		onError: {
-			title: 'Something wrong happened.',
-			message: 'We are working to resolve this problem. Please, try again later.',
+		onError() {
+			errorNotification('Something wrong happened.', 'We are working to resolve this problem. Please, try again later.');
 		}
 	});
 

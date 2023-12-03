@@ -1,9 +1,9 @@
 .root {
-  background-color: var(--mantine-color-red-5);
+  background-color: var(--mantine-color-red-5) !important;
   color: white;
 
   &::before {
-    background-color: var(--mantine-color-red-5);
+    background-color: var(--mantine-color-red-5) !important;
   }
 }
 

@@ -4,7 +4,7 @@ import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
 import styles from '@app/uiComponents/listing/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import {ActionIcon, Pill, Popover} from '@mantine/core';
+import {ActionIcon, Checkbox, Pill, Popover} from '@mantine/core';
 import {
 	IconChevronDown,
 	IconChevronRight,
@@ -20,8 +20,10 @@ interface Props {
   item: PaginatedVariableResult<any, any>;
   listName: string;
   onDeleted: () => void;
+  disabled?: boolean;
+  onChecked: (itemId: string, checked: boolean) => void;
 }
-export default function Item({ item, listName, onDeleted }: Props) {
+export default function Item({ item, listName, onDeleted, onChecked, disabled }: Props) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { error: errorNotification, success } = useNotification();
@@ -30,11 +32,18 @@ export default function Item({ item, listName, onDeleted }: Props) {
 
 	return (
 		<div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
-			{isDeleting && <div className={styles.disabled}/>}
+			{(isDeleting || disabled) && <div className={styles.disabled}/>}
 			<div
 				onClick={() => setIsExpanded((item) => !item)}
 				className={styles.visibleSectionWrapper}
 			>
+				<div className={styles.checkboxWrapper}>
+					<Checkbox onClick={(e) => {
+						e.stopPropagation();
+						onChecked(item.id, e.currentTarget.checked);
+					}} />
+				</div>
+
 				<div className={styles.infoColumn}>
 					<h2 className={styles.name}>
 						<span>{item.name}</span>
@@ -124,11 +133,11 @@ export default function Item({ item, listName, onDeleted }: Props) {
 				<ValueMetadata item={item} />
 			</div>
 			
-			{deleteItemId && <DeleteModal open={deleteItemId} onClose={() => setDeleteItemId(undefined)} onDelete={async (itemId) => {
+			<DeleteModal message="Are you sure? This action cannot be undone and this item will be permanently deleted." open={deleteItemId} onClose={() => setDeleteItemId(undefined)} onDelete={async () => {
 				setIsDeleting(true);
 				const {error, status} = await deleteListItemByID({
 					name: listName,
-					itemId: itemId,
+					itemId: item.id,
 				});
 
 				if (error) {
@@ -148,7 +157,7 @@ export default function Item({ item, listName, onDeleted }: Props) {
 				setIsDeleting(false);
 				onDeleted();
 				setDeleteItemId(undefined);
-			}}/>}
+			}}/>
 		</div>
 	);
 }

@@ -5,8 +5,8 @@ import { IconHome } from '@tabler/icons-react';
 export default function App() {
 	return (
 		<CreatifProvider
-			apiKey="$2a$10$2aLurymruPh90HSHfPAOKOCvazK095fA9aJTvn4O0SKew1ed94QR."
-			projectId="01HGNVKRY7TCBJFVEPZE2XE2C8"
+			apiKey="$2a$10$izv5d7ul8hXl0Vpl1DxdSuh/4Svd8GI9/t6s7mqgLPrW0NOG/hyZK"
+			projectId="01HGR0NG93FBMW7S19VRZ4HJ8H"
 			locale="hrv"
 		>
 			<SingleColumn

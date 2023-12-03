@@ -35,6 +35,10 @@
   cursor: pointer;
 }
 
+.checkboxWrapper {
+  width: 50px;
+}
+
 .expandedSection {
   overflow: hidden;
   height: 0;
@@ -48,6 +52,7 @@
 .infoColumn {
   display: flex;
   flex-direction: column;
+  flex: 1 1 0px;
   gap: 1rem;
 }
 

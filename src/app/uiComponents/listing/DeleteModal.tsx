@@ -1,18 +1,17 @@
 import {Button, Modal} from '@mantine/core';
 import styles from './css/DeleteModal.module.css';
-
 interface Props {
-    open: string;
+    open: boolean;
+	message: string;
     onClose: () => void;
-    onDelete: (id: string) => void;
+    onDelete: () => void;
 }
-export default function DeleteModal({open, onClose, onDelete}: Props) {
+export default function DeleteModal({open, message, onClose, onDelete}: Props) {
 	return (
 		<>
 			<Modal opened={Boolean(open)} onClose={onClose} centered>
 				<p className={styles.text}>
-                    Are you sure? This action cannot be undone and this item will
-                    be deleted.
+					{message}
 				</p>
 
 				<div className={styles.buttonGroup}>
@@ -20,7 +19,7 @@ export default function DeleteModal({open, onClose, onDelete}: Props) {
                         Cancel
 					</Button>
 
-					<Button onClick={() => onDelete(open)} color="red">
+					<Button onClick={() => onDelete()} color="red">
                         Delete
 					</Button>
 				</div>

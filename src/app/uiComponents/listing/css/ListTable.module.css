@@ -18,6 +18,22 @@
   font-weight: 200;
 }
 
+.selectedItemsContainer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  align-items: center;
+
+  padding: 1rem 0 0 1rem;
+  color: var(--mantine-color-gray-7);
+  font-size: 0.9rem;
+  font-weight: 200;
+}
+
+.selectedItemsContainer span {
+  font-weight: 600;
+}
+
 .totalInfo span {
   font-weight: 600;
 }
