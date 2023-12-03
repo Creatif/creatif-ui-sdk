@@ -3,6 +3,7 @@ import ActionSection from '@app/uiComponents/listing/ActionSection';
 import Item from '@app/uiComponents/listing/Item';
 import NothingFound from '@app/uiComponents/listing/NothingFound';
 import useHttpPaginationQuery from '@app/uiComponents/listing/hooks/useHttpPaginationQuery';
+import useSearchQuery from '@app/uiComponents/listing/hooks/useSearchQuery';
 import {Pagination, Select} from '@mantine/core';
 import { useState } from 'react';
 import contentContainerStyles from '../css/ContentContainer.module.css';
@@ -14,15 +15,15 @@ interface Props {
   listName: string;
 }
 export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
-	console.log('renders');
-
-	const [page, setPage] = useState(1);
-	const [search, setSearch] = useState('');
-	const [groups, setGroups] = useState<string[]>([]);
-	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>('desc');
-	const [behaviour, setBehaviour] = useState<Behaviour | undefined>();
-	const [orderBy, setOrderBy] = useState<CurrentSortType>('index');
-	const [limit, setLimit] = useState('15');
+	const {queryParams, setParam} = useSearchQuery();
+	
+	const [page, setPage] = useState(queryParams.page);
+	const [search, setSearch] = useState(queryParams.search);
+	const [groups, setGroups] = useState<string[]>(queryParams.groups);
+	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(queryParams.direction);
+	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
+	const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy);
+	const [limit, setLimit] = useState(queryParams.limit);
 
 	const {data, error, invalidateEntireQuery} = useHttpPaginationQuery<PaginationResult<Value, Metadata>>({
 		listName: listName,
@@ -31,9 +32,9 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 		groups: groups,
 		direction: direction,
 		behaviour: behaviour,
-		limit: limit,
+		limit: limit as string,
 		orderBy: orderBy,
-		search: search,
+		search: search as string,
 	});
 
 	return (
@@ -43,13 +44,26 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 				direction={direction}
 				behaviour={behaviour}
 				groups={groups}
-				onDirectionChange={setDirection}
-				onBehaviourChange={setBehaviour}
-				onSortChange={(sortType) => setOrderBy(sortType)}
-				onSelectedGroups={setGroups}
+				onDirectionChange={(direction) => {
+					setDirection(direction);
+					setParam('direction', direction as string);
+				}}
+				onBehaviourChange={(behaviour) => {
+					setBehaviour(behaviour);
+					setParam('behaviour', behaviour as string);
+				}}
+				onSortChange={(sortType) => {
+					setOrderBy(sortType);
+					setParam('orderBy', sortType);
+				}}
+				onSelectedGroups={(groups) => {
+					setGroups(groups);
+					setParam('groups', groups.join(','));
+				}}
 				structureName={listName}
 				onSearch={(text) => {
 					setSearch(text);
+					setParam('search', text);
 				}}
 			/>
 

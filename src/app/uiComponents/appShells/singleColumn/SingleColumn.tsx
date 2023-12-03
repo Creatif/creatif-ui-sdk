@@ -44,7 +44,7 @@ export default function SingleColumn({
 					</div>}>
 
 						{options.items.map((item, i) => <React.Fragment key={i}>
-							<Route path={`${item.menu.path}/create`} element={<RouterComponent Component={item.create.Component} structureName={item.create.structure.name} />} />
+							<Route path={`${item.menu.path}/create`} element={item.create.component} />
 							{item.create.structure.type === 'list' && <Route path={`${item.menu.path}`} element={<UnstructuredList listName={item.create.structure.name} />} />}
 						</React.Fragment>)}
 

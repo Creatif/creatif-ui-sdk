@@ -14,7 +14,7 @@ export interface AppShellMenu {
 }
 
 export interface AppShellCreate {
-    Component: any;
+    component: React.ReactNode;
     structure: {
         name: string;
         type: 'list' | 'variable' | 'map';

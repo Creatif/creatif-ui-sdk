@@ -21,7 +21,7 @@ export default function App() {
 								icon: <IconHome size="1.5rem" />,
 							},
 							create: {
-								Component: LandingPage,
+								component: <LandingPage structureName="landing page" />,
 								structure: {
 									name: 'landing page',
 									type: 'list',
