@@ -1,13 +1,14 @@
 import useNotification from '@app/systems/notifications/useNotification';
+import DeleteModal from '@app/uiComponents/listing/DeleteModal';
+import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
 import styles from '@app/uiComponents/listing/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import { ActionIcon, Pill } from '@mantine/core';
+import {ActionIcon, Pill, Popover} from '@mantine/core';
 import {
 	IconChevronDown,
 	IconChevronRight,
 	IconEdit,
-	IconPlus,
 	IconReplace,
 	IconTrash,
 	IconWorld,
@@ -25,8 +26,11 @@ export default function Item({ item, listName, onDeleted }: Props) {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { error: errorNotification, success } = useNotification();
 
+	const [deleteItemId, setDeleteItemId] = useState<string>();
+
 	return (
-		<div className={styles.item}>
+		<div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
+			{isDeleting && <div className={styles.disabled}/>}
 			<div
 				onClick={() => setIsExpanded((item) => !item)}
 				className={styles.visibleSectionWrapper}
@@ -68,12 +72,8 @@ export default function Item({ item, listName, onDeleted }: Props) {
 										{item}
 									</Pill>
 								))}
-								{item.groups.length > 3 && (
-									<p className={styles.groupsSize}>
-										<IconPlus size={10} />
-										{item.groups.length - 3} more
-									</p>
-								)}
+
+								<GroupsPopover groups={item.groups} />
 							</div>
 						)}
 					</div>
@@ -95,30 +95,7 @@ export default function Item({ item, listName, onDeleted }: Props) {
 							variant="white"
 							onClick={async (e) => {
 								e.stopPropagation();
-
-								setIsDeleting(true);
-								const { error, status } = await deleteListItemByID({
-									name: listName,
-									itemId: item.id,
-								});
-
-								if (error) {
-									errorNotification(
-										'Cannot delete list item',
-										'An error occurred when trying to delete list item. Please, try again later.',
-									);
-								}
-
-								if (status === 200) {
-									success(
-										'List item deleted.',
-										'List item was deleted successfully',
-									);
-								}
-
-								setIsDeleting(false);
-
-								onDeleted();
+								setDeleteItemId(item.id);
 							}}
 						>
 							<IconTrash
@@ -146,6 +123,32 @@ export default function Item({ item, listName, onDeleted }: Props) {
 			>
 				<ValueMetadata item={item} />
 			</div>
+			
+			{deleteItemId && <DeleteModal open={deleteItemId} onClose={() => setDeleteItemId(undefined)} onDelete={async (itemId) => {
+				setIsDeleting(true);
+				const {error, status} = await deleteListItemByID({
+					name: listName,
+					itemId: itemId,
+				});
+
+				if (error) {
+					errorNotification(
+						'Cannot delete list item',
+						'An error occurred when trying to delete list item. Please, try again later.',
+					);
+				}
+
+				if (status === 200) {
+					success(
+						'List item deleted.',
+						'List item was deleted successfully',
+					);
+				}
+
+				setIsDeleting(false);
+				onDeleted();
+				setDeleteItemId(undefined);
+			}}/>}
 		</div>
 	);
 }

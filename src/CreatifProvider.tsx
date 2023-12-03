@@ -38,8 +38,6 @@ export function CreatifProvider({
 	const init = useCallback(async () => {
 		const { result, error } = await getProjectMetadata();
 
-		console.log(result, error);
-
 		if (result) {
 			Initialize.init(apiKey, projectId, locale);
 			Storage.init(result);
@@ -60,7 +58,7 @@ export function CreatifProvider({
 
 	return (
 		<MantineProvider theme={theme}>
-			{isLoggedIn && <Notifications />}
+			{isLoggedIn && <Notifications limit={5} />}
 			{isLoggedIn && (
 				<>
 					<QueryClientProvider client={new QueryClient()}>

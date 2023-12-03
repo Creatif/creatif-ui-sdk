@@ -5,29 +5,30 @@ import {
 	IconExclamationCircle,
 	IconInfoCircle,
 } from '@tabler/icons-react';
+import React from 'react';
 import errStyles from './error.module.css';
 import infoStyles from './info.module.css';
 import successStyles from './success.module.css';
 import warnStyles from './warn.module.css';
-
 export default function useNotification() {
 	return {
-		warn: (title: string, description: React.ReactNode) => {
+		warn: (title: string, description: React.ReactNode, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 10000,
+				autoClose: 5000,
 				title: title,
 				message: description,
 				icon: <IconExclamationCircle color="white" />,
 				color: 'orange',
 				classNames: warnStyles,
 			});
+
+			if (clean) notifications.clean();
 		},
-		error: (title: string, description: React.ReactNode) => {
-			console.log(title, description);
+		error: (title: string, description: React.ReactNode, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 10000,
+				autoClose: 5000,
 				styles: (theme) => ({
 					title: { color: theme.white },
 					description: { color: theme.white },
@@ -37,28 +38,34 @@ export default function useNotification() {
 				icon: <IconAlertTriangle color="white" />,
 				classNames: errStyles,
 			});
+
+			if (clean) notifications.clean();
 		},
-		info: (title: string, description: React.ReactNode) => {
+		info: (title: string, description: React.ReactNode, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 10000,
+				autoClose: 5000,
 				withBorder: true,
 				title: title,
 				message: description,
 				icon: <IconInfoCircle color="gray" />,
 				classNames: infoStyles,
 			});
+
+			if (clean) notifications.clean();
 		},
-		success: (title: string, description: React.ReactNode) => {
+		success: (title: string, description: React.ReactNode, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 10000,
+				autoClose: 5000,
 				withBorder: true,
 				title: title,
 				message: description,
 				icon: <IconConfetti color="white" />,
 				classNames: successStyles,
 			});
+
+			if (clean) notifications.clean();
 		},
 	};
 }

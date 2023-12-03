@@ -7,7 +7,7 @@ import type {Behaviour} from '@lib/api/declarations/types/sharedTypes';
 interface Props {
     listName: string;
     locale?: string;
-    limit?: number;
+    limit?: string;
     page?: number;
 	behaviour?: Behaviour | undefined;
     groups?: string[];
@@ -15,7 +15,7 @@ interface Props {
 	search?: string;
     direction?: 'desc' | 'asc';
 }
-export default function useHttpPaginationQuery<Response>({listName, search = '', limit = 15, page = 1, groups = [], orderBy = 'created_at', direction = 'desc', behaviour = undefined, locale}: Props) {
+export default function useHttpPaginationQuery<Response>({listName, search = '', limit = '15', page = 1, groups = [], orderBy = 'created_at', direction = 'desc', behaviour = undefined, locale}: Props) {
 	const queryClient = useQueryClient();
 
 	return {
@@ -32,7 +32,7 @@ export default function useHttpPaginationQuery<Response>({listName, search = '',
 			}],
 			`/lists/${Initialize.ProjectID()}/${locale ? locale : Initialize.Locale()}/${listName}${queryConstructor(page, limit, groups, orderBy, direction, search, behaviour)}`,
 		),
-		invalidateQuery(listName: string, page = 1, limit = 15, groups: string[] = [], orderBy = 'created_at', direction = 'desc') {
+		invalidateQuery(listName: string, page = 1, limit = '15', groups: string[] = [], orderBy = 'created_at', direction = 'desc') {
 			queryClient.invalidateQueries([listName, {
 				page: page,
 				limit: limit,
@@ -42,6 +42,9 @@ export default function useHttpPaginationQuery<Response>({listName, search = '',
 				direction: direction,
 				search: search,
 			}]);
+		},
+		invalidateEntireQuery() {
+			queryClient.invalidateQueries(listName);
 		}
 	};
 }

@@ -14,16 +14,19 @@ interface Props {
 	currentSort: CurrentSortType;
 	currentGroups: string[];
 	structureName: string;
+	currentDirection: 'desc' | 'asc' | undefined;
+	currentBehaviour: Behaviour | undefined;
 
 	onSelectedGroups: (groups: string[]) => void;
 	onSortChange: (sort: CurrentSortType) => void;
 	onBehaviourChange: (sort: Behaviour | undefined) => void;
+	onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
 }
-export default function Sort({currentSort = 'index', currentGroups = [], structureName, onSelectedGroups, onSortChange, onBehaviourChange}: Props) {
+export default function Sort({currentSort = 'index', currentGroups = [], structureName, onSelectedGroups, onSortChange, onBehaviourChange, onDirectionChange, currentDirection, currentBehaviour}: Props) {
 	const [selectedSort, setSelectedSort] = useState<CurrentSortType>(currentSort);
 	const [groups, setGroups] = useState<string[]>(currentGroups);
-	const [behaviour, setBehaviour] = useState<Behaviour | undefined>();
-	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>();
+	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(currentBehaviour);
+	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(currentDirection);
 	const {mutate, isLoading, data, error} = useHttpMutation<{name: string}, string[]>(declarations(), 'post',`/list/groups/${Initialize.ProjectID()}/${Initialize.Locale()}`);
 	const [debouncedGroups] = useDebouncedValue(groups, 500);
 
@@ -136,8 +139,12 @@ export default function Sort({currentSort = 'index', currentGroups = [], structu
 			<div className={classNames(styles.column, styles.behaviourColumn)}>
 				<div onClick={() => {
 					setDirection((item) => {
-						if (item === 'asc') return undefined;
+						if (item === 'asc') {
+							onDirectionChange(undefined);
+							return undefined;
+						}
 
+						onDirectionChange('asc');
 						return 'asc';
 					});
 				}} className={classNames(styles.behaviourPill, direction === 'asc' ? styles.selectedBehaviourPill : undefined)}>
@@ -147,8 +154,12 @@ export default function Sort({currentSort = 'index', currentGroups = [], structu
 
 				<div onClick={() => {
 					setDirection((item) => {
-						if (item === 'desc') return undefined;
+						if (item === 'desc') {
+							onDirectionChange(undefined);
+							return undefined;
+						}
 
+						onDirectionChange('desc');
 						return 'desc';
 					});
 				}} className={classNames(styles.behaviourPill, direction === 'desc' ? styles.selectedBehaviourPill : undefined)}>

@@ -11,6 +11,17 @@
   position: relative;
 }
 
+.totalInfo {
+  padding: 1rem;
+  color: var(--mantine-color-gray-7);
+  font-size: 0.9rem;
+  font-weight: 200;
+}
+
+.totalInfo span {
+  font-weight: 600;
+}
+
 .container {
   width: 100%;
   display: flex;
@@ -26,19 +37,14 @@
   height: 300px;
 }
 
-.nothingFound {
-  text-align: center;
-  padding-top: 6rem;
-  color: var(--mantine-color-gray-6);
-  font-size: 0.9rem;
-}
-
 .stickyPagination {
   position: sticky;
   bottom: 0;
   display: flex;
   justify-content: center;
+  align-items: flex-end;
   background-color: white;
   padding: 1rem;
+  gap: 2rem;
   margin: 2rem 0 2rem 0;
 }

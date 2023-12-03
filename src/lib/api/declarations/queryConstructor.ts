@@ -1,6 +1,6 @@
 export function queryConstructor(
 	page = 1,
-	limit = 15,
+	limit = '15',
 	groups: string[] = [],
 	orderBy = 'created_at',
 	direction = 'desc',

@@ -1,13 +1,18 @@
 import Loading from '@app/components/Loading';
 import { Initialize } from '@app/initialize';
-import { getOrCreateStore } from '@app/systems/fields/stores';
 import useNotification from '@app/systems/notifications/useNotification';
+import {getOptions} from '@app/systems/stores/options';
 import { appendToList } from '@lib/api/declarations/lists/appendToList';
 import { createList } from '@lib/api/declarations/lists/createList';
+import {declarations} from '@lib/http/axios';
+import useHttpMutation from '@lib/http/useHttpMutation';
 import Storage from '@lib/storage/storage';
 import { Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import {useQueryClient} from 'react-query';
+import {useNavigate} from 'react-router-dom';
+import contentContainerStyles from '../css/ContentContainer.module.css';
 import type { AppendedListResult } from '@lib/api/declarations/types/listTypes';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
@@ -95,9 +100,22 @@ export default function ListForm<T extends FieldValues>({
 	beforeSave,
 	afterSave,
 }: Props<T>) {
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+	const useStructureOptionsStore = getOptions(listName);
 	const methods = useForm(formProps);
 	const [isSaving, setIsSaving] = useState(false);
-	const { error: notificationError, warn, info, success } = useNotification();
+	const { error: notificationError, success } = useNotification();
+	const {mutate} = useHttpMutation(declarations(), 'put', `/list/${Initialize.ProjectID()}/${Initialize.Locale()}`, {
+		onSuccess: {
+			title: `List with name ${listName} created.`,
+			message: `List '${listName}' has been successfully created. This message will only appear once.`
+		},
+		onError: {
+			title: 'Something wrong happened.',
+			message: 'We are working to resolve this problem. Please, try again later.',
+		}
+	});
 
 	const {
 		setValue,
@@ -114,48 +132,10 @@ export default function ListForm<T extends FieldValues>({
 	} = methods;
 
 	useEffect(() => {
-		getOrCreateStore({
-			structureName: listName,
-		});
-
 		const chosenLocale = locale ? locale : Initialize.Locale();
 		if (!Storage.instance.hasList(listName, chosenLocale)) {
-			createList({
+			mutate({
 				name: listName,
-				locale: chosenLocale,
-			}).then(({ result, error }) => {
-				if (error && error.error?.data && error.error.data['nameExists']) {
-					Storage.instance.addList(listName, chosenLocale);
-					warn(
-						'Warning.',
-						<span>
-              List with name <strong>{listName}</strong> already exists and has
-              not been recreated. You can ignore this message if you deleted the
-              cache in your browser or you are running multiple applications on
-              localhost.
-						</span>,
-					);
-					return;
-				}
-
-				if (error) {
-					notificationError(
-						'Something wrong happened.',
-						'We are working to resolve this problem. Please, try again later.',
-					);
-					return;
-				}
-
-				if (result) {
-					Storage.instance.addList(listName, chosenLocale);
-					info(
-						'UnstructuredList created',
-						<span>
-              List <strong>{listName}</strong> has been successfully created.
-              This message will only appear once.
-						</span>,
-					);
-				}
 			});
 		}
 	}, []);
@@ -242,14 +222,17 @@ export default function ListForm<T extends FieldValues>({
 					if (result) {
 						afterSave?.(result, e);
 						success(
-							'UnstructuredList variable created',
+							`Variable for structure ${listName}`,
 							<span>
                 List variable <strong>{name}</strong> has been created.
 							</span>,
 						);
 					}
 
+
+					queryClient.invalidateQueries(listName);
 					setIsSaving(false);
+					navigate(useStructureOptionsStore.getState().paths.listing);
 				});
 			});
 		},
@@ -257,35 +240,37 @@ export default function ListForm<T extends FieldValues>({
 	);
 
 	return (
-		<FormProvider {...methods}>
-			<form onSubmit={methods.handleSubmit(onInternalSubmit)}>
-				<Loading isLoading={isLoading} />
-				{!isLoading &&
-          inputs(
-          	<Group justify="end">
-          		<Button
-          			loaderProps={{ type: 'dots' }}
-          			loading={isSaving}
-          			type="submit"
-          		>
-          			{isSaving ? 'Creating' : 'Create'}
-          		</Button>
-          	</Group>,
-          	{
-          		setValue: setValue,
-          		getValues: getValues,
-          		setFocus: setFocus,
-          		setError: setError,
-          		reset: reset,
-          		resetField: resetField,
-          		unregister: unregister,
-          		watch: watch,
-          		trigger: trigger,
-          		getFieldState: getFieldState,
-          		defaultValues: getValues(),
-          	},
-          )}
-			</form>
-		</FormProvider>
+		<div className={contentContainerStyles.root}>
+			<FormProvider {...methods}>
+				<form onSubmit={methods.handleSubmit(onInternalSubmit)}>
+					<Loading isLoading={isLoading} />
+					{!isLoading &&
+						inputs(
+							<Group justify="end">
+								<Button
+									loaderProps={{ type: 'dots' }}
+									loading={isSaving}
+									type="submit"
+								>
+									{isSaving ? 'Creating' : 'Create'}
+								</Button>
+							</Group>,
+							{
+								setValue: setValue,
+								getValues: getValues,
+								setFocus: setFocus,
+								setError: setError,
+								reset: reset,
+								resetField: resetField,
+								unregister: unregister,
+								watch: watch,
+								trigger: trigger,
+								getFieldState: getFieldState,
+								defaultValues: getValues(),
+							},
+						)}
+				</form>
+			</FormProvider>
+		</div>
 	);
 }
