@@ -1,3 +1,4 @@
+import FormGrid from '@app/components/grid/FormGrid';
 import InputCheckbox from '@app/uiComponents/inputs/InputCheckbox';
 import InputCheckboxControlled from '@app/uiComponents/inputs/InputCheckboxControlled';
 import InputCheckboxGroupControlled from '@app/uiComponents/inputs/InputCheckboxGroupControlled';
@@ -93,213 +94,173 @@ export default function LandingPage({ structureName }: Props) {
 				},
 			}}
 			inputs={(submitButton) => (
-				<Grid>
-					<Grid.Col span={12}>
-						<InputText
-							options={{
-								required: 'Name is required',
-								validate: (value: string) => {
-									if (value !== 'mario') return 'It should say mario';
-								},
-							}}
-							label="Name"
-							name="name"
-						/>
-					</Grid.Col>
+				<FormGrid>
+					<InputText
+						options={{
+							required: 'Name is required',
+							validate: (value: string) => {
+								if (value !== 'mario') return 'It should say mario';
+							},
+						}}
+						label="Name"
+						name="name"
+					/>
 
-					<Grid.Col span={6}>
-						<InputText
-							options={{
-								required: 'Last name is required',
-							}}
-							label="Last name"
-							name="lastName"
-						/>
-					</Grid.Col>
+					<InputText
+						options={{
+							required: 'Last name is required',
+						}}
+						label="Last name"
+						name="lastName"
+					/>
 
-					<Grid.Col span={6}>
-						<InputEmail label="Email" name="email" />
-					</Grid.Col>
+					<InputEmail label="Email" name="email" />
 
-					<Grid.Col span={6}>
-						<InputDateControlled
-							validation={{
-								required: 'Date of birth is required.',
-							}}
-							label="Date of birth"
-							name="dob"
-						/>
-					</Grid.Col>
+					<InputDateControlled
+						validation={{
+							required: 'Date of birth is required.',
+						}}
+						label="Date of birth"
+						name="dob"
+					/>
 
-					<Grid.Col span={6}>
-						<InputRatingControlled name="rating" />
-					</Grid.Col>
+					<InputRatingControlled name="rating" />
 
-					<Grid.Col span={6}>
-						<InputChipControlled
-							validation={{
-								required: 'Eligible field is required.',
-							}}
-							name="eligible"
-						>
-              Are you eligible?
-						</InputChipControlled>
-					</Grid.Col>
+					<InputChipControlled
+						validation={{
+							required: 'Eligible field is required.',
+						}}
+						name="eligible"
+					>
+						Are you eligible?
+					</InputChipControlled>
 
-					<Grid.Col span={6}>
-						<InputSegmentedControlControlled
-							data={[
-								{ label: 'React', value: 'react' },
-								{ label: 'Angular', value: 'ng' },
-								{ label: 'Vue', value: 'vue' },
-								{ label: 'Svelte', value: 'svelte' },
-							]}
-							name="segmentedControl"
-						/>
-					</Grid.Col>
+					<InputSegmentedControlControlled
+						data={[
+							{ label: 'React', value: 'react' },
+							{ label: 'Angular', value: 'ng' },
+							{ label: 'Vue', value: 'vue' },
+							{ label: 'Svelte', value: 'svelte' },
+						]}
+						name="segmentedControl"
+					/>
 
-					<Grid.Col span={6}>
-						<InputCheckboxControlled
-							validation={{
-								required: 'Controlled checkbox field is required.',
-							}}
-							label="Controlled checkbox"
-							name="checkboxControlled"
-						/>
-					</Grid.Col>
+					<InputCheckboxControlled
+						validation={{
+							required: 'Controlled checkbox field is required.',
+						}}
+						label="Controlled checkbox"
+						name="checkboxControlled"
+					/>
 
-					<Grid.Col span={6}>
-						<InputRadioGroupControlled label="Radio group" name="radioGroup">
-							<Radio value="react" label="React" />
-							<Radio value="svelte" label="Svelte" />
-							<Radio value="ng" label="Angular" />
-							<Radio value="vue" label="Vue" />
-						</InputRadioGroupControlled>
-					</Grid.Col>
+					<InputRadioGroupControlled label="Radio group" name="radioGroup">
+						<Radio value="react" label="React" />
+						<Radio value="svelte" label="Svelte" />
+						<Radio value="ng" label="Angular" />
+						<Radio value="vue" label="Vue" />
+					</InputRadioGroupControlled>
 
-					<Grid.Col span={6}>
-						<InputCheckbox label="Checkbox" name="checkbox" />
-					</Grid.Col>
+					<InputCheckbox label="Checkbox" name="checkbox" />
+					<InputRadio label="Radio" name="radio" />
 
-					<Grid.Col span={6}>
-						<InputRadio label="Radio" name="radio" />
-					</Grid.Col>
+					<InputRadioControlled
+						label="Controlled radio"
+						name="controlledRadio"
+					/>
 
-					<Grid.Col span={6}>
-						<InputRadioControlled
-							label="Controlled radio"
-							name="controlledRadio"
-						/>
-					</Grid.Col>
+					<InputPinControlled name="pin" validation={{ required: true }} />
+					<InputSwitch name="switch" label="Switch" />
+					<InputSwitchControlled
+						name="switchControlled"
+						label="Switch controlled"
+					/>
 
-					<Grid.Col span={6}>
-						<InputPinControlled name="pin" validation={{ required: true }} />
-					</Grid.Col>
+					<InputSliderControlled
+						name="slider"
+						label="Slider"
+						marks={[
+							{ value: 20, label: '20%' },
+							{ value: 50, label: '50%' },
+							{ value: 80, label: '80%' },
+						]}
+					/>
 
-					<Grid.Col span={6}>
-						<InputSwitch name="switch" label="Switch" />
-					</Grid.Col>
+					<InputRangeSliderControlled
+						name="rangeSlider"
+						label="Range slider"
+						marks={[
+							{ value: 20, label: '20%' },
+							{ value: 50, label: '50%' },
+							{ value: 80, label: '80%' },
+						]}
+					/>
 
-					<Grid.Col span={6}>
-						<InputSwitchControlled
-							name="switchControlled"
-							label="Switch controlled"
-						/>
-					</Grid.Col>
+					<InputCheckboxGroupControlled
+						validation={{
+							required: 'Checkbox group is required',
+						}}
+						label="Checkbox group"
+						name="checkboxGroup"
+						component={({ formState: { errors } }) => (
+							<Group mt="xs">
+								<Checkbox
+									error={Boolean(errors['checkboxGroup'])}
+									value="react"
+									label="React"
+								/>
+								<Checkbox
+									error={Boolean(errors['checkboxGroup'])}
+									value="svelte"
+									label="Svelte"
+								/>
+								<Checkbox
+									error={Boolean(errors['checkboxGroup'])}
+									value="ng"
+									label="Angular"
+								/>
+								<Checkbox
+									error={Boolean(errors['checkboxGroup'])}
+									value="vue"
+									label="Vue"
+								/>
+							</Group>
+						)}
+					/>
 
-					<Grid.Col span={6}>
-						<InputSliderControlled
-							name="slider"
-							label="Slider"
-							marks={[
-								{ value: 20, label: '20%' },
-								{ value: 50, label: '50%' },
-								{ value: 80, label: '80%' },
-							]}
-						/>
-					</Grid.Col>
+					<InputSwitchGroupControlled
+						validation={{
+							required: 'Switch group is required',
+						}}
+						label="Switch group"
+						name="switchGroup"
+						component={({ formState: { errors } }) => (
+							<Group mt="xs">
+								<Switch
+									error={Boolean(errors['switchGroup'])}
+									value="react"
+									label="React"
+								/>
+								<Switch
+									error={Boolean(errors['switchGroup'])}
+									value="svelte"
+									label="Svelte"
+								/>
+								<Switch
+									error={Boolean(errors['switchGroup'])}
+									value="ng"
+									label="Angular"
+								/>
+								<Switch
+									error={Boolean(errors['switchGroup'])}
+									value="vue"
+									label="Vue"
+								/>
+							</Group>
+						)}
+					/>
 
-					<Grid.Col span={6}>
-						<InputRangeSliderControlled
-							name="rangeSlider"
-							label="Range slider"
-							marks={[
-								{ value: 20, label: '20%' },
-								{ value: 50, label: '50%' },
-								{ value: 80, label: '80%' },
-							]}
-						/>
-					</Grid.Col>
-
-					<Grid.Col span={6}>
-						<InputCheckboxGroupControlled
-							validation={{
-								required: 'Checkbox group is required',
-							}}
-							label="Checkbox group"
-							name="checkboxGroup"
-							component={({ formState: { errors } }) => (
-								<Group mt="xs">
-									<Checkbox
-										error={Boolean(errors['checkboxGroup'])}
-										value="react"
-										label="React"
-									/>
-									<Checkbox
-										error={Boolean(errors['checkboxGroup'])}
-										value="svelte"
-										label="Svelte"
-									/>
-									<Checkbox
-										error={Boolean(errors['checkboxGroup'])}
-										value="ng"
-										label="Angular"
-									/>
-									<Checkbox
-										error={Boolean(errors['checkboxGroup'])}
-										value="vue"
-										label="Vue"
-									/>
-								</Group>
-							)}
-						/>
-					</Grid.Col>
-
-					<Grid.Col span={6}>
-						<InputSwitchGroupControlled
-							validation={{
-								required: 'Switch group is required',
-							}}
-							label="Switch group"
-							name="switchGroup"
-							component={({ formState: { errors } }) => (
-								<Group mt="xs">
-									<Switch
-										error={Boolean(errors['switchGroup'])}
-										value="react"
-										label="React"
-									/>
-									<Switch
-										error={Boolean(errors['switchGroup'])}
-										value="svelte"
-										label="Svelte"
-									/>
-									<Switch
-										error={Boolean(errors['switchGroup'])}
-										value="ng"
-										label="Angular"
-									/>
-									<Switch
-										error={Boolean(errors['switchGroup'])}
-										value="vue"
-										label="Vue"
-									/>
-								</Group>
-							)}
-						/>
-					</Grid.Col>
-					<Grid.Col span={12}>{submitButton}</Grid.Col>
-				</Grid>
+					{submitButton}
+				</FormGrid>
 			)}
 		/>
 	);

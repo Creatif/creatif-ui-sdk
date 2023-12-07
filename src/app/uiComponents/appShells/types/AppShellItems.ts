@@ -14,14 +14,10 @@ export interface AppShellMenu {
 
 export interface AppShellCreate {
   component: React.ReactNode;
-  structure: {
-    name: string;
-    type: 'list' | 'variable' | 'map';
-    entryName?: string;
-  };
 }
 
 export interface AppShellItem {
   menu: AppShellMenu;
+  structure: {name: string, type: 'list' | 'variable' | 'map'}
   create: AppShellCreate;
 }

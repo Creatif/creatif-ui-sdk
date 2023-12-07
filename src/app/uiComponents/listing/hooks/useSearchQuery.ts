@@ -54,6 +54,10 @@ class QueryParams {
 		} else {
 			this.behaviour = hiddenBehaviour as Behaviour | undefined;
 		}
+
+		if (!search) {
+			this.search = '';
+		}
 	}
 }
 export default function useSearchQuery() {

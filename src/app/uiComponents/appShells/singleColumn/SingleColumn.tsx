@@ -13,7 +13,7 @@ export default function SingleColumn({ options }: Props) {
 	const storeCreatedRef = useRef(false);
 	if (!storeCreatedRef.current) {
 		for (const option of options.items) {
-			const { name, type } = option.create.structure;
+			const { name, type } = option.structure;
 			const { path } = option.menu;
 
 			createOptions({
@@ -54,11 +54,11 @@ export default function SingleColumn({ options }: Props) {
 									path={`${item.menu.path}/create`}
 									element={item.create.component}
 								/>
-								{item.create.structure.type === 'list' && (
+								{item.structure.type === 'list' && (
 									<Route
 										path={`${item.menu.path}`}
 										element={
-											<UnstructuredList listName={item.create.structure.name} />
+											<UnstructuredList listName={item.structure.name} />
 										}
 									/>
 								)}

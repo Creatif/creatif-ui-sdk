@@ -16,6 +16,26 @@ export interface AppendingVariableBlueprint<
   value?: Value;
   metadata?: Metadata;
 }
+
+export interface QueryListItemByIDBlueprint {
+  structureId: string;
+  itemId: string
+  locale?: string;
+}
+
+export interface QueriedListItem<Value, Metadata> {
+  id: string;
+  locale: string;
+  shortId: string;
+  name: string;
+  behaviour: Behaviour;
+  groups: string[];
+  metadata: Metadata;
+  value: Value;
+
+  createdAt: string;
+  updatedAt: string;
+}
 export interface PaginatedVariableResult<Value, Metadata> {
   id: string;
   name: string;

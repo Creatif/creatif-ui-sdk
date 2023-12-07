@@ -5,8 +5,8 @@ import { IconHome } from '@tabler/icons-react';
 export default function App() {
 	return (
 		<CreatifProvider
-			apiKey="$2a$10$izv5d7ul8hXl0Vpl1DxdSuh/4Svd8GI9/t6s7mqgLPrW0NOG/hyZK"
-			projectId="01HGR0NG93FBMW7S19VRZ4HJ8H"
+			apiKey="$2a$10$LCx2kEVLBozDFpXULgT0Cu7qWGQhWV0nMbOf0FjgPKzp84eT5nFIK"
+			projectId="01HH2FRH61WC1K4QHAMYAPN2TY"
 			locale="hrv"
 		>
 			<SingleColumn
@@ -20,12 +20,12 @@ export default function App() {
 								path: 'landing-page',
 								icon: <IconHome size="1.5rem" />,
 							},
+							structure: {
+								name: 'landing page',
+								type: 'list',
+							},
 							create: {
 								component: <LandingPage structureName="landing page" />,
-								structure: {
-									name: 'landing page',
-									type: 'list',
-								},
 							},
 						},
 					],

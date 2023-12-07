@@ -42,6 +42,10 @@ interface Props<T extends FieldValues> {
   listName: string;
   bindings: Bindings<T>;
   formProps: UseFormProps<T>;
+  update: {
+	  getFn: <F = unknown>() => F;
+	  transformFn: <F = unknown>(value: F) => T;
+  }
   inputs: (
     submitButton: React.ReactNode,
     actions: {
@@ -99,13 +103,14 @@ export default function ListForm<T extends FieldValues>({
 	beforeSave,
 	afterSave,
 }: Props<T>) {
+	const methods = useForm(formProps);
+
 	const { success: successNotification, error: errorNotification } =
     useNotification();
 
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const useStructureOptionsStore = getOptions(listName);
-	const methods = useForm(formProps);
 	const [isSaving, setIsSaving] = useState(false);
 	const { error: notificationError, success } = useNotification();
 	const { mutate } = useHttpMutation(
@@ -118,6 +123,8 @@ export default function ListForm<T extends FieldValues>({
 					`List with name ${listName} created.`,
 					`List '${listName}' has been successfully created. This message will only appear once.`,
 				);
+
+				Storage.instance.addList(listName, locale ? locale : Initialize.Locale());
 			},
 			onError() {
 				errorNotification(
@@ -258,7 +265,7 @@ export default function ListForm<T extends FieldValues>({
             inputs(
             	<Group justify="end">
             		<Button
-            			loaderProps={{ type: 'dots' }}
+            			loaderProps={{ size: 14 }}
             			loading={isSaving}
             			type="submit"
             		>
