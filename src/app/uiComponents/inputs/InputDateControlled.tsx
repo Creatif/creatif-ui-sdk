@@ -1,6 +1,7 @@
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import transformDate from '@lib/helpers/transformDate';
 import { DateInput } from '@mantine/dates';
+import parse from 'date-fns/parse';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { DateInputProps } from '@mantine/dates';
@@ -23,8 +24,9 @@ export default function InputDateControlled({
 }: Props) {
 	const { control, getValues } = useFormContext();
 	let def = getValues(name);
+	console.log('Date: ', def);
 	if (typeof def === 'string' && def) {
-		def = new Date(def);
+		def = parse(def, 'do MMMM, yyyy', new Date());
 	}
 
 	const [value, setValue] = useState<Date | null>(def);
