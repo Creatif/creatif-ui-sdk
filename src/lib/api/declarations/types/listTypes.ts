@@ -39,6 +39,7 @@ export interface QueriedListItem<Value, Metadata> {
 export interface PaginatedVariableResult<Value, Metadata> {
   id: string;
   name: string;
+  shortId: string;
   behaviour: Behaviour;
   locale: string;
   groups?: string[];

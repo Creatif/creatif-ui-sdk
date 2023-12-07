@@ -23,7 +23,7 @@ export default function InputDateControlled({
 }: Props) {
 	const { control, getValues } = useFormContext();
 	let def = getValues(name);
-	if (typeof def === 'string') {
+	if (typeof def === 'string' && def) {
 		def = new Date(def);
 	}
 

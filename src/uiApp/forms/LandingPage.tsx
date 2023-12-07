@@ -21,8 +21,9 @@ import ListForm from '@app/uiComponents/listForm/ListForm';
 import { Checkbox, Grid, Group, Radio, Switch } from '@mantine/core';
 interface Props {
   structureName: string;
+  mode?: 'update';
 }
-export default function LandingPage({ structureName }: Props) {
+export default function LandingPage({ structureName, mode }: Props) {
 	return (
 		<ListForm<{
       name: string;
@@ -54,6 +55,7 @@ export default function LandingPage({ structureName }: Props) {
 
 				return values;
 			}}
+			mode={mode}
 			afterSave={(values) => {
 				console.log(values);
 			}}
@@ -71,26 +73,26 @@ export default function LandingPage({ structureName }: Props) {
 			listName={structureName}
 			formProps={{
 				defaultValues: {
-					name: 'mario',
-					lastName: 'skrlec',
-					email: 'marioskrlec222@gmail.com',
-					dob: 'November 25, 2023',
-					eligible: true,
-					radio: 'on',
+					name: '',
+					lastName: '',
+					email: '',
+					dob: '',
+					eligible: false,
+					radio: '',
 					uncontrolledEligible: true,
-					controlledRadio: 'on',
-					checkboxControlled: true,
-					checkbox: true,
-					radioGroup: 'ng',
-					pin: '1234',
-					checkboxGroup: ['react', 'svelte'],
-					rating: '3',
-					segmentedControl: 'svelte',
-					switch: true,
-					switchControlled: true,
-					switchGroup: ['react', 'ng'],
-					slider: 5,
-					rangeSlider: [12, 25],
+					controlledRadio: '',
+					checkboxControlled: false,
+					checkbox: false,
+					radioGroup: '',
+					pin: '',
+					checkboxGroup: [],
+					rating: '',
+					segmentedControl: '',
+					switch: false,
+					switchControlled: false,
+					switchGroup: [],
+					slider: 0,
+					rangeSlider: [],
 				},
 			}}
 			inputs={(submitButton) => (

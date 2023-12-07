@@ -20,4 +20,5 @@ export interface AppShellItem {
   menu: AppShellMenu;
   structure: {name: string, type: 'list' | 'variable' | 'map'}
   create: AppShellCreate;
+  update: AppShellCreate;
 }

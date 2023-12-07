@@ -1,4 +1,5 @@
 import useNotification from '@app/systems/notifications/useNotification';
+import {getOptions} from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/listing/DeleteModal';
 import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
@@ -15,6 +16,7 @@ import {
 } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
+import {Link} from 'react-router-dom';
 import type { PaginatedVariableResult } from '@lib/api/declarations/types/listTypes';
 interface Props {
   item: PaginatedVariableResult<any, any>;
@@ -33,6 +35,7 @@ export default function Item({
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { error: errorNotification, success } = useNotification();
+	const useOptions = getOptions(listName);
 
 	const [deleteItemId, setDeleteItemId] = useState<string>();
 
@@ -104,10 +107,9 @@ export default function Item({
 				<div className={styles.menu}>
 					<div className={styles.actionMenu}>
 						<ActionIcon
+							component={Link}
+							to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
 							variant="white"
-							onClick={(e) => {
-								e.stopPropagation();
-							}}
 						>
 							<IconEdit className={styles.actionMenuIcon} size={20} />
 						</ActionIcon>

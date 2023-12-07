@@ -54,6 +54,10 @@ export default function SingleColumn({ options }: Props) {
 									path={`${item.menu.path}/create`}
 									element={item.create.component}
 								/>
+								<Route
+									path={`${item.menu.path}/update/:structureId/:itemId`}
+									element={item.update.component}
+								/>
 								{item.structure.type === 'list' && (
 									<Route
 										path={`${item.menu.path}`}

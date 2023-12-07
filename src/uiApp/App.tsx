@@ -27,6 +27,9 @@ export default function App() {
 							create: {
 								component: <LandingPage structureName="landing page" />,
 							},
+							update: {
+								component: <LandingPage structureName="landing page" mode="update" />
+							}
 						},
 					],
 				}}
