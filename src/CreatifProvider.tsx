@@ -13,7 +13,7 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 import '@app/css/reset.module.css';
-import '@app/css/global.module.css';
+import styles from '@app/css/global.module.css';
 
 interface Props {
   apiKey: string;
@@ -22,7 +22,9 @@ interface Props {
 }
 
 const theme = createTheme({
-	/** Put your mantine theme override here */
+	fontFamily: 'Barlow, sans-serif',
+	fontFamilyMonospace: 'Monaco, Courier, monospace',
+	headings: { fontFamily: 'Barlow, sans-serif' },
 });
 export function CreatifProvider({
 	apiKey,
@@ -62,7 +64,7 @@ export function CreatifProvider({
 			{isLoggedIn && (
 				<>
 					<QueryClientProvider client={new QueryClient()}>
-						{children}
+						<div className={styles.initialAnimation}>{children}</div>
 					</QueryClientProvider>
 				</>
 			)}

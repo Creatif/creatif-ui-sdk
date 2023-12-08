@@ -12,10 +12,15 @@ import successStyles from './success.module.css';
 import warnStyles from './warn.module.css';
 export default function useNotification() {
 	return {
-		warn: (title: string, description: React.ReactNode, clean = false) => {
+		warn: (
+			title: string,
+			description: React.ReactNode,
+			autoClose: number | boolean = 5000,
+			clean = false,
+		) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 5000,
+				autoClose: autoClose,
 				title: title,
 				message: description,
 				icon: <IconExclamationCircle color="white" />,
@@ -25,10 +30,15 @@ export default function useNotification() {
 
 			if (clean) notifications.clean();
 		},
-		error: (title: string, description: React.ReactNode, clean = false) => {
+		error: (
+			title: string,
+			description: React.ReactNode,
+			autoClose: number | boolean = 5000,
+			clean = false,
+		) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 5000,
+				autoClose: autoClose,
 				styles: (theme) => ({
 					title: { color: theme.white },
 					description: { color: theme.white },
@@ -41,10 +51,15 @@ export default function useNotification() {
 
 			if (clean) notifications.clean();
 		},
-		info: (title: string, description: React.ReactNode, clean = false) => {
+		info: (
+			title: string,
+			description: React.ReactNode,
+			autoClose: number | boolean = 5000,
+			clean = false,
+		) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 5000,
+				autoClose: autoClose,
 				withBorder: true,
 				title: title,
 				message: description,
@@ -54,10 +69,15 @@ export default function useNotification() {
 
 			if (clean) notifications.clean();
 		},
-		success: (title: string, description: React.ReactNode, clean = false) => {
+		success: (
+			title: string,
+			description: React.ReactNode,
+			autoClose: number | boolean = 5000,
+			clean = false,
+		) => {
 			notifications.show({
 				withCloseButton: true,
-				autoClose: 5000,
+				autoClose: autoClose,
 				withBorder: true,
 				title: title,
 				message: description,

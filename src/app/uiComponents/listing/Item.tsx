@@ -1,5 +1,5 @@
 import useNotification from '@app/systems/notifications/useNotification';
-import {getOptions} from '@app/systems/stores/options';
+import { getOptions } from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/listing/DeleteModal';
 import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
@@ -16,7 +16,7 @@ import {
 } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@lib/api/declarations/types/listTypes';
 interface Props {
   item: PaginatedVariableResult<any, any>;
@@ -61,13 +61,54 @@ export default function Item({
 				</div>
 
 				<div className={styles.infoColumn}>
-					<h2 className={styles.name}>
-						<span>{item.name}</span>
-						<span className={styles.locale}>
-							<IconWorld size={20} />
-							{item.locale}
-						</span>
-					</h2>
+					<div className={styles.nameRow}>
+						<h2 className={styles.nameRowTitle}>{item.name}</h2>
+
+						<div className={styles.actionRow}>
+							<span className={styles.locale}>{item.locale} locale</span>
+
+							<div className={styles.actionMenu}>
+								<ActionIcon
+									component={Link}
+									to={`${useOptions.getState().paths.update}/${listName}/${
+										item.id
+									}`}
+									variant="white"
+								>
+									<IconEdit
+										className={classNames(
+											styles.actionMenuIcon,
+											styles.actionMenuEdit,
+										)}
+										size={18}
+									/>
+								</ActionIcon>
+
+								<ActionIcon
+									loading={isDeleting}
+									variant="white"
+									onClick={async (e) => {
+										e.stopPropagation();
+										setDeleteItemId(item.id);
+									}}
+								>
+									<IconTrash
+										className={classNames(
+											styles.actionMenuIcon,
+											styles.actionMenuDelete,
+										)}
+										size={18}
+									/>{' '}
+								</ActionIcon>
+							</div>
+
+							{!isExpanded ? (
+								<IconChevronRight className={styles.dropdownIcon} />
+							) : (
+								<IconChevronDown className={styles.dropdownIcon} />
+							)}
+						</div>
+					</div>
 
 					<div className={styles.information}>
 						<div className={styles.behaviour}>
@@ -104,39 +145,7 @@ export default function Item({
 					</div>
 				</div>
 
-				<div className={styles.menu}>
-					<div className={styles.actionMenu}>
-						<ActionIcon
-							component={Link}
-							to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
-							variant="white"
-						>
-							<IconEdit className={styles.actionMenuIcon} size={20} />
-						</ActionIcon>
-
-						<ActionIcon
-							loading={isDeleting}
-							variant="white"
-							onClick={async (e) => {
-								e.stopPropagation();
-								setDeleteItemId(item.id);
-							}}
-						>
-							<IconTrash
-								className={classNames(
-									styles.actionMenuIcon,
-									styles.actionMenuDelete,
-								)}
-								size={20}
-							/>{' '}
-						</ActionIcon>
-					</div>
-					{!isExpanded ? (
-						<IconChevronRight className={styles.dropdownIcon} />
-					) : (
-						<IconChevronDown className={styles.dropdownIcon} />
-					)}
-				</div>
+				<div className={styles.menu}></div>
 			</div>
 
 			<div

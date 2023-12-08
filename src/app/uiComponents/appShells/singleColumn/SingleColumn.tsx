@@ -1,4 +1,5 @@
 import { createOptions } from '@app/systems/stores/options';
+import Header from '@app/uiComponents/appShells/singleColumn/Header';
 import Navigation from '@app/uiComponents/appShells/singleColumn/Navigation';
 import UnstructuredList from '@app/uiComponents/listing/UnstructuredList';
 import { Container } from '@mantine/core';
@@ -39,9 +40,7 @@ export default function SingleColumn({ options }: Props) {
 								)}
 
 								<div>
-									{options.header && (
-										<header className={styles.header}>{options.header}</header>
-									)}
+									{options.header && <Header>{options.header}</Header>}
 
 									<div className={styles.content}>{<Outlet />}</div>
 								</div>

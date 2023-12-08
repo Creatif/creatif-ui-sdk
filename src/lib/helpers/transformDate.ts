@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 export default function transformDate(
 	date: string | Date | undefined | null,
 	dateFormat = 'do MMMM, yyyy',

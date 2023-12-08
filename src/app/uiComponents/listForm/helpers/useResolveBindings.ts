@@ -1,8 +1,8 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import React from 'react';
-import type {Bindings} from '@app/uiComponents/types/forms';
-import type {Behaviour} from '@lib/api/declarations/types/sharedTypes';
-import type {FieldValues} from 'react-hook-form';
+import type { Bindings } from '@app/uiComponents/types/forms';
+import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
+import type { FieldValues } from 'react-hook-form';
 function resolveBindings<T extends FieldValues>(
 	values: T,
 	bindings: Bindings<T>,
@@ -71,6 +71,6 @@ export default function useResolveBindings() {
 			behaviour = b;
 		}
 
-		return {name, groups, behaviour};
+		return { name, groups, behaviour };
 	};
 }

@@ -1,0 +1,32 @@
+.header {
+  width: 100%;
+  border: 1px solid var(--mantine-color-gray-1);
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: white;
+}
+
+.contentWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionRoot {
+  width: 360px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.supportedLocalesAction {
+  display: block;
+  color: var(--mantine-primary-color-filled);
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  cursor: pointer;
+}
+
+.supportedLocalesAction:hover {
+  text-decoration: underline;
+}

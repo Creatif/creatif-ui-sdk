@@ -17,16 +17,15 @@ interface Props extends DateInputProps {
 }
 export default function InputDateControlled({
 	name,
-	format,
+	format = 'do MMMM, yyyy',
 	validation,
 	onInputChange,
 	...rest
 }: Props) {
 	const { control, getValues } = useFormContext();
 	let def = getValues(name);
-	console.log('Date: ', def);
 	if (typeof def === 'string' && def) {
-		def = parse(def, 'do MMMM, yyyy', new Date());
+		def = parse(def, format, new Date());
 	}
 
 	const [value, setValue] = useState<Date | null>(def);

@@ -5,7 +5,7 @@ interface OptionsStore {
   paths: {
     listing: string;
     create: string;
-	update: string;
+    update: string;
   };
   type: string;
 }
@@ -28,7 +28,7 @@ export function createOptions({ structureName, path, type }: Props) {
 		paths: {
 			listing: `/${path}`,
 			create: `/${path}/create`,
-			update: `/${path}/update`
+			update: `/${path}/update`,
 		},
 		type: type,
 		structureName: name,

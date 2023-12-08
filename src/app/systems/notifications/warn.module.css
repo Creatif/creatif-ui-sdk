@@ -1,9 +1,9 @@
 .root {
-  background-color: var(--mantine-color-orange-6);
+  background-color: var(--mantine-color-orange-6) !important;
   color: white;
 
   &::before {
-    background-color: var(--mantine-color-orange-6);
+    background-color: var(--mantine-color-orange-6) !important;
   }
 }
 
@@ -13,7 +13,7 @@
 
 .description,
 .title {
-  color: var(--mantine-color-white);
+  color: var(--mantine-color-white) !important;
 }
 
 .title {
@@ -23,9 +23,9 @@
 }
 
 .closeButton {
-  color: var(--mantine-color-white);
+  color: var(--mantine-color-white) !important;
 }
 
 .closeButton:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--mantine-color-orange-6) !important;
 }

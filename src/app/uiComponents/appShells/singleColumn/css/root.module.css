@@ -6,14 +6,6 @@
   padding: 0.5rem;
 }
 
-.header {
-  width: 100%;
-  border: 1px solid var(--mantine-color-gray-1);
-  padding: 2rem;
-  border-radius: 1rem;
-  background-color: white;
-}
-
 .content {
   border: 1px solid var(--mantine-color-gray-1);
   border-radius: 1rem;

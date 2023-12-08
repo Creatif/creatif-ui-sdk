@@ -5,8 +5,8 @@ import { IconHome } from '@tabler/icons-react';
 export default function App() {
 	return (
 		<CreatifProvider
-			apiKey="$2a$10$LCx2kEVLBozDFpXULgT0Cu7qWGQhWV0nMbOf0FjgPKzp84eT5nFIK"
-			projectId="01HH2FRH61WC1K4QHAMYAPN2TY"
+			apiKey="$2a$10$.y8Q7TWw3RNRKfZTOTLmgO7Y6oCsTaD7IIZ/.Hfe2c0FU.wZ4OQ7m"
+			projectId="01HH4375DTYW0RTXR5R71HW86V"
 			locale="hrv"
 		>
 			<SingleColumn
@@ -28,8 +28,10 @@ export default function App() {
 								component: <LandingPage structureName="landing page" />,
 							},
 							update: {
-								component: <LandingPage structureName="landing page" mode="update" />
-							}
+								component: (
+									<LandingPage structureName="landing page" mode="update" />
+								),
+							},
 						},
 					],
 				}}

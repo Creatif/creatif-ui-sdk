@@ -19,7 +19,7 @@ export interface AppendingVariableBlueprint<
 
 export interface QueryListItemByIDBlueprint {
   structureId: string;
-  itemId: string
+  itemId: string;
   locale?: string;
 }
 
@@ -55,7 +55,29 @@ export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
   locale?: string;
   variables: AppendingVariableBlueprint<Value, Metadata>[];
 }
+export interface UpdateListItemBlueprint {
+  name: string;
+  itemID: string;
+  locale?: string;
+  variable: UpdateListItemVariableBlueprint;
+}
+
+export interface UpdateListItemVariableBlueprint {
+  name: string;
+  behaviour: Behaviour;
+  groups: string[];
+  metadata: unknown;
+  value: unknown;
+}
 export interface AppendedListResult {
+  id: string;
+  projectID: string;
+  name: string;
+  locale: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface UpdateListItemResult {
   id: string;
   projectID: string;
   name: string;

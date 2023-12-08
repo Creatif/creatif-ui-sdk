@@ -21,7 +21,8 @@ interface Props {
 }
 export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 	const { queryParams, setParam } = useSearchQuery();
-	const { error: errorNotification, success: successNotification } = useNotification();
+	const { error: errorNotification, success: successNotification } =
+    useNotification();
 
 	const [page, setPage] = useState(queryParams.page);
 	const [search, setSearch] = useState(queryParams.search);

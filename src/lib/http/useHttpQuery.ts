@@ -8,6 +8,10 @@ export default function useHttpQuery<Response>(
 	instance: AxiosInstance,
 	key: QueryKey,
 	path: string,
+	options?: {
+    onError?: (error: ApiError) => void;
+    onSuccess?: (data: Response) => void;
+  },
 ) {
 	return useQuery<unknown, ApiError, Response>(
 		key,
@@ -26,6 +30,8 @@ export default function useHttpQuery<Response>(
 			}
 		},
 		{
+			onError: options?.onError,
+			onSuccess: options?.onSuccess,
 			staleTime: Infinity,
 			keepPreviousData: true,
 			refetchOnWindowFocus: false,

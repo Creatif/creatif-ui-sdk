@@ -53,12 +53,12 @@ export default function LandingPage({ structureName, mode }: Props) {
 					values.checkboxGroup = [];
 				}
 
-				return values;
+				return {
+					value: values,
+					metadata: undefined,
+				};
 			}}
 			mode={mode}
-			afterSave={(values) => {
-				console.log(values);
-			}}
 			bindings={{
 				name: (values) => values.email,
 				groups: (values) => [
@@ -134,7 +134,7 @@ export default function LandingPage({ structureName, mode }: Props) {
 						}}
 						name="eligible"
 					>
-						Are you eligible?
+            Are you eligible?
 					</InputChipControlled>
 
 					<InputSegmentedControlControlled
