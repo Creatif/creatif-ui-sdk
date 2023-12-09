@@ -1,3 +1,4 @@
+import {Initialize} from '@app/initialize';
 import { createOptions } from '@app/systems/stores/options';
 import Header from '@app/uiComponents/appShells/singleColumn/Header';
 import Navigation from '@app/uiComponents/appShells/singleColumn/Navigation';

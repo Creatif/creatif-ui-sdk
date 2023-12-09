@@ -24,7 +24,7 @@ export default function useHttpPaginationQuery<Response>({
 	orderBy = 'created_at',
 	direction = 'desc',
 	behaviour = undefined,
-	locale,
+	locale = '',
 }: Props) {
 	const queryClient = useQueryClient();
 
@@ -39,13 +39,12 @@ export default function useHttpPaginationQuery<Response>({
 					groups: groups,
 					behaviour: behaviour,
 					orderBy: orderBy,
+					locale: locale,
 					direction: direction,
 					search: search,
 				},
 			],
-			`/lists/${Initialize.ProjectID()}/${
-				locale ? locale : Initialize.Locale()
-			}/${listName}${queryConstructor(
+			`/lists/${Initialize.ProjectID()}/${listName}${queryConstructor(
 				page,
 				limit,
 				groups,
@@ -53,6 +52,7 @@ export default function useHttpPaginationQuery<Response>({
 				direction,
 				search,
 				behaviour,
+				locale,
 			)}`,
 		),
 		invalidateQuery(
@@ -62,6 +62,7 @@ export default function useHttpPaginationQuery<Response>({
 			groups: string[] = [],
 			orderBy = 'created_at',
 			direction = 'desc',
+			locale = '',
 		) {
 			queryClient.invalidateQueries([
 				listName,
@@ -73,6 +74,7 @@ export default function useHttpPaginationQuery<Response>({
 					orderBy: orderBy,
 					direction: direction,
 					search: search,
+					locale: locale,
 				},
 			]);
 		},

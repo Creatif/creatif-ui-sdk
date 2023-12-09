@@ -6,8 +6,9 @@ export function queryConstructor(
 	direction = 'desc',
 	search = '',
 	behaviour = '',
+	locale = '',
 ) {
-	let base = `?page=${page}&orderBy=${orderBy}&direction=${direction}&limit=${limit}&search=${search}&behaviour=${behaviour}`;
+	let base = `?page=${page}&orderBy=${orderBy}&direction=${direction}&limit=${limit}&search=${search}&behaviour=${behaviour}&locale=${locale}`;
 
 	if (groups.length > 0) {
 		const newGroups: string[] = [];

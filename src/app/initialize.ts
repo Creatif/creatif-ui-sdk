@@ -16,4 +16,8 @@ export class Initialize {
 	static Locale(): string {
 		return Initialize.locale;
 	}
+
+	static changeLocale(locale: string) {
+		Initialize.locale = locale;
+	}
 }

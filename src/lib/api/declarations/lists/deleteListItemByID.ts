@@ -19,10 +19,11 @@ export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
 	const locale = blueprint.locale ? blueprint.locale : Initialize.Locale();
 	return tryPost(
 		declarations(),
-		`/list/item-id/${Initialize.ProjectID()}/${locale}`,
+		`/list/item-id/${Initialize.ProjectID()}`,
 		{
 			name: blueprint.name,
 			id: blueprint.id,
+			locale: locale,
 			shortID: blueprint.shortId,
 			itemID: blueprint.itemId,
 			itemShortID: blueprint.itemShortId,

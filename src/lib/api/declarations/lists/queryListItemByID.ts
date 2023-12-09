@@ -11,8 +11,6 @@ export default function queryListItemByID<Value = unknown, Metadata = unknown>(
 ) {
 	return tryGet<QueriedListItem<Value, Metadata>>(
 		declarations(),
-		`/list/query-id/${Initialize.ProjectID()}/${
-			blueprint.locale ? blueprint.locale : Initialize.Locale()
-		}/${blueprint.structureId}/${blueprint.itemId}`,
+		`/list/query-id/${Initialize.ProjectID()}/${blueprint.structureId}/${blueprint.itemId}`,
 	);
 }

@@ -8,9 +8,11 @@ class QueryParams {
 	public readonly direction: 'desc' | 'asc' | undefined = 'desc';
 	public readonly behaviour: Behaviour | undefined = undefined;
 	public readonly orderBy: CurrentSortType = 'index';
+	public readonly locale: string = '';
 	constructor(
     private readonly hiddenPage: string | null,
     readonly limit: string | null,
+	private readonly hiddenLocale: string | null,
     private readonly hiddenDirection: string | null,
     private readonly hiddenOrderBy: string | null,
     private readonly hiddenGroups: string | null,
@@ -58,6 +60,12 @@ class QueryParams {
 		if (!search) {
 			this.search = '';
 		}
+
+		if (!hiddenLocale) {
+			this.locale = '';
+		} else {
+			this.locale = hiddenLocale;
+		}
 	}
 }
 export default function useSearchQuery() {
@@ -66,6 +74,7 @@ export default function useSearchQuery() {
 	const q = new QueryParams(
 		params.get('page'),
 		params.get('limit'),
+		params.get('locale'),
 		params.get('direction'),
 		params.get('orderBy'),
 		params.get('groups'),
@@ -78,6 +87,7 @@ export default function useSearchQuery() {
 			setParams({
 				page: q.page + '',
 				limit: q.limit + '',
+				locale: q.locale,
 				groups: Array.isArray(q.groups) ? q.groups.join(',') : '',
 				direction: q.direction ? q.direction : '',
 				orderBy: q.orderBy,

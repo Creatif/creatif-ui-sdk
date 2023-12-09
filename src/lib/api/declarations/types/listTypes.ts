@@ -13,6 +13,7 @@ export interface AppendingVariableBlueprint<
   name: string;
   behaviour: Behaviour;
   groups?: string[];
+  locale?: string;
   value?: Value;
   metadata?: Metadata;
 }
@@ -52,13 +53,11 @@ export interface PaginationResult<Value, Metadata> {
 }
 export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
   name: string;
-  locale?: string;
   variables: AppendingVariableBlueprint<Value, Metadata>[];
 }
 export interface UpdateListItemBlueprint {
   name: string;
   itemID: string;
-  locale?: string;
   variable: UpdateListItemVariableBlueprint;
 }
 
@@ -66,6 +65,7 @@ export interface UpdateListItemVariableBlueprint {
   name: string;
   behaviour: Behaviour;
   groups: string[];
+  locale?: string;
   metadata: unknown;
   value: unknown;
 }

@@ -1,6 +1,6 @@
 import CreateNew from '@app/uiComponents/button/CreateNew';
 import Sort from '@app/uiComponents/listing/Sort';
-import { Button, Drawer, TextInput } from '@mantine/core';
+import {Button, Drawer, Loader, TextInput} from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconAdjustments, IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -13,24 +13,30 @@ interface Props {
   onSortChange: (sortType: CurrentSortType) => void;
   onBehaviourChange: (behaviour: Behaviour | undefined) => void;
   onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
+  onSelectedLocale: (locale: string) => void;
 
   direction: 'desc' | 'asc' | undefined;
   sortBy: CurrentSortType;
   structureName: string;
   behaviour: Behaviour | undefined;
   groups: string[];
+  isLoading: boolean;
+  locale: string;
 }
 export default function ActionSection({
 	onSearch,
 	structureName,
+	isLoading,
 	onSelectedGroups,
 	onSortChange,
+	onSelectedLocale,
 	onBehaviourChange,
 	onDirectionChange,
 	direction,
 	behaviour,
 	groups,
 	sortBy,
+	locale,
 }: Props) {
 	const [isDrawerOpened, setIsDrawerOpened] = useState(false);
 	const [value, setValue] = useState('');
@@ -70,7 +76,10 @@ export default function ActionSection({
 					</Button>
 				</div>
 
-				<CreateNew structureName={structureName} />
+				<div className={styles.buttonWidthLoadingWrapper}>
+					<CreateNew structureName={structureName} />
+					{isLoading && <Loader size={20} />}
+				</div>
 			</div>
 
 			<Drawer
@@ -79,6 +88,7 @@ export default function ActionSection({
 				position="right"
 			>
 				<Sort
+					onSelectedLocale={onSelectedLocale}
 					onDirectionChange={onDirectionChange}
 					onBehaviourChange={onBehaviourChange}
 					onSortChange={onSortChange}
@@ -86,6 +96,7 @@ export default function ActionSection({
 					structureName={structureName}
 					currentDirection={direction}
 					currentBehaviour={behaviour}
+					currentLocale={locale}
 					currentSort={sortBy}
 					currentGroups={groups}
 				/>

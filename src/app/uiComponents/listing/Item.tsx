@@ -5,14 +5,13 @@ import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
 import styles from '@app/uiComponents/listing/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import { ActionIcon, Checkbox, Pill } from '@mantine/core';
+import {ActionIcon, Button, Checkbox, Pill} from '@mantine/core';
 import {
 	IconChevronDown,
 	IconChevronRight,
 	IconEdit,
 	IconReplace,
 	IconTrash,
-	IconWorld,
 } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -65,7 +64,7 @@ export default function Item({
 						<h2 className={styles.nameRowTitle}>{item.name}</h2>
 
 						<div className={styles.actionRow}>
-							<span className={styles.locale}>{item.locale} locale</span>
+							<Button leftSection={<IconEdit size={16} />} size="xs" variant="default" className={styles.locale}>{item.locale} locale</Button>
 
 							<div className={styles.actionMenu}>
 								<ActionIcon
@@ -159,7 +158,7 @@ export default function Item({
 
 			<DeleteModal
 				message="Are you sure? This action cannot be undone and this item will be permanently deleted."
-				open={deleteItemId}
+				open={Boolean(deleteItemId)}
 				onClose={() => setDeleteItemId(undefined)}
 				onDelete={async () => {
 					setIsDeleting(true);

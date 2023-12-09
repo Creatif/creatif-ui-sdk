@@ -1,15 +1,16 @@
+import {Initialize} from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
-import { app } from '@lib/http/axios';
-import useHttpQuery from '@lib/http/useHttpQuery';
-import { Button, Select } from '@mantine/core';
+import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
+import {Button, Select} from '@mantine/core';
 import { IconStackPush } from '@tabler/icons-react';
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useQueryClient} from 'react-query';
 import styles from './css/header.module.css';
+import type {Locale} from '@lib/api/project/types/SupportedLocales';
 import type { PropsWithChildren } from 'react';
 
 function localesToSelectOptions(
-	data: { name: string; alpha: string }[] | undefined,
+	data: Locale[] | undefined,
 ) {
 	if (!data) return [];
 
@@ -19,23 +20,25 @@ function localesToSelectOptions(
 	}));
 }
 export default function Header({ children }: PropsWithChildren) {
-	const { warn } = useNotification();
-	const { locale } = useParams();
+	const { warn, info } = useNotification();
+	const queryClient = useQueryClient();
+	const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
 
-	const { isFetching, data, error } = useHttpQuery<
-    { name: string; alpha: string }[]
-  >(app(), 'supported_locales', '/supported-locales', {
-  	onError: () => {
-  		warn(
-  			'Warning! Locales failed to load.',
-  			'Locales could not be loaded. Please, try refreshing your browser. If that does not work, the default locale is set to English. If that is not your desired locale, please be patient until we fix this issue.',
-  			false,
-  		);
-  	},
-  });
-	const [currentLocale, setCurrentLocale] = useState<string | null>(
-		locale || 'eng',
-	);
+	const [currentLocale, setCurrentLocale] = useState<string>(Initialize.Locale());
+
+	useEffect(() => {
+		const cachedLocales = queryClient.getQueryData('supported_locales');
+		if (cachedLocales === 'failed') {
+			warn(
+				'Warning! Locales failed to load.',
+				`Locales could not be loaded. Please, try refreshing your browser. If that does not work, locale is set to last locale that you used which is '${Initialize.Locale()}'. If that is not your desired locale, please be patient until we fix this issue.`,
+				false,
+			);
+			return;
+		}
+
+		setLocales(cachedLocales as Locale[]);
+	}, []);
 
 	return (
 		<header className={styles.header}>
@@ -46,15 +49,22 @@ export default function Header({ children }: PropsWithChildren) {
 					<div>
 						<Select
 							value={currentLocale}
-							onChange={(val) => setCurrentLocale(val)}
-							disabled={isFetching || Boolean(error)}
+							onChange={(val) => {
+								if (val) {
+									setCurrentLocale(val);
+									CurrentLocaleStorage.instance.setLocale(val);
+									Initialize.changeLocale(val);
+									info('Locale changed', `Locale changed to '${Initialize.Locale()}'`);
+								}
+							}}
+							disabled={queryClient.getQueryData('supported_locales') === 'failed'}
 							comboboxProps={{
 								transitionProps: { transition: 'pop', duration: 200 },
 							}}
 							searchable
 							size="sm"
 							defaultValue="eng"
-							data={localesToSelectOptions(data)}
+							data={localesToSelectOptions(locales)}
 						/>
 						<span className={styles.supportedLocalesAction}>
               View supported locales?

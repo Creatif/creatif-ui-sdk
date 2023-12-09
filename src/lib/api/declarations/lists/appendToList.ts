@@ -8,9 +8,7 @@ import type {
 export async function appendToList(blueprint: AppendToListBlueprint) {
 	return tryPut<AppendedListResult>(
 		declarations(),
-		`/list/append/${Initialize.ProjectID()}/${
-			blueprint.locale ? blueprint.locale : Initialize.Locale()
-		}`,
+		`/list/append/${Initialize.ProjectID()}`,
 		{
 			name: blueprint.name,
 			variables: blueprint.variables.map((item) => {
@@ -20,6 +18,10 @@ export async function appendToList(blueprint: AppendToListBlueprint) {
 
 				if (item.metadata) {
 					item.metadata = JSON.stringify(item.metadata);
+				}
+
+				if (!item.locale) {
+					item.locale = Initialize.Locale();
 				}
 
 				return item;

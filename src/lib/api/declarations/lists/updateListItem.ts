@@ -8,14 +8,13 @@ import type {
 export async function updateListItem(blueprint: UpdateListItemBlueprint) {
 	return tryPost<UpdateListItemResult>(
 		declarations(),
-		`/list/update-item-by-id/${Initialize.ProjectID()}/${
-			blueprint.locale ? blueprint.locale : Initialize.Locale()
-		}/${blueprint.name}/${
+		`/list/update-item-by-id/${Initialize.ProjectID()}/${blueprint.name}/${
 			blueprint.itemID
-		}?fields=name|metadata|groups|behaviour|value`,
+		}?fields=name|metadata|groups|behaviour|value|locale`,
 		{
 			values: {
 				name: blueprint.variable.name,
+				locale: blueprint.variable.locale || Initialize.Locale(),
 				groups: blueprint.variable.groups,
 				behaviour: blueprint.variable.behaviour,
 				value: blueprint.variable.value

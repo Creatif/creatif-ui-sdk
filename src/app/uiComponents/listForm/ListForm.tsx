@@ -10,7 +10,7 @@ import useUpdateListItem from '@app/uiComponents/listForm/helpers/useUpdateListI
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
-import Storage from '@lib/storage/storage';
+import StructureStorage from '@lib/storage/structureStorage';
 import { Alert, Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -59,12 +59,10 @@ interface Props<T extends FieldValues> {
   ) => React.ReactNode;
   beforeSave?: BeforeSaveFn<T>;
   afterSave?: AfterSaveFn;
-  locale?: string;
   form?: HTMLAttributes<HTMLFormElement>;
 }
 export default function ListForm<T extends FieldValues>({
 	listName,
-	locale,
 	formProps,
 	bindings,
 	inputs,
@@ -103,9 +101,8 @@ export default function ListForm<T extends FieldValues>({
 					`List '${listName}' has been successfully created. This message will only appear once.`,
 				);
 
-				Storage.instance.addList(
+				StructureStorage.instance.addList(
 					listName,
-					locale ? locale : Initialize.Locale(),
 				);
 			},
 			onError() {
@@ -132,8 +129,7 @@ export default function ListForm<T extends FieldValues>({
 	} = methods;
 
 	useEffect(() => {
-		const chosenLocale = locale ? locale : Initialize.Locale();
-		if (!Storage.instance.hasList(listName, chosenLocale)) {
+		if (!StructureStorage.instance.hasList(listName)) {
 			mutate({
 				name: listName,
 			});

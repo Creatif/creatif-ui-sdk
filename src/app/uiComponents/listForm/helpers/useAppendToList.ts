@@ -1,3 +1,4 @@
+import {Initialize} from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { appendToList } from '@lib/api/declarations/lists/appendToList';
 import type { BeforeSaveReturnType } from '@app/uiComponents/types/forms';
@@ -18,6 +19,7 @@ export default function useAppendToList(structureName: string) {
 					name: name,
 					behaviour: behaviour,
 					groups: groups,
+					locale: Initialize.Locale(),
 					value: beforeSaveResult.value,
 					metadata: beforeSaveResult.metadata,
 				},

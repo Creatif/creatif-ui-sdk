@@ -17,3 +17,10 @@
   align-content: center;
   gap: 1rem;
 }
+
+.buttonWidthLoadingWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}

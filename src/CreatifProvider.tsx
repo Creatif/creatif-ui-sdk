@@ -2,7 +2,9 @@ import Authentication from '@app/components/authentication/Authentication';
 import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
 import { getProjectMetadata } from '@lib/api/project/getProjectMetadata';
-import Storage from '@lib/storage/storage';
+import {getSupportedLocales} from '@lib/api/project/getSupportedLocales';
+import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
+import StructureStorage from '@lib/storage/structureStorage';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -18,7 +20,6 @@ import styles from '@app/css/global.module.css';
 interface Props {
   apiKey: string;
   projectId: string;
-  locale?: string;
 }
 
 const theme = createTheme({
@@ -26,10 +27,11 @@ const theme = createTheme({
 	fontFamilyMonospace: 'Monaco, Courier, monospace',
 	headings: { fontFamily: 'Barlow, sans-serif' },
 });
+
+const queryClient = new QueryClient();
 export function CreatifProvider({
 	apiKey,
 	projectId,
-	locale = 'eng',
 	children,
 }: Props & PropsWithChildren) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,9 +43,20 @@ export function CreatifProvider({
 		const { result } = await getProjectMetadata();
 
 		if (result) {
-			Initialize.init(apiKey, projectId, locale);
-			Storage.init(result);
-			setIsLoggedIn(true);
+			getSupportedLocales().then(({result: locales, error}) => {
+				if (error) {
+					queryClient.setQueryData('supported_locales', 'failed');
+				}
+
+				if (locales) {
+					queryClient.setQueryData('supported_locales', locales);
+				}
+
+				CurrentLocaleStorage.init('eng');
+				Initialize.init(apiKey, projectId, CurrentLocaleStorage.instance.getLocale());
+				StructureStorage.init(result);
+				setIsLoggedIn(true);
+			});
 		}
 	}, []);
 
@@ -63,7 +76,7 @@ export function CreatifProvider({
 			{isLoggedIn && <Notifications limit={5} />}
 			{isLoggedIn && (
 				<>
-					<QueryClientProvider client={new QueryClient()}>
+					<QueryClientProvider client={queryClient}>
 						<div className={styles.initialAnimation}>{children}</div>
 					</QueryClientProvider>
 				</>

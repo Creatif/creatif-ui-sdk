@@ -1,4 +1,5 @@
 import CenteredError from '@app/components/CenteredError';
+import Loading from '@app/components/Loading';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
@@ -25,6 +26,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
     useNotification();
 
 	const [page, setPage] = useState(queryParams.page);
+	const [locale, setLocale] = useState(queryParams.locale);
 	const [search, setSearch] = useState(queryParams.search);
 	const [groups, setGroups] = useState<string[]>(queryParams.groups);
 	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(
@@ -40,12 +42,12 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 	const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
 	const [areItemsDeleting, setAreItemsDeleting] = useState(false);
 
-	const { data, error, invalidateEntireQuery } = useHttpPaginationQuery<
+	const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
     PaginationResult<Value, Metadata>
   >({
   	listName: listName,
   	page: page,
-  	locale: 'hrv',
+  	locale: locale,
   	groups: groups,
   	direction: direction,
   	behaviour: behaviour,
@@ -84,13 +86,19 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 	return (
 		<>
 			<ActionSection
+				isLoading={isFetching}
 				sortBy={orderBy}
+				locale={locale}
 				direction={direction}
 				behaviour={behaviour}
 				groups={groups}
 				onDirectionChange={(direction) => {
 					setDirection(direction);
 					setParam('direction', direction as string);
+				}}
+				onSelectedLocale={(locale) => {
+					setLocale(locale);
+					setParam('locale', locale);
 				}}
 				onBehaviourChange={(behaviour) => {
 					setBehaviour(behaviour);

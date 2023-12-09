@@ -5,9 +5,7 @@ import type { CreateListBlueprint } from '@lib/api/declarations/types/listTypes'
 export async function createList(blueprint: CreateListBlueprint) {
 	return tryPut(
 		declarations(),
-		`/list/${Initialize.ProjectID()}/${
-			blueprint.locale ? blueprint.locale : Initialize.Locale()
-		}`,
+		`/list/${Initialize.ProjectID()}`,
 		{
 			name: blueprint.name,
 		},
