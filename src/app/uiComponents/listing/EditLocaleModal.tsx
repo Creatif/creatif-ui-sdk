@@ -1,4 +1,3 @@
-import {Initialize} from '@app/initialize';
 import styles from '@app/uiComponents/listing/css/DeleteModal.module.css';
 import {Button, Modal, Select} from '@mantine/core';
 import {useState} from 'react';

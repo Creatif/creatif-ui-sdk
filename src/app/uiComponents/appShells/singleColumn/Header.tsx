@@ -1,5 +1,6 @@
 import {Initialize} from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
+import SupportedLocalesModal from '@app/uiComponents/appShells/singleColumn/SupportedLocalesModal';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import {Button, Select} from '@mantine/core';
 import { IconStackPush } from '@tabler/icons-react';
@@ -23,8 +24,8 @@ export default function Header({ children }: PropsWithChildren) {
 	const { warn, info } = useNotification();
 	const queryClient = useQueryClient();
 	const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
-
 	const [currentLocale, setCurrentLocale] = useState<string>(Initialize.Locale());
+	const [isLocalesModalOpen, setIsLocalesModalOpen] = useState(false);
 
 	useEffect(() => {
 		const cachedLocales = queryClient.getQueryData('supported_locales');
@@ -66,7 +67,7 @@ export default function Header({ children }: PropsWithChildren) {
 							defaultValue="eng"
 							data={localesToSelectOptions(locales)}
 						/>
-						<span className={styles.supportedLocalesAction}>
+						<span onClick={() => setIsLocalesModalOpen(true)} className={styles.supportedLocalesAction}>
               View supported locales?
 						</span>
 					</div>
@@ -76,6 +77,8 @@ export default function Header({ children }: PropsWithChildren) {
 					</Button>
 				</div>
 			</div>
+
+			<SupportedLocalesModal open={isLocalesModalOpen} onClose={() => setIsLocalesModalOpen(false)} />
 		</header>
 	);
 }
