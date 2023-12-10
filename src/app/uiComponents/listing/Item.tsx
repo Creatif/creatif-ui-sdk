@@ -1,10 +1,14 @@
+import {Initialize} from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/listing/DeleteModal';
+import EditLocaleModal from '@app/uiComponents/listing/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
 import styles from '@app/uiComponents/listing/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
+import {declarations} from '@lib/http/axios';
+import useHttpMutation from '@lib/http/useHttpMutation';
 import {ActionIcon, Button, Checkbox, Pill} from '@mantine/core';
 import {
 	IconChevronDown,
@@ -16,7 +20,7 @@ import {
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { PaginatedVariableResult } from '@lib/api/declarations/types/listTypes';
+import type {PaginatedVariableResult, UpdateListItemResult} from '@lib/api/declarations/types/listTypes';
 interface Props {
   item: PaginatedVariableResult<any, any>;
   listName: string;
@@ -37,6 +41,21 @@ export default function Item({
 	const useOptions = getOptions(listName);
 
 	const [deleteItemId, setDeleteItemId] = useState<string>();
+	const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
+	const {info, error} = useNotification();
+
+	const {mutate, isLoading, data} = useHttpMutation<unknown, UpdateListItemResult>(declarations(), 'post', `/list/update-item-by-id/${Initialize.ProjectID()}/${listName}/${
+		item.id
+	}?fields=locale`, {
+		onSuccess: () => {
+			info('Locale changed.', `Locale for structure '${listName}' and item '${item.name}' has been updated.`);
+		},
+		onError: () => {
+			error('Something went wrong.', 'Locale cannot be changed at this moment. Please, try again later.');
+		}
+	});
+
+	item.locale = data && data.locale ? data.locale : item.locale;
 
 	return (
 		<div
@@ -64,7 +83,22 @@ export default function Item({
 						<h2 className={styles.nameRowTitle}>{item.name}</h2>
 
 						<div className={styles.actionRow}>
-							<Button leftSection={<IconEdit size={16} />} size="xs" variant="default" className={styles.locale}>{item.locale} locale</Button>
+							<Button
+								disabled={isLoading}
+								loading={isLoading}
+								loaderProps={{size: 12}}
+								onClick={(e) => {
+									e.stopPropagation();
+									setIsEditLocaleOpen(true);
+								}}
+								leftSection={<IconEdit style={{
+									color: isLoading ? 'var(--mantine-color-gray-4)' : 'var(--mantine-color-gray-8)'
+								}} size={12} />}
+								size="xs"
+								variant="default"
+								className={styles.locale}>
+								{item.locale} locale
+							</Button>
 
 							<div className={styles.actionMenu}>
 								<ActionIcon
@@ -183,6 +217,20 @@ export default function Item({
 					setDeleteItemId(undefined);
 				}}
 			/>
+			
+			<EditLocaleModal currentLocale={item.locale} open={isEditLocaleOpen} onClose={() => setIsEditLocaleOpen(false)} onEdit={(locale) => {
+				if (item.locale === locale) {
+					setIsEditLocaleOpen(false);
+					return;
+				}
+
+				mutate({
+					values: {
+						locale: locale,
+					}
+				});
+				setIsEditLocaleOpen(false);
+			}} />
 		</div>
 	);
 }

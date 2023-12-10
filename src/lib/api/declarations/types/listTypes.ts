@@ -69,15 +69,19 @@ export interface UpdateListItemVariableBlueprint {
   metadata: unknown;
   value: unknown;
 }
-export interface AppendedListResult {
+
+export interface UpdateListItemResult<Value = unknown, Metadata = unknown> {
   id: string;
-  projectID: string;
   name: string;
   locale: string;
+  behaviour: Behaviour;
+  groups: string[];
+  metadata: Metadata;
+  value: Value;
   createdAt: string;
   updatedAt: string;
 }
-export interface UpdateListItemResult {
+export interface AppendedListResult {
   id: string;
   projectID: string;
   name: string;
