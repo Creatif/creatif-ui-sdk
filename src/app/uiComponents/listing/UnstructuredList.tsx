@@ -26,7 +26,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
     useNotification();
 
 	const [page, setPage] = useState(queryParams.page);
-	const [locale, setLocale] = useState(queryParams.locale);
+	const [locales, setLocales] = useState<string[]>(queryParams.locales);
 	const [search, setSearch] = useState(queryParams.search);
 	const [groups, setGroups] = useState<string[]>(queryParams.groups);
 	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(
@@ -47,7 +47,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
   >({
   	listName: listName,
   	page: page,
-  	locale: locale,
+  	locales: locales,
   	groups: groups,
   	direction: direction,
   	behaviour: behaviour,
@@ -88,7 +88,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 			<ActionSection
 				isLoading={isFetching}
 				sortBy={orderBy}
-				locale={locale}
+				locales={locales}
 				direction={direction}
 				behaviour={behaviour}
 				groups={groups}
@@ -96,9 +96,9 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 					setDirection(direction);
 					setParam('direction', direction as string);
 				}}
-				onSelectedLocale={(locale) => {
-					setLocale(locale);
-					setParam('locale', locale);
+				onSelectedLocales={(locales) => {
+					setLocales(locales);
+					setParam('locales', locales.join(','));
 				}}
 				onBehaviourChange={(behaviour) => {
 					setBehaviour(behaviour);

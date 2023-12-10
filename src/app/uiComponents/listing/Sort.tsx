@@ -1,7 +1,7 @@
 import { Initialize } from '@app/initialize';
 import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
-import {MultiSelect, Select} from '@mantine/core';
+import {MultiSelect} from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
 	IconCheck,
@@ -24,21 +24,21 @@ interface Props {
   structureName: string;
   currentDirection: 'desc' | 'asc' | undefined;
   currentBehaviour: Behaviour | undefined;
-  currentLocale: string;
+  currentLocales: string[];
 
   onSelectedGroups: (groups: string[]) => void;
   onSortChange: (sort: CurrentSortType) => void;
   onBehaviourChange: (sort: Behaviour | undefined) => void;
   onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
-  onSelectedLocale: (locale: string) => void;
+  onSelectedLocales: (locales: string[]) => void;
 }
 export default function Sort({
 	currentSort = 'index',
 	currentGroups = [],
 	structureName,
-	currentLocale,
+	currentLocales,
 	onSelectedGroups,
-	onSelectedLocale,
+	onSelectedLocales,
 	onSortChange,
 	onBehaviourChange,
 	onDirectionChange,
@@ -48,7 +48,7 @@ export default function Sort({
 	const [selectedSort, setSelectedSort] =
     useState<CurrentSortType>(currentSort);
 	const [groups, setGroups] = useState<string[]>(currentGroups);
-	const [locale, setLocale] = useState<string | null>(currentLocale);
+	const [locales, setLocales] = useState<string[]>(currentLocales);
 	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(
 		currentBehaviour,
 	);
@@ -153,16 +153,16 @@ export default function Sort({
 			</div>
 
 			<div className={styles.sortRoot}>
-				<h2 className={styles.sortTitle}>LOCALE</h2>
+				<h2 className={styles.sortTitle}>Locales</h2>
 
 				<div className={styles.column}>
-					<Select
-						value={locale}
+					<MultiSelect
+						value={locales}
 						searchable
 						clearable
-						onChange={(selectedLocale) => {
-							setLocale(selectedLocale);
-							onSelectedLocale(selectedLocale ? selectedLocale : '');
+						onChange={(locales) => {
+							setLocales(locales);
+							onSelectedLocales(locales);
 						}}
 						nothingFoundMessage="No locales found"
 						filter={({options, search}) => {
@@ -176,11 +176,12 @@ export default function Sort({
 							filtered.sort((a, b) => a.label.localeCompare(b.label));
 							return filtered;
 						}}
-						placeholder="Select locale"
+						placeholder="Select locales"
 						data={cachedLocales.map(item => ({
 							value: item.alpha,
 							label: `${item.name} - ${item.alpha}`,
-						}))}					/>
+						}))}
+					/>
 				</div>
 			</div>
 
@@ -191,6 +192,7 @@ export default function Sort({
 					<MultiSelect
 						disabled={areGroupsLoading || Boolean(error)}
 						value={groups}
+						clearable
 						searchable
 						onChange={setGroups}
 						nothingFoundMessage="No groups found"

@@ -6,7 +6,7 @@ import { useQueryClient } from 'react-query';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 interface Props {
   listName: string;
-  locale?: string;
+  locales?: string[];
   limit?: string;
   page?: number;
   behaviour?: Behaviour | undefined;
@@ -24,7 +24,7 @@ export default function useHttpPaginationQuery<Response>({
 	orderBy = 'created_at',
 	direction = 'desc',
 	behaviour = undefined,
-	locale = '',
+	locales = [],
 }: Props) {
 	const queryClient = useQueryClient();
 
@@ -39,7 +39,7 @@ export default function useHttpPaginationQuery<Response>({
 					groups: groups,
 					behaviour: behaviour,
 					orderBy: orderBy,
-					locale: locale,
+					locale: locales,
 					direction: direction,
 					search: search,
 				},
@@ -52,7 +52,7 @@ export default function useHttpPaginationQuery<Response>({
 				direction,
 				search,
 				behaviour,
-				locale,
+				locales,
 			)}`,
 		),
 		invalidateQuery(
@@ -62,7 +62,7 @@ export default function useHttpPaginationQuery<Response>({
 			groups: string[] = [],
 			orderBy = 'created_at',
 			direction = 'desc',
-			locale = '',
+			locales: string[] = [],
 		) {
 			queryClient.invalidateQueries([
 				listName,
@@ -74,7 +74,7 @@ export default function useHttpPaginationQuery<Response>({
 					orderBy: orderBy,
 					direction: direction,
 					search: search,
-					locale: locale,
+					locales: locales,
 				},
 			]);
 		},

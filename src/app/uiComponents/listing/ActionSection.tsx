@@ -13,7 +13,7 @@ interface Props {
   onSortChange: (sortType: CurrentSortType) => void;
   onBehaviourChange: (behaviour: Behaviour | undefined) => void;
   onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
-  onSelectedLocale: (locale: string) => void;
+  onSelectedLocales: (locales: string[]) => void;
 
   direction: 'desc' | 'asc' | undefined;
   sortBy: CurrentSortType;
@@ -21,7 +21,7 @@ interface Props {
   behaviour: Behaviour | undefined;
   groups: string[];
   isLoading: boolean;
-  locale: string;
+  locales: string[];
 }
 export default function ActionSection({
 	onSearch,
@@ -29,14 +29,14 @@ export default function ActionSection({
 	isLoading,
 	onSelectedGroups,
 	onSortChange,
-	onSelectedLocale,
+	onSelectedLocales,
 	onBehaviourChange,
 	onDirectionChange,
 	direction,
 	behaviour,
 	groups,
 	sortBy,
-	locale,
+	locales,
 }: Props) {
 	const [isDrawerOpened, setIsDrawerOpened] = useState(false);
 	const [value, setValue] = useState('');
@@ -88,7 +88,7 @@ export default function ActionSection({
 				position="right"
 			>
 				<Sort
-					onSelectedLocale={onSelectedLocale}
+					onSelectedLocales={onSelectedLocales}
 					onDirectionChange={onDirectionChange}
 					onBehaviourChange={onBehaviourChange}
 					onSortChange={onSortChange}
@@ -96,7 +96,7 @@ export default function ActionSection({
 					structureName={structureName}
 					currentDirection={direction}
 					currentBehaviour={behaviour}
-					currentLocale={locale}
+					currentLocales={locales}
 					currentSort={sortBy}
 					currentGroups={groups}
 				/>
