@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import styles from './json.module.css';
 
 interface Props {
-  value: object;
+    value: object;
 }
 export default function JSON({ value }: Props) {
 	const ref = useRef(null);
@@ -24,14 +24,13 @@ export default function JSON({ value }: Props) {
 		<div
 			className={styles.root}
 			style={{
-				fontFamily:
-          'ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace',
+				fontFamily: 'ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace',
 				fontSize: '0.8rem',
 				'--jsonPaddingLeft': '1.5rem',
 				fontWeight: 200,
 				'ul li': 'margin-bottom: 0.4rem',
 			}}
 			ref={ref}
-		></div>
+		/>
 	);
 }

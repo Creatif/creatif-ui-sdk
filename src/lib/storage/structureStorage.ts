@@ -1,9 +1,33 @@
 import { Initialize } from '@app/initialize';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 interface InternalStorage {
-  variables: Record<string, string[]> | null;
-  maps: Record<string, string[]> | null;
-  lists: string[] | null;
+    variables: Record<string, string[]> | null;
+    maps: Record<string, string[]> | null;
+    lists: string[] | null;
+}
+
+function removePreviousProjectIfExists(currentKey: string) {
+	const nonDeterminedKeys = ['creatif-current-locale'];
+	const lsKeys = Object.keys(localStorage);
+	// filter out the keys that are not project key
+	const possibleAppKeys = lsKeys.filter(
+		(item) => new RegExp('creatif-').test(item) && !nonDeterminedKeys.includes(item),
+	);
+	if (possibleAppKeys.length !== 1) {
+		console.warn('App LS key not found.');
+		return;
+	}
+
+	const key = possibleAppKeys[0];
+	// if this is a different app key, remove all creatif keys since they will be recreated later
+	if (key !== currentKey) {
+		console.info('Removing previous app LS keys. They will be recreated.');
+		for (const lsKey of lsKeys) {
+			if (new RegExp('creatif-').test(lsKey)) {
+				localStorage.removeItem(lsKey);
+			}
+		}
+	}
 }
 export default class StructureStorage {
 	public static instance: StructureStorage;
@@ -13,19 +37,9 @@ export default class StructureStorage {
 		this.storage = storage;
 	}
 	static init(projectMetadata: ProjectMetadata) {
-		StructureStorage.key = `creatif-${Initialize.ProjectID()}-${Initialize.ApiKey().substring(
-			0,
-			10,
-		)}`;
-		// remove previous project keys. This is to reduce the load on local storage if localhost
-		// is used with multiple project
-		const undeleteableKeys = ['creatif-current-locale'];
-		const keys = Object.keys(localStorage);
-		for (const key of keys) {
-			if (key !== StructureStorage.key && !undeleteableKeys.includes(key)) {
-				localStorage.removeItem(key);
-			}
-		}
+		StructureStorage.key = `creatif-${Initialize.ProjectID()}`;
+
+		removePreviousProjectIfExists(StructureStorage.key);
 
 		const locale = Initialize.Locale();
 		const internalStorage: InternalStorage = {

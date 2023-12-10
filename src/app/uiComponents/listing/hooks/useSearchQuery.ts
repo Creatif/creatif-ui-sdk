@@ -10,14 +10,14 @@ class QueryParams {
 	public readonly orderBy: CurrentSortType = 'index';
 	public readonly locales: string[] = [];
 	constructor(
-    private readonly hiddenPage: string | null,
-    readonly limit: string | null,
-	private readonly hiddenLocales: string | null,
-    private readonly hiddenDirection: string | null,
-    private readonly hiddenOrderBy: string | null,
-    private readonly hiddenGroups: string | null,
-    private readonly hiddenBehaviour: string | null,
-    readonly search: string | null,
+        private readonly hiddenPage: string | null,
+        readonly limit: string | null,
+        private readonly hiddenLocales: string | null,
+        private readonly hiddenDirection: string | null,
+        private readonly hiddenOrderBy: string | null,
+        private readonly hiddenGroups: string | null,
+        private readonly hiddenBehaviour: string | null,
+        readonly search: string | null,
 	) {
 		if (!hiddenPage) {
 			this.page = 1;
@@ -48,10 +48,7 @@ class QueryParams {
 			this.direction = hiddenDirection as 'desc' | 'asc' | undefined;
 		}
 
-		if (
-			this.hiddenBehaviour !== 'modifiable' &&
-      this.hiddenBehaviour !== 'readonly'
-		) {
+		if (this.hiddenBehaviour !== 'modifiable' && this.hiddenBehaviour !== 'readonly') {
 			this.behaviour = undefined;
 		} else {
 			this.behaviour = hiddenBehaviour as Behaviour | undefined;

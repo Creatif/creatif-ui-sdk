@@ -5,20 +5,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import type { CheckboxProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends CheckboxProps {
-  name: string;
-  onInputChange?: (value: boolean) => void;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
-  options?: RegisterOptions;
+    name: string;
+    onInputChange?: (value: boolean) => void;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: RegisterOptions;
 }
-export default function InputCheckboxControlled({
-	name,
-	validation,
-	onInputChange,
-	...rest
-}: Props) {
+export default function InputCheckboxControlled({ name, validation, onInputChange, ...rest }: Props) {
 	const { control, getValues } = useFormContext();
 	const [checked, setChecked] = useState(getValues(name));
 

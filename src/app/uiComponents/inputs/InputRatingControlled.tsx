@@ -3,15 +3,10 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { RatingProps } from '@mantine/core';
 interface Props extends RatingProps {
-  name: string;
-  onInputChange?: (value: number) => void;
+    name: string;
+    onInputChange?: (value: number) => void;
 }
-export default function InputRatingControlled({
-	name,
-	defaultValue,
-	onInputChange,
-	...rest
-}: Props) {
+export default function InputRatingControlled({ name, defaultValue, onInputChange, ...rest }: Props) {
 	const { control, getValues } = useFormContext();
 	const [value, setValue] = useState(defaultValue || getValues(name));
 

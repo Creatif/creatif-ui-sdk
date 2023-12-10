@@ -16,12 +16,10 @@ export default function useUpdateList<T>(isUpdateMode: boolean) {
 	}
 
 	return async (): Promise<T> => {
-		const { result, error } = await queryListItemByID<
-      QueriedListItem<unknown, unknown>
-    >({
-    	itemId: itemId,
-    	structureId: structureId,
-    });
+		const { result, error } = await queryListItemByID<QueriedListItem<unknown, unknown>>({
+			itemId: itemId,
+			structureId: structureId,
+		});
 
 		if (error) {
 			errorNotification(

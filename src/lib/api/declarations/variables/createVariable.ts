@@ -6,19 +6,13 @@ import type { CreateVariableBlueprint } from '@lib/api/declarations/types/variab
 export async function createVariable(blueprint: CreateVariableBlueprint) {
 	return tryPut(
 		declarations(),
-		`/variable/${Initialize.ProjectID()}/${
-			blueprint.locale ? blueprint.locale : Initialize.Locale()
-		}`,
+		`/variable/${Initialize.ProjectID()}/${blueprint.locale ? blueprint.locale : Initialize.Locale()}`,
 		{
 			name: blueprint.name,
 			behaviour: blueprint.behaviour,
 			groups: blueprint.groups,
-			metadata: !exists('metadata', blueprint.metadata)
-				? JSON.stringify(blueprint.metadata)
-				: null,
-			value: !exists('value', blueprint.value)
-				? JSON.stringify(blueprint.value)
-				: null,
+			metadata: !exists('metadata', blueprint.metadata) ? JSON.stringify(blueprint.metadata) : null,
+			value: !exists('value', blueprint.value) ? JSON.stringify(blueprint.value) : null,
 		},
 	);
 }

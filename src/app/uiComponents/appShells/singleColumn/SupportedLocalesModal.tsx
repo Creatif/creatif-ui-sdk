@@ -1,20 +1,17 @@
 import styles from '@app/uiComponents/listing/css/DeleteModal.module.css';
-import {Button, Input, Modal, ScrollArea, Select, Table, TextInput} from '@mantine/core';
-import {useDebouncedValue} from '@mantine/hooks';
-import {IconSearch} from '@tabler/icons-react';
-import {useEffect, useState} from 'react';
-import {useQueryClient} from 'react-query';
-import type {Locale} from '@lib/api/project/types/SupportedLocales';
+import { Button, Modal, ScrollArea, Table, TextInput } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
+import { IconSearch } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
+import type { Locale } from '@lib/api/project/types/SupportedLocales';
 
 interface Props {
     open: boolean;
     onClose: () => void;
 }
 
-export default function SupportedLocalesModal({
-	open,
-	onClose,
-}: Props) {
+export default function SupportedLocalesModal({ open, onClose }: Props) {
 	const [value, setValue] = useState<string>('');
 	const locales = useQueryClient().getQueryData('supported_locales') as Locale[];
 	const [searchedLocales, setSearchedLocales] = useState<Locale[]>([]);
@@ -57,32 +54,47 @@ export default function SupportedLocalesModal({
 					leftSection={<IconSearch size={14} />}
 				/>
 
-				{searchedLocales.length > 0 && <ScrollArea style={{
-					marginTop: '3rem',
-					marginBottom: '3rem',
-				}} h={250}>
-					<Table withTableBorder withColumnBorders>
-						<Table.Thead>
-							<Table.Tr>
-								<Table.Th style={{
-									fontWeight: 'bolder',
-									width: '70%',
-								}}>Name</Table.Th>
-								<Table.Th style={{
-									fontWeight: 'bolder',
-									width: '30%',
-								}}>Alpha</Table.Th>
-							</Table.Tr>
-						</Table.Thead>
-						<Table.Tbody>{rows}</Table.Tbody>
-					</Table>
-				</ScrollArea>}
+				{searchedLocales.length > 0 && (
+					<ScrollArea
+						style={{
+							marginTop: '3rem',
+							marginBottom: '3rem',
+						}}
+						h={250}>
+						<Table withTableBorder withColumnBorders>
+							<Table.Thead>
+								<Table.Tr>
+									<Table.Th
+										style={{
+											fontWeight: 'bolder',
+											width: '70%',
+										}}>
+                                        Name
+									</Table.Th>
+									<Table.Th
+										style={{
+											fontWeight: 'bolder',
+											width: '30%',
+										}}>
+                                        Alpha
+									</Table.Th>
+								</Table.Tr>
+							</Table.Thead>
+							<Table.Tbody>{rows}</Table.Tbody>
+						</Table>
+					</ScrollArea>
+				)}
 
-				{searchedLocales.length === 0 && <p style={{
-					textAlign: 'center',
-					margin: '3rem 0 3rem 0',
-					color: 'var(--mantine-color-gray-6)'
-				}}>NOTHING FOUND</p>}
+				{searchedLocales.length === 0 && (
+					<p
+						style={{
+							textAlign: 'center',
+							margin: '3rem 0 3rem 0',
+							color: 'var(--mantine-color-gray-6)',
+						}}>
+                        NOTHING FOUND
+					</p>
+				)}
 
 				<div className={styles.buttonGroup}>
 					<Button onClick={onClose} variant="light" color="gray">

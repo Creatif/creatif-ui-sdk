@@ -1,18 +1,16 @@
-import {Initialize} from '@app/initialize';
+import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/appShells/singleColumn/SupportedLocalesModal';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
-import {Button, Select} from '@mantine/core';
+import { Button, Select } from '@mantine/core';
 import { IconStackPush } from '@tabler/icons-react';
-import {useEffect, useState} from 'react';
-import {useQueryClient} from 'react-query';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import styles from './css/header.module.css';
-import type {Locale} from '@lib/api/project/types/SupportedLocales';
+import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import type { PropsWithChildren } from 'react';
 
-function localesToSelectOptions(
-	data: Locale[] | undefined,
-) {
+function localesToSelectOptions(data: Locale[] | undefined) {
 	if (!data) return [];
 
 	return data.map((item) => ({
@@ -68,12 +66,12 @@ export default function Header({ children }: PropsWithChildren) {
 							data={localesToSelectOptions(locales)}
 						/>
 						<span onClick={() => setIsLocalesModalOpen(true)} className={styles.supportedLocalesAction}>
-              View supported locales?
+                            View supported locales?
 						</span>
 					</div>
 
 					<Button color="green" leftSection={<IconStackPush size={24} />}>
-            Publish
+                        Publish
 					</Button>
 				</div>
 			</div>

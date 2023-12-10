@@ -5,15 +5,15 @@ import useHttpQuery from '@lib/http/useHttpQuery';
 import { useQueryClient } from 'react-query';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 interface Props {
-  listName: string;
-  locales?: string[];
-  limit?: string;
-  page?: number;
-  behaviour?: Behaviour | undefined;
-  groups?: string[];
-  orderBy?: string;
-  search?: string;
-  direction?: 'desc' | 'asc';
+    listName: string;
+    locales?: string[];
+    limit?: string;
+    page?: number;
+    behaviour?: Behaviour | undefined;
+    groups?: string[];
+    orderBy?: string;
+    search?: string;
+    direction?: 'desc' | 'asc';
 }
 export default function useHttpPaginationQuery<Response>({
 	listName,
@@ -54,6 +54,11 @@ export default function useHttpPaginationQuery<Response>({
 				behaviour,
 				locales,
 			)}`,
+			undefined,
+			{
+				'X-CREATIF-API-KEY': Initialize.ApiKey(),
+				'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
+			},
 		),
 		invalidateQuery(
 			listName: string,

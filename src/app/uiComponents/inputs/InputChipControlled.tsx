@@ -7,13 +7,10 @@ import type { ChipProps } from '@mantine/core';
 import type { PropsWithChildren } from 'react';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 interface Props extends ChipProps {
-  name: string;
-  format?: string;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
-  onInputChange?: (checked: boolean) => void;
+    name: string;
+    format?: string;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (checked: boolean) => void;
 }
 export default function InputChipControlled({
 	name,
@@ -41,8 +38,7 @@ export default function InputChipControlled({
 							onInputChange?.(value);
 							setChecked((value) => !value);
 						}}
-						{...rest}
-					>
+						{...rest}>
 						{children}
 					</Chip>
 

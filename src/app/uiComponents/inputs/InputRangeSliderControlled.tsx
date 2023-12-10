@@ -6,24 +6,13 @@ import styles from './css/InputSlider.module.css';
 import type { RangeSliderProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends RangeSliderProps {
-  name: string;
-  onInputChange?: (value: [number, number]) => void;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
+    name: string;
+    onInputChange?: (value: [number, number]) => void;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export default function InputRangeSliderControlled({
-	name,
-	validation,
-	onInputChange,
-	defaultValue,
-	...rest
-}: Props) {
+export default function InputRangeSliderControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
 	const { control, getValues, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<[number, number] | undefined>(
-		defaultValue || getValues(name),
-	);
+	const [value, setValue] = useState<[number, number] | undefined>(defaultValue || getValues(name));
 	const error = useFirstError(name);
 
 	useEffect(() => {

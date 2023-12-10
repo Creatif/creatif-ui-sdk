@@ -1,24 +1,24 @@
 import type React from 'react';
 
 export interface AppShellItems {
-  logo: React.ReactNode;
-  header: React.ReactNode;
-  items: AppShellItem[];
+    logo: React.ReactNode;
+    header: React.ReactNode;
+    items: AppShellItem[];
 }
 
 export interface AppShellMenu {
-  text: string;
-  path: string;
-  icon?: React.ReactNode;
+    text: string;
+    path: string;
+    icon?: React.ReactNode;
 }
 
 export interface AppShellCreate {
-  component: React.ReactNode;
+    component: React.ReactNode;
 }
 
 export interface AppShellItem {
-  menu: AppShellMenu;
-  structure: { name: string; type: 'list' | 'variable' | 'map' };
-  create: AppShellCreate;
-  update: AppShellCreate;
+    menu: AppShellMenu;
+    structure: { name: string; type: 'list' | 'variable' | 'map' };
+    create: AppShellCreate;
+    update: AppShellCreate;
 }

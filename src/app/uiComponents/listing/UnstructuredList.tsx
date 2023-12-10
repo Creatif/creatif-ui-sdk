@@ -1,5 +1,4 @@
 import CenteredError from '@app/components/CenteredError';
-import Loading from '@app/components/Loading';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
@@ -18,23 +17,18 @@ import type { CurrentSortType } from '@app/uiComponents/listing/types/components
 import type { PaginationResult } from '@lib/api/declarations/types/listTypes';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
 interface Props {
-  listName: string;
+    listName: string;
 }
 export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 	const { queryParams, setParam } = useSearchQuery();
-	const { error: errorNotification, success: successNotification } =
-    useNotification();
+	const { error: errorNotification, success: successNotification } = useNotification();
 
 	const [page, setPage] = useState(queryParams.page);
 	const [locales, setLocales] = useState<string[]>(queryParams.locales);
 	const [search, setSearch] = useState(queryParams.search);
 	const [groups, setGroups] = useState<string[]>(queryParams.groups);
-	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(
-		queryParams.direction,
-	);
-	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(
-		queryParams.behaviour,
-	);
+	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(queryParams.direction);
+	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
 	const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy);
 	const [limit, setLimit] = useState(queryParams.limit);
 
@@ -43,45 +37,43 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 	const [areItemsDeleting, setAreItemsDeleting] = useState(false);
 
 	const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
-    PaginationResult<Value, Metadata>
-  >({
-  	listName: listName,
-  	page: page,
-  	locales: locales,
-  	groups: groups,
-  	direction: direction,
-  	behaviour: behaviour,
-  	limit: limit as string,
-  	orderBy: orderBy,
-  	search: search as string,
-  });
+        PaginationResult<Value, Metadata>
+    >({
+    	listName: listName,
+    	page: page,
+    	locales: locales,
+    	groups: groups,
+    	direction: direction,
+    	behaviour: behaviour,
+    	limit: limit as string,
+    	orderBy: orderBy,
+    	search: search as string,
+    });
 
 	const { mutate: deleteItemsByRange, invalidateQueries } = useHttpMutation<
-    { items: string[]; name: string },
-    undefined
-  >(
-  	declarations(),
-  	'post',
-  	`/list/range/${Initialize.ProjectID()}/${Initialize.Locale()}`,
-  	{
-  		onSuccess() {
-  			setAreItemsDeleting(false);
-  			setCheckedItems([]);
-  			invalidateQueries(listName);
-  			successNotification(
-  				'Action is a success',
-  				'All selected items were deleted.',
-  			);
-  		},
-  		onError() {
-  			setAreItemsDeleting(false);
-  			errorNotification(
-  				'Something wrong',
-  				'An error occurred. Please, try again later.',
-  			);
-  		},
-  	},
-  );
+        { items: string[]; name: string },
+        undefined
+    >(
+    	declarations(),
+    	'post',
+    	`/list/range/${Initialize.ProjectID()}/${Initialize.Locale()}`,
+    	{
+    		onSuccess() {
+    			setAreItemsDeleting(false);
+    			setCheckedItems([]);
+    			invalidateQueries(listName);
+    			successNotification('Action is a success', 'All selected items were deleted.');
+    		},
+    		onError() {
+    			setAreItemsDeleting(false);
+    			errorNotification('Something wrong', 'An error occurred. Please, try again later.');
+    		},
+    	},
+    	{
+    		'X-CREATIF-API-KEY': Initialize.ApiKey(),
+    		'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
+    	},
+    );
 
 	return (
 		<>
@@ -122,8 +114,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 			<div className={contentContainerStyles.root}>
 				{data && data.total > 0 && (
 					<p className={styles.totalInfo}>
-            Showing <span>{limit}</span> of <span>{data.total}</span> total
-            items
+                        Showing <span>{limit}</span> of <span>{data.total}</span> total items
 					</p>
 				)}
 
@@ -137,9 +128,8 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 							onClick={() => setIsDeleteAllModalOpen(true)}
 							color="red"
 							variant="outline"
-							size="xs"
-						>
-              Delete selected
+							size="xs">
+                            Delete selected
 						</Button>
 					</div>
 				)}
@@ -147,8 +137,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 				{error && (
 					<div className={styles.skeleton}>
 						<CenteredError title="An error occurred">
-              Something went wrong when trying to fetch list {listName}. Please,
-              try again later.
+                            Something went wrong when trying to fetch list {listName}. Please, try again later.
 						</CenteredError>
 					</div>
 				)}

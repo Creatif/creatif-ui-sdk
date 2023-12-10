@@ -12,13 +12,7 @@ export default function useUpdateListItem(isUpdate: boolean) {
 		);
 	}
 
-	return async (
-		name: string,
-		value: unknown,
-		metadata: unknown,
-		groups: string[],
-		behaviour: Behaviour,
-	) => {
+	return async (name: string, value: unknown, metadata: unknown, groups: string[], behaviour: Behaviour) => {
 		const { result, error } = await updateListItem({
 			itemID: itemId,
 			name: structureId,

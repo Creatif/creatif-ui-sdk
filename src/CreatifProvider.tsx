@@ -1,8 +1,9 @@
 import Authentication from '@app/components/authentication/Authentication';
+import styles from '@app/css/global.module.css';
 import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
 import { getProjectMetadata } from '@lib/api/project/getProjectMetadata';
-import {getSupportedLocales} from '@lib/api/project/getSupportedLocales';
+import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import StructureStorage from '@lib/storage/structureStorage';
 import { MantineProvider, createTheme } from '@mantine/core';
@@ -15,11 +16,10 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 import '@app/css/reset.module.css';
-import styles from '@app/css/global.module.css';
 
 interface Props {
-  apiKey: string;
-  projectId: string;
+    apiKey: string;
+    projectId: string;
 }
 
 const theme = createTheme({
@@ -29,21 +29,15 @@ const theme = createTheme({
 });
 
 const queryClient = new QueryClient();
-export function CreatifProvider({
-	apiKey,
-	projectId,
-	children,
-}: Props & PropsWithChildren) {
+export function CreatifProvider({ apiKey, projectId, children }: Props & PropsWithChildren) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>(
-		'idle',
-	);
+	const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>('idle');
 
 	const init = useCallback(async () => {
-		const { result } = await getProjectMetadata();
+		const { result } = await getProjectMetadata(apiKey, projectId);
 
 		if (result) {
-			getSupportedLocales().then(({result: locales, error}) => {
+			getSupportedLocales().then(({ result: locales, error }) => {
 				if (error) {
 					queryClient.setQueryData('supported_locales', 'failed');
 				}
@@ -52,16 +46,16 @@ export function CreatifProvider({
 					queryClient.setQueryData('supported_locales', locales);
 				}
 
+				StructureStorage.init(result);
 				CurrentLocaleStorage.init('eng');
 				Initialize.init(apiKey, projectId, CurrentLocaleStorage.instance.getLocale());
-				StructureStorage.init(result);
 				setIsLoggedIn(true);
 			});
 		}
 	}, []);
 
 	useEffect(() => {
-		authCheck().then(async (res) => {
+		authCheck(apiKey, projectId).then(async (res) => {
 			if (res.error) {
 				setIsAuthCheck('fail');
 				return;
@@ -83,11 +77,7 @@ export function CreatifProvider({
 			)}
 
 			{!isLoggedIn && checkedAuth === 'fail' && (
-				<Authentication
-					apiKey={apiKey}
-					projectId={projectId}
-					onSuccess={init}
-				/>
+				<Authentication apiKey={apiKey} projectId={projectId} onSuccess={init} />
 			)}
 		</MantineProvider>
 	);

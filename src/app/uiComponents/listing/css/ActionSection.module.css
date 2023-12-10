@@ -1,26 +1,26 @@
 .root {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-content: center;
-  margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    margin-bottom: 0.5rem;
 
-  background-color: white;
-  padding: 1rem;
-  border-radius: 1rem;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
 }
 
 .leftMenu {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: center;
-  gap: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    gap: 1rem;
 }
 
 .buttonWidthLoadingWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }

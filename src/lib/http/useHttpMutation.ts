@@ -9,9 +9,9 @@ export default function useHttpMutation<Body, Response>(
 	method: 'post' | 'put' | 'delete',
 	path: string,
 	options?: {
-    onError?: (error: ApiError) => void;
-    onSuccess?: (data: Response) => void;
-  },
+        onError?: (error: ApiError) => void;
+        onSuccess?: (data: Response) => void;
+    },
 	headers: Record<string, string> = {},
 ) {
 	const queryClient = useQueryClient();

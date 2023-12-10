@@ -5,10 +5,7 @@ export function useCache() {
 	return function <T>(
 		key: string,
 		fn: () => Promise<T>,
-		callback: (
-      value: CacheResult<T> | undefined,
-      error: Error | undefined,
-    ) => void,
+		callback: (value: CacheResult<T> | undefined, error: Error | undefined) => void,
 	) {
 		if (!Object.hasOwn(cache, key)) {
 			fn()

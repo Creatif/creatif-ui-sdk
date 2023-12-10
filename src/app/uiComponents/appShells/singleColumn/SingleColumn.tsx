@@ -1,4 +1,3 @@
-import {Initialize} from '@app/initialize';
 import { createOptions } from '@app/systems/stores/options';
 import Header from '@app/uiComponents/appShells/singleColumn/Header';
 import Navigation from '@app/uiComponents/appShells/singleColumn/Navigation';
@@ -9,7 +8,7 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import styles from './css/root.module.css';
 import type { AppShellItems } from '@app/uiComponents/appShells/types/AppShellItems';
 interface Props {
-  options: AppShellItems;
+    options: AppShellItems;
 }
 export default function SingleColumn({ options }: Props) {
 	const storeCreatedRef = useRef(false);
@@ -36,9 +35,7 @@ export default function SingleColumn({ options }: Props) {
 						path="/"
 						element={
 							<div className={styles.root}>
-								{options && (
-									<Navigation navItems={options.items} logo={options.logo} />
-								)}
+								{options && <Navigation navItems={options.items} logo={options.logo} />}
 
 								<div>
 									{options.header && <Header>{options.header}</Header>}
@@ -46,14 +43,10 @@ export default function SingleColumn({ options }: Props) {
 									<div className={styles.content}>{<Outlet />}</div>
 								</div>
 							</div>
-						}
-					>
+						}>
 						{options.items.map((item, i) => (
 							<React.Fragment key={i}>
-								<Route
-									path={`${item.menu.path}/create`}
-									element={item.create.component}
-								/>
+								<Route path={`${item.menu.path}/create`} element={item.create.component} />
 								<Route
 									path={`${item.menu.path}/update/:structureId/:itemId`}
 									element={item.update.component}
@@ -61,9 +54,7 @@ export default function SingleColumn({ options }: Props) {
 								{item.structure.type === 'list' && (
 									<Route
 										path={`${item.menu.path}`}
-										element={
-											<UnstructuredList listName={item.structure.name} />
-										}
+										element={<UnstructuredList listName={item.structure.name} />}
 									/>
 								)}
 							</React.Fragment>

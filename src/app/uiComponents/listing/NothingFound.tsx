@@ -2,7 +2,7 @@ import CreateNew from '@app/uiComponents/button/CreateNew';
 import styles from '@app/uiComponents/listing/css/NothingFound.module.css';
 
 interface Props {
-  structureName: string;
+    structureName: string;
 }
 
 export default function NothingFound({ structureName }: Props) {

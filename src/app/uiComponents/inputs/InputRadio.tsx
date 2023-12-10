@@ -4,8 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import type { RadioProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends RadioProps {
-  name: string;
-  options?: RegisterOptions;
+    name: string;
+    options?: RegisterOptions;
 }
 /**
  * TODO: mention that when selected, value is 'on'.
@@ -13,7 +13,5 @@ interface Props extends RadioProps {
 export default function InputRadio({ name, options, ...rest }: Props) {
 	const { register } = useFormContext();
 
-	return (
-		<Radio error={useFirstError(name)} {...register(name, options)} {...rest} />
-	);
+	return <Radio error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }

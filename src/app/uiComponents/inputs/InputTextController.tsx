@@ -5,19 +5,11 @@ import type { TextInputProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 
 interface Props extends TextInputProps {
-  name: string;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
-  onInputChange?: (value: string) => void;
+    name: string;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (value: string) => void;
 }
-export default function InputTextControlled({
-	name,
-	validation,
-	onInputChange,
-	...rest
-}: Props) {
+export default function InputTextControlled({ name, validation, onInputChange, ...rest }: Props) {
 	const { control, getValues } = useFormContext();
 	const [value, setValue] = useState<string>(getValues(name));
 

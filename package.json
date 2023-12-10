@@ -1,81 +1,81 @@
 {
-  "name": "creatif-api-sdk",
-  "version": "0.0.1",
-  "description": "API SDK for Creatif",
-  "license": "MIT",
-  "repository": {
-    "url": "git@github.com:Creatif/creatif-ui-sdk.git"
-  },
-  "main": "build/index.js",
-  "keywords": [
-    "timer",
-    "interval"
-  ],
-  "author": {
-    "email": "marioskrlec222@gmail.com",
-    "name": "Mario Škrlec"
-  },
-  "scripts": {
-    "dev": "vite --mode development",
-    "build-dev": "vite build --mode development",
-    "build": "yarn pretty && yarn es-lint && vite build --mode production",
-    "pretty": "yarn prettier --loglevel='warn' --log-level='error' --write .",
-    "es-lint": "yarn eslint --fix .",
-    "preview": "vite preview"
-  },
-  "files": [
-    "build",
-    "index.d.ts",
-    "types.d.ts"
-  ],
-  "devDependencies": {
-    "@babel/preset-env": "7.22.7",
-    "@babel/preset-react": "7.22.5",
-    "@babel/preset-typescript": "7.22.5",
-    "@rollup/plugin-commonjs": "25.0.2",
-    "@types/node": "^20.5.7",
-    "@types/react": "18.2.14",
-    "@types/react-dom": "18.2.6",
-    "@typescript-eslint/eslint-plugin": "6.0.0",
-    "@typescript-eslint/parser": "6.0.0",
-    "@vitejs/plugin-react": "^4.0.4",
-    "eslint": "8.44.0",
-    "eslint-config-prettier": "8.8.0",
-    "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-react": "7.32.2",
-    "postcss": "^8.4.31",
-    "postcss-preset-mantine": "^1.11.0",
-    "postcss-simple-vars": "^7.0.1",
-    "prettier": "3.0.0",
-    "rollup": "3.26.2",
-    "rollup-plugin-cleanup": "^3.2.1",
-    "rollup-plugin-typescript2": "0.35.0",
-    "ts-node": "^10.9.1",
-    "typescript": "5.1.6",
-    "vite": "^4.4.9",
-    "vite-plugin-dts": "^3.5.3"
-  },
-  "dependencies": {
-    "@mantine/core": "^7.2.2",
-    "@mantine/dates": "^7.2.2",
-    "@mantine/dropzone": "^7.2.2",
-    "@mantine/hooks": "^7.2.2",
-    "@mantine/notifications": "^7.2.2",
-    "@tabler/icons-react": "^2.42.0",
-    "@zerodevx/svelte-json-view": "^1.0.7",
-    "axios": "^1.4.0",
-    "classnames": "^2.3.2",
-    "date-fns": "^2.30.0",
-    "dayjs": "^1.11.10",
-    "normalize.css": "^8.0.1",
-    "react-hook-form": "^7.48.2",
-    "react-query": "^3.39.3",
-    "react-router-dom": "^6.20.1",
-    "universal-cookie": "^6.1.1",
-    "zustand": "^4.4.6"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  }
+    "name": "creatif-api-sdk",
+    "version": "0.0.1",
+    "description": "API SDK for Creatif",
+    "license": "MIT",
+    "repository": {
+        "url": "git@github.com:Creatif/creatif-ui-sdk.git"
+    },
+    "main": "build/index.js",
+    "keywords": [
+        "timer",
+        "interval"
+    ],
+    "author": {
+        "email": "marioskrlec222@gmail.com",
+        "name": "Mario Škrlec"
+    },
+    "scripts": {
+        "dev": "vite --mode development",
+        "build-dev": "vite build --mode development",
+        "build": "npm run pretty && npm run es-lint && vite build --mode production",
+        "pretty": "prettier --loglevel='warn' --log-level='error' --write .",
+        "es-lint": "eslint --fix .",
+        "preview": "vite preview"
+    },
+    "files": [
+        "build",
+        "index.d.ts",
+        "types.d.ts"
+    ],
+    "devDependencies": {
+        "@babel/preset-env": "7.22.7",
+        "@babel/preset-react": "7.22.5",
+        "@babel/preset-typescript": "7.22.5",
+        "@rollup/plugin-commonjs": "25.0.2",
+        "@types/node": "^20.5.7",
+        "@types/react": "18.2.14",
+        "@types/react-dom": "18.2.6",
+        "@typescript-eslint/eslint-plugin": "6.0.0",
+        "@typescript-eslint/parser": "6.0.0",
+        "@vitejs/plugin-react": "^4.0.4",
+        "eslint": "8.44.0",
+        "eslint-config-prettier": "8.8.0",
+        "eslint-plugin-import": "2.27.5",
+        "eslint-plugin-react": "7.32.2",
+        "postcss": "^8.4.31",
+        "postcss-preset-mantine": "^1.11.0",
+        "postcss-simple-vars": "^7.0.1",
+        "prettier": "3.0.0",
+        "rollup": "3.26.2",
+        "rollup-plugin-cleanup": "^3.2.1",
+        "rollup-plugin-typescript2": "0.35.0",
+        "ts-node": "^10.9.1",
+        "typescript": "5.1.6",
+        "vite": "^4.4.9",
+        "vite-plugin-dts": "^3.5.3"
+    },
+    "dependencies": {
+        "@mantine/core": "^7.2.2",
+        "@mantine/dates": "^7.2.2",
+        "@mantine/dropzone": "^7.2.2",
+        "@mantine/hooks": "^7.2.2",
+        "@mantine/notifications": "^7.2.2",
+        "@tabler/icons-react": "^2.42.0",
+        "@zerodevx/svelte-json-view": "^1.0.7",
+        "axios": "^1.4.0",
+        "classnames": "^2.3.2",
+        "date-fns": "^2.30.0",
+        "dayjs": "^1.11.10",
+        "normalize.css": "^8.0.1",
+        "react-hook-form": "^7.48.2",
+        "react-query": "^3.39.3",
+        "react-router-dom": "^6.20.1",
+        "universal-cookie": "^6.1.1",
+        "zustand": "^4.4.6"
+    },
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    }
 }

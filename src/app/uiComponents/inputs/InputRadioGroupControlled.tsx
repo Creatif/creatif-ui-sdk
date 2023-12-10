@@ -8,17 +8,11 @@ import type { RegisterOptions, FieldValues, FormState } from 'react-hook-form';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 interface Props extends RadioGroupProps {
-  name: string;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
-  onInputChange?: (value: string) => void;
-  component?: (data: {
-    value: string;
-    formState: FormState<FieldValues>;
-  }) => React.ReactNode;
-  children?: ReactNode;
+    name: string;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (value: string) => void;
+    component?: (data: { value: string; formState: FormState<FieldValues> }) => React.ReactNode;
+    children?: ReactNode;
 }
 export default function InputRadioGroupControlled({
 	name,
@@ -48,11 +42,8 @@ export default function InputRadioGroupControlled({
 						onInputChange?.(value);
 						setValue(value);
 					}}
-					{...rest}
-				>
-					{component
-						? component({ value: value, formState: formState })
-						: children}
+					{...rest}>
+					{component ? component({ value: value, formState: formState }) : children}
 				</Radio.Group>
 			)}
 			name={name}

@@ -5,19 +5,11 @@ import { Controller, useFormContext } from 'react-hook-form';
 import type { RadioProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends RadioProps {
-  name: string;
-  onInputChange?: (value: boolean) => void;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
+    name: string;
+    onInputChange?: (value: boolean) => void;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export default function InputRadioControlled({
-	name,
-	validation,
-	onInputChange,
-	...rest
-}: Props) {
+export default function InputRadioControlled({ name, validation, onInputChange, ...rest }: Props) {
 	const { control, getValues } = useFormContext();
 	const [checked, setChecked] = useState(getValues(name));
 

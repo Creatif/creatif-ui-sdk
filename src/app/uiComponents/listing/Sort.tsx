@@ -1,36 +1,30 @@
 import { Initialize } from '@app/initialize';
 import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
-import {MultiSelect} from '@mantine/core';
+import { MultiSelect } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import {
-	IconCheck,
-	IconEyeOff,
-	IconReplace,
-	IconSortAscending,
-	IconSortDescending,
-} from '@tabler/icons-react';
+import { IconCheck, IconEyeOff, IconReplace, IconSortAscending, IconSortDescending } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
-import {useQueryClient} from 'react-query';
+import { useQueryClient } from 'react-query';
 import styles from './css/Sort.module.css';
 import type { CurrentSortType } from '@app/uiComponents/listing/types/components';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
-import type {Locale} from '@lib/api/project/types/SupportedLocales';
+import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import type { ComboboxItem } from '@mantine/core';
 interface Props {
-  currentSort: CurrentSortType;
-  currentGroups: string[];
-  structureName: string;
-  currentDirection: 'desc' | 'asc' | undefined;
-  currentBehaviour: Behaviour | undefined;
-  currentLocales: string[];
+    currentSort: CurrentSortType;
+    currentGroups: string[];
+    structureName: string;
+    currentDirection: 'desc' | 'asc' | undefined;
+    currentBehaviour: Behaviour | undefined;
+    currentLocales: string[];
 
-  onSelectedGroups: (groups: string[]) => void;
-  onSortChange: (sort: CurrentSortType) => void;
-  onBehaviourChange: (sort: Behaviour | undefined) => void;
-  onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
-  onSelectedLocales: (locales: string[]) => void;
+    onSelectedGroups: (groups: string[]) => void;
+    onSortChange: (sort: CurrentSortType) => void;
+    onBehaviourChange: (sort: Behaviour | undefined) => void;
+    onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
+    onSelectedLocales: (locales: string[]) => void;
 }
 export default function Sort({
 	currentSort = 'index',
@@ -45,25 +39,27 @@ export default function Sort({
 	currentDirection,
 	currentBehaviour,
 }: Props) {
-	const [selectedSort, setSelectedSort] =
-    useState<CurrentSortType>(currentSort);
+	const [selectedSort, setSelectedSort] = useState<CurrentSortType>(currentSort);
 	const [groups, setGroups] = useState<string[]>(currentGroups);
 	const [locales, setLocales] = useState<string[]>(currentLocales);
-	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(
-		currentBehaviour,
-	);
+	const [behaviour, setBehaviour] = useState<Behaviour | undefined>(currentBehaviour);
 	const cachedLocales = useQueryClient().getQueryData('supported_locales') as Locale[];
-	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(
-		currentDirection,
+	const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(currentDirection);
+	const {
+		mutate,
+		isLoading: areGroupsLoading,
+		data,
+		error,
+	} = useHttpMutation<{ name: string }, string[]>(
+		declarations(),
+		'post',
+		`/list/groups/${Initialize.ProjectID()}`,
+		undefined,
+		{
+			'X-CREATIF-API-KEY': Initialize.ApiKey(),
+			'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
+		},
 	);
-	const { mutate, isLoading: areGroupsLoading, data, error } = useHttpMutation<
-    { name: string },
-    string[]
-  >(
-  	declarations(),
-  	'post',
-  	`/list/groups/${Initialize.ProjectID()}`,
-  );
 	const [debouncedGroups] = useDebouncedValue(groups, 500);
 
 	useEffect(() => {
@@ -95,8 +91,7 @@ export default function Sort({
 							styles.row,
 							selectedSort === 'created_at' ? styles.selectedRow : undefined,
 						)}
-						onClick={() => onSortSelected('created_at')}
-					>
+						onClick={() => onSortSelected('created_at')}>
 						<IconCheck
 							size={20}
 							style={{
@@ -115,8 +110,7 @@ export default function Sort({
 							styles.row,
 							selectedSort === 'updated_at' ? styles.selectedRow : undefined,
 						)}
-						onClick={() => onSortSelected('updated_at')}
-					>
+						onClick={() => onSortSelected('updated_at')}>
 						<IconCheck
 							size={20}
 							style={{
@@ -131,12 +125,8 @@ export default function Sort({
 					</div>
 
 					<div
-						className={classNames(
-							styles.row,
-							selectedSort === 'index' ? styles.selectedRow : undefined,
-						)}
-						onClick={() => onSortSelected('index')}
-					>
+						className={classNames(styles.row, selectedSort === 'index' ? styles.selectedRow : undefined)}
+						onClick={() => onSortSelected('index')}>
 						<IconCheck
 							size={20}
 							style={{
@@ -165,19 +155,16 @@ export default function Sort({
 							onSelectedLocales(locales);
 						}}
 						nothingFoundMessage="No locales found"
-						filter={({options, search}) => {
+						filter={({ options, search }) => {
 							const filtered = (options as ComboboxItem[]).filter((option) =>
-								option.label
-									.toLowerCase()
-									.trim()
-									.includes(search.toLowerCase().trim()),
+								option.label.toLowerCase().trim().includes(search.toLowerCase().trim()),
 							);
 
 							filtered.sort((a, b) => a.label.localeCompare(b.label));
 							return filtered;
 						}}
 						placeholder="Select locales"
-						data={cachedLocales.map(item => ({
+						data={cachedLocales.map((item) => ({
 							value: item.alpha,
 							label: `${item.name} - ${item.alpha}`,
 						}))}
@@ -196,12 +183,9 @@ export default function Sort({
 						searchable
 						onChange={setGroups}
 						nothingFoundMessage="No groups found"
-						filter={({options, search}) => {
+						filter={({ options, search }) => {
 							const filtered = (options as ComboboxItem[]).filter((option) =>
-								option.label
-									.toLowerCase()
-									.trim()
-									.includes(search.toLowerCase().trim()),
+								option.label.toLowerCase().trim().includes(search.toLowerCase().trim()),
 							);
 
 							filtered.sort((a, b) => a.label.localeCompare(b.label));
@@ -231,12 +215,9 @@ export default function Sort({
 						}}
 						className={classNames(
 							styles.behaviourPill,
-							behaviour === 'modifiable'
-								? styles.selectedBehaviourPill
-								: undefined,
-						)}
-					>
-						<IconReplace size={16}/>
+							behaviour === 'modifiable' ? styles.selectedBehaviourPill : undefined,
+						)}>
+						<IconReplace size={16} />
 						<span>Modifiable</span>
 					</div>
 
@@ -254,12 +235,9 @@ export default function Sort({
 						}}
 						className={classNames(
 							styles.behaviourPill,
-							behaviour === 'readonly'
-								? styles.selectedBehaviourPill
-								: undefined,
-						)}
-					>
-						<IconEyeOff size={16}/>
+							behaviour === 'readonly' ? styles.selectedBehaviourPill : undefined,
+						)}>
+						<IconEyeOff size={16} />
 						<span>Readonly</span>
 					</div>
 				</div>
@@ -284,9 +262,8 @@ export default function Sort({
 						className={classNames(
 							styles.behaviourPill,
 							direction === 'asc' ? styles.selectedBehaviourPill : undefined,
-						)}
-					>
-						<IconSortAscending size={16}/>
+						)}>
+						<IconSortAscending size={16} />
 						<span>Ascending</span>
 					</div>
 
@@ -305,9 +282,8 @@ export default function Sort({
 						className={classNames(
 							styles.behaviourPill,
 							direction === 'desc' ? styles.selectedBehaviourPill : undefined,
-						)}
-					>
-						<IconSortDescending size={16}/>
+						)}>
+						<IconSortDescending size={16} />
 						<span>Descending</span>
 					</div>
 				</div>

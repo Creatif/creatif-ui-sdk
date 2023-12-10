@@ -1,10 +1,5 @@
 import { notifications } from '@mantine/notifications';
-import {
-	IconAlertTriangle,
-	IconConfetti,
-	IconExclamationCircle,
-	IconInfoCircle,
-} from '@tabler/icons-react';
+import { IconAlertTriangle, IconConfetti, IconExclamationCircle, IconInfoCircle } from '@tabler/icons-react';
 import React from 'react';
 import errStyles from './error.module.css';
 import infoStyles from './info.module.css';
@@ -12,12 +7,7 @@ import successStyles from './success.module.css';
 import warnStyles from './warn.module.css';
 export default function useNotification() {
 	return {
-		warn: (
-			title: string,
-			description: React.ReactNode,
-			autoClose: number | boolean = 5000,
-			clean = false,
-		) => {
+		warn: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
 				autoClose: autoClose,
@@ -30,12 +20,7 @@ export default function useNotification() {
 
 			if (clean) notifications.clean();
 		},
-		error: (
-			title: string,
-			description: React.ReactNode,
-			autoClose: number | boolean = 5000,
-			clean = false,
-		) => {
+		error: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
 				autoClose: autoClose,
@@ -51,12 +36,7 @@ export default function useNotification() {
 
 			if (clean) notifications.clean();
 		},
-		info: (
-			title: string,
-			description: React.ReactNode,
-			autoClose: number | boolean = 5000,
-			clean = false,
-		) => {
+		info: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
 				autoClose: autoClose,
@@ -69,12 +49,7 @@ export default function useNotification() {
 
 			if (clean) notifications.clean();
 		},
-		success: (
-			title: string,
-			description: React.ReactNode,
-			autoClose: number | boolean = 5000,
-			clean = false,
-		) => {
+		success: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
 			notifications.show({
 				withCloseButton: true,
 				autoClose: autoClose,

@@ -18,36 +18,36 @@ import InputSwitchControlled from '@app/uiComponents/inputs/InputSwitchControlle
 import InputSwitchGroupControlled from '@app/uiComponents/inputs/InputSwitchGroupControlled';
 import InputText from '@app/uiComponents/inputs/InputText';
 import ListForm from '@app/uiComponents/listForm/ListForm';
-import { Checkbox, Grid, Group, Radio, Switch } from '@mantine/core';
+import { Checkbox, Group, Radio, Switch } from '@mantine/core';
 interface Props {
-  structureName: string;
-  mode?: 'update';
+    structureName: string;
+    mode?: 'update';
 }
 export default function LandingPage({ structureName, mode }: Props) {
 	return (
 		<ListForm<{
-      name: string;
-      lastName: string;
-      email: string;
-      dob: string;
-      eligible: boolean;
-      uncontrolledEligible: boolean;
-      checkboxControlled: boolean;
-      checkbox: boolean;
-      chipUncontrolled: boolean;
-      checkboxGroup: string[];
-      radio: string;
-      controlledRadio: string;
-      radioGroup: string;
-      pin: string;
-      rating: string;
-      segmentedControl: string;
-      switch: boolean;
-      switchControlled: boolean;
-      switchGroup: string[];
-      slider: number;
-      rangeSlider: [number, number];
-    }>
+            name: string;
+            lastName: string;
+            email: string;
+            dob: string;
+            eligible: boolean;
+            uncontrolledEligible: boolean;
+            checkboxControlled: boolean;
+            checkbox: boolean;
+            chipUncontrolled: boolean;
+            checkboxGroup: string[];
+            radio: string;
+            controlledRadio: string;
+            radioGroup: string;
+            pin: string;
+            rating: string;
+            segmentedControl: string;
+            switch: boolean;
+            switchControlled: boolean;
+            switchGroup: string[];
+            slider: number;
+            rangeSlider: [number, number];
+        }>
 			beforeSave={(values) => {
 				if (!values.checkboxGroup) {
 					values.checkboxGroup = [];
@@ -132,9 +132,8 @@ export default function LandingPage({ structureName, mode }: Props) {
 						validation={{
 							required: 'Eligible field is required.',
 						}}
-						name="eligible"
-					>
-            Are you eligible?
+						name="eligible">
+                        Are you eligible?
 					</InputChipControlled>
 
 					<InputSegmentedControlControlled
@@ -165,17 +164,11 @@ export default function LandingPage({ structureName, mode }: Props) {
 					<InputCheckbox label="Checkbox" name="checkbox" />
 					<InputRadio label="Radio" name="radio" />
 
-					<InputRadioControlled
-						label="Controlled radio"
-						name="controlledRadio"
-					/>
+					<InputRadioControlled label="Controlled radio" name="controlledRadio" />
 
 					<InputPinControlled name="pin" validation={{ required: true }} />
 					<InputSwitch name="switch" label="Switch" />
-					<InputSwitchControlled
-						name="switchControlled"
-						label="Switch controlled"
-					/>
+					<InputSwitchControlled name="switchControlled" label="Switch controlled" />
 
 					<InputSliderControlled
 						name="slider"
@@ -205,26 +198,10 @@ export default function LandingPage({ structureName, mode }: Props) {
 						name="checkboxGroup"
 						component={({ formState: { errors } }) => (
 							<Group mt="xs">
-								<Checkbox
-									error={Boolean(errors['checkboxGroup'])}
-									value="react"
-									label="React"
-								/>
-								<Checkbox
-									error={Boolean(errors['checkboxGroup'])}
-									value="svelte"
-									label="Svelte"
-								/>
-								<Checkbox
-									error={Boolean(errors['checkboxGroup'])}
-									value="ng"
-									label="Angular"
-								/>
-								<Checkbox
-									error={Boolean(errors['checkboxGroup'])}
-									value="vue"
-									label="Vue"
-								/>
+								<Checkbox error={Boolean(errors['checkboxGroup'])} value="react" label="React" />
+								<Checkbox error={Boolean(errors['checkboxGroup'])} value="svelte" label="Svelte" />
+								<Checkbox error={Boolean(errors['checkboxGroup'])} value="ng" label="Angular" />
+								<Checkbox error={Boolean(errors['checkboxGroup'])} value="vue" label="Vue" />
 							</Group>
 						)}
 					/>
@@ -237,26 +214,10 @@ export default function LandingPage({ structureName, mode }: Props) {
 						name="switchGroup"
 						component={({ formState: { errors } }) => (
 							<Group mt="xs">
-								<Switch
-									error={Boolean(errors['switchGroup'])}
-									value="react"
-									label="React"
-								/>
-								<Switch
-									error={Boolean(errors['switchGroup'])}
-									value="svelte"
-									label="Svelte"
-								/>
-								<Switch
-									error={Boolean(errors['switchGroup'])}
-									value="ng"
-									label="Angular"
-								/>
-								<Switch
-									error={Boolean(errors['switchGroup'])}
-									value="vue"
-									label="Vue"
-								/>
+								<Switch error={Boolean(errors['switchGroup'])} value="react" label="React" />
+								<Switch error={Boolean(errors['switchGroup'])} value="svelte" label="Svelte" />
+								<Switch error={Boolean(errors['switchGroup'])} value="ng" label="Angular" />
+								<Switch error={Boolean(errors['switchGroup'])} value="vue" label="Vue" />
 							</Group>
 						)}
 					/>

@@ -5,9 +5,8 @@ import { IconHome } from '@tabler/icons-react';
 export default function App() {
 	return (
 		<CreatifProvider
-			apiKey="$2a$10$8l799gyW1zxeGu/T/vW.MuEaWnUxIKCX8XwgHM8e0TE3KSv0vojFK"
-			projectId="01HH9E247K7XBPNZ30RC63TQQC"
-		>
+			apiKey="$2a$10$PGM38witQV38WVHCN4Ap9ONOiQTAt35.t5oAQG.7cqdrkhyBoRnW."
+			projectId="01HH9T1JTPQWVENQNMGXX99SJ3">
 			<SingleColumn
 				options={{
 					logo: 'BEACH FRONT',
@@ -27,9 +26,7 @@ export default function App() {
 								component: <LandingPage structureName="landing page" />,
 							},
 							update: {
-								component: (
-									<LandingPage structureName="landing page" mode="update" />
-								),
+								component: <LandingPage structureName="landing page" mode="update" />,
 							},
 						},
 					],

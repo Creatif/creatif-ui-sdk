@@ -16,11 +16,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import type {
-	AfterSaveFn,
-	BeforeSaveFn,
-	Bindings,
-} from '@app/uiComponents/types/forms';
+import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@app/uiComponents/types/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
 import type {
 	FieldValues,
@@ -37,29 +33,29 @@ import type {
 	UseFormWatch,
 } from 'react-hook-form';
 interface Props<T extends FieldValues> {
-  listName: string;
-  bindings: Bindings<T>;
-  formProps: UseFormProps<T>;
-  mode?: 'update';
-  inputs: (
-    submitButton: React.ReactNode,
-    actions: {
-      setValue: UseFormSetValue<T>;
-      getValues: UseFormGetValues<T>;
-      setFocus: UseFormSetFocus<T>;
-      setError: UseFormSetError<T>;
-      reset: UseFormReset<T>;
-      resetField: UseFormResetField<T>;
-      unregister: UseFormUnregister<T>;
-      watch: UseFormWatch<T>;
-      trigger: UseFormTrigger<T>;
-      getFieldState: UseFormGetFieldState<T>;
-      defaultValues: T;
-    },
-  ) => React.ReactNode;
-  beforeSave?: BeforeSaveFn<T>;
-  afterSave?: AfterSaveFn;
-  form?: HTMLAttributes<HTMLFormElement>;
+    listName: string;
+    bindings: Bindings<T>;
+    formProps: UseFormProps<T>;
+    mode?: 'update';
+    inputs: (
+        submitButton: React.ReactNode,
+        actions: {
+            setValue: UseFormSetValue<T>;
+            getValues: UseFormGetValues<T>;
+            setFocus: UseFormSetFocus<T>;
+            setError: UseFormSetError<T>;
+            reset: UseFormReset<T>;
+            resetField: UseFormResetField<T>;
+            unregister: UseFormUnregister<T>;
+            watch: UseFormWatch<T>;
+            trigger: UseFormTrigger<T>;
+            getFieldState: UseFormGetFieldState<T>;
+            defaultValues: T;
+        },
+    ) => React.ReactNode;
+    beforeSave?: BeforeSaveFn<T>;
+    afterSave?: AfterSaveFn;
+    form?: HTMLAttributes<HTMLFormElement>;
 }
 export default function ListForm<T extends FieldValues>({
 	listName,
@@ -78,8 +74,7 @@ export default function ListForm<T extends FieldValues>({
 	const updateListItem = useUpdateListItem(Boolean(mode));
 
 	const methods = useForm(formProps);
-	const { success: successNotification, error: errorNotification } =
-    useNotification();
+	const { success: successNotification, error: errorNotification } = useNotification();
 
 	const [beforeSaveError, setBeforeSaveError] = useState(false);
 
@@ -101,9 +96,7 @@ export default function ListForm<T extends FieldValues>({
 					`List '${listName}' has been successfully created. This message will only appear once.`,
 				);
 
-				StructureStorage.instance.addList(
-					listName,
-				);
+				StructureStorage.instance.addList(listName);
 			},
 			onError() {
 				errorNotification(
@@ -111,6 +104,10 @@ export default function ListForm<T extends FieldValues>({
 					'We are working to resolve this problem. Please, try again later.',
 				);
 			},
+		},
+		{
+			'X-CREATIF-API-KEY': Initialize.ApiKey(),
+			'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
 		},
 	);
 
@@ -136,75 +133,63 @@ export default function ListForm<T extends FieldValues>({
 		}
 	}, []);
 
-	const onInternalSubmit = useCallback(
-		(value: T, e: BaseSyntheticEvent | undefined) => {
-			if (!value) {
-				notificationError(
-					'No data submitted.',
-					<span>
-						<strong>undefined</strong> has been submitted which means there are
-            no values to save. Have you added some fields to your form?
-					</span>,
-				);
+	const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
+		if (!value) {
+			notificationError(
+				'No data submitted.',
+				<span>
+					<strong>undefined</strong> has been submitted which means there are no values to save. Have you
+                    added some fields to your form?
+				</span>,
+			);
+			return;
+		}
+
+		const binding = resolveBindings(value, bindings);
+		if (!binding) return;
+		const { name, groups, behaviour } = binding;
+
+		setIsSaving(true);
+
+		Promise.resolve(beforeSave?.(value, e)).then((result) => {
+			if (!valueMetadataValidator(result)) {
+				setBeforeSaveError(true);
+				setIsSaving(false);
 				return;
 			}
 
-			const binding = resolveBindings(value, bindings);
-			if (!binding) return;
-			const { name, groups, behaviour } = binding;
-
-			setIsSaving(true);
-
-			Promise.resolve(beforeSave?.(value, e)).then((result) => {
-				if (!valueMetadataValidator(result)) {
-					setBeforeSaveError(true);
-					setIsSaving(false);
-					return;
-				}
-
-				if (!mode && result) {
-					appendToList(name, behaviour, groups, result).then((appendResult) => {
-						if (appendResult) {
-							queryClient.invalidateQueries(listName);
-							afterSave?.(result, e);
-							setIsSaving(false);
-							navigate(useStructureOptionsStore.getState().paths.listing);
-						}
-					});
-				}
-
-				if (mode && result && updateListItem) {
-					updateListItem(
-						name,
-						result.value,
-						result.metadata,
-						groups,
-						behaviour,
-					).then((updateResult) => {
-						if (updateResult) {
-							successNotification(
-								'Item updated',
-								`Item '${name}' has been updated.`,
-							);
-							setIsSaving(false);
-							queryClient.invalidateQueries(listName);
-							afterSave?.(result, e);
-							navigate(useStructureOptionsStore.getState().paths.listing);
-
-							return;
-						}
-
+			if (!mode && result) {
+				appendToList(name, behaviour, groups, result).then((appendResult) => {
+					if (appendResult) {
+						queryClient.invalidateQueries(listName);
+						afterSave?.(result, e);
 						setIsSaving(false);
-						errorNotification(
-							'Something went wrong',
-							`Item '${name}' could not be updated. Please, try again later.`,
-						);
-					});
-				}
-			});
-		},
-		[],
-	);
+						navigate(useStructureOptionsStore.getState().paths.listing);
+					}
+				});
+			}
+
+			if (mode && result && updateListItem) {
+				updateListItem(name, result.value, result.metadata, groups, behaviour).then((updateResult) => {
+					if (updateResult) {
+						successNotification('Item updated', `Item '${name}' has been updated.`);
+						setIsSaving(false);
+						queryClient.invalidateQueries(listName);
+						afterSave?.(result, e);
+						navigate(useStructureOptionsStore.getState().paths.listing);
+
+						return;
+					}
+
+					setIsSaving(false);
+					errorNotification(
+						'Something went wrong',
+						`Item '${name}' could not be updated. Please, try again later.`,
+					);
+				});
+			}
+		});
+	}, []);
 
 	return (
 		<div className={contentContainerStyles.root}>
@@ -214,8 +199,7 @@ export default function ListForm<T extends FieldValues>({
 						marginBottom: '2rem',
 					}}
 					color="red"
-					title="beforeSubmit() error"
-				>
+					title="beforeSubmit() error">
 					{
 						'Return value of \'beforeSave\' must be in the form of type: value: unknown, metadata: unknown}. Something else was returned'
 					}
@@ -226,31 +210,27 @@ export default function ListForm<T extends FieldValues>({
 				<form onSubmit={methods.handleSubmit(onInternalSubmit)}>
 					<Loading isLoading={isLoading} />
 					{!isLoading &&
-            inputs(
-            	<Group justify="end">
-            		<Button
-            			loaderProps={{ size: 14 }}
-            			loading={isSaving}
-            			type="submit"
-            		>
-            			{mode && 'Update'}
-            			{!mode && 'Create'}
-            		</Button>
-            	</Group>,
-            	{
-            		setValue: setValue,
-            		getValues: getValues,
-            		setFocus: setFocus,
-            		setError: setError,
-            		reset: reset,
-            		resetField: resetField,
-            		unregister: unregister,
-            		watch: watch,
-            		trigger: trigger,
-            		getFieldState: getFieldState,
-            		defaultValues: getValues(),
-            	},
-            )}
+                        inputs(
+                        	<Group justify="end">
+                        		<Button loaderProps={{ size: 14 }} loading={isSaving} type="submit">
+                        			{mode && 'Update'}
+                        			{!mode && 'Create'}
+                        		</Button>
+                        	</Group>,
+                        	{
+                        		setValue: setValue,
+                        		getValues: getValues,
+                        		setFocus: setFocus,
+                        		setError: setError,
+                        		reset: reset,
+                        		resetField: resetField,
+                        		unregister: unregister,
+                        		watch: watch,
+                        		trigger: trigger,
+                        		getFieldState: getFieldState,
+                        		defaultValues: getValues(),
+                        	},
+                        )}
 				</form>
 			</FormProvider>
 		</div>

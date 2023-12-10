@@ -2,9 +2,9 @@ import styles from '@app/css/authentication/wrapper.module.css';
 import { Button } from '@mantine/core';
 import axios from 'axios';
 interface Props {
-  apiKey: string;
-  projectId: string;
-  onSuccess: () => void;
+    apiKey: string;
+    projectId: string;
+    onSuccess: () => void;
 }
 function calcPosition(windowWidth: number, windowHeight: number) {
 	const height = window.innerHeight;
@@ -15,11 +15,7 @@ function calcPosition(windowWidth: number, windowHeight: number) {
 		top: Math.floor((height - windowHeight) / 2),
 	};
 }
-export default function Authentication({
-	apiKey,
-	projectId,
-	onSuccess,
-}: Props) {
+export default function Authentication({ apiKey, projectId, onSuccess }: Props) {
 	const width = 480;
 	const height = 480;
 	const { top, left } = calcPosition(width, height);
@@ -52,10 +48,7 @@ export default function Authentication({
 								const messageInterval = setInterval(() => {
 									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 									// @ts-ignore
-									openedWindow.postMessage(
-										'poll',
-										import.meta.env.VITE_FRONTEND_HOST,
-									);
+									openedWindow.postMessage('poll', import.meta.env.VITE_FRONTEND_HOST);
 								}, 100);
 
 								let messageReceived = false;
@@ -64,8 +57,7 @@ export default function Authentication({
 									(event) => {
 										// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 										// @ts-ignore
-										if (event.origin !== import.meta.env.VITE_FRONTEND_HOST)
-											return;
+										if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
 										if (messageReceived) return;
 										messageReceived = true;
 										clearInterval(messageInterval);
@@ -85,8 +77,7 @@ export default function Authentication({
 											(event) => {
 												// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 												// @ts-ignore
-												if (event.origin !== import.meta.env.VITE_FRONTEND_HOST)
-													return;
+												if (event.origin !== import.meta.env.VITE_FRONTEND_HOST) return;
 												if (messageReceived) return;
 												messageReceived = true;
 												clearInterval(messageInterval);
@@ -107,9 +98,8 @@ export default function Authentication({
 						});
 					}}
 					variant="light"
-					size="xl"
-				>
-          Authenticate
+					size="xl">
+                    Authenticate
 				</Button>
 			</div>
 		</div>

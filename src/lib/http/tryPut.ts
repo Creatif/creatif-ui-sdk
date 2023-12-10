@@ -7,9 +7,10 @@ export async function tryPut<ReturnType, Body = unknown>(
 	instance: AxiosInstance,
 	path: string,
 	model: Body,
+	headers: Record<string, string> = {},
 ): Promise<TryResult<ReturnType>> {
 	try {
-		const res = await Api.put(instance, path, model);
+		const res = await Api.put(instance, path, model, headers);
 
 		return {
 			result: res.data as ReturnType,

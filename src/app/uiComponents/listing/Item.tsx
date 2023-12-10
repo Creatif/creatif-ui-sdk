@@ -1,4 +1,4 @@
-import {Initialize} from '@app/initialize';
+import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/listing/DeleteModal';
@@ -7,34 +7,22 @@ import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
 import styles from '@app/uiComponents/listing/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import {declarations} from '@lib/http/axios';
+import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
-import {ActionIcon, Button, Checkbox, Pill} from '@mantine/core';
-import {
-	IconChevronDown,
-	IconChevronRight,
-	IconEdit,
-	IconReplace,
-	IconTrash,
-} from '@tabler/icons-react';
+import { ActionIcon, Button, Checkbox, Pill } from '@mantine/core';
+import { IconChevronDown, IconChevronRight, IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type {PaginatedVariableResult, UpdateListItemResult} from '@lib/api/declarations/types/listTypes';
+import type { PaginatedVariableResult, UpdateListItemResult } from '@lib/api/declarations/types/listTypes';
 interface Props {
-  item: PaginatedVariableResult<any, any>;
-  listName: string;
-  onDeleted: () => void;
-  disabled?: boolean;
-  onChecked: (itemId: string, checked: boolean) => void;
+    item: PaginatedVariableResult<unknown, unknown>;
+    listName: string;
+    onDeleted: () => void;
+    disabled?: boolean;
+    onChecked: (itemId: string, checked: boolean) => void;
 }
-export default function Item({
-	item,
-	listName,
-	onDeleted,
-	onChecked,
-	disabled,
-}: Props) {
+export default function Item({ item, listName, onDeleted, onChecked, disabled }: Props) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { error: errorNotification, success } = useNotification();
@@ -42,33 +30,32 @@ export default function Item({
 
 	const [deleteItemId, setDeleteItemId] = useState<string>();
 	const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
-	const {info, error} = useNotification();
+	const { info, error } = useNotification();
 
-	const {mutate, isLoading, data} = useHttpMutation<unknown, UpdateListItemResult>(declarations(), 'post', `/list/update-item-by-id/${Initialize.ProjectID()}/${listName}/${
-		item.id
-	}?fields=locale`, {
-		onSuccess: () => {
-			info('Locale changed.', `Locale for structure '${listName}' and item '${item.name}' has been updated.`);
+	const { mutate, isLoading, data } = useHttpMutation<unknown, UpdateListItemResult>(
+		declarations(),
+		'post',
+		`/list/update-item-by-id/${Initialize.ProjectID()}/${listName}/${item.id}?fields=locale`,
+		{
+			onSuccess: () => {
+				info('Locale changed.', `Locale for structure '${listName}' and item '${item.name}' has been updated.`);
+			},
+			onError: () => {
+				error('Something went wrong.', 'Locale cannot be changed at this moment. Please, try again later.');
+			},
 		},
-		onError: () => {
-			error('Something went wrong.', 'Locale cannot be changed at this moment. Please, try again later.');
-		}
-	});
+		{
+			'X-CREATIF-API-KEY': Initialize.ApiKey(),
+			'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
+		},
+	);
 
 	item.locale = data && data.locale ? data.locale : item.locale;
 
 	return (
-		<div
-			className={classNames(
-				styles.item,
-				isDeleting ? styles.itemDisabled : undefined,
-			)}
-		>
+		<div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
 			{(isDeleting || disabled) && <div className={styles.disabled} />}
-			<div
-				onClick={() => setIsExpanded((item) => !item)}
-				className={styles.visibleSectionWrapper}
-			>
+			<div onClick={() => setIsExpanded((item) => !item)} className={styles.visibleSectionWrapper}>
 				<div className={styles.checkboxWrapper}>
 					<Checkbox
 						onClick={(e) => {
@@ -86,14 +73,21 @@ export default function Item({
 							<Button
 								disabled={isLoading}
 								loading={isLoading}
-								loaderProps={{size: 12}}
+								loaderProps={{ size: 12 }}
 								onClick={(e) => {
 									e.stopPropagation();
 									setIsEditLocaleOpen(true);
 								}}
-								leftSection={<IconEdit style={{
-									color: isLoading ? 'var(--mantine-color-gray-4)' : 'var(--mantine-color-gray-8)'
-								}} size={12} />}
+								leftSection={
+									<IconEdit
+										style={{
+											color: isLoading
+												? 'var(--mantine-color-gray-4)'
+												: 'var(--mantine-color-gray-8)',
+										}}
+										size={12}
+									/>
+								}
 								size="xs"
 								variant="default"
 								className={styles.locale}>
@@ -103,16 +97,10 @@ export default function Item({
 							<div className={styles.actionMenu}>
 								<ActionIcon
 									component={Link}
-									to={`${useOptions.getState().paths.update}/${listName}/${
-										item.id
-									}`}
-									variant="white"
-								>
+									to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
+									variant="white">
 									<IconEdit
-										className={classNames(
-											styles.actionMenuIcon,
-											styles.actionMenuEdit,
-										)}
+										className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
 										size={18}
 									/>
 								</ActionIcon>
@@ -123,13 +111,9 @@ export default function Item({
 									onClick={async (e) => {
 										e.stopPropagation();
 										setDeleteItemId(item.id);
-									}}
-								>
+									}}>
 									<IconTrash
-										className={classNames(
-											styles.actionMenuIcon,
-											styles.actionMenuDelete,
-										)}
+										className={classNames(styles.actionMenuIcon, styles.actionMenuDelete)}
 										size={18}
 									/>{' '}
 								</ActionIcon>
@@ -146,16 +130,10 @@ export default function Item({
 					<div className={styles.information}>
 						<div className={styles.behaviour}>
 							<IconReplace
-								className={
-									item.behaviour === 'modifiable'
-										? styles.modifiable
-										: styles.readonly
-								}
+								className={item.behaviour === 'modifiable' ? styles.modifiable : styles.readonly}
 								size={20}
 							/>
-							<p>
-								{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}
-							</p>
+							<p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
 						</div>
 
 						{item.groups && (
@@ -166,8 +144,7 @@ export default function Item({
 										styles={{
 											root: { backgroundColor: 'var(--mantine-color-blue-0)' },
 											label: { cursor: 'pointer' },
-										}}
-									>
+										}}>
 										{item}
 									</Pill>
 								))}
@@ -178,15 +155,11 @@ export default function Item({
 					</div>
 				</div>
 
-				<div className={styles.menu}></div>
+				<div className={styles.menu} />
 			</div>
 
 			<div
-				className={classNames(
-					styles.expandedSection,
-					isExpanded ? styles.expandedSectionExpanded : undefined,
-				)}
-			>
+				className={classNames(styles.expandedSection, isExpanded ? styles.expandedSectionExpanded : undefined)}>
 				<ValueMetadata item={item} />
 			</div>
 
@@ -217,20 +190,25 @@ export default function Item({
 					setDeleteItemId(undefined);
 				}}
 			/>
-			
-			<EditLocaleModal currentLocale={item.locale} open={isEditLocaleOpen} onClose={() => setIsEditLocaleOpen(false)} onEdit={(locale) => {
-				if (item.locale === locale) {
-					setIsEditLocaleOpen(false);
-					return;
-				}
 
-				mutate({
-					values: {
-						locale: locale,
+			<EditLocaleModal
+				currentLocale={item.locale}
+				open={isEditLocaleOpen}
+				onClose={() => setIsEditLocaleOpen(false)}
+				onEdit={(locale) => {
+					if (item.locale === locale) {
+						setIsEditLocaleOpen(false);
+						return;
 					}
-				});
-				setIsEditLocaleOpen(false);
-			}} />
+
+					mutate({
+						values: {
+							locale: locale,
+						},
+					});
+					setIsEditLocaleOpen(false);
+				}}
+			/>
 		</div>
 	);
 }

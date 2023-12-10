@@ -1,10 +1,10 @@
 export interface APIError {
-  data: Record<string, string>;
+    data: Record<string, string>;
 }
 export class ApiError extends Error {
 	constructor(
 		message: string,
-    public error: APIError,
+        public error: APIError,
 	) {
 		super();
 	}

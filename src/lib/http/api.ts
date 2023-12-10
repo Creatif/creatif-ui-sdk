@@ -1,12 +1,7 @@
 import type { AxiosInstance } from 'axios';
 
 class api {
-	async put<Body>(
-		instance: AxiosInstance,
-		path: string,
-		body: Body,
-		headers: Record<string, string> = {},
-	) {
+	async put<Body>(instance: AxiosInstance, path: string, body: Body, headers: Record<string, string> = {}) {
 		return await instance({
 			method: 'put',
 			url: path,
@@ -14,12 +9,7 @@ class api {
 			headers: headers,
 		});
 	}
-	async post<Body>(
-		instance: AxiosInstance,
-		path: string,
-		body: Body,
-		headers: Record<string, string> = {},
-	) {
+	async post<Body>(instance: AxiosInstance, path: string, body: Body, headers: Record<string, string> = {}) {
 		return await instance({
 			method: 'post',
 			url: path,
@@ -27,11 +17,7 @@ class api {
 			headers: headers,
 		});
 	}
-	async get(
-		instance: AxiosInstance,
-		path: string,
-		headers: Record<string, string> = {},
-	) {
+	async get(instance: AxiosInstance, path: string, headers: Record<string, string> = {}) {
 		return await instance({
 			method: 'get',
 			url: path,

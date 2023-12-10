@@ -7,13 +7,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import type { DateInputProps } from '@mantine/dates';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 interface Props extends DateInputProps {
-  name: string;
-  format?: string;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
-  onInputChange?: (date: string) => void;
+    name: string;
+    format?: string;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (date: string) => void;
 }
 export default function InputDateControlled({
 	name,

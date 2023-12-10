@@ -1,4 +1,4 @@
 export enum Routes {
-  DECLARATIONS = '/declarations',
-  APP = '/app',
+    DECLARATIONS = '/declarations',
+    APP = '/app',
 }

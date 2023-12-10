@@ -12,7 +12,9 @@ export default class CurrentLocaleStorage {
 			return;
 		}
 
-		CurrentLocaleStorage.instance = new CurrentLocaleStorage(localStorage.getItem(CurrentLocaleStorage.key) as string);
+		CurrentLocaleStorage.instance = new CurrentLocaleStorage(
+            localStorage.getItem(CurrentLocaleStorage.key) as string,
+		);
 	}
 	getLocale() {
 		return this.storage;

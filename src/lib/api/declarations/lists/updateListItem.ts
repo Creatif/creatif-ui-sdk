@@ -1,10 +1,7 @@
 import { Initialize } from '@app/initialize';
 import { declarations } from '@lib/http/axios';
 import { tryPost } from '@lib/http/tryPost';
-import type {
-	UpdateListItemBlueprint,
-	UpdateListItemResult,
-} from '@lib/api/declarations/types/listTypes';
+import type { UpdateListItemBlueprint, UpdateListItemResult } from '@lib/api/declarations/types/listTypes';
 export async function updateListItem(blueprint: UpdateListItemBlueprint) {
 	return tryPost<UpdateListItemResult>(
 		declarations(),
@@ -17,13 +14,13 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
 				locale: blueprint.variable.locale || Initialize.Locale(),
 				groups: blueprint.variable.groups,
 				behaviour: blueprint.variable.behaviour,
-				value: blueprint.variable.value
-					? JSON.stringify(blueprint.variable.value)
-					: null,
-				metadata: blueprint.variable.metadata
-					? JSON.stringify(blueprint.variable.metadata)
-					: null,
+				value: blueprint.variable.value ? JSON.stringify(blueprint.variable.value) : null,
+				metadata: blueprint.variable.metadata ? JSON.stringify(blueprint.variable.metadata) : null,
 			},
+		},
+		{
+			'X-CREATIF-API-KEY': Initialize.ApiKey(),
+			'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
 		},
 	);
 }

@@ -1,7 +1,7 @@
 import { Loader } from '@mantine/core';
 
 interface Props {
-  isLoading: boolean;
+    isLoading: boolean;
 }
 export default function Loading({ isLoading }: Props) {
 	if (!isLoading) return null;

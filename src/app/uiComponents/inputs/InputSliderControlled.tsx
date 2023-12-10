@@ -6,19 +6,11 @@ import styles from './css/InputSlider.module.css';
 import type { SliderProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends SliderProps {
-  name: string;
-  onInputChange?: (value: number) => void;
-  validation?: Omit<
-    RegisterOptions,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
+    name: string;
+    onInputChange?: (value: number) => void;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export default function InputSliderControlled({
-	name,
-	validation,
-	onInputChange,
-	...rest
-}: Props) {
+export default function InputSliderControlled({ name, validation, onInputChange, ...rest }: Props) {
 	const { control, getValues, setValue: setFormValue } = useFormContext();
 	const [value, setValue] = useState<number | undefined>(getValues(name));
 	const error = useFirstError(name);

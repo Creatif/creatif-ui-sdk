@@ -1,31 +1,31 @@
 .root {
-  background-color: var(--mantine-color-red-6) !important;
-  color: white;
-
-  &::before {
     background-color: var(--mantine-color-red-6) !important;
-  }
+    color: white;
+
+    &::before {
+        background-color: var(--mantine-color-red-6) !important;
+    }
 }
 
 .root div:first-of-type {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .description,
 .title {
-  color: var(--mantine-color-white);
+    color: var(--mantine-color-white);
 }
 
 .title {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 .closeButton {
-  color: var(--mantine-color-white);
+    color: var(--mantine-color-white);
 }
 
 .closeButton:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
 }

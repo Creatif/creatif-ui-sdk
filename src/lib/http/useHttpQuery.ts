@@ -9,15 +9,16 @@ export default function useHttpQuery<Response>(
 	key: QueryKey,
 	path: string,
 	options?: {
-    onError?: (error: ApiError) => void;
-    onSuccess?: (data: Response) => void;
-  },
+        onError?: (error: ApiError) => void;
+        onSuccess?: (data: Response) => void;
+    },
+	headers: Record<string, string> = {},
 ) {
 	return useQuery<unknown, ApiError, Response>(
 		key,
 		async () => {
 			try {
-				const res = await Api.get(instance, path);
+				const res = await Api.get(instance, path, headers);
 				return res.data as Response;
 			} catch (e: unknown) {
 				if (e instanceof AxiosError) {

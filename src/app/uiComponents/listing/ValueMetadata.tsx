@@ -1,14 +1,11 @@
 import JSON from '@app/uiComponents/external/Json';
 import styles from '@app/uiComponents/listing/css/ValueMetadata.module.css';
 import { Button } from '@mantine/core';
-import {
-	IconArrowsDiagonal2,
-	IconArrowsDiagonalMinimize,
-} from '@tabler/icons-react';
+import { IconArrowsDiagonal2, IconArrowsDiagonalMinimize } from '@tabler/icons-react';
 import { useState } from 'react';
 import type { PaginatedVariableResult } from '@lib/api/declarations/types/listTypes';
 interface Props {
-  item: PaginatedVariableResult<any, any>;
+    item: PaginatedVariableResult<object, object>;
 }
 export default function ValueMetadata({ item }: Props) {
 	const [isValueExpanded, setIsValueExpanded] = useState(false);
@@ -21,25 +18,13 @@ export default function ValueMetadata({ item }: Props) {
 
 				<div>
 					{item.value && (
-						<div
-							className={
-								isValueExpanded
-									? styles.rawValueContainerExpanded
-									: styles.rawValueContainer
-							}
-						>
+						<div className={isValueExpanded ? styles.rawValueContainerExpanded : styles.rawValueContainer}>
 							<JSON value={item.value} />
 						</div>
 					)}
 
 					{item.value && (
-						<div
-							className={
-								isValueExpanded
-									? styles.containerShowMoreExpanded
-									: styles.containerShowMore
-							}
-						>
+						<div className={isValueExpanded ? styles.containerShowMoreExpanded : styles.containerShowMore}>
 							<Button
 								onClick={() => setIsValueExpanded((item) => !item)}
 								variant="subtle"
@@ -53,8 +38,7 @@ export default function ValueMetadata({ item }: Props) {
 								color="gray"
 								style={{
 									zIndex: 5,
-								}}
-							>
+								}}>
 								{isValueExpanded ? 'Show less' : 'Show more'}
 							</Button>
 						</div>
@@ -71,11 +55,8 @@ export default function ValueMetadata({ item }: Props) {
 					{item.metadata && (
 						<div
 							className={
-								isMetadataExpanded
-									? styles.rawValueContainerExpanded
-									: styles.rawValueContainer
-							}
-						>
+								isMetadataExpanded ? styles.rawValueContainerExpanded : styles.rawValueContainer
+							}>
 							<JSON value={item.metadata} />
 						</div>
 					)}
@@ -83,11 +64,8 @@ export default function ValueMetadata({ item }: Props) {
 					{item.metadata && (
 						<div
 							className={
-								isMetadataExpanded
-									? styles.containerShowMoreExpanded
-									: styles.containerShowMore
-							}
-						>
+								isMetadataExpanded ? styles.containerShowMoreExpanded : styles.containerShowMore
+							}>
 							<Button
 								onClick={() => setIsMetadataExpanded((item) => !item)}
 								variant="subtle"
@@ -101,16 +79,13 @@ export default function ValueMetadata({ item }: Props) {
 								color="gray"
 								style={{
 									zIndex: 5,
-								}}
-							>
+								}}>
 								{isMetadataExpanded ? 'Show less' : 'Show more'}
 							</Button>
 						</div>
 					)}
 
-					{!item.metadata && (
-						<p className={styles.nothingFound}>NO METADATA FOUND</p>
-					)}
+					{!item.metadata && <p className={styles.nothingFound}>NO METADATA FOUND</p>}
 				</div>
 			</div>
 		</div>
