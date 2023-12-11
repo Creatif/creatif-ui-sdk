@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from '@app/uiComponents/listing/list/css/DeleteModal.module.css';
 import { Button, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
@@ -12,7 +14,7 @@ interface Props {
 }
 
 export default function EditLocaleModal({ open, onClose, onEdit, currentLocale }: Props) {
-	const [value, setValue] = useState<string | null>(currentLocale);
+	const [value, setValue] = useState<string>(currentLocale);
 	const data = (useQueryClient().getQueryData('supported_locales') as Locale[]) || [];
 
 	return (
@@ -24,7 +26,9 @@ export default function EditLocaleModal({ open, onClose, onEdit, currentLocale }
 					}}
 					searchable
 					value={value}
-					onChange={(v) => setValue(v)}
+					onChange={(v) => {
+						if (v) setValue(v);
+					}}
 					data={data.map((item) => ({
 						label: `${item.name} - ${item.alpha}`,
 						value: item.alpha,

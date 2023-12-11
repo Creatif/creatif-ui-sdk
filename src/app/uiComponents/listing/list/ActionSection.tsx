@@ -4,6 +4,8 @@ import { Button, Drawer, Loader, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconAdjustments, IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/ActionSection.module.css';
 import type { CurrentSortType } from '@app/uiComponents/listing/types/components';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';

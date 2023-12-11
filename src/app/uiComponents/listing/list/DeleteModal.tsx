@@ -1,4 +1,6 @@
 import { Button, Modal } from '@mantine/core';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/DeleteModal.module.css';
 interface Props {
     open: boolean;

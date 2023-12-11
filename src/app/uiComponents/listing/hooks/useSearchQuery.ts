@@ -9,9 +9,10 @@ class QueryParams {
 	public readonly behaviour: Behaviour | undefined = undefined;
 	public readonly orderBy: CurrentSortType = 'index';
 	public readonly locales: string[] = [];
+	public readonly limit: string = '15';
 	constructor(
         private readonly hiddenPage: string | null,
-        readonly limit: string | null,
+		private readonly hiddenLimit: string | null,
         private readonly hiddenLocales: string | null,
         private readonly hiddenDirection: string | null,
         private readonly hiddenOrderBy: string | null,
@@ -38,8 +39,10 @@ class QueryParams {
 			this.groups = hiddenGroups.split(',');
 		}
 
-		if (!limit) {
+		if (!hiddenLimit) {
 			this.limit = '15';
+		} else {
+			this.limit = hiddenLimit;
 		}
 
 		if (this.hiddenDirection !== 'desc' && this.hiddenDirection !== 'asc') {

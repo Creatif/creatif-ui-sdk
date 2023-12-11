@@ -1,4 +1,6 @@
 import JSON from '@app/uiComponents/external/Json';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from '@app/uiComponents/listing/list/css/ValueMetadata.module.css';
 import { Button } from '@mantine/core';
 import { IconArrowsDiagonal2, IconArrowsDiagonalMinimize } from '@tabler/icons-react';

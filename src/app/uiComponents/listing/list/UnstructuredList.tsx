@@ -1,6 +1,8 @@
 import CenteredError from '@app/components/CenteredError';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useHttpPaginationQuery from '@app/uiComponents/listing/hooks/useHttpPaginationQuery';
 import useSearchQuery from '@app/uiComponents/listing/hooks/useSearchQuery';
@@ -11,7 +13,10 @@ import NothingFound from '@app/uiComponents/listing/list/NothingFound';
 import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
 import { Button, Pagination, Select } from '@mantine/core';
+import { IconList, IconTable } from '@tabler/icons-react';
 import { useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/ListTable.module.css';
 import type { CurrentSortType } from '@app/uiComponents/listing/types/components';
 import type { PaginationResult } from '@lib/api/declarations/types/listTypes';
@@ -113,9 +118,16 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 
 			<div className={contentContainerStyles.root}>
 				{data && data.total > 0 && (
-					<p className={styles.totalInfo}>
-                        Showing <span>{limit}</span> of <span>{data.total}</span> total items
-					</p>
+					<div className={styles.listChoiceHeading}>
+						<p className={styles.totalInfo}>
+							Showing <span>{limit}</span> of <span>{data.total}</span> total items
+						</p>
+
+						<div className={styles.listChoiceListType}>
+							<IconList className={styles.listChoiceListType_Icon} size={20} />
+							<IconTable className={styles.listChoiceListType_Icon} size={20} />
+						</div>
+					</div>
 				)}
 
 				{checkedItems.length > 0 && (
@@ -176,7 +188,7 @@ export default function UnstructuredList<Value, Metadata>({ listName }: Props) {
 								onChange={setPage}
 								radius={20}
 								boundaries={2}
-								total={Math.ceil(data.total / limit)}
+								total={Math.ceil(data.total / parseInt(limit))}
 							/>
 							<Select
 								label="TOTAL"

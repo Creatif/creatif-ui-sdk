@@ -5,6 +5,8 @@ import DeleteModal from '@app/uiComponents/listing/list/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/listing/list/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/listing/list/GroupsPopover';
 import ValueMetadata from '@app/uiComponents/listing/list/ValueMetadata';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from '@app/uiComponents/listing/list/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { declarations } from '@lib/http/axios';

@@ -1,4 +1,6 @@
 import CreateNew from '@app/uiComponents/button/CreateNew';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from '@app/uiComponents/listing/list/css/NothingFound.module.css';
 
 interface Props {

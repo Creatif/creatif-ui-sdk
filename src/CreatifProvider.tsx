@@ -16,6 +16,9 @@ import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 import '@app/css/reset.module.css';
 import '@app/css/global.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+// eslint-disable-next-line import/order
 import animations from '@app/css/animations.module.css';
 
 interface Props {
@@ -24,6 +27,10 @@ interface Props {
 }
 
 const theme = createTheme({
+	primaryColor: 'indigo-primary',
+	colors: {
+		'indigo-primary':  ['#f3f0ff', '#e5dbff', '#d0bfff', '#b197fc', '#9775fa', '#845ef7', '#7950f2', '#7048e8', '#6741d9', '#5f3dc4'],
+	},
 	fontFamily: 'Barlow, sans-serif',
 	fontFamilyMonospace: 'Monaco, Courier, monospace',
 	headings: { fontFamily: 'Barlow, sans-serif' },

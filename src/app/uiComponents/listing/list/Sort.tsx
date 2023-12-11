@@ -7,6 +7,8 @@ import { IconCheck, IconEyeOff, IconReplace, IconSortAscending, IconSortDescendi
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/Sort.module.css';
 import type { CurrentSortType } from '@app/uiComponents/listing/types/components';
 import type { Behaviour } from '@lib/api/declarations/types/sharedTypes';
