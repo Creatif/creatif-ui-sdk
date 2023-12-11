@@ -1,5 +1,5 @@
 import CreateNew from '@app/uiComponents/button/CreateNew';
-import styles from '@app/uiComponents/listing/css/NothingFound.module.css';
+import styles from '@app/uiComponents/listing/list/css/NothingFound.module.css';
 
 interface Props {
     structureName: string;

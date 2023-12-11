@@ -1,4 +1,4 @@
-import styles from '@app/uiComponents/listing/css/DeleteModal.module.css';
+import styles from '@app/uiComponents/listing/list/css/DeleteModal.module.css';
 import { Button, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';

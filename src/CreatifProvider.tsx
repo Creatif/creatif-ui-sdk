@@ -1,5 +1,4 @@
 import Authentication from '@app/components/authentication/Authentication';
-import styles from '@app/css/global.module.css';
 import { Initialize } from '@app/initialize';
 import authCheck from '@lib/api/auth/authCheck';
 import { getProjectMetadata } from '@lib/api/project/getProjectMetadata';
@@ -16,6 +15,8 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 import '@app/css/reset.module.css';
+import '@app/css/global.module.css';
+import animations from '@app/css/animations.module.css';
 
 interface Props {
     apiKey: string;
@@ -71,7 +72,7 @@ export function CreatifProvider({ apiKey, projectId, children }: Props & PropsWi
 			{isLoggedIn && (
 				<>
 					<QueryClientProvider client={queryClient}>
-						<div className={styles.initialAnimation}>{children}</div>
+						<div className={animations.initialAnimation}>{children}</div>
 					</QueryClientProvider>
 				</>
 			)}

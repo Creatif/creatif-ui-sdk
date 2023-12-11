@@ -1,7 +1,7 @@
 import { createOptions } from '@app/systems/stores/options';
 import Header from '@app/uiComponents/appShells/singleColumn/Header';
 import Navigation from '@app/uiComponents/appShells/singleColumn/Navigation';
-import UnstructuredList from '@app/uiComponents/listing/UnstructuredList';
+import UnstructuredList from '@app/uiComponents/listing/list/UnstructuredList';
 import { Container } from '@mantine/core';
 import React, { useRef } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';

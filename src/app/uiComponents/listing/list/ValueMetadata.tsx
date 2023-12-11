@@ -1,5 +1,5 @@
 import JSON from '@app/uiComponents/external/Json';
-import styles from '@app/uiComponents/listing/css/ValueMetadata.module.css';
+import styles from '@app/uiComponents/listing/list/css/ValueMetadata.module.css';
 import { Button } from '@mantine/core';
 import { IconArrowsDiagonal2, IconArrowsDiagonalMinimize } from '@tabler/icons-react';
 import { useState } from 'react';

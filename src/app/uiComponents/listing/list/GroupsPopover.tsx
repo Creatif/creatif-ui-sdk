@@ -1,4 +1,4 @@
-import styles from '@app/uiComponents/listing/css/GroupsPopover.module.css';
+import styles from '@app/uiComponents/listing/list/css/GroupsPopover.module.css';
 import { Pill, Popover } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons-react';

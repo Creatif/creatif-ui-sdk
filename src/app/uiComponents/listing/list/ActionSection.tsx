@@ -1,5 +1,5 @@
 import CreateNew from '@app/uiComponents/button/CreateNew';
-import Sort from '@app/uiComponents/listing/Sort';
+import Sort from '@app/uiComponents/listing/list/Sort';
 import { Button, Drawer, Loader, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconAdjustments, IconSearch } from '@tabler/icons-react';

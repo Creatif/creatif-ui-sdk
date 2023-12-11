@@ -1,11 +1,11 @@
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
-import DeleteModal from '@app/uiComponents/listing/DeleteModal';
-import EditLocaleModal from '@app/uiComponents/listing/EditLocaleModal';
-import GroupsPopover from '@app/uiComponents/listing/GroupsPopover';
-import ValueMetadata from '@app/uiComponents/listing/ValueMetadata';
-import styles from '@app/uiComponents/listing/css/Item.module.css';
+import DeleteModal from '@app/uiComponents/listing/list/DeleteModal';
+import EditLocaleModal from '@app/uiComponents/listing/list/EditLocaleModal';
+import GroupsPopover from '@app/uiComponents/listing/list/GroupsPopover';
+import ValueMetadata from '@app/uiComponents/listing/list/ValueMetadata';
+import styles from '@app/uiComponents/listing/list/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
