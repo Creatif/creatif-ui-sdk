@@ -1,19 +1,18 @@
 import { createOptions } from '@app/systems/stores/options';
-import Header from '@app/uiComponents/appShells/singleColumn/Header';
-import Navigation from '@app/uiComponents/appShells/singleColumn/Navigation';
 import ListList from '@app/uiComponents/listing/ListList';
-import UnstructuredList from '@app/uiComponents/listing/list/UnstructuredList';
+import Header from '@app/uiComponents/shell/Header';
+import Navigation from '@app/uiComponents/shell/Navigation';
 import { Container } from '@mantine/core';
 import React, { useRef } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './css/root.module.css';
-import type { AppShellItems } from '@app/uiComponents/appShells/types/AppShellItems';
+import type { AppShellItems, CreatifApp } from '@app/uiComponents/shell/types/AppShellItems';
 interface Props {
-    options: AppShellItems;
+    options: CreatifApp;
 }
-export default function SingleColumn({ options }: Props) {
+export default function Shell({ options }: Props) {
     const storeCreatedRef = useRef(false);
     if (!storeCreatedRef.current) {
         for (const option of options.items) {
@@ -41,7 +40,7 @@ export default function SingleColumn({ options }: Props) {
                                 {options && <Navigation navItems={options.items} logo={options.logo} />}
 
                                 <div>
-                                    {options.header && <Header>{options.header}</Header>}
+                                    <Header />
 
                                     <div className={styles.content}>{<Outlet />}</div>
                                 </div>
@@ -59,6 +58,10 @@ export default function SingleColumn({ options }: Props) {
                                         path={`${item.menu.path}`}
                                         element={<ListList listName={item.structure.name} />}
                                     />
+                                )}
+
+                                {item.structure.type === 'variable' && (
+                                    <Route path={`${item.menu.path}`} element={<div>Variable listing</div>} />
                                 )}
                             </React.Fragment>
                         ))}

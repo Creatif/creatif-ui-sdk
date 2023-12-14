@@ -205,7 +205,7 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
                             />
                         )}
 
-                        {!isListView && <MainTableView />}
+                        {!isListView && <MainTableView<Value, Metadata> data={data} />}
 
                         <div className={styles.stickyPagination}>
                             <Pagination

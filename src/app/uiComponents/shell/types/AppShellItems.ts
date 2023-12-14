@@ -1,11 +1,15 @@
 import type React from 'react';
 
+export interface CreatifApp {
+    logo: React.ReactNode;
+    items: AppShellItem[];
+}
+
 export interface AppShellItems {
     logo: React.ReactNode;
     header: React.ReactNode;
     items: AppShellItem[];
 }
-
 export interface AppShellMenu {
     text: string;
     path: string;

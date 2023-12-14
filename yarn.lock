@@ -1182,7 +1182,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@mantine/core@^7.2.2", "@mantine/core@7.2.2":
+"@mantine/core@^7.2.2", "@mantine/core@>=7", "@mantine/core@7.2.2":
   version "7.2.2"
   resolved "https://registry.npmjs.org/@mantine/core/-/core-7.2.2.tgz"
   integrity sha512-cVGmLjYyKIzjn0LRwamj71O4HT43qCxPGAzMZqkMYGOako7xwBLYQNe7HjL/J0FXJDyfX8OdMylVhgsePWYbng==
@@ -1208,7 +1208,7 @@
   dependencies:
     react-dropzone-esm "15.0.1"
 
-"@mantine/hooks@^7.2.2", "@mantine/hooks@7.2.2":
+"@mantine/hooks@^7.2.2", "@mantine/hooks@>=7", "@mantine/hooks@7.2.2":
   version "7.2.2"
   resolved "https://registry.npmjs.org/@mantine/hooks/-/hooks-7.2.2.tgz"
   integrity sha512-7CFSVP2aQHrBwLLAVf0q5dgj+6QTZmhLTNcuc3pE1du+HLFUdyVS6vvQC6kieZXxOd6UzwFGBlN4G+aDx95XeA==
@@ -1931,7 +1931,7 @@ classnames@^2.3.2:
   resolved "https://registry.npmjs.org/classnames/-/classnames-2.3.2.tgz"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
 
-clsx@2.0.0:
+clsx@^2.0.0, clsx@>=2, clsx@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/clsx/-/clsx-2.0.0.tgz"
   integrity sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==
@@ -3188,6 +3188,11 @@ make-error@^1.1.1:
   resolved "https://registry.npmjs.org/make-error/-/make-error-1.3.6.tgz"
   integrity sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
 
+mantine-datatable@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.npmjs.org/mantine-datatable/-/mantine-datatable-7.3.0.tgz"
+  integrity sha512-JcLYuQdG7H0yQm/aSTaGjCbMch64lgfqJLNcygXiM+L2gLJtA9E99jE5aFAr3dIVp7luSddHJgq7aYC4ragzIQ==
+
 match-sorter@^6.0.2:
   version "6.3.1"
   resolved "https://registry.npmjs.org/match-sorter/-/match-sorter-6.3.1.tgz"
@@ -3680,7 +3685,7 @@ react-transition-group@4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-"react@^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.5.1 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, "react@>= 16.8 || 18.0.0", react@>=16.6.0, react@>=16.8, react@>=16.8.0:
+"react@^0.14 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.5.1 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, "react@>= 16.8 || 18.0.0", react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=18.2:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==

@@ -38,8 +38,8 @@ export interface PaginatedVariableResult<Value, Metadata> {
     behaviour: Behaviour;
     locale: string;
     groups?: string[];
-    value?: Value;
-    metadata?: Metadata;
+    value: Value;
+    metadata: Metadata;
 }
 export interface PaginationResult<Value, Metadata> {
     total: number;

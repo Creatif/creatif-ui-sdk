@@ -2,7 +2,6 @@ import Loading from '@app/components/Loading';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
-import useUpdateList from '@app/systems/updateList/useUpdateList';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
@@ -10,6 +9,7 @@ import useAppendToList from '@app/uiComponents/listForm/helpers/useAppendToList'
 import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
 import useUpdateListItem from '@app/uiComponents/listForm/helpers/useUpdateListItem';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
+import { createVariable } from '@lib/api/declarations/variables/createVariable';
 import { declarations } from '@lib/http/axios';
 import useHttpMutation from '@lib/http/useHttpMutation';
 import StructureStorage from '@lib/storage/structureStorage';
@@ -35,7 +35,7 @@ import type {
     UseFormWatch,
 } from 'react-hook-form';
 interface Props<T extends FieldValues> {
-    listName: string;
+    variableName: string;
     bindings: Bindings<T>;
     formProps: UseFormProps<T>;
     mode?: 'update';
@@ -59,8 +59,8 @@ interface Props<T extends FieldValues> {
     afterSave?: AfterSaveFn;
     form?: HTMLAttributes<HTMLFormElement>;
 }
-export default function ListForm<T extends FieldValues>({
-    listName,
+export default function VariableForm<T extends FieldValues>({
+    variableName,
     formProps,
     bindings,
     inputs,
@@ -68,11 +68,6 @@ export default function ListForm<T extends FieldValues>({
     afterSave,
     mode,
 }: Props<T>) {
-    const defaultListUpdate = useUpdateList<T>(Boolean(mode));
-    if (mode === 'update' && defaultListUpdate) {
-        formProps.defaultValues = defaultListUpdate;
-    }
-
     const updateListItem = useUpdateListItem(Boolean(mode));
 
     const methods = useForm(formProps);
@@ -84,7 +79,7 @@ export default function ListForm<T extends FieldValues>({
     const navigate = useNavigate();
     const appendToList = useAppendToList(listName);
     const resolveBindings = useResolveBindings();
-    const useStructureOptionsStore = getOptions(listName);
+    const useStructureOptionsStore = getOptions(variableName);
     const [isSaving, setIsSaving] = useState(false);
     const { error: notificationError } = useNotification();
     const { mutate } = useHttpMutation(
@@ -94,11 +89,11 @@ export default function ListForm<T extends FieldValues>({
         {
             onSuccess() {
                 successNotification(
-                    `List with name ${listName} created.`,
-                    `List '${listName}' has been successfully created. This message will only appear once.`,
+                    `Variable with name ${variableName} created.`,
+                    `Variable '${variableName}' has been successfully created. This message will only appear once.`,
                 );
 
-                StructureStorage.instance.addList(listName);
+                StructureStorage.instance.addList(variableName);
             },
             onError() {
                 errorNotification(
@@ -128,9 +123,9 @@ export default function ListForm<T extends FieldValues>({
     } = methods;
 
     useEffect(() => {
-        if (!StructureStorage.instance.hasList(listName)) {
+        if (!StructureStorage.instance.hasList(variableName)) {
             mutate({
-                name: listName,
+                name: variableName,
             });
         }
     }, []);
@@ -161,33 +156,17 @@ export default function ListForm<T extends FieldValues>({
             }
 
             if (!mode && result) {
-                appendToList(name, behaviour, groups, result).then((appendResult) => {
-                    if (appendResult) {
-                        queryClient.invalidateQueries(listName);
-                        afterSave?.(result, e);
-                        setIsSaving(false);
-                        navigate(useStructureOptionsStore.getState().paths.listing);
-                    }
-                });
-            }
-
-            if (mode && result && updateListItem) {
-                updateListItem(name, result.value, result.metadata, groups, behaviour).then((updateResult) => {
-                    if (updateResult) {
-                        successNotification('Item updated', `Item '${name}' has been updated.`);
-                        setIsSaving(false);
-                        queryClient.invalidateQueries(listName);
-                        afterSave?.(result, e);
-                        navigate(useStructureOptionsStore.getState().paths.listing);
-
-                        return;
-                    }
-
+                createVariable({
+                    name: name,
+                    behaviour: behaviour,
+                    groups: groups,
+                    metadata: result.metadata,
+                    value: result.value,
+                }).then(() => {
+                    queryClient.invalidateQueries(variableName);
+                    afterSave?.(result, e);
                     setIsSaving(false);
-                    errorNotification(
-                        'Something went wrong',
-                        `Item '${name}' could not be updated. Please, try again later.`,
-                    );
+                    navigate(useStructureOptionsStore.getState().paths.listing);
                 });
             }
         });
