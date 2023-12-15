@@ -1,0 +1,49 @@
+.informationRoot {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+
+    margin-bottom: 3rem;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    gap: 1rem;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.behaviour {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    gap: 0.5rem;
+}
+
+.behaviour .modifiable {
+    color: var(--mantine-primary-color-filled);
+}
+
+.behaviour .readonly {
+    color: var(--mantine-color-red-8);
+}
+
+.actionButtonGroup {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.groups {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.3rem;
+}

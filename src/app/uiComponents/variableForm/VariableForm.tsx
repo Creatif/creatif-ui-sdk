@@ -1,25 +1,24 @@
 import Loading from '@app/components/Loading';
-import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import useAppendToList from '@app/uiComponents/listForm/helpers/useAppendToList';
 import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
-import useUpdateListItem from '@app/uiComponents/listForm/helpers/useUpdateListItem';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
+import { wrappedBeforeSave } from '@app/uiComponents/util';
+import useUpdateVariable from '@app/uiComponents/variableForm/useUpdateVariable';
 import { createVariable } from '@lib/api/declarations/variables/createVariable';
-import { declarations } from '@lib/http/axios';
-import useHttpMutation from '@lib/http/useHttpMutation';
 import StructureStorage from '@lib/storage/structureStorage';
 import { Alert, Button, Group } from '@mantine/core';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import React, { useCallback, useState } from 'react';
+import { DefaultValues, FormProvider, useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@app/uiComponents/types/forms';
+import type { CreatedVariable } from '@root/types/api/variable';
+import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
+
 import type {
     FieldValues,
     UseFormProps,
@@ -34,9 +33,9 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-interface Props<T extends FieldValues> {
+interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
-    bindings: Bindings<T>;
+    bindings?: Bindings<T>;
     formProps: UseFormProps<T>;
     mode?: 'update';
     inputs: (
@@ -56,10 +55,10 @@ interface Props<T extends FieldValues> {
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
-    afterSave?: AfterSaveFn;
+    afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
     form?: HTMLAttributes<HTMLFormElement>;
 }
-export default function VariableForm<T extends FieldValues>({
+export default function VariableForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
     variableName,
     formProps,
     bindings,
@@ -67,8 +66,11 @@ export default function VariableForm<T extends FieldValues>({
     beforeSave,
     afterSave,
     mode,
-}: Props<T>) {
-    const updateListItem = useUpdateListItem(Boolean(mode));
+}: Props<T, Value, Metadata>) {
+    const defaultValuesForUpdate = useUpdateVariable<T>(Boolean(mode), formProps.defaultValues);
+    if (mode === 'update' && defaultValuesForUpdate?.defaultValues) {
+        formProps.defaultValues = defaultValuesForUpdate.defaultValues;
+    }
 
     const methods = useForm(formProps);
     const { success: successNotification, error: errorNotification } = useNotification();
@@ -77,36 +79,9 @@ export default function VariableForm<T extends FieldValues>({
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const appendToList = useAppendToList(listName);
     const resolveBindings = useResolveBindings();
     const useStructureOptionsStore = getOptions(variableName);
     const [isSaving, setIsSaving] = useState(false);
-    const { error: notificationError } = useNotification();
-    const { mutate } = useHttpMutation(
-        declarations(),
-        'put',
-        `/list/${Initialize.ProjectID()}/${Initialize.Locale()}`,
-        {
-            onSuccess() {
-                successNotification(
-                    `Variable with name ${variableName} created.`,
-                    `Variable '${variableName}' has been successfully created. This message will only appear once.`,
-                );
-
-                StructureStorage.instance.addList(variableName);
-            },
-            onError() {
-                errorNotification(
-                    'Something wrong happened.',
-                    'We are working to resolve this problem. Please, try again later.',
-                );
-            },
-        },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
-    );
 
     const {
         setValue,
@@ -122,51 +97,89 @@ export default function VariableForm<T extends FieldValues>({
         formState: { isLoading },
     } = methods;
 
-    useEffect(() => {
-        if (!StructureStorage.instance.hasList(variableName)) {
-            mutate({
-                name: variableName,
-            });
-        }
-    }, []);
-
     const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
         if (!value) {
-            notificationError(
+            errorNotification(
                 'No data submitted.',
-                <span>
-                    <strong>undefined</strong> has been submitted which means there are no values to save. Have you
-                    added some fields to your form?
-                </span>,
+                'undefined has been submitted which means there are no values to save. Have you added some fields to your form?',
             );
             return;
         }
+
+        setIsSaving(true);
 
         const binding = resolveBindings(value, bindings);
         if (!binding) return;
         const { name, groups, behaviour } = binding;
 
-        setIsSaving(true);
-
-        Promise.resolve(beforeSave?.(value, e)).then((result) => {
+        wrappedBeforeSave(value, e, beforeSave).then((result) => {
             if (!valueMetadataValidator(result)) {
                 setBeforeSaveError(true);
                 setIsSaving(false);
                 return;
             }
 
+            if (mode && result && defaultValuesForUpdate?.update) {
+                defaultValuesForUpdate
+                    .update(variableName, ['value', 'metadata', 'groups', 'behaviour'], {
+                        behaviour: behaviour,
+                        groups: groups,
+                        metadata: result.metadata,
+                        value: result.value,
+                    })
+                    .then(({ result: response, error }) => {
+                        if (error) {
+                            setIsSaving(false);
+                            errorNotification(
+                                'Something went wrong.',
+                                'Variable could not be update. Please, try again later.',
+                            );
+                            return;
+                        }
+
+                        if (response) {
+                            successNotification('Variable updated', `Variable with name '${name}' has been updated.`);
+
+                            StructureStorage.instance.addVariable(name);
+                            queryClient.invalidateQueries(`get_${variableName}`);
+                            afterSave?.(response, e);
+                            setIsSaving(false);
+                            navigate(useStructureOptionsStore.getState().paths.listing);
+                        }
+                    });
+            }
+
             if (!mode && result) {
-                createVariable({
-                    name: name,
+                createVariable<Value, Metadata>({
+                    name: name || variableName,
                     behaviour: behaviour,
                     groups: groups,
                     metadata: result.metadata,
                     value: result.value,
-                }).then(() => {
-                    queryClient.invalidateQueries(variableName);
-                    afterSave?.(result, e);
-                    setIsSaving(false);
-                    navigate(useStructureOptionsStore.getState().paths.listing);
+                }).then(({ result: response, error, status }) => {
+                    if (error && error.error.data['nameExists']) {
+                        setIsSaving(false);
+                        errorNotification('Variable name exists', `Variable with the name '${name}' already exists.`);
+
+                        return;
+                    } else if (error) {
+                        setIsSaving(false);
+                        errorNotification(
+                            'Something went wrong.',
+                            'Variable could not be created. Please, try again later.',
+                        );
+                        return;
+                    }
+
+                    if (response) {
+                        successNotification('Variable created', `Variable with name '${name}' has been created.`);
+
+                        StructureStorage.instance.addVariable(name);
+                        queryClient.invalidateQueries(variableName);
+                        afterSave?.(response, e);
+                        setIsSaving(false);
+                        navigate(useStructureOptionsStore.getState().paths.listing);
+                    }
                 });
             }
         });
@@ -182,7 +195,7 @@ export default function VariableForm<T extends FieldValues>({
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: value: unknown, metadata: unknown}. Something else was returned"
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}

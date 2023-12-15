@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/shell/css/navigation.module.css';
+import classNames from 'classnames';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import type { AppShellItem } from '@app/uiComponents/shell/types/AppShellItems';
+import { NavLink } from 'react-router-dom';
+import type { AppShellItem } from '@root/types/shell/shell';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];
@@ -15,10 +16,17 @@ export default function Navigation({ navItems, logo }: Props) {
 
             <nav className={styles.root}>
                 {navItems.map((item, index) => (
-                    <Link key={index} className={styles.navItem} to={item.menu.path}>
+                    <NavLink
+                        key={index}
+                        className={({ isActive }) => {
+                            if (isActive) return classNames(styles.navItem, styles.active);
+
+                            return styles.navItem;
+                        }}
+                        to={item.menu.path}>
                         {item.menu.icon && <span className={styles.navItemIcon}>{item.menu.icon}</span>}
                         <span className={styles.navItemText}>{item.menu.text}</span>
-                    </Link>
+                    </NavLink>
                 ))}
             </nav>
         </div>

@@ -1,11 +1,12 @@
 import { CreatifProvider } from '@root/CreatifProvider';
 import LandingPage from '@root/uiApp/forms/LandingPage';
+import LandingPageBanner from '@root/uiApp/forms/LandingPageBanner';
 import { IconCashBanknote, IconHome } from '@tabler/icons-react';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$EbUbCiuHQiulgnvllemQ5Op1N3QnTbTKMKBCYAH0sKYlNBY7Vx40."
-            projectId="01HHCZFF53YBFGNJXAZ1WW7NVD"
+            apiKey="$2a$10$gw8TjP6EBg/3yzFKHlOR/O9Cc2Hvf97Yl7upiaitox37RtmtdAeY."
+            projectId="01HHP24FP9MMCJ9Z6Z6Z5VVYV3"
             app={{
                 logo: 'Break free',
                 items: [
@@ -37,10 +38,10 @@ export default function App() {
                             type: 'variable',
                         },
                         create: {
-                            component: <div>Create</div>,
+                            component: <LandingPageBanner variableName="landing page banner" />,
                         },
                         update: {
-                            component: <div>Update</div>,
+                            component: <LandingPageBanner variableName="landing page banner" mode="update" />,
                         },
                     },
                 ],

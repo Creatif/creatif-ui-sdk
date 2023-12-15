@@ -11,21 +11,19 @@
     background-color: white;
 }
 
-.logo {
-}
-
 .navItem {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin-bottom: 0.5rem;
 
     text-decoration: none;
     font-size: 1rem;
     text-align: left;
     color: var(--mantine-color-gray-7);
 
-    padding: 1rem 1rem 1rem 0;
-    border-radius: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    border-radius: 2rem;
 
     transition:
         background-color 0.2s,
@@ -34,7 +32,7 @@
 }
 
 .navItem:hover {
-    background-color: var(--mantine-color-gray-2);
+    background-color: var(--mantine-color-indigo-0);
 }
 
 .navItemIcon {
@@ -46,4 +44,13 @@
 .navItemText {
     padding-right: 1.5rem;
     padding-left: 1.5rem;
+}
+
+.root a.active {
+    color: var(--mantine-color-indigo-9);
+    background-color: var(--mantine-color-indigo-1);
+}
+
+.root a.active .navItemIcon {
+    color: var(--mantine-color-indigo-9);
 }

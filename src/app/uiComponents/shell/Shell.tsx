@@ -1,14 +1,15 @@
 import { createOptions } from '@app/systems/stores/options';
-import ListList from '@app/uiComponents/listing/ListList';
+import ListList from '@app/uiComponents/lists/ListList';
 import Header from '@app/uiComponents/shell/Header';
 import Navigation from '@app/uiComponents/shell/Navigation';
+import VariableDisplay from '@app/uiComponents/variables/VariableDisplay';
 import { Container } from '@mantine/core';
 import React, { useRef } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './css/root.module.css';
-import type { AppShellItems, CreatifApp } from '@app/uiComponents/shell/types/AppShellItems';
+import type { Shell, CreatifApp } from '@root/types/shell/shell';
 interface Props {
     options: CreatifApp;
 }
@@ -49,19 +50,30 @@ export default function Shell({ options }: Props) {
                         {options.items.map((item, i) => (
                             <React.Fragment key={i}>
                                 <Route path={`${item.menu.path}/create`} element={item.create.component} />
-                                <Route
-                                    path={`${item.menu.path}/update/:structureId/:itemId`}
-                                    element={item.update.component}
-                                />
                                 {item.structure.type === 'list' && (
-                                    <Route
-                                        path={`${item.menu.path}`}
-                                        element={<ListList listName={item.structure.name} />}
-                                    />
+                                    <>
+                                        <Route
+                                            path={`${item.menu.path}/update/:structureId/:itemId`}
+                                            element={item.update.component}
+                                        />
+                                        <Route
+                                            path={`${item.menu.path}`}
+                                            element={<ListList listName={item.structure.name} />}
+                                        />
+                                    </>
                                 )}
 
                                 {item.structure.type === 'variable' && (
-                                    <Route path={`${item.menu.path}`} element={<div>Variable listing</div>} />
+                                    <>
+                                        <Route
+                                            path={`${item.menu.path}/update/:structureId`}
+                                            element={item.update.component}
+                                        />
+                                        <Route
+                                            path={`${item.menu.path}`}
+                                            element={<VariableDisplay variableName={item.structure.name} />}
+                                        />
+                                    </>
                                 )}
                             </React.Fragment>
                         ))}

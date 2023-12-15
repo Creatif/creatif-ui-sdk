@@ -18,7 +18,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@app/uiComponents/types/forms';
+import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
 import type {
     FieldValues,
