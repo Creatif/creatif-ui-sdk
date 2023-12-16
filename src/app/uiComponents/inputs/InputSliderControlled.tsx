@@ -11,38 +11,38 @@ interface Props extends SliderProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 export default function InputSliderControlled({ name, validation, onInputChange, ...rest }: Props) {
-	const { control, getValues, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<number | undefined>(getValues(name));
-	const error = useFirstError(name);
+    const { control, getValues, setValue: setFormValue } = useFormContext();
+    const [value, setValue] = useState<number | undefined>(getValues(name));
+    const error = useFirstError(name);
 
-	useEffect(() => {
-		setFormValue(name, value);
-	}, []);
+    useEffect(() => {
+        setFormValue(name, value);
+    }, []);
 
-	return (
-		<>
-			<Controller
-				rules={validation}
-				control={control}
-				name={name}
-				render={({ field: { onChange } }) => (
-					<Slider
-						name={name}
-						value={value}
-						onChange={(value) => {
-							setValue(value);
-						}}
-						onChangeEnd={(value) => {
-							onChange(value);
-							onInputChange?.(value);
-							setValue(value);
-						}}
-						{...rest}
-					/>
-				)}
-			/>
+    return (
+        <>
+            <Controller
+                rules={validation}
+                control={control}
+                name={name}
+                render={({ field: { onChange } }) => (
+                    <Slider
+                        name={name}
+                        value={value}
+                        onChange={(value) => {
+                            setValue(value);
+                        }}
+                        onChangeEnd={(value) => {
+                            onChange(value);
+                            onInputChange?.(value);
+                            setValue(value);
+                        }}
+                        {...rest}
+                    />
+                )}
+            />
 
-			{error && <span className={styles.errorMessage}>{error}</span>}
-		</>
-	);
+            {error && <span className={styles.errorMessage}>{error}</span>}
+        </>
+    );
 }

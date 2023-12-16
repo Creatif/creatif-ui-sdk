@@ -1,9 +1,9 @@
 import { Initialize } from '@app/initialize';
-import { queryConstructor } from '@lib/api/declarations/queryConstructor';
-import { declarations } from '@lib/http/axios';
+import { throwIfHttpFails } from '@lib/http/tryHttp';
 import useHttpQuery from '@lib/http/useHttpQuery';
 import { useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
+import paginateList from '@lib/api/declarations/lists/paginateList';
 interface Props {
     listName: string;
     locales?: string[];
@@ -14,6 +14,7 @@ interface Props {
     orderBy?: string;
     search?: string;
     direction?: 'desc' | 'asc';
+    fields?: string[];
 }
 export default function useHttpPaginationQuery<Response>({
     listName,
@@ -25,12 +26,12 @@ export default function useHttpPaginationQuery<Response>({
     direction = 'desc',
     behaviour = undefined,
     locales = [],
+    fields = [],
 }: Props) {
     const queryClient = useQueryClient();
 
     return {
         ...useHttpQuery<Response>(
-            declarations(),
             [
                 listName,
                 {
@@ -42,23 +43,24 @@ export default function useHttpPaginationQuery<Response>({
                     locale: locales,
                     direction: direction,
                     search: search,
+                    fields: fields,
                 },
             ],
-            `/lists/${Initialize.ProjectID()}/${listName}${queryConstructor(
-                page,
-                limit,
-                groups,
-                orderBy,
-                direction,
-                search,
-                behaviour,
-                locales,
-            )}`,
-            undefined,
-            {
-                'X-CREATIF-API-KEY': Initialize.ApiKey(),
-                'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-            },
+            throwIfHttpFails(() =>
+                paginateList({
+                    name: listName,
+                    projectId: Initialize.ProjectID(),
+                    page,
+                    limit,
+                    groups,
+                    orderBy,
+                    direction,
+                    search,
+                    behaviour,
+                    locales,
+                    fields,
+                }),
+            ),
         ),
         invalidateQuery(
             listName: string,

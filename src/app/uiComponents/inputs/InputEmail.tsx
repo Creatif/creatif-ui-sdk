@@ -6,18 +6,18 @@ interface Props extends TextInputProps {
     options?: RegisterOptions;
 }
 export default function InputEmail({ options, ...rest }: Props) {
-	let optionsCopy = {};
-	if (options) {
-		optionsCopy = options;
-	}
+    let optionsCopy = {};
+    if (options) {
+        optionsCopy = options;
+    }
 
-	optionsCopy = {
-		...optionsCopy,
-		pattern: {
-			value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-			message: 'Provided email is invalid',
-		},
-	};
+    optionsCopy = {
+        ...optionsCopy,
+        pattern: {
+            value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            message: 'Provided email is invalid',
+        },
+    };
 
-	return <InputText {...rest} options={optionsCopy} />;
+    return <InputText {...rest} options={optionsCopy} />;
 }

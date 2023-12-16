@@ -1,8 +1,8 @@
 export class ValidationError extends Error {
-	constructor(message, errors, status) {
-		super(message);
+    constructor(message, errors, status) {
+        super(message);
 
-		this.errors = errors;
-		this.status = status;
-	}
+        this.errors = errors;
+        this.status = status;
+    }
 }

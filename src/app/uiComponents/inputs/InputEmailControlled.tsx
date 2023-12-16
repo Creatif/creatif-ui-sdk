@@ -11,40 +11,40 @@ interface Props extends TextInputProps {
     onInputChange?: (value: string) => void;
 }
 export default function InputEmailControlled({ name, validation, onInputChange, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [value, setValue] = useState<string>(getValues(name));
-	let optionsCopy = {};
-	if (validation) {
-		optionsCopy = validation;
-	}
+    const { control, getValues } = useFormContext();
+    const [value, setValue] = useState<string>(getValues(name));
+    let optionsCopy = {};
+    if (validation) {
+        optionsCopy = validation;
+    }
 
-	optionsCopy = {
-		...optionsCopy,
-		pattern: {
-			value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-			message: 'Provided email is invalid',
-		},
-	};
+    optionsCopy = {
+        ...optionsCopy,
+        pattern: {
+            value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            message: 'Provided email is invalid',
+        },
+    };
 
-	return (
-		<Controller
-			control={control}
-			name={name}
-			rules={validation}
-			render={({ field: { onChange } }) => (
-				<InputText
-					error={useFirstError(name)}
-					value={value}
-					onChange={(event) => {
-						onChange(event.currentTarget.value);
-						onInputChange?.(event.currentTarget.value);
-						setValue(event.currentTarget.value);
-					}}
-					name={name}
-					{...rest}
-					options={optionsCopy}
-				/>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            control={control}
+            name={name}
+            rules={validation}
+            render={({ field: { onChange } }) => (
+                <InputText
+                    error={useFirstError(name)}
+                    value={value}
+                    onChange={(event) => {
+                        onChange(event.currentTarget.value);
+                        onInputChange?.(event.currentTarget.value);
+                        setValue(event.currentTarget.value);
+                    }}
+                    name={name}
+                    {...rest}
+                    options={optionsCopy}
+                />
+            )}
+        />
+    );
 }

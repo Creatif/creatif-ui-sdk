@@ -1,9 +1,15 @@
+import type { CreatedList, CreateListBlueprint } from '@root/types/api/list';
+import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { declarations } from '@lib/http/fetchInstance';
 import { Initialize } from '@app/initialize';
-import { declarations } from '@lib/http/axios';
-import { tryPut } from '@lib/http/tryPut';
-import type { CreateListBlueprint } from '@root/types/api/list';
-export async function createList(blueprint: CreateListBlueprint) {
-    return tryPut(declarations(), `/list/${Initialize.ProjectID()}`, {
-        name: blueprint.name,
-    });
+export default function createList(blueprint: CreateListBlueprint) {
+    return tryHttp<CreatedList>(
+        declarations(),
+        'put',
+        `/list/${blueprint.projectId}/${blueprint.locale ? blueprint.locale : Initialize.Locale()}`,
+        {
+            name: blueprint.name,
+        },
+        authHeaders(),
+    );
 }

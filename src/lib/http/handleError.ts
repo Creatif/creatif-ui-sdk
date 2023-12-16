@@ -1,37 +1,12 @@
-import { ApiError } from '@lib/http/apiError';
-import { AxiosError } from 'axios';
-export function handleError(e: unknown): { error: ApiError; status: number } {
-    if (e instanceof AxiosError) {
-        if (e.response) {
-            let data = e.response.data;
-            if (!data) {
-                data = 'Unexpected error';
-            }
-
-            return {
-                error: new ApiError('An error occurred', e.response.data),
-                status: e.response.status,
-            };
-        }
-    }
-
-    if (e && Object.hasOwn(e, 'message')) {
-        return {
-            error: new ApiError(`An error occurred: ${(e as AxiosError).message}`, {
-                data: {
-                    message: 'Unexpected error',
-                },
-            }),
-            status: 500,
-        };
-    }
-
+import type { TryResult } from '@root/types/shared';
+export function handleError<T>(e: TypeError): TryResult<T> {
     return {
-        error: new ApiError('An error occurred.', {
+        result: undefined,
+        error: {
             data: {
-                message: 'Unexpected error',
+                message: e.message,
             },
-        }),
+        },
         status: 500,
     };
 }

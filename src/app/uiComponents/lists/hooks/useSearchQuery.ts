@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
-import type { CurrentSortType } from '../../../../types/components/components';
 import type { Behaviour } from '@root/types/api/shared';
+import type { CurrentSortType } from '@root/types/components/components';
 
 class QueryParams {
     public readonly page: number = 1;

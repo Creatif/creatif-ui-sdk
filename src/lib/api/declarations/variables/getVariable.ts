@@ -1,17 +1,16 @@
 import { Initialize } from '@app/initialize';
-import { declarations } from '@lib/http/axios';
-import { tryGet } from '@lib/http/tryGet';
-import type { GetVariableBlueprint } from '@root/types/api/variable';
+import { declarations } from '@lib/http/fetchInstance';
+import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import type { GetVariableBlueprint, GetVariableResponse } from '@root/types/api/variable';
 
-export default function getVariable<Response>(blueprint: GetVariableBlueprint) {
-    return tryGet<Response>(
+export default function getVariable(blueprint: GetVariableBlueprint) {
+    return tryHttp<GetVariableResponse>(
         declarations(),
-        `/variable/${Initialize.ProjectID()}/${blueprint.name}/${
+        'get',
+        `/variable/${blueprint.projectId}/${blueprint.name}/${
             blueprint.locale ? blueprint.locale : Initialize.Locale()
         }`,
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
+        null,
+        authHeaders(),
     );
 }

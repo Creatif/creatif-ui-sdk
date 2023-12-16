@@ -10,26 +10,26 @@ interface Props extends RadioProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 export default function InputRadioControlled({ name, validation, onInputChange, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [checked, setChecked] = useState(getValues(name));
+    const { control, getValues } = useFormContext();
+    const [checked, setChecked] = useState(getValues(name));
 
-	return (
-		<Controller
-			rules={validation}
-			control={control}
-			name={name}
-			render={({ field: { onChange: onChange } }) => (
-				<Radio
-					checked={checked}
-					error={useFirstError(name)}
-					onChange={(event) => {
-						onChange(event.currentTarget.checked);
-						onInputChange?.(event.currentTarget.checked);
-						setChecked(event.currentTarget.checked);
-					}}
-					{...rest}
-				/>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            rules={validation}
+            control={control}
+            name={name}
+            render={({ field: { onChange: onChange } }) => (
+                <Radio
+                    checked={checked}
+                    error={useFirstError(name)}
+                    onChange={(event) => {
+                        onChange(event.currentTarget.checked);
+                        onInputChange?.(event.currentTarget.checked);
+                        setChecked(event.currentTarget.checked);
+                    }}
+                    {...rest}
+                />
+            )}
+        />
+    );
 }

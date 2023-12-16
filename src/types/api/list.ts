@@ -1,7 +1,17 @@
-import type { Behaviour, PaginationBlueprint } from '@root/types/api/shared';
+import type { Behaviour } from '@root/types/api/shared';
 export interface CreateListBlueprint {
     name: string;
     locale?: string;
+    projectId: string;
+}
+
+export interface CreatedList {
+    id: string;
+    shortId: string;
+    name: string;
+    locale: string;
+    createdAt: string;
+    updatedAt: string;
 }
 export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
@@ -15,6 +25,7 @@ export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown>
 export interface QueryListItemByIDBlueprint {
     structureId: string;
     itemId: string;
+    projectId: string;
     locale?: string;
 }
 
@@ -30,6 +41,20 @@ export interface QueriedListItem<Value, Metadata> {
 
     createdAt: string;
     updatedAt: string;
+}
+
+export interface PaginateListBlueprint {
+    name: string;
+    projectId: string;
+    search: string;
+    limit: string | number;
+    page: number;
+    groups?: string[];
+    orderBy?: string;
+    direction?: 'desc' | 'asc';
+    behaviour?: Behaviour;
+    locales?: string[];
+    fields?: string[];
 }
 export interface PaginatedVariableResult<Value, Metadata> {
     id: string;
@@ -51,17 +76,19 @@ export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
 }
 export interface UpdateListItemBlueprint {
     name: string;
-    itemID: string;
-    variable: UpdateListItemVariableBlueprint;
+    itemId: string;
+    projectId: string;
+    fields?: string[];
+    values: UpdateListItemVariableBlueprint;
 }
 
 export interface UpdateListItemVariableBlueprint {
-    name: string;
-    behaviour: Behaviour;
-    groups: string[];
+    name?: string;
+    behaviour?: Behaviour;
+    groups?: string[];
     locale?: string;
-    metadata: unknown;
-    value: unknown;
+    metadata?: unknown;
+    value?: unknown;
 }
 
 export interface UpdateListItemResult<Value = unknown, Metadata = unknown> {
@@ -75,7 +102,7 @@ export interface UpdateListItemResult<Value = unknown, Metadata = unknown> {
     createdAt: string;
     updatedAt: string;
 }
-export interface AppendedListResult {
+export interface AppendedListResponse {
     id: string;
     projectID: string;
     name: string;
@@ -90,4 +117,14 @@ export interface DeleteListItemBlueprint {
     itemId?: string;
     itemShortId?: string;
     locale?: string;
+}
+export interface DeleteRangeBlueprint {
+    name: string;
+    projectId: string;
+    items: string[];
+}
+
+export interface GetGroupsBlueprint {
+    projectId: string;
+    name: string;
 }

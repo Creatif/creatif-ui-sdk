@@ -1,33 +1,48 @@
-import type { AxiosInstance } from 'axios';
+import type { FetchInstance } from '@lib/http/fetchInstance';
 
 class api {
-	async put<Body>(instance: AxiosInstance, path: string, body: Body, headers: Record<string, string> = {}) {
-		return await instance({
-			method: 'put',
-			url: path,
-			data: body,
-			headers: headers,
-		});
-	}
-	async post<Body>(instance: AxiosInstance, path: string, body: Body, headers: Record<string, string> = {}) {
-		return await instance({
-			method: 'post',
-			url: path,
-			data: body,
-			headers: headers,
-		});
-	}
-	async get(instance: AxiosInstance, path: string, headers: Record<string, string> = {}) {
-		return await instance({
-			method: 'get',
-			url: path,
-			headers: headers,
-		});
-	}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async delete<Body>(instance: AxiosInstance, path: string, body: Body) {
-		return await instance.delete(path);
-	}
+    async put<Body>(instance: FetchInstance, path: string, body: Body, headers: Record<string, string> = {}) {
+        return fetch(`${instance.baseURL}${path}`, {
+            method: 'put',
+            body: body ? JSON.stringify(body) : null,
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            credentials: 'include',
+        });
+    }
+    async post<Body>(instance: FetchInstance, path: string, body: Body, headers: Record<string, string> = {}) {
+        return fetch(`${instance.baseURL}${path}`, {
+            method: 'POST',
+            body: body ? JSON.stringify(body) : null,
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            credentials: 'include',
+        });
+    }
+    async get<Body>(instance: FetchInstance, path: string, body: Body, headers: Record<string, string> = {}) {
+        return fetch(`${instance.baseURL}${path}`, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            credentials: 'include',
+        });
+    }
+    async delete<Body>(instance: FetchInstance, path: string, body: Body, headers: Record<string, string> = {}) {
+        return fetch(`${instance.baseURL}${path}`, {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            credentials: 'include',
+        });
+    }
 }
 
 export const Api = new api();

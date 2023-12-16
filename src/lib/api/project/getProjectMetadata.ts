@@ -1,9 +1,10 @@
-import { app } from '@lib/http/axios';
-import { tryGet } from '@lib/http/tryGet';
+import { app } from '@lib/http/fetchInstance';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
-export async function getProjectMetadata(apiKey: string, projectId: string) {
-	return await tryGet<ProjectMetadata>(app(), '/project-metadata', {
-		'X-CREATIF-API-KEY': apiKey,
-		'X-CREATIF-PROJECT-ID': projectId,
-	});
+import type { ProjectMetadataBlueprint } from '@root/types/api/auth';
+export async function getProjectMetadata(blueprint: ProjectMetadataBlueprint) {
+    return tryHttp<ProjectMetadata>(app(), 'get', '/project-metadata', undefined, {
+        'X-CREATIF-API-KEY': blueprint.apiKey,
+        'X-CREATIF-PROJECT-ID': blueprint.projectId,
+    });
 }

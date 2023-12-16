@@ -10,7 +10,7 @@ interface Props<Value, Metadata> {
     value: Value;
     metadata: Metadata;
 }
-export default function ItemView<Value, Metadata>({ value, metadata }: Props<Value, Metadata>) {
+export default function ItemView<Value, Metadata>({ value }: Props<Value, Metadata>) {
     const grid = useMemo(() => {
         if (!value) return [];
 

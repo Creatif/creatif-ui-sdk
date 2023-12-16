@@ -2,7 +2,8 @@ import useNotification from '@app/systems/notifications/useNotification';
 import getVariable from '@lib/api/declarations/variables/getVariable';
 import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import { useParams } from 'react-router-dom';
-import type { CreatedVariable, UpdateableVariableValuesBlueprint } from '@root/types/api/variable';
+import type { UpdateableVariableValuesBlueprint } from '@root/types/api/variable';
+import { Initialize } from '@app/initialize';
 export default function useUpdateVariable<Value>(isUpdateMode: boolean, currentDefaultValues: Value) {
     if (!isUpdateMode) return undefined;
 
@@ -11,14 +12,15 @@ export default function useUpdateVariable<Value>(isUpdateMode: boolean, currentD
 
     if (!structureId) {
         throw new Error(
-            "There is no 'structureId' route parameter in the URL. It must be provided in order for automatic update to work.",
+            'There is no \'structureId\' route parameter in the URL. It must be provided in order for automatic update to work.',
         );
     }
 
     return {
         defaultValues: async (): Promise<Value> => {
-            const { result, error } = await getVariable<CreatedVariable<Value>>({
+            const { result, error } = await getVariable({
                 name: structureId,
+                projectId: Initialize.ProjectID(),
             });
 
             if (error) {

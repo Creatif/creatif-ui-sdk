@@ -1,6 +1,6 @@
 import { Initialize } from '@app/initialize';
-import { declarations } from '@lib/http/axios';
-import { tryPost } from '@lib/http/tryPost';
+import { declarations } from '@lib/http/fetchInstance';
+import { authHeaders, tryHttp } from '@lib/http/tryHttp';
 import type { DeleteListItemBlueprint } from '@root/types/api/list';
 
 export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
@@ -13,8 +13,9 @@ export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
     }
 
     const locale = blueprint.locale ? blueprint.locale : Initialize.Locale();
-    return tryPost(
+    return tryHttp(
         declarations(),
+        'post',
         `/list/item-id/${Initialize.ProjectID()}`,
         {
             name: blueprint.name,
@@ -24,9 +25,6 @@ export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
             itemID: blueprint.itemId,
             itemShortID: blueprint.itemShortId,
         },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
+        authHeaders(),
     );
 }

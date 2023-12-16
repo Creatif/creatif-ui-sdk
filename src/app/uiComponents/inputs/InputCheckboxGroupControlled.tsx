@@ -15,43 +15,43 @@ interface Props extends CheckboxGroupProps {
     children?: ReactNode;
 }
 export default function InputCheckboxGroupControlled({
-	name,
-	validation,
-	onInputChange,
-	defaultValue,
-	children,
-	component,
-	...rest
+    name,
+    validation,
+    onInputChange,
+    defaultValue,
+    children,
+    component,
+    ...rest
 }: Props & PropsWithChildren) {
-	if (!component && !children)
-		throw new Error(
-			`InputCheckboxGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
-		);
-	const { control, getValues, formState, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<string[]>(defaultValue || getValues(name));
+    if (!component && !children)
+        throw new Error(
+            `InputCheckboxGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
+        );
+    const { control, getValues, formState, setValue: setFormValue } = useFormContext();
+    const [value, setValue] = useState<string[]>(defaultValue || getValues(name));
 
-	useEffect(() => {
-		setFormValue(name, value);
-	}, []);
+    useEffect(() => {
+        setFormValue(name, value);
+    }, []);
 
-	return (
-		<Controller
-			control={control}
-			render={({ field: { onChange } }) => (
-				<Checkbox.Group
-					value={value}
-					error={useFirstError(name)}
-					onChange={(value) => {
-						onChange(value);
-						onInputChange?.(value);
-						setValue(value);
-					}}
-					{...rest}>
-					{component ? component({ value: value, formState: formState }) : children}
-				</Checkbox.Group>
-			)}
-			name={name}
-			rules={validation}
-		/>
-	);
+    return (
+        <Controller
+            control={control}
+            render={({ field: { onChange } }) => (
+                <Checkbox.Group
+                    value={value}
+                    error={useFirstError(name)}
+                    onChange={(value) => {
+                        onChange(value);
+                        onInputChange?.(value);
+                        setValue(value);
+                    }}
+                    {...rest}>
+                    {component ? component({ value: value, formState: formState }) : children}
+                </Checkbox.Group>
+            )}
+            name={name}
+            rules={validation}
+        />
+    );
 }

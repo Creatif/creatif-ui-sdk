@@ -1,5 +1,4 @@
 import Loading from '@app/components/Loading';
-import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 import useUpdateList from '@app/systems/updateList/useUpdateList';
@@ -10,8 +9,7 @@ import useAppendToList from '@app/uiComponents/listForm/helpers/useAppendToList'
 import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
 import useUpdateListItem from '@app/uiComponents/listForm/helpers/useUpdateListItem';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
-import { declarations } from '@lib/http/axios';
-import useHttpMutation from '@lib/http/useHttpMutation';
+import useCreateList from '@app/uiComponents/listForm/mutations/useCreateList';
 import StructureStorage from '@lib/storage/structureStorage';
 import { Alert, Button, Group } from '@mantine/core';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -34,6 +32,7 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
+import { Initialize } from '@app/initialize';
 interface Props<T extends FieldValues> {
     listName: string;
     bindings: Bindings<T>;
@@ -87,31 +86,7 @@ export default function ListForm<T extends FieldValues>({
     const useStructureOptionsStore = getOptions(listName);
     const [isSaving, setIsSaving] = useState(false);
     const { error: notificationError } = useNotification();
-    const { mutate } = useHttpMutation(
-        declarations(),
-        'put',
-        `/list/${Initialize.ProjectID()}/${Initialize.Locale()}`,
-        {
-            onSuccess() {
-                successNotification(
-                    `List with name ${listName} created.`,
-                    `List '${listName}' has been successfully created. This message will only appear once.`,
-                );
-
-                StructureStorage.instance.addList(listName);
-            },
-            onError() {
-                errorNotification(
-                    'Something wrong happened.',
-                    'We are working to resolve this problem. Please, try again later.',
-                );
-            },
-        },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
-    );
+    const { mutate } = useCreateList(listName);
 
     const {
         setValue,
@@ -131,6 +106,8 @@ export default function ListForm<T extends FieldValues>({
         if (!StructureStorage.instance.hasList(listName)) {
             mutate({
                 name: listName,
+                projectId: Initialize.ProjectID(),
+                locale: Initialize.Locale(),
             });
         }
     }, []);
@@ -203,7 +180,7 @@ export default function ListForm<T extends FieldValues>({
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}

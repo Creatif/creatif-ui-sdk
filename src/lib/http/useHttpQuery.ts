@@ -1,43 +1,35 @@
-import { Api } from '@lib/http/api';
-import { ApiError } from '@lib/http/apiError';
-import { AxiosError } from 'axios';
 import { useQuery } from 'react-query';
-import type { AxiosInstance } from 'axios';
+import type { ApiError } from '@lib/http/apiError';
+import type { throwIfHttpFails } from '@lib/http/tryHttp';
 import type { QueryKey } from 'react-query';
+import type { RetryValue } from 'react-query/types/core/retryer';
 export default function useHttpQuery<Response>(
-    instance: AxiosInstance,
     key: QueryKey,
-    path: string,
+    fn: ReturnType<typeof throwIfHttpFails>,
     options?: {
         onError?: (error: ApiError) => void;
         onSuccess?: (data: Response) => void;
-        enabled?: true;
+        enabled?: boolean;
+        retry?: RetryValue<unknown>;
     },
-    headers: Record<string, string> = {},
 ) {
-    return useQuery<unknown, ApiError, Response>(
-        key,
-        async () => {
-            try {
-                const res = await Api.get(instance, path, headers);
-                return res.data as Response;
-            } catch (e: unknown) {
-                if (e instanceof AxiosError) {
-                    if (e.response) {
-                        throw new ApiError('An API error occurred', e.response.data);
-                    }
-                }
+    let enabled = true;
+    if (typeof options?.enabled !== 'undefined') {
+        enabled = options.enabled;
+    }
 
-                throw new Error('Unexpected error');
-            }
-        },
-        {
-            onError: options?.onError,
-            onSuccess: options?.onSuccess,
-            staleTime: Infinity,
-            enabled: options?.enabled,
-            keepPreviousData: true,
-            refetchOnWindowFocus: false,
-        },
-    );
+    let retries: RetryValue<unknown> = 2;
+    if (typeof options?.retry !== 'undefined') {
+        retries = options.retry;
+    }
+
+    return useQuery<unknown, ApiError, Response>(key, async () => await fn(), {
+        onError: options?.onError,
+        onSuccess: options?.onSuccess,
+        retry: retries,
+        staleTime: Infinity,
+        enabled: enabled,
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+    });
 }

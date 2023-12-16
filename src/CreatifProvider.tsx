@@ -56,7 +56,7 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
     const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>('idle');
 
     const init = useCallback(async () => {
-        const { result } = await getProjectMetadata(apiKey, projectId);
+        const { result } = await getProjectMetadata({ apiKey: apiKey, projectId: projectId });
 
         if (result) {
             getSupportedLocales().then(({ result: locales, error }) => {
@@ -68,16 +68,16 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
                     queryClient.setQueryData('supported_locales', locales);
                 }
 
-                StructureStorage.init(result);
                 CurrentLocaleStorage.init('eng');
                 Initialize.init(apiKey, projectId, CurrentLocaleStorage.instance.getLocale());
+                StructureStorage.init(result);
                 setIsLoggedIn(true);
             });
         }
     }, []);
 
     useEffect(() => {
-        authCheck(apiKey, projectId).then(async (res) => {
+        authCheck({ apiKey: apiKey, projectId: projectId }).then(async (res) => {
             if (res.error) {
                 setIsAuthCheck('fail');
                 return;

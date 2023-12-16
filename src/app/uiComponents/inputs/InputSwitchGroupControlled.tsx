@@ -15,42 +15,42 @@ interface Props extends SwitchGroupProps {
     children?: ReactNode;
 }
 export default function InputSwitchGroupControlled({
-	name,
-	validation,
-	onInputChange,
-	children,
-	component,
-	...rest
+    name,
+    validation,
+    onInputChange,
+    children,
+    component,
+    ...rest
 }: Props & PropsWithChildren) {
-	if (!component && !children)
-		throw new Error(
-			`InputSwitchGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
-		);
-	const { control, getValues, formState, setValue: setFormValue } = useFormContext();
-	const [value, setValue] = useState<string[]>(getValues(name));
+    if (!component && !children)
+        throw new Error(
+            `InputSwitchGroupControlled component with name '${name}' did not provided either children or component(). You must provide either children or component().`,
+        );
+    const { control, getValues, formState, setValue: setFormValue } = useFormContext();
+    const [value, setValue] = useState<string[]>(getValues(name));
 
-	useEffect(() => {
-		setFormValue(name, value);
-	}, []);
+    useEffect(() => {
+        setFormValue(name, value);
+    }, []);
 
-	return (
-		<Controller
-			control={control}
-			render={({ field: { onChange } }) => (
-				<Switch.Group
-					value={value}
-					error={useFirstError(name)}
-					onChange={(value) => {
-						onChange(value);
-						onInputChange?.(value);
-						setValue(value);
-					}}
-					{...rest}>
-					{component ? component({ value: value, formState: formState }) : children}
-				</Switch.Group>
-			)}
-			name={name}
-			rules={validation}
-		/>
-	);
+    return (
+        <Controller
+            control={control}
+            render={({ field: { onChange } }) => (
+                <Switch.Group
+                    value={value}
+                    error={useFirstError(name)}
+                    onChange={(value) => {
+                        onChange(value);
+                        onInputChange?.(value);
+                        setValue(value);
+                    }}
+                    {...rest}>
+                    {component ? component({ value: value, formState: formState }) : children}
+                </Switch.Group>
+            )}
+            name={name}
+            rules={validation}
+        />
+    );
 }

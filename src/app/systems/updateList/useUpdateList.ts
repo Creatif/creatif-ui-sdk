@@ -11,7 +11,7 @@ export default function useUpdateList<T>(isUpdateMode: boolean) {
 
     if (!structureId || !itemId) {
         throw new Error(
-            "There are no 'structureId' or 'itemId' route parameters in the URL. They must be provided in order for automatic update to work.",
+            'There are no \'structureId\' or \'itemId\' route parameters in the URL. They must be provided in order for automatic update to work.',
         );
     }
 

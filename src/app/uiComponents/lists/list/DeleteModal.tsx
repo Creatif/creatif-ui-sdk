@@ -9,21 +9,21 @@ interface Props {
     onDelete: () => void;
 }
 export default function DeleteModal({ open, message, onClose, onDelete }: Props) {
-	return (
-		<>
-			<Modal opened={Boolean(open)} onClose={onClose} centered>
-				<p className={styles.text}>{message}</p>
+    return (
+        <>
+            <Modal opened={Boolean(open)} onClose={onClose} centered>
+                <p className={styles.text}>{message}</p>
 
-				<div className={styles.buttonGroup}>
-					<Button onClick={onClose} variant="light" color="gray">
+                <div className={styles.buttonGroup}>
+                    <Button onClick={onClose} variant="light" color="gray">
                         Cancel
-					</Button>
+                    </Button>
 
-					<Button onClick={() => onDelete()} color="red">
+                    <Button onClick={() => onDelete()} color="red">
                         Delete
-					</Button>
-				</div>
-			</Modal>
-		</>
-	);
+                    </Button>
+                </div>
+            </Modal>
+        </>
+    );
 }

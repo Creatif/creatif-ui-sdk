@@ -8,9 +8,9 @@ interface Props extends SwitchProps {
     options?: RegisterOptions;
 }
 export default function InputSwitch({ name, options, ...rest }: Props) {
-	const { register, getValues } = useFormContext();
+    const { register, getValues } = useFormContext();
 
-	return (
-		<Switch defaultChecked={getValues(name)} error={useFirstError(name)} {...register(name, options)} {...rest} />
-	);
+    return (
+        <Switch defaultChecked={getValues(name)} error={useFirstError(name)} {...register(name, options)} {...rest} />
+    );
 }

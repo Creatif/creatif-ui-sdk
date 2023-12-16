@@ -7,24 +7,24 @@ interface Props extends RatingProps {
     onInputChange?: (value: number) => void;
 }
 export default function InputRatingControlled({ name, defaultValue, onInputChange, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [value, setValue] = useState(defaultValue || getValues(name));
+    const { control, getValues } = useFormContext();
+    const [value, setValue] = useState(defaultValue || getValues(name));
 
-	return (
-		<Controller
-			control={control}
-			name={name}
-			render={({ field: { onChange: onChange } }) => (
-				<Rating
-					value={value}
-					onChange={(value) => {
-						onChange(value);
-						onInputChange?.(value);
-						setValue(value);
-					}}
-					{...rest}
-				/>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            control={control}
+            name={name}
+            render={({ field: { onChange: onChange } }) => (
+                <Rating
+                    value={value}
+                    onChange={(value) => {
+                        onChange(value);
+                        onInputChange?.(value);
+                        setValue(value);
+                    }}
+                    {...rest}
+                />
+            )}
+        />
+    );
 }

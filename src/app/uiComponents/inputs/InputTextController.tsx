@@ -10,26 +10,26 @@ interface Props extends TextInputProps {
     onInputChange?: (value: string) => void;
 }
 export default function InputTextControlled({ name, validation, onInputChange, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [value, setValue] = useState<string>(getValues(name));
+    const { control, getValues } = useFormContext();
+    const [value, setValue] = useState<string>(getValues(name));
 
-	return (
-		<Controller
-			control={control}
-			name={name}
-			rules={validation}
-			render={({ field: { onChange } }) => (
-				<InputText
-					value={value}
-					onChange={(event) => {
-						onChange(event.currentTarget.value);
-						onInputChange?.(event.currentTarget.value);
-						setValue(event.currentTarget.value);
-					}}
-					name={name}
-					{...rest}
-				/>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            control={control}
+            name={name}
+            rules={validation}
+            render={({ field: { onChange } }) => (
+                <InputText
+                    value={value}
+                    onChange={(event) => {
+                        onChange(event.currentTarget.value);
+                        onInputChange?.(event.currentTarget.value);
+                        setValue(event.currentTarget.value);
+                    }}
+                    name={name}
+                    {...rest}
+                />
+            )}
+        />
+    );
 }

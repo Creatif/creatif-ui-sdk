@@ -6,9 +6,9 @@ interface Props {
     flexCentered?: boolean;
 }
 export default function CenteredError({ title, children }: Props & PropsWithChildren) {
-	return (
-		<Alert className={styles.centered} variant="light" color="red" title={title}>
-			{children}
-		</Alert>
-	);
+    return (
+        <Alert className={styles.centered} variant="light" color="red" title={title}>
+            {children}
+        </Alert>
+    );
 }

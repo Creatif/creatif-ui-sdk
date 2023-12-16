@@ -10,26 +10,26 @@ interface Props extends TextareaProps {
     onInputChange?: (value: string) => void;
 }
 export default function InputTextareaControlled({ name, validation, onInputChange, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [value, setValue] = useState<string>(getValues(name));
+    const { control, getValues } = useFormContext();
+    const [value, setValue] = useState<string>(getValues(name));
 
-	return (
-		<Controller
-			name={name}
-			rules={validation}
-			control={control}
-			render={({ field: { onChange } }) => (
-				<Textarea
-					value={value}
-					error={useFirstError(name)}
-					onChange={(event) => {
-						onChange(event.currentTarget.value);
-						onInputChange?.(event.currentTarget.value);
-						setValue(event.currentTarget.value);
-					}}
-					{...rest}
-				/>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            name={name}
+            rules={validation}
+            control={control}
+            render={({ field: { onChange } }) => (
+                <Textarea
+                    value={value}
+                    error={useFirstError(name)}
+                    onChange={(event) => {
+                        onChange(event.currentTarget.value);
+                        onInputChange?.(event.currentTarget.value);
+                        setValue(event.currentTarget.value);
+                    }}
+                    {...rest}
+                />
+            )}
+        />
+    );
 }

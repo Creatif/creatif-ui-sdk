@@ -8,7 +8,7 @@ interface Props extends CheckboxProps {
     options?: RegisterOptions;
 }
 export default function InputCheckbox({ name, options, ...rest }: Props) {
-	const { register } = useFormContext();
+    const { register } = useFormContext();
 
-	return <Checkbox error={useFirstError(name)} {...register(name, options)} {...rest} />;
+    return <Checkbox error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }

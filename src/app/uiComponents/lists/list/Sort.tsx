@@ -1,6 +1,4 @@
-import { Initialize } from '@app/initialize';
-import { declarations } from '@lib/http/axios';
-import useHttpMutation from '@lib/http/useHttpMutation';
+import useGetGroups from '@app/uiComponents/lists/hooks/useGetGroups';
 import { MultiSelect } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconCheck, IconEyeOff, IconReplace, IconSortAscending, IconSortDescending } from '@tabler/icons-react';
@@ -47,21 +45,8 @@ export default function Sort({
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(currentBehaviour);
     const cachedLocales = useQueryClient().getQueryData('supported_locales') as Locale[];
     const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(currentDirection);
-    const {
-        mutate,
-        isLoading: areGroupsLoading,
-        data,
-        error,
-    } = useHttpMutation<{ name: string }, string[]>(
-        declarations(),
-        'post',
-        `/list/groups/${Initialize.ProjectID()}`,
-        undefined,
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
-    );
+    const { mutate, isLoading: areGroupsLoading, data, error } = useGetGroups();
+
     const [debouncedGroups] = useDebouncedValue(groups, 500);
 
     useEffect(() => {
@@ -194,7 +179,7 @@ export default function Sort({
                             return filtered;
                         }}
                         placeholder="Select groups"
-                        data={data}
+                        data={data?.result || []}
                     />
                 </div>
             </div>

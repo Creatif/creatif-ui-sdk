@@ -11,7 +11,7 @@ interface Props extends RadioProps {
  * TODO: mention that when selected, value is 'on'.
  */
 export default function InputRadio({ name, options, ...rest }: Props) {
-	const { register } = useFormContext();
+    const { register } = useFormContext();
 
-	return <Radio error={useFirstError(name)} {...register(name, options)} {...rest} />;
+    return <Radio error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }

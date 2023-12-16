@@ -38,4 +38,20 @@ export interface UpdateableVariableValuesBlueprint<Value, Metadata> {
 export interface GetVariableBlueprint {
     name: string;
     locale?: string;
+    projectId: string;
+}
+export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
+    name: string;
+    shortID: string;
+    behaviour: Behaviour;
+    groups?: string[];
+    metadata?: Value;
+    value?: Metadata;
+    locale?: string;
+}
+
+export interface DeleteVariableBlueprint {
+    name: string;
+    locale?: string;
+    projectId: string;
 }

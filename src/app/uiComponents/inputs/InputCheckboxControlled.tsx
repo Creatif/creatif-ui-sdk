@@ -11,26 +11,26 @@ interface Props extends CheckboxProps {
     options?: RegisterOptions;
 }
 export default function InputCheckboxControlled({ name, validation, onInputChange, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [checked, setChecked] = useState(getValues(name));
+    const { control, getValues } = useFormContext();
+    const [checked, setChecked] = useState(getValues(name));
 
-	return (
-		<Controller
-			rules={validation}
-			control={control}
-			name={name}
-			render={({ field: { onChange: onChange } }) => (
-				<Checkbox
-					defaultChecked={checked}
-					error={useFirstError(name)}
-					onChange={(event) => {
-						onChange(event.currentTarget.checked);
-						onInputChange?.(event.currentTarget.checked);
-						setChecked(event.currentTarget.checked);
-					}}
-					{...rest}
-				/>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            rules={validation}
+            control={control}
+            name={name}
+            render={({ field: { onChange: onChange } }) => (
+                <Checkbox
+                    defaultChecked={checked}
+                    error={useFirstError(name)}
+                    onChange={(event) => {
+                        onChange(event.currentTarget.checked);
+                        onInputChange?.(event.currentTarget.checked);
+                        setChecked(event.currentTarget.checked);
+                    }}
+                    {...rest}
+                />
+            )}
+        />
+    );
 }

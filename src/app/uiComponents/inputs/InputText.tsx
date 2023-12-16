@@ -8,7 +8,7 @@ interface Props extends TextInputProps {
     options?: RegisterOptions;
 }
 export default function InputText({ name, options, ...rest }: Props) {
-	const { register } = useFormContext();
+    const { register } = useFormContext();
 
-	return <TextInput error={useFirstError(name)} {...register(name, options)} {...rest} />;
+    return <TextInput error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }

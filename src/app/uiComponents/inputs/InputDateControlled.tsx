@@ -13,38 +13,38 @@ interface Props extends DateInputProps {
     onInputChange?: (date: string) => void;
 }
 export default function InputDateControlled({
-	name,
-	format = 'do MMMM, yyyy',
-	validation,
-	onInputChange,
-	...rest
+    name,
+    format = 'do MMMM, yyyy',
+    validation,
+    onInputChange,
+    ...rest
 }: Props) {
-	const { control, getValues } = useFormContext();
-	let def = getValues(name);
-	if (typeof def === 'string' && def) {
-		def = parse(def, format, new Date());
-	}
+    const { control, getValues } = useFormContext();
+    let def = getValues(name);
+    if (typeof def === 'string' && def) {
+        def = parse(def, format, new Date());
+    }
 
-	const [value, setValue] = useState<Date | null>(def);
+    const [value, setValue] = useState<Date | null>(def);
 
-	return (
-		<Controller
-			rules={validation}
-			control={control}
-			render={({ field: { onChange: onChange } }) => (
-				<DateInput
-					error={useFirstError(name)}
-					value={value}
-					onChange={(value) => {
-						setValue(value);
-						const transformedDate = transformDate(value, format);
-						onChange(transformedDate);
-						onInputChange?.(transformedDate);
-					}}
-					{...rest}
-				/>
-			)}
-			name={name}
-		/>
-	);
+    return (
+        <Controller
+            rules={validation}
+            control={control}
+            render={({ field: { onChange: onChange } }) => (
+                <DateInput
+                    error={useFirstError(name)}
+                    value={value}
+                    onChange={(value) => {
+                        setValue(value);
+                        const transformedDate = transformDate(value, format);
+                        onChange(transformedDate);
+                        onInputChange?.(transformedDate);
+                    }}
+                    {...rest}
+                />
+            )}
+            name={name}
+        />
+    );
 }

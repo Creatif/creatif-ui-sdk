@@ -1,9 +1,9 @@
 import CenteredError from '@app/components/CenteredError';
-import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
+import useDeleteRange from '@app/uiComponents/lists/hooks/useDeleteRange';
 import useHttpPaginationQuery from '@app/uiComponents/lists/hooks/useHttpPaginationQuery';
 import useSearchQuery from '@app/uiComponents/lists/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/lists/list/ActionSection';
@@ -14,8 +14,6 @@ import NothingFound from '@app/uiComponents/lists/list/NothingFound';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import MainTableView from '@app/uiComponents/lists/table/MainTableView';
-import { declarations } from '@lib/http/axios';
-import useHttpMutation from '@lib/http/useHttpMutation';
 import { Button, Pagination, Select } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
@@ -23,6 +21,7 @@ import { useState } from 'react';
 import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
+import type { TryResult } from '@root/types/shared';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -50,7 +49,7 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
     const [isListView, setIsListView] = useState(true);
 
     const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
-        PaginationResult<Value, Metadata>
+        TryResult<PaginationResult<Value, Metadata>>
     >({
         listName: listName,
         page: page,
@@ -61,30 +60,19 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
         limit: limit as string,
         orderBy: orderBy,
         search: search as string,
+        fields: ['groups'],
     });
 
-    const { mutate: deleteItemsByRange, invalidateQueries } = useHttpMutation<
-        { items: string[]; name: string },
-        undefined
-    >(
-        declarations(),
-        'post',
-        `/list/range/${Initialize.ProjectID()}/${Initialize.Locale()}`,
-        {
-            onSuccess() {
-                setAreItemsDeleting(false);
-                setCheckedItems([]);
-                invalidateQueries(listName);
-                successNotification('Action is a success', 'All selected items were deleted.');
-            },
-            onError() {
-                setAreItemsDeleting(false);
-                errorNotification('Something wrong', 'An error occurred. Please, try again later.');
-            },
+    const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
+        () => {
+            setAreItemsDeleting(false);
+            setCheckedItems([]);
+            invalidateQueries(listName);
+            successNotification('Action is a success', 'All selected items were deleted.');
         },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
+        () => {
+            setAreItemsDeleting(false);
+            errorNotification('Something wrong', 'An error occurred. Please, try again later.');
         },
     );
 
@@ -125,10 +113,10 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
             />
 
             <div className={contentContainerStyles.root}>
-                {data && data.total > 0 && (
+                {data?.result && data.result.total > 0 && (
                     <div className={styles.listChoiceHeading}>
                         <p className={styles.totalInfo}>
-                            Showing <span>{limit}</span> of <span>{data.total}</span> total items
+                            Showing <span>{limit}</span> of <span>{data.result.total}</span> total items
                         </p>
 
                         <div className={styles.listChoiceListType}>
@@ -177,13 +165,13 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
                     </div>
                 )}
 
-                {data && data.total === 0 && <NothingFound structureName={listName} />}
+                {data?.result && data.result.total === 0 && <NothingFound structureName={listName} />}
 
-                {data && data.total !== 0 && (
+                {!isFetching && data?.result && data.result.total !== 0 && (
                     <div className={styles.container}>
                         {isListView && (
                             <MainListView<Value, Metadata>
-                                data={data}
+                                data={data.result}
                                 listName={listName}
                                 onDeleted={() => invalidateEntireQuery()}
                                 disabled={{
@@ -205,7 +193,7 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
                             />
                         )}
 
-                        {!isListView && <MainTableView<Value, Metadata> data={data} />}
+                        {!isListView && <MainTableView<Value, Metadata> data={data.result} />}
 
                         <div className={styles.stickyPagination}>
                             <Pagination
@@ -213,7 +201,7 @@ export default function ListList<Value, Metadata>({ listName }: Props) {
                                 onChange={setPage}
                                 radius={20}
                                 boundaries={2}
-                                total={Math.ceil(data.total / parseInt(limit))}
+                                total={Math.ceil(data.result.total / parseInt(limit))}
                             />
                             <Select
                                 label="TOTAL"

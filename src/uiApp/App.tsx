@@ -5,8 +5,8 @@ import { IconCashBanknote, IconHome } from '@tabler/icons-react';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$gw8TjP6EBg/3yzFKHlOR/O9Cc2Hvf97Yl7upiaitox37RtmtdAeY."
-            projectId="01HHP24FP9MMCJ9Z6Z6Z5VVYV3"
+            apiKey="$2a$10$mb2bKfDLYalGVdqizmQ8x.rLKgJ2nPwEFHd3FSojXTzIKn/7hEfgi"
+            projectId="01HHSQRWNS6CEGH8VB8V4C1F41"
             app={{
                 logo: 'Break free',
                 items: [

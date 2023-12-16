@@ -12,7 +12,7 @@ import { createVariable } from '@lib/api/declarations/variables/createVariable';
 import StructureStorage from '@lib/storage/structureStorage';
 import { Alert, Button, Group } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
-import { DefaultValues, FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import type { CreatedVariable } from '@root/types/api/variable';
@@ -67,6 +67,8 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
     afterSave,
     mode,
 }: Props<T, Value, Metadata>) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const defaultValuesForUpdate = useUpdateVariable<T>(Boolean(mode), formProps.defaultValues);
     if (mode === 'update' && defaultValuesForUpdate?.defaultValues) {
         formProps.defaultValues = defaultValuesForUpdate.defaultValues;
@@ -156,8 +158,8 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     groups: groups,
                     metadata: result.metadata,
                     value: result.value,
-                }).then(({ result: response, error, status }) => {
-                    if (error && error.error.data['nameExists']) {
+                }).then(({ result: response, error }) => {
+                    if (error && error.data['nameExists']) {
                         setIsSaving(false);
                         errorNotification('Variable name exists', `Variable with the name '${name}' already exists.`);
 
@@ -195,7 +197,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}

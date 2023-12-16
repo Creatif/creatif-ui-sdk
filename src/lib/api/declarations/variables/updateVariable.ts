@@ -1,6 +1,6 @@
 import { Initialize } from '@app/initialize';
-import { declarations } from '@lib/http/axios';
-import { tryPost } from '@lib/http/tryPost';
+import { declarations } from '@lib/http/fetchInstance';
+import { authHeaders, tryHttp } from '@lib/http/tryHttp';
 import type { UpdateableVariableValuesBlueprint, UpdateVariableBlueprint } from '@root/types/api/variable';
 export default function updateVariable(blueprint: UpdateVariableBlueprint) {
     const values: UpdateableVariableValuesBlueprint<unknown, unknown> = {};
@@ -27,8 +27,9 @@ export default function updateVariable(blueprint: UpdateVariableBlueprint) {
         }
     }
 
-    return tryPost<unknown, UpdateVariableBlueprint>(
+    return tryHttp<unknown, UpdateVariableBlueprint>(
         declarations(),
+        'post',
         `/variable/${Initialize.ProjectID()}`,
         {
             name: blueprint.name,
@@ -36,9 +37,6 @@ export default function updateVariable(blueprint: UpdateVariableBlueprint) {
             fields: blueprint.fields,
             values: values,
         },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
+        authHeaders(),
     );
 }

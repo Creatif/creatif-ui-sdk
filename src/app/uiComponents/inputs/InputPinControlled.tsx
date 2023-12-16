@@ -11,31 +11,31 @@ interface Props extends PinInputProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 export default function InputPinControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
-	const { control, getValues } = useFormContext();
-	const [value, setValue] = useState<string | undefined>(defaultValue || getValues(name));
-	const error = useFirstError(name);
-	return (
-		<>
-			<Controller
-				rules={validation}
-				control={control}
-				name={name}
-				render={({ field: { onChange } }) => (
-					<PinInput
-						value={value}
-						error={Boolean(error)}
-						name={name}
-						onChange={(value) => {
-							onChange(value);
-							onInputChange?.(value);
-							setValue(value);
-						}}
-						{...rest}
-					/>
-				)}
-			/>
+    const { control, getValues } = useFormContext();
+    const [value, setValue] = useState<string | undefined>(defaultValue || getValues(name));
+    const error = useFirstError(name);
+    return (
+        <>
+            <Controller
+                rules={validation}
+                control={control}
+                name={name}
+                render={({ field: { onChange } }) => (
+                    <PinInput
+                        value={value}
+                        error={Boolean(error)}
+                        name={name}
+                        onChange={(value) => {
+                            onChange(value);
+                            onInputChange?.(value);
+                            setValue(value);
+                        }}
+                        {...rest}
+                    />
+                )}
+            />
 
-			{error && <span className={styles.errorMessage}>{error}</span>}
-		</>
-	);
+            {error && <span className={styles.errorMessage}>{error}</span>}
+        </>
+    );
 }

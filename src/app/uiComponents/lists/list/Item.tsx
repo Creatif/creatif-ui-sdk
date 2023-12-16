@@ -1,6 +1,6 @@
-import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
+import useEditLocale from '@app/uiComponents/lists/hooks/useEditLocale';
 import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/lists/list/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
@@ -9,14 +9,14 @@ import ItemView from '@app/uiComponents/lists/list/ItemView';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import { declarations } from '@lib/http/axios';
-import useHttpMutation from '@lib/http/useHttpMutation';
-import { ActionIcon, Button, Checkbox, Pill } from '@mantine/core';
+import { ActionIcon, Button, Checkbox, Loader, Pill } from '@mantine/core';
 import { IconChevronDown, IconChevronRight, IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { PaginatedVariableResult, UpdateListItemResult } from '@root/types/api/list';
+import type { PaginatedVariableResult } from '@root/types/api/list';
+import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
+import UIError from '@app/components/UIError';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     listName: string;
@@ -38,27 +38,15 @@ export default function Item<Value, Metadata>({
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
-    const { info, error } = useNotification();
+    const {
+        isFetching,
+        data: queriedItem,
+        error: queryError,
+    } = useQueryListItem<Value, Metadata>(listName, item.id, item.locale, isExpanded);
 
-    const { mutate, isLoading, data } = useHttpMutation<unknown, UpdateListItemResult>(
-        declarations(),
-        'post',
-        `/list/update-item-by-id/${Initialize.ProjectID()}/${listName}/${item.id}?fields=locale`,
-        {
-            onSuccess: () => {
-                info('Locale changed.', `Locale for structure '${listName}' and item '${item.name}' has been updated.`);
-            },
-            onError: () => {
-                error('Something went wrong.', 'Locale cannot be changed at this moment. Please, try again later.');
-            },
-        },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
-    );
+    const { mutate, isLoading, data } = useEditLocale(listName, item.id, item.name);
 
-    item.locale = data && data.locale ? data.locale : item.locale;
+    item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
 
     return (
         <div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
@@ -78,6 +66,8 @@ export default function Item<Value, Metadata>({
                         <h2 className={styles.nameRowTitle}>{item.name}</h2>
 
                         <div className={styles.actionRow}>
+                            {isFetching && <Loader size={16} />}
+
                             <Button
                                 disabled={isLoading}
                                 loading={isLoading}
@@ -168,7 +158,15 @@ export default function Item<Value, Metadata>({
 
             <div
                 className={classNames(styles.expandedSection, isExpanded ? styles.expandedSectionExpanded : undefined)}>
-                <ItemView<Value, Metadata> value={item.value} metadata={item.metadata} />
+                {!isFetching && queryError && (
+                    <UIError title="Cannot show item">Something went wrong. Please, try again later.</UIError>
+                )}
+                {!isFetching && queriedItem?.result && (
+                    <ItemView<Value, Metadata>
+                        value={queriedItem.result.value}
+                        metadata={queriedItem.result.metadata}
+                    />
+                )}
             </div>
 
             <DeleteModal

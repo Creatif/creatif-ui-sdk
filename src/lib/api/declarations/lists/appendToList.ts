@@ -1,10 +1,12 @@
 import { Initialize } from '@app/initialize';
-import { declarations } from '@lib/http/axios';
-import { tryPut } from '@lib/http/tryPut';
-import type { AppendedListResult, AppendToListBlueprint } from '@root/types/api/list';
+import { declarations } from '@lib/http/fetchInstance';
+import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import type { AppendToListBlueprint } from '@root/types/api/list';
+
 export async function appendToList(blueprint: AppendToListBlueprint) {
-    return tryPut<AppendedListResult>(
+    return tryHttp(
         declarations(),
+        'put',
         `/list/append/${Initialize.ProjectID()}`,
         {
             name: blueprint.name,
@@ -24,9 +26,6 @@ export async function appendToList(blueprint: AppendToListBlueprint) {
                 return item;
             }),
         },
-        {
-            'X-CREATIF-API-KEY': Initialize.ApiKey(),
-            'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
-        },
+        authHeaders(),
     );
 }

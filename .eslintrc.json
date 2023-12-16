@@ -19,20 +19,6 @@
     },
     "plugins": ["react", "@typescript-eslint", "import"],
     "rules": {
-        "import/order": [
-            "error",
-            {
-                "groups": ["builtin", "external", "parent", "sibling", "index", "object", "type"],
-                "pathGroups": [
-                    {
-                        "pattern": "@/**/**",
-                        "group": "parent",
-                        "position": "before"
-                    }
-                ],
-                "alphabetize": { "order": "asc" }
-            }
-        ],
         "react/react-in-jsx-scope": "off",
         "react/no-unknown-property": "off",
         "import/no-unresolved": "off",

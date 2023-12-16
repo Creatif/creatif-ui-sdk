@@ -38,7 +38,7 @@ export default function useResolveBindings() {
         if (!name) {
             notificationError(
                 'Name binding does not exist.',
-                "You haven't provided any binding for the name of the variable. Add the 'binding' property to your form.",
+                'You haven\'t provided any binding for the name of the variable. Add the \'binding\' property to your form.',
             );
             return;
         }

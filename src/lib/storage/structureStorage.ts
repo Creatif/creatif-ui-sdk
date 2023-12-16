@@ -69,6 +69,15 @@ export default class StructureStorage {
         return Boolean(this.storage.lists.find((item) => item === name));
     }
 
+    removeVariable(name: string) {
+        const locale = Initialize.Locale();
+        if (this.storage.variables && this.storage.variables[locale]) {
+            const idx = this.storage.variables[locale].findIndex((item) => item === name);
+            if (idx !== -1) {
+                this.storage.variables[locale].splice(idx, 1);
+            }
+        }
+    }
     addVariable(name: string) {
         const locale = Initialize.Locale();
         if (this.storage.variables) {

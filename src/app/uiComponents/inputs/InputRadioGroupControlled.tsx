@@ -15,39 +15,39 @@ interface Props extends RadioGroupProps {
     children?: ReactNode;
 }
 export default function InputRadioGroupControlled({
-	name,
-	validation,
-	onInputChange,
-	children,
-	defaultValue,
-	component,
-	...rest
+    name,
+    validation,
+    onInputChange,
+    children,
+    defaultValue,
+    component,
+    ...rest
 }: Props & PropsWithChildren) {
-	if (!component && !children)
-		throw new Error(
-			`InputRadioGroupControlled component with name '${name}' did not provide either children or component(). You must provide either children or component().`,
-		);
-	const { control, getValues, formState } = useFormContext();
-	const [value, setValue] = useState<string>(defaultValue || getValues(name));
+    if (!component && !children)
+        throw new Error(
+            `InputRadioGroupControlled component with name '${name}' did not provide either children or component(). You must provide either children or component().`,
+        );
+    const { control, getValues, formState } = useFormContext();
+    const [value, setValue] = useState<string>(defaultValue || getValues(name));
 
-	return (
-		<Controller
-			control={control}
-			render={({ field: { onChange } }) => (
-				<Radio.Group
-					value={value}
-					error={useFirstError(name)}
-					onChange={(value) => {
-						onChange(value);
-						onInputChange?.(value);
-						setValue(value);
-					}}
-					{...rest}>
-					{component ? component({ value: value, formState: formState }) : children}
-				</Radio.Group>
-			)}
-			name={name}
-			rules={validation}
-		/>
-	);
+    return (
+        <Controller
+            control={control}
+            render={({ field: { onChange } }) => (
+                <Radio.Group
+                    value={value}
+                    error={useFirstError(name)}
+                    onChange={(value) => {
+                        onChange(value);
+                        onInputChange?.(value);
+                        setValue(value);
+                    }}
+                    {...rest}>
+                    {component ? component({ value: value, formState: formState }) : children}
+                </Radio.Group>
+            )}
+            name={name}
+            rules={validation}
+        />
+    );
 }
