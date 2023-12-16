@@ -4,7 +4,6 @@ import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/variables/css/VariableDisplay.module.css';
-import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
 import { Button, Pill } from '@mantine/core';
 import { IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ import { Link } from 'react-router-dom';
 import type { Behaviour } from '@root/types/api/shared';
 import { Initialize } from '@app/initialize';
 import useDeleteVariable from '@lib/api/hooks/useDeleteVariable';
-
 interface Props {
     name: string;
     behaviour: Behaviour;
@@ -20,7 +18,6 @@ interface Props {
     shortId: string;
     structureName: string;
 }
-
 export default function InfoSection({ name, behaviour, groups, shortId, structureName }: Props) {
     const useVariableOptions = getOptions(structureName);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
