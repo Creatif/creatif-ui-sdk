@@ -79,7 +79,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
 }: Props<T, Value, Metadata>) {
     const { success: successNotification, error: errorNotification } = useNotification();
     const [beforeSaveError, setBeforeSaveError] = useState(false);
-    const { variableLocale } = useParams();
+    const { variableLocale, structureId } = useParams();
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -108,7 +108,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 return;
             }
 
-            if (mode && result) {
+            if (mode && result && structureId) {
                 type localeType = { locale: string };
                 const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
                 if (Object.hasOwn(result.value as object, 'locale')) {
@@ -119,10 +119,11 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
 
                 mutateAsync({
                     projectId: Initialize.ProjectID(),
-                    name: variableName,
-                    fields: ['value', 'metadata', 'groups', 'behaviour', 'locale'],
+                    name: structureId,
+                    fields: ['value', 'metadata', 'groups', 'behaviour', 'locale', 'name'],
                     values: {
                         behaviour: behaviour,
+                        name: variableName,
                         groups: groups.length === 0 ? ['default'] : groups,
                         metadata: result.metadata,
                         value: result.value,

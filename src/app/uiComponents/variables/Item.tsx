@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
 import { Initialize } from '@app/initialize';
+import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     name: string;
@@ -30,9 +31,9 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
 
-    const { mutate, isLoading, data } = useEditLocale(name);
+    const { mutate, isLoading, data } = useUpdateVariable(name);
 
-    item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
+    item.locale = data?.result && data?.result.locale ? data?.result.locale : item.locale;
 
     return (
         <div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
@@ -176,9 +177,14 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                     }
 
                     mutate({
-                        id: item.id,
-                        currentLocale: item.locale,
-                        nextLocale: locale,
+                        projectId: Initialize.ProjectID(),
+                        name: item.id,
+                        fields: ['locale', 'name'],
+                        values: {
+                            name: item.name,
+                            locale: locale,
+                        },
+                        locale: item.locale,
                     });
                     setIsEditLocaleOpen(false);
                 }}

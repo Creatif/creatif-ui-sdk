@@ -3,8 +3,6 @@
 import styles from '@app/uiComponents/lists/list/css/DeleteModal.module.css';
 import { Button, type ComboboxItem, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
-import { useQueryClient } from 'react-query';
-import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import LocalesCache from '@lib/storage/localesCache';
 
 interface Props {
