@@ -154,6 +154,7 @@ export default function ListForm<T extends FieldValues>({
                         successNotification('Item updated', `Item '${name}' has been updated.`);
                         setIsSaving(false);
                         queryClient.invalidateQueries(listName);
+                        queryClient.invalidateQueries(`get_list_${listName}_${updateResult.id}`);
                         afterSave?.(result, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);
 
@@ -180,7 +181,7 @@ export default function ListForm<T extends FieldValues>({
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}

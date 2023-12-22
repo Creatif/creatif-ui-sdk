@@ -123,8 +123,3 @@ export interface DeleteRangeBlueprint {
     projectId: string;
     items: string[];
 }
-
-export interface GetGroupsBlueprint {
-    projectId: string;
-    name: string;
-}

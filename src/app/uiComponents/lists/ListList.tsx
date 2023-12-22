@@ -6,7 +6,7 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 import useDeleteRange from '@app/uiComponents/lists/hooks/useDeleteRange';
 import useHttpPaginationQuery from '@app/uiComponents/lists/hooks/useHttpPaginationQuery';
 import useSearchQuery from '@app/uiComponents/lists/hooks/useSearchQuery';
-import ActionSection from '@app/uiComponents/lists/list/ActionSection';
+import ActionSection from '@app/uiComponents/shared/ActionSection';
 import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
 import MainListView from '@app/uiComponents/lists/list/MainListView';
 import NothingFound from '@app/uiComponents/lists/list/NothingFound';
@@ -30,7 +30,7 @@ import type { TryResult } from '@root/types/shared';
 interface Props {
     listName: string;
 }
-export default function ListList<Value, Metadata>({ listName }: Props) {
+export function ListList<Value, Metadata>({ listName }: Props) {
     const { queryParams, setParam } = useSearchQuery();
     const { error: errorNotification, success: successNotification } = useNotification();
 

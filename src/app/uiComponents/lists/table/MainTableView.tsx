@@ -7,7 +7,6 @@ function resolveColumns(values: never) {
     const columnKeys = Object.keys(values);
     const columns = [];
     for (const colKey of columnKeys) {
-        console.log(colKey);
         columns.push({
             accessor: colKey,
             sortable: false,

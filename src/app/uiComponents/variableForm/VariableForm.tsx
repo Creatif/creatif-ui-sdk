@@ -4,17 +4,15 @@ import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
+import useResolveBindings from '@app/uiComponents/variableForm/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
-import useUpdateVariable from '@app/uiComponents/variableForm/useUpdateVariable';
 import { createVariable } from '@lib/api/declarations/variables/createVariable';
 import StructureStorage from '@lib/storage/structureStorage';
-import { Alert, Button, Group } from '@mantine/core';
+import { Alert } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { CreatedVariable } from '@root/types/api/variable';
 import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
@@ -33,6 +31,11 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
+import { Initialize } from '@app/initialize';
+import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
+import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
+import Form from '@app/uiComponents/shared/Form';
+import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
 interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
     bindings?: Bindings<T>;
@@ -52,11 +55,18 @@ interface Props<T extends FieldValues, Value, Metadata> {
             trigger: UseFormTrigger<T>;
             getFieldState: UseFormGetFieldState<T>;
             defaultValues: T;
+            inputLocale: (props?: InputLocaleProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
     afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
     form?: HTMLAttributes<HTMLFormElement>;
+}
+
+function chooseLocale(fieldLocale: string, bindingLocale: string): string {
+    if (bindingLocale) return bindingLocale;
+    if (fieldLocale) return fieldLocale;
+    return Initialize.Locale();
 }
 export default function VariableForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
     variableName,
@@ -67,37 +77,17 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
     afterSave,
     mode,
 }: Props<T, Value, Metadata>) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const defaultValuesForUpdate = useUpdateVariable<T>(Boolean(mode), formProps.defaultValues);
-    if (mode === 'update' && defaultValuesForUpdate?.defaultValues) {
-        formProps.defaultValues = defaultValuesForUpdate.defaultValues;
-    }
-
-    const methods = useForm(formProps);
     const { success: successNotification, error: errorNotification } = useNotification();
-
     const [beforeSaveError, setBeforeSaveError] = useState(false);
+    const { variableLocale } = useParams();
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const resolveBindings = useResolveBindings();
     const useStructureOptionsStore = getOptions(variableName);
-    const [isSaving, setIsSaving] = useState(false);
 
-    const {
-        setValue,
-        getValues,
-        setError,
-        setFocus,
-        reset,
-        resetField,
-        unregister,
-        watch,
-        trigger,
-        getFieldState,
-        formState: { isLoading },
-    } = methods;
+    const { isFetching, data, error } = useGetVariable(variableName, variableLocale, Boolean(mode && variableLocale));
+    const { mutateAsync, isLoading } = useUpdateVariable(variableName);
 
     const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
         if (!value) {
@@ -108,64 +98,84 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
             return;
         }
 
-        setIsSaving(true);
-
         const binding = resolveBindings(value, bindings);
         if (!binding) return;
-        const { name, groups, behaviour } = binding;
+        const { locale, groups, behaviour } = binding;
 
         wrappedBeforeSave(value, e, beforeSave).then((result) => {
             if (!valueMetadataValidator(result)) {
                 setBeforeSaveError(true);
-                setIsSaving(false);
                 return;
             }
 
-            if (mode && result && defaultValuesForUpdate?.update) {
-                defaultValuesForUpdate
-                    .update(variableName, ['value', 'metadata', 'groups', 'behaviour'], {
+            if (mode && result) {
+                type localeType = { locale: string };
+                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
+                if (Object.hasOwn(result.value as object, 'locale')) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete (result.value as localeType).locale;
+                }
+
+                mutateAsync({
+                    projectId: Initialize.ProjectID(),
+                    name: variableName,
+                    fields: ['value', 'metadata', 'groups', 'behaviour', 'locale'],
+                    values: {
                         behaviour: behaviour,
-                        groups: groups,
+                        groups: groups.length === 0 ? ['default'] : groups,
                         metadata: result.metadata,
                         value: result.value,
-                    })
-                    .then(({ result: response, error }) => {
-                        if (error) {
-                            setIsSaving(false);
-                            errorNotification(
-                                'Something went wrong.',
-                                'Variable could not be update. Please, try again later.',
-                            );
-                            return;
-                        }
+                        locale: chosenLocale,
+                    },
+                    locale: variableLocale || Initialize.Locale(),
+                }).then((response) => {
+                    if (error) {
+                        errorNotification(
+                            'Something went wrong.',
+                            'Variable could not be update. Please, try again later.',
+                        );
+                        return;
+                    }
 
-                        if (response) {
-                            successNotification('Variable updated', `Variable with name '${name}' has been updated.`);
+                    if (response) {
+                        successNotification(
+                            'Variable updated',
+                            `Variable with name '${variableName}' has been updated.`,
+                        );
 
-                            StructureStorage.instance.addVariable(name);
-                            queryClient.invalidateQueries(`get_${variableName}`);
-                            afterSave?.(response, e);
-                            setIsSaving(false);
-                            navigate(useStructureOptionsStore.getState().paths.listing);
-                        }
-                    });
+                        queryClient.invalidateQueries(variableName);
+                        afterSave?.(response, e);
+                        navigate(useStructureOptionsStore.getState().paths.listing);
+                    }
+                });
             }
 
             if (!mode && result) {
+                type localeType = { locale: string };
+                const locale = (result.value as localeType).locale
+                    ? (result.value as localeType).locale
+                    : Initialize.Locale();
+                if (result && (result.value as localeType).locale) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete (result.value as localeType).locale;
+                }
+
                 createVariable<Value, Metadata>({
-                    name: name || variableName,
+                    name: variableName,
                     behaviour: behaviour,
-                    groups: groups,
+                    groups: groups.length === 0 ? ['default'] : groups,
+                    projectId: Initialize.ProjectID(),
+                    locale: locale ? locale : Initialize.Locale(),
                     metadata: result.metadata,
                     value: result.value,
                 }).then(({ result: response, error }) => {
                     if (error && error.data['nameExists']) {
-                        setIsSaving(false);
                         errorNotification('Variable name exists', `Variable with the name '${name}' already exists.`);
 
                         return;
                     } else if (error) {
-                        setIsSaving(false);
                         errorNotification(
                             'Something went wrong.',
                             'Variable could not be created. Please, try again later.',
@@ -176,10 +186,9 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     if (response) {
                         successNotification('Variable created', `Variable with name '${name}' has been created.`);
 
-                        StructureStorage.instance.addVariable(name);
+                        StructureStorage.instance.addVariable(variableName, response.locale);
                         queryClient.invalidateQueries(variableName);
                         afterSave?.(response, e);
-                        setIsSaving(false);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
@@ -197,38 +206,23 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
 
-            <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit(onInternalSubmit)}>
-                    <Loading isLoading={isLoading} />
-                    {!isLoading &&
-                        inputs(
-                            <Group justify="end">
-                                <Button loaderProps={{ size: 14 }} loading={isSaving} type="submit">
-                                    {mode && 'Update'}
-                                    {!mode && 'Create'}
-                                </Button>
-                            </Group>,
-                            {
-                                setValue: setValue,
-                                getValues: getValues,
-                                setFocus: setFocus,
-                                setError: setError,
-                                reset: reset,
-                                resetField: resetField,
-                                unregister: unregister,
-                                watch: watch,
-                                trigger: trigger,
-                                getFieldState: getFieldState,
-                                defaultValues: getValues(),
-                            },
-                        )}
-                </form>
-            </FormProvider>
+            <Loading isLoading={isFetching} />
+
+            {!isFetching && (
+                <Form
+                    formProps={formProps}
+                    inputs={inputs}
+                    onSubmit={onInternalSubmit}
+                    isSaving={isLoading}
+                    mode={mode}
+                    currentData={data?.result}
+                />
+            )}
         </div>
     );
 }

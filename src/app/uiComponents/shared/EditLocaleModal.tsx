@@ -1,10 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/DeleteModal.module.css';
-import { Button, Modal, Select } from '@mantine/core';
+import { Button, type ComboboxItem, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
+import LocalesCache from '@lib/storage/localesCache';
 
 interface Props {
     open: boolean;
@@ -15,7 +16,7 @@ interface Props {
 
 export default function EditLocaleModal({ open, onClose, onEdit, currentLocale }: Props) {
     const [value, setValue] = useState<string>(currentLocale);
-    const data = (useQueryClient().getQueryData('supported_locales') as Locale[]) || [];
+    const data = LocalesCache.instance.getLocales() || [];
 
     return (
         <>
@@ -25,9 +26,18 @@ export default function EditLocaleModal({ open, onClose, onEdit, currentLocale }
                         transitionProps: { transition: 'pop', duration: 200 },
                     }}
                     searchable
+                    clearable
                     value={value}
                     onChange={(v) => {
                         if (v) setValue(v);
+                    }}
+                    filter={({ options, search }) => {
+                        const filtered = (options as ComboboxItem[]).filter((option) =>
+                            option.label.toLowerCase().trim().includes(search.toLowerCase().trim()),
+                        );
+
+                        filtered.sort((a, b) => a.label.localeCompare(b.label));
+                        return filtered;
                     }}
                     data={data.map((item) => ({
                         label: `${item.name} - ${item.alpha}`,

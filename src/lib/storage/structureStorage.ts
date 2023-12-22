@@ -78,8 +78,7 @@ export default class StructureStorage {
             }
         }
     }
-    addVariable(name: string) {
-        const locale = Initialize.Locale();
+    addVariable(name: string, locale: string) {
         if (this.storage.variables) {
             if (!this.storage.variables[locale]) {
                 this.storage.variables[locale] = [];
@@ -89,10 +88,9 @@ export default class StructureStorage {
         }
     }
 
-    hasVariable(name: string) {
+    hasVariable(name: string, locale: string) {
         if (!this.storage.variables) return false;
 
-        const locale = Initialize.Locale();
         if (!this.storage.variables[locale]) return false;
 
         return this.storage.variables[locale].includes(name);

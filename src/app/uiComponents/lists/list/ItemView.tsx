@@ -23,8 +23,6 @@ export default function ItemView<Value, Metadata>({ value }: Props<Value, Metada
                 // @ts-ignore
                 const val = value[key];
 
-                //console.log(key, val);
-
                 if (typeof val !== 'boolean' && !val) {
                     internalGrid.push({
                         column: key,

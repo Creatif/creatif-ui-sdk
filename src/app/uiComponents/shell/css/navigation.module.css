@@ -4,11 +4,10 @@
 
 .navigationGrid {
     min-height: 98vh;
-    border: 1px solid var(--mantine-color-gray-1);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: 1rem;
+    border-right: 1px solid var(--mantine-color-indigo-1);
 
-    background-color: white;
+    background-color: var(--mantine-color-indigo-0);
 }
 
 .navItem {
@@ -18,12 +17,12 @@
     margin-bottom: 0.5rem;
 
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-align: left;
     color: var(--mantine-color-gray-7);
 
     padding: 0.5rem 0.5rem 0.5rem 0;
-    border-radius: 2rem;
+    border-radius: 0.2rem;
 
     transition:
         background-color 0.2s,
@@ -37,18 +36,19 @@
 
 .navItemIcon {
     display: inline-block;
-    margin-left: 1rem;
+    margin-left: 0.6rem;
     color: var(--mantine-color-gray-7);
 }
 
 .navItemText {
-    padding-right: 1.5rem;
-    padding-left: 1.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 .root a.active {
     color: var(--mantine-color-indigo-9);
     background-color: var(--mantine-color-indigo-1);
+    font-weight: 500;
 }
 
 .root a.active .navItemIcon {

@@ -4,8 +4,9 @@ export interface CreateVariableBlueprint {
     behaviour: Behaviour;
     groups?: string[] | null;
     metadata?: unknown;
+    projectId: string;
     value?: unknown;
-    locale?: string;
+    locale: string;
 }
 
 export interface CreatedVariable<Value = unknown, Metadata = unknown> {
@@ -24,16 +25,18 @@ export interface CreatedVariable<Value = unknown, Metadata = unknown> {
 }
 export interface UpdateVariableBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
-    locale?: string;
+    projectId: string;
+    locale: string;
     fields: string[];
     values: UpdateableVariableValuesBlueprint<Value, Metadata>;
 }
-export interface UpdateableVariableValuesBlueprint<Value, Metadata> {
+export interface UpdateableVariableValuesBlueprint<Value = unknown, Metadata = unknown> {
     name?: string;
     behaviour?: Behaviour;
     value?: Value;
     metadata?: Metadata;
     groups?: string[];
+    locale?: string;
 }
 export interface GetVariableBlueprint {
     name: string;
@@ -47,11 +50,11 @@ export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
     groups?: string[];
     metadata?: Value;
     value?: Metadata;
-    locale?: string;
+    locale: string;
 }
 
 export interface DeleteVariableBlueprint {
     name: string;
-    locale?: string;
+    locale: string;
     projectId: string;
 }

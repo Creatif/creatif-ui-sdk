@@ -19,9 +19,9 @@ import '@app/css/reset.module.css';
 import '@app/css/global.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-// eslint-disable-next-line import/order
 import animations from '@app/css/animations.module.css';
 import Shell from '@app/uiComponents/shell/Shell';
+import LocalesCache from '@lib/storage/localesCache';
 
 interface Props {
     apiKey: string;
@@ -51,29 +51,31 @@ const theme = createTheme({
 });
 
 const queryClient = new QueryClient();
+
+async function loadLocalesAndMetadata(apiKey: string, projectId: string) {
+    Initialize.init(apiKey, projectId);
+    LocalesCache.init();
+    if (!LocalesCache.instance.hasLocales()) {
+        const { result: locales } = await getSupportedLocales();
+        if (locales) {
+            LocalesCache.init(locales);
+        }
+    }
+
+    CurrentLocaleStorage.init('eng');
+    const { result: projectMetadata } = await getProjectMetadata({ apiKey: apiKey, projectId: projectId });
+
+    if (projectMetadata) {
+        StructureStorage.init(projectMetadata);
+    }
+}
 export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChildren) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>('idle');
 
     const init = useCallback(async () => {
-        const { result } = await getProjectMetadata({ apiKey: apiKey, projectId: projectId });
-
-        if (result) {
-            getSupportedLocales().then(({ result: locales, error }) => {
-                if (error) {
-                    queryClient.setQueryData('supported_locales', 'failed');
-                }
-
-                if (locales) {
-                    queryClient.setQueryData('supported_locales', locales);
-                }
-
-                CurrentLocaleStorage.init('eng');
-                Initialize.init(apiKey, projectId, CurrentLocaleStorage.instance.getLocale());
-                StructureStorage.init(result);
-                setIsLoggedIn(true);
-            });
-        }
+        await loadLocalesAndMetadata(apiKey, projectId);
+        setIsLoggedIn(true);
     }, []);
 
     useEffect(() => {

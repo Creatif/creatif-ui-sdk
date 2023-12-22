@@ -1,6 +1,6 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
-import useEditLocale from '@app/uiComponents/lists/hooks/useEditLocale';
+import useEditLocale from '@app/uiComponents/variables/hooks/useEditLocale';
 import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
@@ -8,66 +8,41 @@ import ItemView from '@app/uiComponents/lists/list/ItemView';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
-import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import { ActionIcon, Button, Checkbox, Loader, Pill } from '@mantine/core';
+import { ActionIcon, Button, Pill } from '@mantine/core';
 import { IconChevronDown, IconChevronRight, IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
-import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
-import UIError from '@app/components/UIError';
+import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
+import { Initialize } from '@app/initialize';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
-    listName: string;
+    name: string;
     onDeleted: () => void;
-    disabled?: boolean;
-    onChecked: (itemId: string, checked: boolean) => void;
 }
-export default function Item<Value, Metadata>({
-    item,
-    listName,
-    onDeleted,
-    onChecked,
-    disabled,
-}: Props<Value, Metadata>) {
+export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<Value, Metadata>) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const useOptions = getOptions(listName);
+    const useOptions = getOptions(name);
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
-    const {
-        isFetching,
-        data: queriedItem,
-        error: queryError,
-    } = useQueryListItem<Value, Metadata>(listName, item.id, item.locale, isExpanded);
 
-    const { mutate, isLoading, data } = useEditLocale(listName, item.id, item.name);
+    const { mutate, isLoading, data } = useEditLocale(name);
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
 
     return (
         <div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
-            {(isDeleting || disabled) && <div className={styles.disabled} />}
+            {isDeleting && <div className={styles.disabled} />}
             <div onClick={() => setIsExpanded((item) => !item)} className={styles.visibleSectionWrapper}>
-                <div className={styles.checkboxWrapper}>
-                    <Checkbox
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onChecked(item.id, e.currentTarget.checked);
-                        }}
-                    />
-                </div>
-
                 <div className={styles.infoColumn}>
                     <div className={styles.nameRow}>
                         <h2 className={styles.nameRowTitle}>{item.name}</h2>
 
                         <div className={styles.actionRow}>
-                            {isFetching && <Loader size={16} />}
-
                             <Button
                                 disabled={isLoading}
                                 loading={isLoading}
@@ -83,7 +58,7 @@ export default function Item<Value, Metadata>({
                                                 ? 'var(--mantine-color-gray-4)'
                                                 : 'var(--mantine-color-gray-8)',
                                         }}
-                                        size={12}
+                                        size={16}
                                     />
                                 }
                                 size="xs"
@@ -95,7 +70,7 @@ export default function Item<Value, Metadata>({
                             <div className={styles.actionMenu}>
                                 <ActionIcon
                                     component={Link}
-                                    to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
+                                    to={`${useOptions.getState().paths.update}/${item.id}/${item.locale}`}
                                     variant="white">
                                     <IconEdit
                                         className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
@@ -158,15 +133,7 @@ export default function Item<Value, Metadata>({
 
             <div
                 className={classNames(styles.expandedSection, isExpanded ? styles.expandedSectionExpanded : undefined)}>
-                {!isFetching && queryError && (
-                    <UIError title="Cannot show item">Something went wrong. Please, try again later.</UIError>
-                )}
-                {!isFetching && queriedItem?.result && (
-                    <ItemView<Value, Metadata>
-                        value={queriedItem.result.value}
-                        metadata={queriedItem.result.metadata}
-                    />
-                )}
+                <ItemView<Value, Metadata> value={item.value} metadata={item.metadata} />
             </div>
 
             <DeleteModal
@@ -175,20 +142,21 @@ export default function Item<Value, Metadata>({
                 onClose={() => setDeleteItemId(undefined)}
                 onDelete={async () => {
                     setIsDeleting(true);
-                    const { error, status } = await deleteListItemByID({
-                        name: listName,
-                        itemId: item.id,
+                    const { error, status } = await deleteVariable({
+                        name: name,
+                        locale: item.locale,
+                        projectId: Initialize.ProjectID(),
                     });
 
                     if (error) {
                         errorNotification(
-                            'Cannot delete list item',
-                            'An error occurred when trying to delete list item. Please, try again later.',
+                            'Cannot delete item',
+                            'An error occurred when trying to delete item. Please, try again later.',
                         );
                     }
 
                     if (status === 200) {
-                        success('List item deleted.', 'List item was deleted successfully');
+                        success('Item deleted.', 'Item was deleted successfully');
                     }
 
                     setIsDeleting(false);
@@ -208,9 +176,9 @@ export default function Item<Value, Metadata>({
                     }
 
                     mutate({
-                        values: {
-                            locale: locale,
-                        },
+                        id: item.id,
+                        currentLocale: item.locale,
+                        nextLocale: locale,
                     });
                     setIsEditLocaleOpen(false);
                 }}

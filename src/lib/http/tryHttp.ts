@@ -30,32 +30,23 @@ export async function tryHttp<ReturnType, Body = unknown>(
 
         if (res.status === 403) {
             return {
-                error: {
-                    data: {
-                        message: 'Unauthenticated',
-                    },
-                },
+                error: new ApiError('Forbidden', { data: { message: 'Forbidden' } }, 403),
                 status: res.status,
             };
         }
 
         return {
-            error: {
-                data: {
-                    message: 'Unexpected error',
-                },
-            },
+            error: new ApiError('Unexpected error', { data: { message: 'Unexpected error' } }, 500),
             status: res.status,
         };
     } catch (e) {
-        console.log(e);
         return handleError<ReturnType>(e as TypeError);
     }
 }
 export function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
     return async () => {
         const response = await fn();
-        if (response.error) throw new ApiError('', response.error, response.status);
+        if (response.error) throw response.error;
 
         return response;
     };

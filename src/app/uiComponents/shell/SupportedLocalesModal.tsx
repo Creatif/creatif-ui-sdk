@@ -5,15 +5,15 @@ import { Button, Modal, ScrollArea, Table, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
+import LocalesCache from '@lib/storage/localesCache';
 interface Props {
     open: boolean;
     onClose: () => void;
 }
 export default function SupportedLocalesModal({ open, onClose }: Props) {
     const [value, setValue] = useState<string>('');
-    const locales = useQueryClient().getQueryData('supported_locales') as Locale[];
+    const locales = LocalesCache.instance.getLocales() || [];
     const [searchedLocales, setSearchedLocales] = useState<Locale[]>([]);
     const [debounced] = useDebouncedValue(value, 500);
 

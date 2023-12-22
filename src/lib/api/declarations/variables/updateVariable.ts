@@ -1,7 +1,10 @@
-import { Initialize } from '@app/initialize';
 import { declarations } from '@lib/http/fetchInstance';
 import { authHeaders, tryHttp } from '@lib/http/tryHttp';
-import type { UpdateableVariableValuesBlueprint, UpdateVariableBlueprint } from '@root/types/api/variable';
+import type {
+    CreatedVariable,
+    UpdateableVariableValuesBlueprint,
+    UpdateVariableBlueprint,
+} from '@root/types/api/variable';
 export default function updateVariable(blueprint: UpdateVariableBlueprint) {
     const values: UpdateableVariableValuesBlueprint<unknown, unknown> = {};
 
@@ -25,15 +28,21 @@ export default function updateVariable(blueprint: UpdateVariableBlueprint) {
         if (field === 'behaviour') {
             values.behaviour = blueprint.values.behaviour;
         }
+
+        if (field === 'locale') {
+            // TODO: this should be removed when creating proper API SDK authentication
+            if (!blueprint.values.locale) throw new Error('Updating locale not specified');
+            values.locale = blueprint.values.locale;
+        }
     }
 
-    return tryHttp<unknown, UpdateVariableBlueprint>(
+    return tryHttp<CreatedVariable>(
         declarations(),
         'post',
-        `/variable/${Initialize.ProjectID()}`,
+        `/variable/${blueprint.projectId}`,
         {
             name: blueprint.name,
-            locale: blueprint.locale ? blueprint.locale : Initialize.Locale(),
+            locale: blueprint.locale,
             fields: blueprint.fields,
             values: values,
         },

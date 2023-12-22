@@ -7,6 +7,6 @@ export default function queryListItemByID<Value = unknown, Metadata = unknown>(b
     return tryHttp<QueriedListItem<Value, Metadata>>(
         declarations(),
         'get',
-        `/list/quey-id/${Initialize.ProjectID()}/${blueprint.structureId}/${blueprint.itemId}`,
+        `/list/query-id/${Initialize.ProjectID()}/${blueprint.structureId}/${blueprint.itemId}`,
     );
 }

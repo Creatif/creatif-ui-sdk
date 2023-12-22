@@ -2,14 +2,14 @@ import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/shell/SupportedLocalesModal';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
-import { Button, Select } from '@mantine/core';
+import { Button, type ComboboxItem, Select } from '@mantine/core';
 import { IconStackPush } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './css/header.module.css';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
+import LocalesCache from '@lib/storage/localesCache';
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];
 
@@ -19,24 +19,13 @@ function localesToSelectOptions(data: Locale[] | undefined) {
     }));
 }
 export default function Header() {
-    const { warn, info } = useNotification();
-    const queryClient = useQueryClient();
+    const { info } = useNotification();
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
     const [currentLocale, setCurrentLocale] = useState<string>(Initialize.Locale());
     const [isLocalesModalOpen, setIsLocalesModalOpen] = useState(false);
 
     useEffect(() => {
-        const cachedLocales = queryClient.getQueryData('supported_locales');
-        if (cachedLocales === 'failed') {
-            warn(
-                'Warning! Locales failed to load.',
-                `Locales could not be loaded. Please, try refreshing your browser. If that does not work, locale is set to last locale that you used which is '${Initialize.Locale()}'. If that is not your desired locale, please be patient until we fix this issue.`,
-                false,
-            );
-            return;
-        }
-
-        setLocales(cachedLocales as Locale[]);
+        setLocales(LocalesCache.instance.getLocales() || []);
     }, []);
 
     return (
@@ -54,7 +43,14 @@ export default function Header() {
                                     info('Locale changed', `Locale changed to '${Initialize.Locale()}'`);
                                 }
                             }}
-                            disabled={queryClient.getQueryData('supported_locales') === 'failed'}
+                            filter={({ options, search }) => {
+                                const filtered = (options as ComboboxItem[]).filter((option) =>
+                                    option.label.toLowerCase().trim().includes(search.toLowerCase().trim()),
+                                );
+
+                                filtered.sort((a, b) => a.label.localeCompare(b.label));
+                                return filtered;
+                            }}
                             comboboxProps={{
                                 transitionProps: { transition: 'pop', duration: 200 },
                             }}

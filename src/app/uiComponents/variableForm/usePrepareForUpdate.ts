@@ -6,49 +6,43 @@ import type { UpdateableVariableValuesBlueprint } from '@root/types/api/variable
 import { Initialize } from '@app/initialize';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import type { StoreApi, UseBoundStore } from 'zustand';
+import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
 import { ApiError } from '@lib/http/apiError';
-export default function useUpdateVariable<Value>(
+
+interface UseUpdateVariable {}
+export default function usePrepareForUpdate<Value>(
     isUpdateMode: boolean,
     currentDefaultValues: Value,
     specialFieldsStore: UseBoundStore<StoreApi<SpecialFieldsStore>>,
-    onError: (err: ApiError) => void,
 ) {
     const setLocale = specialFieldsStore((state) => state.setLocale);
+    setLocale(Initialize.Locale());
     const setGroups = specialFieldsStore((state) => state.setGroups);
     const setBehaviour = specialFieldsStore((state) => state.setBehaviour);
 
-    if (!isUpdateMode) return undefined;
+    const { structureId } = useParams();
+    const { error: errorNotification } = useNotification();
 
-    const { structureId, variableLocale } = useParams();
+    if (!structureId) {
+        return {
+            isFetching: false,
+            variable: null,
+            getVariableError: new ApiError('Route does not exist', { data: {} }, 404),
+        };
+    }
 
-    if (!structureId || !variableLocale) {
-        onError(new ApiError('No structure ID in url.', { data: { message: 'No ID in url.' } }, 404));
-        return;
+    const { isFetching, data, error } = useGetVariable(structureId, isUpdateMode);
+
+    if (!isFetching && data?.result) {
+        setLocale(data.result.locale);
+        if (data.result.groups) setGroups(data.result.groups);
+        setBehaviour(data.result.behaviour);
     }
 
     return {
-        defaultValues: async (): Promise<Value> => {
-            const { result, error } = await getVariable({
-                name: structureId,
-                projectId: Initialize.ProjectID(),
-                locale: variableLocale,
-            });
-
-            if (error) {
-                onError(error);
-                return currentDefaultValues;
-            }
-
-            if (result) {
-                console.log('result: ', result.locale);
-                setLocale(result.locale);
-                if (result.groups) setGroups(result.groups);
-                setBehaviour(result.behaviour);
-                return result?.value as Value;
-            }
-
-            return currentDefaultValues;
-        },
+        isFetching,
+        variable: data,
+        getVariableError: error,
         update: async (
             id: string,
             fields: string[],

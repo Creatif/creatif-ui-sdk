@@ -5,8 +5,8 @@ import { IconCashBanknote, IconHome } from '@tabler/icons-react';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$mb2bKfDLYalGVdqizmQ8x.rLKgJ2nPwEFHd3FSojXTzIKn/7hEfgi"
-            projectId="01HHSQRWNS6CEGH8VB8V4C1F41"
+            apiKey="$2a$10$XCuNhVz93iySyHqg64e9oOag74kp9ZFMEXPo3gFk0sF5CTCtg.q8C"
+            projectId="01HHVAHQJ00QYGA5WNBK3MD7V6"
             app={{
                 logo: 'Break free',
                 items: [
@@ -14,7 +14,7 @@ export default function App() {
                         menu: {
                             text: 'Landing page',
                             path: 'landing-page',
-                            icon: <IconHome size="1.5rem" />,
+                            icon: <IconHome size={20} />,
                         },
                         structure: {
                             name: 'landing page',
@@ -31,7 +31,7 @@ export default function App() {
                         menu: {
                             text: 'Landing page banner',
                             path: 'landing-page-banner',
-                            icon: <IconCashBanknote size="1.5rem" />,
+                            icon: <IconCashBanknote size={20} />,
                         },
                         structure: {
                             name: 'landing page banner',

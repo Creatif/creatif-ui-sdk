@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Behaviour } from '@root/types/api/shared';
 import { Initialize } from '@app/initialize';
-import useDeleteVariable from '@lib/api/hooks/useDeleteVariable';
+import useDeleteVariable from '@app/uiComponents/variables/hooks/useDeleteVariable';
 interface Props {
     name: string;
     behaviour: Behaviour;

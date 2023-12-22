@@ -29,17 +29,17 @@ export default function useResolveBindings() {
     return <T extends FieldValues>(value: T, bindings?: Bindings<T>) => {
         if (!bindings) {
             return {
-                name: '',
+                locale: '',
                 groups: [],
                 behaviour: 'modifiable' as Behaviour,
             };
         }
 
-        const name = resolveBindings<T>(value, bindings, 'name');
-        if (!name) {
+        const locale = resolveBindings(value, bindings, 'locale');
+        if (bindings.locale && !locale) {
             notificationError(
-                'Name binding does not exist.',
-                "You haven't provided any binding for the name of the variable. Add the 'binding' property to your form.",
+                'Cannot determine groups binding',
+                'Locale binding cannot be determined. If a field name is provided, be sure that it exists as a field in your form. If a function is provided, be sure to return either a string or Array<string>',
             );
             return;
         }
@@ -74,6 +74,6 @@ export default function useResolveBindings() {
             behaviour = b;
         }
 
-        return { name, groups, behaviour };
+        return { locale, groups, behaviour };
     };
 }

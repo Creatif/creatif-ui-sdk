@@ -1,15 +1,16 @@
 .item {
-    border: 1px solid var(--mantine-color-gray-2);
     border-radius: 0.5rem;
     position: relative;
-
     margin-bottom: 1rem;
 
-    transition: border 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
 }
 
 .item:hover {
-    border: 1px solid var(--mantine-color-gray-5);
+    transform: translate(0, -4px);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
 .itemDisabled:hover {
@@ -47,6 +48,7 @@
 .expandedSectionExpanded {
     height: auto;
     padding: 1rem;
+    margin-bottom: 1rem;
 }
 
 .infoColumn {

@@ -1,8 +1,8 @@
 import { createOptions } from '@app/systems/stores/options';
-import ListList from '@app/uiComponents/lists/ListList';
+import { ListList as StructureListListing } from '@app/uiComponents/lists/ListList';
+import { ListList as VariableListListing } from '@app/uiComponents/variables/ListList';
 import Header from '@app/uiComponents/shell/Header';
 import Navigation from '@app/uiComponents/shell/Navigation';
-import VariableDisplay from '@app/uiComponents/variables/VariableDisplay';
 import { Container } from '@mantine/core';
 import React, { useRef } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
@@ -58,7 +58,7 @@ export default function Shell({ options }: Props) {
                                         />
                                         <Route
                                             path={`${item.menu.path}`}
-                                            element={<ListList listName={item.structure.name} />}
+                                            element={<StructureListListing listName={item.structure.name} />}
                                         />
                                     </>
                                 )}
@@ -66,12 +66,12 @@ export default function Shell({ options }: Props) {
                                 {item.structure.type === 'variable' && (
                                     <>
                                         <Route
-                                            path={`${item.menu.path}/update/:structureId`}
+                                            path={`${item.menu.path}/update/:structureId/:variableLocale`}
                                             element={item.update.component}
                                         />
                                         <Route
                                             path={`${item.menu.path}`}
-                                            element={<VariableDisplay variableName={item.structure.name} />}
+                                            element={<VariableListListing name={item.structure.name} />}
                                         />
                                     </>
                                 )}

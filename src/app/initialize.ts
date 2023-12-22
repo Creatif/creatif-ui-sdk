@@ -1,11 +1,11 @@
+import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
+
 export class Initialize {
     private static apiKey: string;
     private static projectId: string;
-    private static locale: string;
-    static init(apiKey: string, projectId: string, locale: string) {
+    static init(apiKey: string, projectId: string) {
         Initialize.apiKey = apiKey;
         Initialize.projectId = projectId;
-        Initialize.locale = locale;
     }
     static ApiKey(): string {
         return Initialize.apiKey;
@@ -14,10 +14,9 @@ export class Initialize {
         return Initialize.projectId;
     }
     static Locale(): string {
-        return Initialize.locale;
+        return CurrentLocaleStorage.instance.getLocale();
     }
-
     static changeLocale(locale: string) {
-        Initialize.locale = locale;
+        CurrentLocaleStorage.instance.setLocale(locale);
     }
 }

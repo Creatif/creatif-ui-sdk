@@ -7,3 +7,9 @@ export interface PaginationBlueprint {
     orderBy?: string;
     direction?: PaginationDirection;
 }
+
+export interface GetGroupsBlueprint {
+    structureType: string;
+    structureId: string;
+    projectId: string;
+}
