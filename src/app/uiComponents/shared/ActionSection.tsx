@@ -1,8 +1,16 @@
 import CreateNew from '@app/uiComponents/button/CreateNew';
 import Sort from '@app/uiComponents/shared/Sort';
-import { Button, Drawer, Loader, TextInput } from '@mantine/core';
+import { Button, Drawer, Loader, TextInput, Tooltip } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { IconAdjustments, IconSearch } from '@tabler/icons-react';
+import {
+    IconAdjustments,
+    IconLanguage,
+    IconReplace,
+    IconRouteSquare2,
+    IconSearch,
+    IconSortAscending,
+    IconSortDescending,
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -48,6 +56,8 @@ export default function ActionSection({
     const [value, setValue] = useState('');
     const [debounced] = useDebouncedValue(value, 500);
 
+    console.log(groups, locales, behaviour);
+
     useEffect(() => {
         onSearch(debounced);
     }, [debounced]);
@@ -78,8 +88,72 @@ export default function ActionSection({
                                 fontWeight: '200',
                                 fontSize: '0.8rem',
                                 border: '1px dashed var(--mantine-color-gray-4)',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                gap: '10rem',
+                                alignItems: 'center',
                             }}>
-                            FILTERS
+                            <span
+                                style={{
+                                    margin: '0 0.5rem 0 0',
+                                }}>
+                                FILTERS
+                            </span>
+
+                            {behaviour && (
+                                <Tooltip label={'Behaviour - ' + behaviour}>
+                                    <IconReplace
+                                        size={16}
+                                        style={{
+                                            margin: '0 0.5rem 0 0',
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {locales.length !== 0 && (
+                                <Tooltip label={'Locale - ' + locales.join(', ')}>
+                                    <IconLanguage
+                                        size={16}
+                                        style={{
+                                            margin: '0 0.5rem 0 0',
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {groups.length !== 0 && (
+                                <Tooltip label={'Groups - ' + groups.join(', ')}>
+                                    <IconRouteSquare2
+                                        size={16}
+                                        style={{
+                                            margin: '0 0.5rem 0 0',
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {direction === 'desc' && (
+                                <Tooltip label="Descending sorting">
+                                    <IconSortDescending
+                                        size={16}
+                                        style={{
+                                            margin: '0 0.5rem 0 0',
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {direction === 'asc' && (
+                                <Tooltip label="Ascending sorting">
+                                    <IconSortAscending
+                                        size={16}
+                                        style={{
+                                            margin: '0 0.5rem 0 0',
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
                         </Button>
                     </div>
 

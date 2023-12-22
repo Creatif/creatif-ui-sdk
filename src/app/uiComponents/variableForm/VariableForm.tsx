@@ -35,7 +35,8 @@ import { Initialize } from '@app/initialize';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
 import Form from '@app/uiComponents/shared/Form';
-import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
+import updateVariable from '@lib/api/declarations/variables/updateVariable';
+import UIError from '@app/components/UIError';
 interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
     bindings?: Bindings<T>;
@@ -80,14 +81,18 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
     const { success: successNotification, error: errorNotification } = useNotification();
     const [beforeSaveError, setBeforeSaveError] = useState(false);
     const { variableLocale, structureId } = useParams();
+    const [isSaving, setIsSaving] = useState(false);
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const resolveBindings = useResolveBindings();
     const useStructureOptionsStore = getOptions(variableName);
 
-    const { isFetching, data, error } = useGetVariable(variableName, variableLocale, Boolean(mode && variableLocale));
-    const { mutateAsync, isLoading } = useUpdateVariable(variableName);
+    const {
+        isFetching,
+        data,
+        error: getError,
+    } = useGetVariable(variableName, variableLocale, Boolean(mode && variableLocale), () => {});
 
     const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
         if (!value) {
@@ -117,7 +122,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     delete (result.value as localeType).locale;
                 }
 
-                mutateAsync({
+                updateVariable({
                     projectId: Initialize.ProjectID(),
                     name: structureId,
                     fields: ['value', 'metadata', 'groups', 'behaviour', 'locale', 'name'],
@@ -130,29 +135,33 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         locale: chosenLocale,
                     },
                     locale: variableLocale || Initialize.Locale(),
-                }).then((response) => {
-                    if (error) {
+                }).then(({ result, error }) => {
+                    if (error && error.error.data['exists']) {
+                        errorNotification('Variable exists', 'Variable with this name and locale already exists');
+                        return;
+                    } else if (error) {
                         errorNotification(
-                            'Something went wrong.',
-                            'Variable could not be update. Please, try again later.',
+                            'Something went wrong',
+                            'Variable could not be updated. Please, try again later',
                         );
                         return;
                     }
 
-                    if (response) {
+                    if (result) {
                         successNotification(
                             'Variable updated',
                             `Variable with name '${variableName}' has been updated.`,
                         );
 
                         queryClient.invalidateQueries(variableName);
-                        afterSave?.(response, e);
+                        afterSave?.(result, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
             }
 
             if (!mode && result) {
+                setIsSaving(true);
                 type localeType = { locale: string };
                 const locale = (result.value as localeType).locale
                     ? (result.value as localeType).locale
@@ -172,15 +181,16 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     metadata: result.metadata,
                     value: result.value,
                 }).then(({ result: response, error }) => {
-                    if (error && error.data['nameExists']) {
-                        errorNotification('Variable name exists', `Variable with the name '${name}' already exists.`);
-
+                    if (error && error.error.data['exists']) {
+                        errorNotification('Variable name exists', 'Variable with this name and locale already exists');
+                        setIsSaving(false);
                         return;
                     } else if (error) {
                         errorNotification(
                             'Something went wrong.',
                             'Variable could not be created. Please, try again later.',
                         );
+                        setIsSaving(false);
                         return;
                     }
 
@@ -190,6 +200,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         StructureStorage.instance.addVariable(variableName, response.locale);
                         queryClient.invalidateQueries(variableName);
                         afterSave?.(response, e);
+                        setIsSaving(false);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
@@ -212,14 +223,16 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 </Alert>
             )}
 
+            {getError && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+
             <Loading isLoading={isFetching} />
 
-            {!isFetching && (
+            {!isFetching && !getError && (
                 <Form
                     formProps={formProps}
                     inputs={inputs}
                     onSubmit={onInternalSubmit}
-                    isSaving={isLoading}
+                    isSaving={isSaving}
                     mode={mode}
                     currentData={data?.result}
                 />

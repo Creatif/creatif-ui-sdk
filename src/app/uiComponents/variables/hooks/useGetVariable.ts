@@ -9,6 +9,7 @@ export function useGetVariable<Value = unknown, Metadata = unknown>(
     variableName: string,
     locale: string | undefined,
     enabled = true,
+    onError?: () => void,
 ) {
     const { error: errorNotification } = useNotification();
 
@@ -23,16 +24,18 @@ export function useGetVariable<Value = unknown, Metadata = unknown>(
                 }),
             )(),
         {
-            onError: (error: ApiError) => {
-                if (error.status === 404) {
-                    return;
-                }
+            onError: onError
+                ? onError
+                : (error: ApiError) => {
+                      if (error.status === 404) {
+                          return;
+                      }
 
-                errorNotification(
-                    'Failed to get variable',
-                    `Something went wrong when trying to get variable ${variableName}. Please, try again later`,
-                );
-            },
+                      errorNotification(
+                          'Failed to get variable',
+                          `Something went wrong when trying to get variable ${variableName}. Please, try again later`,
+                      );
+                  },
             retry: 0,
             enabled: enabled,
             refetchOnWindowFocus: false,

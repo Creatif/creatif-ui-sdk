@@ -21,16 +21,16 @@ export async function tryHttp<ReturnType, Body = unknown>(
             };
         }
 
-        if (res.status === 400 || res.status === 404) {
+        if (res.status === 403) {
             return {
-                error: await res.json(),
+                error: new ApiError('Forbidden', { data: { message: 'Forbidden' } }, 403),
                 status: res.status,
             };
         }
 
-        if (res.status === 403) {
+        if (res.status === 400 || res.status === 404 || res.status === 422) {
             return {
-                error: new ApiError('Forbidden', { data: { message: 'Forbidden' } }, 403),
+                error: new ApiError('Forbidden', await res.json(), 403),
                 status: res.status,
             };
         }
