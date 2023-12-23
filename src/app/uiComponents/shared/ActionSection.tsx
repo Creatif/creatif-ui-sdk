@@ -56,8 +56,6 @@ export default function ActionSection({
     const [value, setValue] = useState('');
     const [debounced] = useDebouncedValue(value, 500);
 
-    console.log(groups, locales, behaviour);
-
     useEffect(() => {
         onSearch(debounced);
     }, [debounced]);

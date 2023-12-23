@@ -21,8 +21,12 @@ import React from 'react';
 import { createSpecialFields } from '@app/systems/stores/specialFields';
 import type { GetVariableResponse } from '@root/types/api/variable';
 import { Initialize } from '@app/initialize';
+import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
+import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
 
 interface Props<T extends FieldValues> {
+    structureId: string;
+    structureType: string;
     formProps: UseFormProps<T>;
     inputs: (
         submitButton: React.ReactNode,
@@ -39,6 +43,7 @@ interface Props<T extends FieldValues> {
             getFieldState: UseFormGetFieldState<T>;
             defaultValues: T;
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
+            inputGroups: (props?: InputGroupsProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
@@ -47,6 +52,8 @@ interface Props<T extends FieldValues> {
     currentData: GetVariableResponse | undefined;
 }
 export default function Form<T extends FieldValues>({
+    structureType,
+    structureId,
     formProps,
     inputs,
     onSubmit,
@@ -61,13 +68,14 @@ export default function Form<T extends FieldValues>({
 
     if (mode === 'update' && currentData) {
         setLocale(currentData.locale);
-        setGroups(currentData.groups || []);
+        setGroups(currentData.groups || ['default']);
         setBehaviour(currentData.behaviour);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         formProps.defaultValues = currentData.value;
     } else {
         setLocale(Initialize.Locale());
+        setGroups(['default']);
     }
     const methods = useForm(formProps);
 
@@ -110,6 +118,14 @@ export default function Form<T extends FieldValues>({
                             defaultValues: getValues(),
                             inputLocale: (props?: InputLocaleProps) => (
                                 <InputLocale {...props} store={useSpecialFields} />
+                            ),
+                            inputGroups: (props?: InputGroupsProps) => (
+                                <InputGroups
+                                    structureType={structureType}
+                                    structureId={structureId}
+                                    store={useSpecialFields}
+                                    {...props}
+                                />
                             ),
                         },
                     )}

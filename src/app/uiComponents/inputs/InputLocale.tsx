@@ -3,7 +3,6 @@ import type { ComboboxItem, SelectProps } from '@mantine/core';
 import { Select } from '@mantine/core';
 import { Controller, type RegisterOptions, useFormContext } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
@@ -41,6 +40,7 @@ export default function InputLocale({ store, validation, ...rest }: InputLocaleP
             }
             render={({ field: { onChange } }) => (
                 <Select
+                    label="Locale"
                     searchable
                     clearable
                     error={useFirstError('locale')}

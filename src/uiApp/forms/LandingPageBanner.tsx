@@ -4,6 +4,7 @@ import InputSwitch from '@app/uiComponents/inputs/InputSwitch';
 import InputText from '@app/uiComponents/inputs/InputText';
 import VariableForm from '@app/uiComponents/variableForm/VariableForm';
 import InputLocale from '@app/uiComponents/inputs/InputLocale';
+import { Grid } from '@mantine/core';
 
 interface Props {
     variableName: string;
@@ -21,23 +22,31 @@ export default function LandingPageBanner({ variableName, mode }: Props) {
                     locale: '',
                 },
             }}
-            inputs={(submitButton, { inputLocale }) => (
+            inputs={(submitButton, { inputLocale, inputGroups }) => (
                 <>
-                    <InputText
-                        options={{
-                            required: 'Title is required',
-                        }}
-                        label="Title"
-                        name="title"
-                    />
+                    <Grid columns={12}>
+                        <Grid.Col span={6}>
+                            <InputText
+                                options={{
+                                    required: 'Title is required',
+                                }}
+                                label="Title"
+                                name="title"
+                            />
+                        </Grid.Col>
 
-                    {inputLocale()}
+                        <Grid.Col span={6}>{inputLocale()}</Grid.Col>
 
-                    <InputSwitch
-                        description="Will this banner appear on the landing page or not?"
-                        label="Enabled"
-                        name="enabled"
-                    />
+                        <Grid.Col span={12}>{inputGroups()}</Grid.Col>
+
+                        <Grid.Col span={12}>
+                            <InputSwitch
+                                description="Will this banner appear on the landing page or not?"
+                                label="Enabled"
+                                name="enabled"
+                            />
+                        </Grid.Col>
+                    </Grid>
 
                     {submitButton}
                 </>

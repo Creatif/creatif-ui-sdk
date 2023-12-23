@@ -37,6 +37,7 @@ import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable
 import Form from '@app/uiComponents/shared/Form';
 import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import UIError from '@app/components/UIError';
+import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
     bindings?: Bindings<T>;
@@ -57,6 +58,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
             getFieldState: UseFormGetFieldState<T>;
             defaultValues: T;
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
+            inputGroups: (props?: InputGroupsProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
@@ -68,6 +70,12 @@ function chooseLocale(fieldLocale: string, bindingLocale: string): string {
     if (bindingLocale) return bindingLocale;
     if (fieldLocale) return fieldLocale;
     return Initialize.Locale();
+}
+
+function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {
+    if (bindingGroups.length !== 0) return bindingGroups;
+    if (fieldGroups.length !== 0) return fieldGroups;
+    return ['default'];
 }
 export default function VariableForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
     variableName,
@@ -108,18 +116,28 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
         const { locale, groups, behaviour } = binding;
 
         wrappedBeforeSave(value, e, beforeSave).then((result) => {
+            setIsSaving(true);
             if (!valueMetadataValidator(result)) {
                 setBeforeSaveError(true);
+                setIsSaving(false);
                 return;
             }
 
             if (mode && result && structureId) {
                 type localeType = { locale: string };
+                type groupsType = { groups: string[] };
                 const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
                 if (Object.hasOwn(result.value as object, 'locale')) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     delete (result.value as localeType).locale;
+                }
+
+                const chosenGroups = chooseGroups((result.value as groupsType).groups, groups);
+                if (Object.hasOwn(result.value as object, 'groups')) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete (result.value as groupsType).groups;
                 }
 
                 updateVariable({
@@ -129,13 +147,15 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     values: {
                         behaviour: behaviour,
                         name: variableName,
-                        groups: groups.length === 0 ? ['default'] : groups,
+                        groups: chosenGroups,
                         metadata: result.metadata,
                         value: result.value,
                         locale: chosenLocale,
                     },
                     locale: variableLocale || Initialize.Locale(),
                 }).then(({ result, error }) => {
+                    setIsSaving(false);
+
                     if (error && error.error.data['exists']) {
                         errorNotification('Variable exists', 'Variable with this name and locale already exists');
                         return;
@@ -163,24 +183,31 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
             if (!mode && result) {
                 setIsSaving(true);
                 type localeType = { locale: string };
-                const locale = (result.value as localeType).locale
-                    ? (result.value as localeType).locale
-                    : Initialize.Locale();
+                type groupsType = { groups: string[] };
+                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
                 if (result && (result.value as localeType).locale) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     delete (result.value as localeType).locale;
                 }
 
+                const chosenGroups = chooseGroups((result.value as groupsType).groups, groups);
+                if (Object.hasOwn(result.value as object, 'groups')) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete (result.value as groupsType).groups;
+                }
+
                 createVariable<Value, Metadata>({
                     name: variableName,
                     behaviour: behaviour,
-                    groups: groups.length === 0 ? ['default'] : groups,
+                    groups: chosenGroups,
                     projectId: Initialize.ProjectID(),
-                    locale: locale ? locale : Initialize.Locale(),
+                    locale: chosenLocale,
                     metadata: result.metadata,
                     value: result.value,
                 }).then(({ result: response, error }) => {
+                    setIsSaving(false);
                     if (error && error.error.data['exists']) {
                         errorNotification('Variable name exists', 'Variable with this name and locale already exists');
                         setIsSaving(false);
@@ -195,10 +222,14 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     }
 
                     if (response) {
-                        successNotification('Variable created', `Variable with name '${name}' has been created.`);
+                        successNotification(
+                            'Variable created',
+                            `Variable with name '${variableName}' and locale '${chosenLocale}' has been created.`,
+                        );
 
                         StructureStorage.instance.addVariable(variableName, response.locale);
                         queryClient.invalidateQueries(variableName);
+                        queryClient.invalidateQueries(['get_groups']);
                         afterSave?.(response, e);
                         setIsSaving(false);
                         navigate(useStructureOptionsStore.getState().paths.listing);
@@ -229,6 +260,8 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
 
             {!isFetching && !getError && (
                 <Form
+                    structureType={'variable'}
+                    structureId={variableName}
                     formProps={formProps}
                     inputs={inputs}
                     onSubmit={onInternalSubmit}
