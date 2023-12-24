@@ -26,10 +26,9 @@ export interface QueryListItemByIDBlueprint {
     structureId: string;
     itemId: string;
     projectId: string;
-    locale?: string;
 }
 
-export interface QueriedListItem<Value, Metadata> {
+export interface QueriedListItem<Value = unknown, Metadata = unknown> {
     id: string;
     locale: string;
     shortId: string;
@@ -73,6 +72,7 @@ export interface PaginationResult<Value, Metadata> {
 export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
     variables: AppendingVariableBlueprint<Value, Metadata>[];
+    projectId: string;
 }
 export interface UpdateListItemBlueprint {
     name: string;

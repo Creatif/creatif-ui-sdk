@@ -42,7 +42,7 @@ export default function Item<Value, Metadata>({
         isFetching,
         data: queriedItem,
         error: queryError,
-    } = useQueryListItem<Value, Metadata>(listName, item.id, item.locale, isExpanded);
+    } = useQueryListItem<Value, Metadata>(listName, item.id, isExpanded);
 
     const { mutate, isLoading, data } = useEditLocale(listName, item.id, item.name);
 

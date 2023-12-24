@@ -7,7 +7,7 @@ export async function appendToList(blueprint: AppendToListBlueprint) {
     return tryHttp(
         declarations(),
         'put',
-        `/list/append/${Initialize.ProjectID()}`,
+        `/list/append/${blueprint.projectId}`,
         {
             name: blueprint.name,
             variables: blueprint.variables.map((item) => {

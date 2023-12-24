@@ -22,11 +22,6 @@ import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 interface Props {
     listName: string;
 }
@@ -40,7 +35,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [groups, setGroups] = useState<string[]>(queryParams.groups);
     const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(queryParams.direction);
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
-    const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy);
+    const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
@@ -79,6 +74,8 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     return (
         <>
             <ActionSection
+                includeSortBy={['created_at', 'updated_at', 'index']}
+                structureType={'list'}
                 isLoading={isFetching}
                 sortBy={orderBy}
                 locales={locales}
@@ -195,38 +192,40 @@ export function ListList<Value, Metadata>({ listName }: Props) {
 
                         {!isListView && <MainTableView<Value, Metadata> data={data.result} />}
 
-                        <div className={styles.stickyPagination}>
-                            <Pagination
-                                value={page}
-                                onChange={setPage}
-                                radius={20}
-                                boundaries={2}
-                                total={Math.ceil(data.result.total / parseInt(limit))}
-                            />
-                            <Select
-                                label="TOTAL"
-                                onChange={(l) => {
-                                    if (!l) {
-                                        setLimit('15');
-                                        return;
-                                    }
+                        {data.result.data.length >= parseInt(limit) && (
+                            <div className={styles.stickyPagination}>
+                                <Pagination
+                                    value={page}
+                                    onChange={setPage}
+                                    radius={20}
+                                    boundaries={2}
+                                    total={Math.ceil(data.result.total / parseInt(limit))}
+                                />
+                                <Select
+                                    label="TOTAL"
+                                    onChange={(l) => {
+                                        if (!l) {
+                                            setLimit('15');
+                                            return;
+                                        }
 
-                                    setLimit(l);
-                                }}
-                                value={limit}
-                                placeholder="Limit"
-                                data={['15', '50', '100', '500', '1000']}
-                                styles={{
-                                    root: {
-                                        width: '100px',
-                                    },
-                                    label: {
-                                        fontSize: '0.7rem',
-                                        color: 'var(--mantine-color-gray-6)',
-                                    },
-                                }}
-                            />
-                        </div>
+                                        setLimit(l);
+                                    }}
+                                    value={limit}
+                                    placeholder="Limit"
+                                    data={['15', '50', '100', '500', '1000']}
+                                    styles={{
+                                        root: {
+                                            width: '100px',
+                                        },
+                                        label: {
+                                            fontSize: '0.7rem',
+                                            color: 'var(--mantine-color-gray-6)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

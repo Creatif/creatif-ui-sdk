@@ -17,13 +17,12 @@ export default function Shell({ options }: Props) {
     const storeCreatedRef = useRef(false);
     if (!storeCreatedRef.current) {
         for (const option of options.items) {
-            const { name, type } = option.structure;
-            const { path } = option.menu;
+            const { structureName, structureType, routePath } = option;
 
             createOptions({
-                structureName: name,
-                path: path,
-                type: type,
+                structureName: structureName,
+                path: routePath,
+                type: structureType,
             });
         }
 
@@ -49,29 +48,29 @@ export default function Shell({ options }: Props) {
                         }>
                         {options.items.map((item, i) => (
                             <React.Fragment key={i}>
-                                <Route path={`${item.menu.path}/create`} element={item.create.component} />
-                                {item.structure.type === 'list' && (
+                                <Route path={`${item.routePath}/create`} element={item.createComponent} />
+                                {item.structureType === 'list' && (
                                     <>
                                         <Route
-                                            path={`${item.menu.path}/update/:structureId/:itemId`}
-                                            element={item.update.component}
+                                            path={`${item.routePath}/update/:structureId/:itemId`}
+                                            element={item.updateComponent}
                                         />
                                         <Route
-                                            path={`${item.menu.path}`}
-                                            element={<StructureListListing listName={item.structure.name} />}
+                                            path={`${item.routePath}`}
+                                            element={<StructureListListing listName={item.structureName} />}
                                         />
                                     </>
                                 )}
 
-                                {item.structure.type === 'variable' && (
+                                {item.structureType === 'variable' && (
                                     <>
                                         <Route
-                                            path={`${item.menu.path}/update/:structureId/:variableLocale`}
-                                            element={item.update.component}
+                                            path={`${item.routePath}/update/:structureId/:variableLocale`}
+                                            element={item.updateComponent}
                                         />
                                         <Route
-                                            path={`${item.menu.path}`}
-                                            element={<VariableListListing name={item.structure.name} />}
+                                            path={`${item.routePath}`}
+                                            element={<VariableListListing name={item.structureName} />}
                                         />
                                     </>
                                 )}

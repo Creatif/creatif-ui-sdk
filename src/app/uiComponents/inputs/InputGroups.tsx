@@ -6,13 +6,7 @@ import { Controller, type RegisterOptions, useFormContext } from 'react-hook-for
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
-function createOptions(groups: string[]) {
-    return groups.map((item) => ({
-        label: item,
-        value: item,
-    }));
-}
-
+import styles from './css/InputGroups.module.css';
 function mergeValues(currentGroups: string[], currentValues: string[]) {
     return Array.from(new Set([...currentValues, ...currentGroups]));
 }
@@ -108,54 +102,57 @@ export function InputGroups({ structureType, structureId, validation, store }: I
                     : validation
             }
             render={({ field: { onChange } }) => (
-                <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
-                    <Combobox.DropdownTarget>
-                        <PillsInput
-                            rightSection={isFetching && <Loader size={16} />}
-                            error={useFirstError('groups')}
-                            onClick={() => combobox.openDropdown()}>
-                            <Pill.Group>
-                                {values}
+                <div className={styles.root}>
+                    <label className={styles.label}>Groups</label>
+                    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
+                        <Combobox.DropdownTarget>
+                            <PillsInput
+                                rightSection={isFetching && <Loader size={16} />}
+                                error={useFirstError('groups')}
+                                onClick={() => combobox.openDropdown()}>
+                                <Pill.Group>
+                                    {values}
 
-                                <Combobox.EventsTarget>
-                                    <PillsInput.Field
-                                        onFocus={() => combobox.openDropdown()}
-                                        onBlur={() => combobox.closeDropdown()}
-                                        value={search}
-                                        placeholder="Search values"
-                                        onChange={(event) => {
-                                            combobox.updateSelectedOptionIndex();
-                                            setSearch(event.currentTarget.value);
-                                            onChange(event.currentTarget.value);
-                                        }}
-                                        onKeyDown={(event) => {
-                                            if (event.key === 'Backspace' && search.length === 0) {
-                                                event.preventDefault();
-                                                handleValueRemove(value[value.length - 1]);
-                                            }
-                                        }}
-                                    />
-                                </Combobox.EventsTarget>
-                            </Pill.Group>
-                        </PillsInput>
-                    </Combobox.DropdownTarget>
+                                    <Combobox.EventsTarget>
+                                        <PillsInput.Field
+                                            onFocus={() => combobox.openDropdown()}
+                                            onBlur={() => combobox.closeDropdown()}
+                                            value={search}
+                                            placeholder="Search values"
+                                            onChange={(event) => {
+                                                combobox.updateSelectedOptionIndex();
+                                                setSearch(event.currentTarget.value);
+                                                onChange(event.currentTarget.value);
+                                            }}
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Backspace' && search.length === 0) {
+                                                    event.preventDefault();
+                                                    handleValueRemove(value[value.length - 1]);
+                                                }
+                                            }}
+                                        />
+                                    </Combobox.EventsTarget>
+                                </Pill.Group>
+                            </PillsInput>
+                        </Combobox.DropdownTarget>
 
-                    <Combobox.Dropdown>
-                        <Combobox.Options>
-                            {options}
+                        <Combobox.Dropdown>
+                            <Combobox.Options>
+                                {options}
 
-                            {!exactOptionMatch && search.trim().length > 0 && (
-                                <Combobox.Option value="$create">
-                                    + Create <Pill color="blue">{search}</Pill>
-                                </Combobox.Option>
-                            )}
+                                {!exactOptionMatch && search.trim().length > 0 && (
+                                    <Combobox.Option value="$create">
+                                        + Create <Pill color="blue">{search}</Pill>
+                                    </Combobox.Option>
+                                )}
 
-                            {options && exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
-                                <Combobox.Empty>Nothing found</Combobox.Empty>
-                            )}
-                        </Combobox.Options>
-                    </Combobox.Dropdown>
-                </Combobox>
+                                {options && exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
+                                    <Combobox.Empty>Nothing found</Combobox.Empty>
+                                )}
+                            </Combobox.Options>
+                        </Combobox.Dropdown>
+                    </Combobox>
+                </div>
             )}
         />
     );

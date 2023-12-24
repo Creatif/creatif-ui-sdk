@@ -32,8 +32,6 @@ export default function InputNumberControlled({ name, onInputChange, validation,
                         }}
                         {...rest}
                     />
-
-                    {err && <span className={styles.errorMessage}>{err}</span>}
                 </>
             )}
         />

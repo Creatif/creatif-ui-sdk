@@ -3,7 +3,7 @@ import type { BaseSyntheticEvent } from 'react';
 
 export type Bindings<T> = {
     name: NameBinding<T>;
-    locale: NameBinding<T>;
+    locale?: NameBinding<T>;
     groups?: GroupBinding<T>;
     behaviour?: BehaviourBinding<T>;
 };

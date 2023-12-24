@@ -108,6 +108,7 @@
     align-items: center;
     align-content: center;
     gap: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .behaviour .modifiable {

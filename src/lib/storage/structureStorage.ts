@@ -5,30 +5,6 @@ interface InternalStorage {
     maps: Record<string, string[]> | null;
     lists: string[] | null;
 }
-
-function removePreviousProjectIfExists(currentKey: string) {
-    const nonDeterminedKeys = ['creatif-current-locale'];
-    const lsKeys = Object.keys(localStorage);
-    // filter out the keys that are not project key
-    const possibleAppKeys = lsKeys.filter(
-        (item) => new RegExp('creatif-').test(item) && !nonDeterminedKeys.includes(item),
-    );
-    if (possibleAppKeys.length !== 1) {
-        console.warn('App LS key not found.');
-        return;
-    }
-
-    const key = possibleAppKeys[0];
-    // if this is a different app key, remove all creatif keys since they will be recreated later
-    if (key !== currentKey) {
-        console.info('Removing previous app LS keys. They will be recreated.');
-        for (const lsKey of lsKeys) {
-            if (new RegExp('creatif-').test(lsKey)) {
-                localStorage.removeItem(lsKey);
-            }
-        }
-    }
-}
 export default class StructureStorage {
     public static instance: StructureStorage;
     private storage: InternalStorage;
@@ -38,8 +14,6 @@ export default class StructureStorage {
     }
     static init(projectMetadata: ProjectMetadata) {
         StructureStorage.key = `creatif-${Initialize.ProjectID()}`;
-
-        removePreviousProjectIfExists(StructureStorage.key);
 
         const locale = Initialize.Locale();
         const internalStorage: InternalStorage = {

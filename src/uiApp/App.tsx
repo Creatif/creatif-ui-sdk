@@ -5,44 +5,31 @@ import { IconCashBanknote, IconHome } from '@tabler/icons-react';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$i7Y3Mu8lERQjnBzunz0LHOvfnGvG2QkaJ6GLwfhZZ4XlnlTQfyFoa"
-            projectId="01HJ8R3WXDZWQBXZBZGH289VRC"
+            apiKey="$2a$10$gGdZLwLZdKdRdkacBu7HaeBJk68uAiG9s/AxqEacX4uMObjSMv/FO"
+            projectId="01HJDDF3CVJ7ZM8VH77AQYBWG3"
             app={{
                 logo: 'Break free',
                 items: [
                     {
-                        menu: {
-                            text: 'Landing page',
-                            path: 'landing-page',
-                            icon: <IconHome size={20} />,
-                        },
-                        structure: {
-                            name: 'landing page',
-                            type: 'list',
-                        },
-                        create: {
-                            component: <LandingPage structureName="landing page" />,
-                        },
-                        update: {
-                            component: <LandingPage structureName="landing page" mode="update" />,
-                        },
+                        menuText: 'Parks',
+                        routePath: 'parks',
+                        menuIcon: <IconHome size={20} />,
+
+                        structureType: 'list',
+                        structureName: 'Parks',
+
+                        createComponent: <LandingPage structureName="Parks" />,
+                        updateComponent: <LandingPage structureName="Parks" mode="update" />,
                     },
                     {
-                        menu: {
-                            text: 'Landing page banner',
-                            path: 'landing-page-banner',
-                            icon: <IconCashBanknote size={20} />,
-                        },
-                        structure: {
-                            name: 'landing page banner',
-                            type: 'variable',
-                        },
-                        create: {
-                            component: <LandingPageBanner variableName="landing page banner" />,
-                        },
-                        update: {
-                            component: <LandingPageBanner variableName="landing page banner" mode="update" />,
-                        },
+                        menuText: 'Ad banner',
+                        routePath: 'add-banner',
+                        menuIcon: <IconCashBanknote size={20} />,
+
+                        structureName: 'add banner',
+                        structureType: 'variable',
+                        createComponent: <LandingPageBanner variableName="add banner" />,
+                        updateComponent: <LandingPageBanner variableName="add banner" mode="update" />,
                     },
                 ],
             }}

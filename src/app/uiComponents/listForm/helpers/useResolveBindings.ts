@@ -31,14 +31,24 @@ export default function useResolveBindings() {
             return {
                 name: '',
                 groups: [],
+                locale: '',
                 behaviour: 'modifiable' as Behaviour,
             };
+        }
+
+        const locale = resolveBindings(value, bindings, 'locale');
+        if (bindings.locale && !locale) {
+            notificationError(
+                'Cannot determine groups binding',
+                'Locale binding cannot be determined. If a field name is provided, be sure that it exists as a field in your form. If a function is provided, be sure to return either a string or Array<string>',
+            );
+            return;
         }
 
         const name = resolveBindings<T>(value, bindings, 'name');
         if (!name) {
             notificationError(
-                'Name binding does not exist.',
+                'Cannot determine name binding',
                 "You haven't provided any binding for the name of the variable. Add the 'binding' property to your form.",
             );
             return;

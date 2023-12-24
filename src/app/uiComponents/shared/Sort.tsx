@@ -11,6 +11,7 @@ import type { ComboboxItem } from '@mantine/core';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import LocalesCache from '@lib/storage/localesCache';
+import AppPill from '@app/uiComponents/shared/AppPill';
 interface Props {
     currentSort: CurrentSortType;
     currentGroups: string[];
@@ -198,9 +199,9 @@ export default function Sort({
                 <h2 className={styles.sortTitle}>BEHAVIOUR</h2>
 
                 <div className={classNames(styles.column, styles.behaviourColumn)}>
-                    <div
-                        onClick={() => {
-                            setBehaviour((item) => {
+                    <AppPill
+                        onChange={(item) => {
+                            setBehaviour(() => {
                                 if (item === 'modifiable') {
                                     onBehaviourChange(undefined);
                                     return undefined;
@@ -210,17 +211,15 @@ export default function Sort({
                                 return 'modifiable';
                             });
                         }}
-                        className={classNames(
-                            styles.behaviourPill,
-                            behaviour === 'modifiable' ? styles.selectedBehaviourPill : undefined,
-                        )}>
-                        <IconReplace size={16} />
-                        <span>Modifiable</span>
-                    </div>
+                        value="behaviour"
+                        icon={<IconReplace size={16} />}
+                        text="Modifiable"
+                        selected={behaviour === 'modifiable'}
+                    />
 
-                    <div
-                        onClick={() => {
-                            setBehaviour((item) => {
+                    <AppPill
+                        onChange={(item) => {
+                            setBehaviour(() => {
                                 if (item === 'readonly') {
                                     onBehaviourChange(undefined);
                                     return undefined;
@@ -230,13 +229,11 @@ export default function Sort({
                                 return 'readonly';
                             });
                         }}
-                        className={classNames(
-                            styles.behaviourPill,
-                            behaviour === 'readonly' ? styles.selectedBehaviourPill : undefined,
-                        )}>
-                        <IconEyeOff size={16} />
-                        <span>Readonly</span>
-                    </div>
+                        value="behaviour"
+                        icon={<IconEyeOff size={16} />}
+                        text="Readonly"
+                        selected={behaviour === 'readonly'}
+                    />
                 </div>
             </div>
 

@@ -35,7 +35,9 @@ export function createOptions({ structureName, path, type }: Props) {
 export function getOptions(structureName: string) {
     const name = `${structureName}-options`;
 
-    if (!store[name]) throw new Error(`Cannot find store for '${name}'. This is definitely a bug.`);
+    if (!store[name]) return {store: null, error: {
+        message: `Structure name <strong>${structureName}</strong> does not seem to exist. Did you perhaps misspell the name of the structure when you created your create/update form component?`
+    }};
 
-    return store[name];
+    return {store: store[name], error: null};
 }

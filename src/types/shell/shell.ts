@@ -10,19 +10,15 @@ export interface Shell {
     header: React.ReactNode;
     items: AppShellItem[];
 }
-export interface AppShellMenu {
-    text: string;
-    path: string;
-    icon?: React.ReactNode;
-}
-
-export interface AppShellCreate {
-    component: React.ReactNode;
-}
 
 export interface AppShellItem {
-    menu: AppShellMenu;
-    structure: { name: string; type: 'list' | 'variable' | 'map' };
-    create: AppShellCreate;
-    update: AppShellCreate;
+    menuText: string;
+    routePath: string;
+    menuIcon?: React.ReactNode;
+
+    structureName: string;
+    structureType: 'list' | 'variable' | 'map';
+
+    createComponent: React.ReactNode;
+    updateComponent: React.ReactNode;
 }

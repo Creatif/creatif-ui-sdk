@@ -4,7 +4,7 @@ import type { Behaviour } from '@root/types/api/shared';
 export interface SpecialFieldsStore {
     locale: string;
     groups: string[];
-    behaviour: string;
+    behaviour: Behaviour;
     setLocale: (l: string) => void;
     setBehaviour: (l: Behaviour) => void;
     setGroups: (g: string[]) => void;
@@ -14,7 +14,7 @@ const store: Record<string, UseBoundStore<StoreApi<SpecialFieldsStore>>> = {};
 export function createSpecialFields() {
     return create<SpecialFieldsStore>((set) => ({
         locale: 'eng',
-        behaviour: '',
+        behaviour: 'modifiable',
         groups: [],
         setLocale: (l: string) => set(() => ({ locale: l })),
         setBehaviour: (l: Behaviour) => set(() => ({ behaviour: l })),

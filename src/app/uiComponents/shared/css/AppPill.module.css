@@ -1,0 +1,19 @@
+.root {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--mantine-color-gray-9);
+
+    background-color: var(--mantine-color-gray-2);
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 50px;
+
+    cursor: pointer;
+}
+
+.selected {
+    color: white;
+    background-color: var(--mantine-color-gray-7);
+}

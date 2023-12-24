@@ -38,6 +38,8 @@ import Form from '@app/uiComponents/shared/Form';
 import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import UIError from '@app/components/UIError';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
+import type { Behaviour } from '@root/types/api/shared';
+import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
     bindings?: Bindings<T>;
@@ -59,6 +61,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
             defaultValues: T;
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
+            inputBehaviour: () => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
@@ -77,6 +80,12 @@ function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] 
     if (fieldGroups.length !== 0) return fieldGroups;
     return ['default'];
 }
+
+function chooseBehaviour(field: Behaviour, binding: Behaviour | undefined): Behaviour {
+    if (binding) return binding;
+    if (field) return field;
+    return 'modifiable';
+}
 export default function VariableForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
     variableName,
     formProps,
@@ -94,7 +103,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const resolveBindings = useResolveBindings();
-    const useStructureOptionsStore = getOptions(variableName);
+    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(variableName);
 
     const {
         isFetching,
@@ -123,9 +132,10 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 return;
             }
 
-            if (mode && result && structureId) {
+            if (mode && result && structureId && useStructureOptionsStore) {
                 type localeType = { locale: string };
                 type groupsType = { groups: string[] };
+                type behaviourType = { behaviour: Behaviour };
                 const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
                 if (Object.hasOwn(result.value as object, 'locale')) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -133,11 +143,21 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     delete (result.value as localeType).locale;
                 }
 
-                const chosenGroups = chooseGroups((result.value as groupsType).groups, groups);
+                const chosenGroups = chooseGroups(
+                    (result.value as groupsType).groups || ['default'],
+                    groups || ['default'],
+                );
                 if (Object.hasOwn(result.value as object, 'groups')) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     delete (result.value as groupsType).groups;
+                }
+
+                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
+                if (Object.hasOwn(result.value as object, 'behaviour')) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete (result.value as behaviourType).behaviour;
                 }
 
                 updateVariable({
@@ -145,7 +165,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     name: structureId,
                     fields: ['value', 'metadata', 'groups', 'behaviour', 'locale', 'name'],
                     values: {
-                        behaviour: behaviour,
+                        behaviour: chosenBehaviour,
                         name: variableName,
                         groups: chosenGroups,
                         metadata: result.metadata,
@@ -184,6 +204,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 setIsSaving(true);
                 type localeType = { locale: string };
                 type groupsType = { groups: string[] };
+                type behaviourType = { behaviour: Behaviour };
                 const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
                 if (result && (result.value as localeType).locale) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -191,16 +212,26 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     delete (result.value as localeType).locale;
                 }
 
-                const chosenGroups = chooseGroups((result.value as groupsType).groups, groups);
+                const chosenGroups = chooseGroups(
+                    (result.value as groupsType).groups || ['default'],
+                    groups || ['default'],
+                );
                 if (Object.hasOwn(result.value as object, 'groups')) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     delete (result.value as groupsType).groups;
                 }
 
+                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
+                if (Object.hasOwn(result.value as object, 'behaviour')) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    delete (result.value as behaviourType).behaviour;
+                }
+
                 createVariable<Value, Metadata>({
                     name: variableName,
-                    behaviour: behaviour,
+                    behaviour: chosenBehaviour,
                     groups: chosenGroups,
                     projectId: Initialize.ProjectID(),
                     locale: chosenLocale,
@@ -221,7 +252,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         return;
                     }
 
-                    if (response) {
+                    if (response && useStructureOptionsStore) {
                         successNotification(
                             'Variable created',
                             `Variable with name '${variableName}' and locale '${chosenLocale}' has been created.`,
@@ -249,7 +280,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}
@@ -270,6 +301,8 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     currentData={data?.result}
                 />
             )}
+
+            <RuntimeErrorModal open={Boolean(runtimeError)} error={runtimeError} />
         </div>
     );
 }

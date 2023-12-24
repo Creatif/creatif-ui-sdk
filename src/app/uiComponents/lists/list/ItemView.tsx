@@ -64,6 +64,13 @@ export default function ItemView<Value, Metadata>({ value }: Props<Value, Metada
                         });
                     }
                 }
+
+                if (typeof val === 'number') {
+                    internalGrid.push({
+                        column: key,
+                        value: val,
+                    });
+                }
             }
         }
 

@@ -1,15 +1,48 @@
 .root {
     width: 100%;
     min-height: 100vh;
+    padding: 1rem;
     position: relative;
 }
 
-.button {
-    position: absolute !important;
+.centerRoot {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.buttonWrapper {
+    display: flex;
+    justify-content: center;
+
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
 
-    background-color: transparent;
-    padding: 12px;
+.button {
+    background-color: white;
+    border: 1px solid var(--mantine-color-indigo-1);
+    border-radius: 4px;
+    color: var(--mantine-color-gray-7);
+    padding: 1rem;
+    cursor: pointer;
+
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.button:hover {
+    transform: translate(0, -1px);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+
+.button:disabled {
+    color: var(--mantine-color-gray-4);
+    border: 1px solid var(--mantine-color-indigo-0);
+    cursor: not-allowed;
 }

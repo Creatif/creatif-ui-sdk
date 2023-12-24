@@ -1,0 +1,15 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    line-height: var(--mantine-line-height);
+}
+
+.label {
+    -webkit-tap-highlight-color: transparent;
+    cursor: default;
+    display: inline-block;
+    font-size: var(--input-label-size,var(--mantine-font-size-sm));
+    font-weight: 500;
+    word-break: break-word;
+}

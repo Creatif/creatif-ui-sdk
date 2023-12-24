@@ -23,9 +23,9 @@ export default function Navigation({ navItems, logo }: Props) {
 
                             return styles.navItem;
                         }}
-                        to={item.menu.path}>
-                        {item.menu.icon && <span className={styles.navItemIcon}>{item.menu.icon}</span>}
-                        <span className={styles.navItemText}>{item.menu.text}</span>
+                        to={item.routePath}>
+                        {item.menuIcon && <span className={styles.navItemIcon}>{item.menuIcon}</span>}
+                        <span className={styles.navItemText}>{item.menuText}</span>
                     </NavLink>
                 ))}
             </nav>

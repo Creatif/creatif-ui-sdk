@@ -19,11 +19,14 @@ import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
+import { getOptions } from '@app/systems/stores/options';
+import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 interface Props {
     name: string;
 }
 export function ListList<Value, Metadata>({ name }: Props) {
     const { queryParams, setParam } = useSearchQuery('created_at');
+    const {error: runtimeError} = getOptions(name);
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -127,7 +130,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
 
                 {data?.result && data.result.total === 0 && <NothingFound structureName={name} />}
 
-                {!isFetching && data?.result && data.result.total !== 0 && (
+                {!isFetching && data?.result && data.result.total !== 0 && !runtimeError && (
                     <div className={styles.container}>
                         {isListView && (
                             <MainListView<Value, Metadata>
@@ -177,6 +180,8 @@ export function ListList<Value, Metadata>({ name }: Props) {
                     </div>
                 )}
             </div>
+
+            <RuntimeErrorModal open={Boolean(runtimeError)} error={runtimeError} />
         </>
     );
 }

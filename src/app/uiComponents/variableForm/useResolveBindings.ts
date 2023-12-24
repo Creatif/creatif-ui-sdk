@@ -31,7 +31,7 @@ export default function useResolveBindings() {
             return {
                 locale: '',
                 groups: [],
-                behaviour: 'modifiable' as Behaviour,
+                behaviour: undefined,
             };
         }
 

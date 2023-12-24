@@ -22,7 +22,7 @@ export default function LandingPageBanner({ variableName, mode }: Props) {
                     locale: '',
                 },
             }}
-            inputs={(submitButton, { inputLocale, inputGroups }) => (
+            inputs={(submitButton, { inputLocale, inputGroups, inputBehaviour }) => (
                 <>
                     <Grid columns={12}>
                         <Grid.Col span={6}>
@@ -38,6 +38,7 @@ export default function LandingPageBanner({ variableName, mode }: Props) {
                         <Grid.Col span={6}>{inputLocale()}</Grid.Col>
 
                         <Grid.Col span={12}>{inputGroups()}</Grid.Col>
+                        <Grid.Col span={12}>{inputBehaviour()}</Grid.Col>
 
                         <Grid.Col span={12}>
                             <InputSwitch

@@ -8,7 +8,7 @@ import ItemView from '@app/uiComponents/lists/list/ItemView';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
 import { ActionIcon, Button, Pill } from '@mantine/core';
-import { IconChevronDown, IconChevronRight, IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronRight, IconEdit, IconEyeOff, IconReplace, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -25,7 +25,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
     const [isExpanded, setIsExpanded] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const useOptions = getOptions(name);
+    const { store: useOptions } = getOptions(name);
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
@@ -68,7 +68,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                             </Button>
 
                             <div className={styles.actionMenu}>
-                                <ActionIcon
+                                {useOptions && <ActionIcon
                                     component={Link}
                                     to={`${useOptions.getState().paths.update}/${item.id}/${item.locale}`}
                                     variant="white">
@@ -76,7 +76,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                         className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
                                         size={18}
                                     />
-                                </ActionIcon>
+                                </ActionIcon>}
 
                                 <ActionIcon
                                     loading={isDeleting}
@@ -102,10 +102,8 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
 
                     <div className={styles.information}>
                         <div className={styles.behaviour}>
-                            <IconReplace
-                                className={item.behaviour === 'modifiable' ? styles.modifiable : styles.readonly}
-                                size={20}
-                            />
+                            {item.behaviour === 'modifiable' && <IconReplace className={styles.modifiable} size={16} />}
+                            {item.behaviour === 'readonly' && <IconEyeOff className={styles.readonly} size={16} />}
                             <p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
                         </div>
 

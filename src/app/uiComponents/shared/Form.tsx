@@ -23,6 +23,8 @@ import type { GetVariableResponse } from '@root/types/api/variable';
 import { Initialize } from '@app/initialize';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
+import InputBehaviour from '@app/uiComponents/inputs/InputBehaviour';
+import type { QueriedListItem } from '@root/types/api/list';
 
 interface Props<T extends FieldValues> {
     structureId: string;
@@ -44,12 +46,13 @@ interface Props<T extends FieldValues> {
             defaultValues: T;
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
+            inputBehaviour: () => React.ReactNode;
         },
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
     isSaving: boolean;
     mode: 'update' | undefined;
-    currentData: GetVariableResponse | undefined;
+    currentData: GetVariableResponse | QueriedListItem | undefined;
 }
 export default function Form<T extends FieldValues>({
     structureType,
@@ -127,6 +130,7 @@ export default function Form<T extends FieldValues>({
                                     {...props}
                                 />
                             ),
+                            inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                         },
                     )}
             </form>

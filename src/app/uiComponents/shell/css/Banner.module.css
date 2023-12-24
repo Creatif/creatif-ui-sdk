@@ -1,0 +1,33 @@
+.banner {
+    background-color: var(--mantine-primary-color-filled);
+    min-height: 100vh;
+    position: relative;
+    text-align: right;
+    padding-inline-end: 8rem;
+}
+
+.banner__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: white;
+    margin-top: 14.7rem;
+}
+
+.banner__textMain {
+    font-size: 6rem;
+}
+
+.banner__textSecondary {
+    font-size: 0.8rem;
+    letter-spacing: 0.03rem;
+    word-spacing: 0.2rem;
+
+    margin-right: 6px;
+}
+
+@media screen and (max-width: 760px) {
+    .banner {
+        display: none;
+    }
+}
