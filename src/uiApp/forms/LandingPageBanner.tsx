@@ -1,9 +1,6 @@
-import FormGrid from '@app/components/grid/FormGrid';
-import GridCell from '@app/components/grid/GridCell';
 import InputSwitch from '@app/uiComponents/inputs/InputSwitch';
 import InputText from '@app/uiComponents/inputs/InputText';
 import VariableForm from '@app/uiComponents/variableForm/VariableForm';
-import InputLocale from '@app/uiComponents/inputs/InputLocale';
 import { Grid } from '@mantine/core';
 
 interface Props {

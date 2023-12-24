@@ -30,7 +30,9 @@
     cursor: pointer;
 
     box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition:
+        transform 0.3s,
+        box-shadow 0.3s;
 
     letter-spacing: 1px;
     font-weight: 500;

@@ -123,7 +123,7 @@ export default function FirstTimeSetup({ children, lists, maps }: Props & PropsW
             {status === 'checking' && (
                 <div className={classNames(styles.root, animations.initialAnimation)}>
                     <Loader type="dots" size={64} />
-                    <p>Preparing your application. This won't take long...</p>
+                    <p>Preparing your application. This won&apos;t take long...</p>
                 </div>
             )}
 

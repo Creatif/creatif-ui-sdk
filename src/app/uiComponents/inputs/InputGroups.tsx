@@ -36,7 +36,7 @@ export function InputGroups({ structureType, structureId, validation, store }: I
         if (groupsError) {
             setError('groups', {
                 type: 'required',
-                message: "'External groups could not be loaded. Please, try again later.'",
+                message: '\'External groups could not be loaded. Please, try again later.\'',
             });
         }
     }, [groupsError]);
@@ -93,10 +93,10 @@ export function InputGroups({ structureType, structureId, validation, store }: I
             rules={
                 !validation
                     ? {
-                          required: "Groups field is required. At least the 'default' group must be set.",
+                          required: 'Groups field is required. At least the \'default\' group must be set.',
                           validate: (value: string[]) => {
                               if (value.length === 0)
-                                  return "Groups field is required. At least the 'default' group must be set.";
+                                  return 'Groups field is required. At least the \'default\' group must be set.';
                           },
                       }
                     : validation

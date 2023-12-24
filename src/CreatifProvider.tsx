@@ -23,7 +23,6 @@ import animations from '@app/css/animations.module.css';
 import Shell from '@app/uiComponents/shell/Shell';
 import LocalesCache from '@lib/storage/localesCache';
 import FirstTimeSetup from '@app/uiComponents/shell/FirstTimeSetup';
-import ValidationMessages from '@app/uiComponents/shell/ValidationMessages';
 import AuthPage from '@app/uiComponents/shell/AuthPage';
 import Banner from '@app/uiComponents/shell/Banner';
 
@@ -153,7 +152,7 @@ function validateConfig(app: CreatifApp) {
         }
     }
 
-    const currentLists = structures.filter(item => item.type === 'list').map((item) => item.name);
+    const currentLists = structures.filter((item) => item.type === 'list').map((item) => item.name);
 
     if (currentLists.length !== Array.from(new Set(currentLists)).length) {
         messages.push(
@@ -163,7 +162,7 @@ function validateConfig(app: CreatifApp) {
         );
     }
 
-    const currentMaps = structures.filter(item => item.type === 'map').map((item) => item.name);
+    const currentMaps = structures.filter((item) => item.type === 'map').map((item) => item.name);
 
     if (currentMaps.length !== Array.from(new Set(currentMaps)).length) {
         messages.push(
@@ -220,13 +219,17 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
                 </>
             )}
 
-                {!isLoggedIn && checkedAuth === 'fail' && (
-                    <AuthPage>
-                        <Banner />
-                        <Authentication apiKey={apiKey} projectId={projectId} onSuccess={init} validationMessages={validationMessages} />
-                    </AuthPage>
-                )}
-
+            {!isLoggedIn && checkedAuth === 'fail' && (
+                <AuthPage>
+                    <Banner />
+                    <Authentication
+                        apiKey={apiKey}
+                        projectId={projectId}
+                        onSuccess={init}
+                        validationMessages={validationMessages}
+                    />
+                </AuthPage>
+            )}
         </MantineProvider>
     );
 }

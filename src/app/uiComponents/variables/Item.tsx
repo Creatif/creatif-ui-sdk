@@ -68,15 +68,17 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                             </Button>
 
                             <div className={styles.actionMenu}>
-                                {useOptions && <ActionIcon
-                                    component={Link}
-                                    to={`${useOptions.getState().paths.update}/${item.id}/${item.locale}`}
-                                    variant="white">
-                                    <IconEdit
-                                        className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
-                                        size={18}
-                                    />
-                                </ActionIcon>}
+                                {useOptions && (
+                                    <ActionIcon
+                                        component={Link}
+                                        to={`${useOptions.getState().paths.update}/${item.id}/${item.locale}`}
+                                        variant="white">
+                                        <IconEdit
+                                            className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
+                                            size={18}
+                                        />
+                                    </ActionIcon>
+                                )}
 
                                 <ActionIcon
                                     loading={isDeleting}

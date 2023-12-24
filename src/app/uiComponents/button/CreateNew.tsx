@@ -9,9 +9,11 @@ export default function CreateNew({ structureName }: Props) {
 
     return (
         <>
-            {useOptionsStore && <Button to={useOptionsStore.getState().paths.create} component={Link}>
-                Create new
-            </Button>}
+            {useOptionsStore && (
+                <Button to={useOptionsStore.getState().paths.create} component={Link}>
+                    Create new
+                </Button>
+            )}
         </>
     );
 }

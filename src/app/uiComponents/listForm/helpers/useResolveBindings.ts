@@ -49,7 +49,7 @@ export default function useResolveBindings() {
         if (!name) {
             notificationError(
                 'Cannot determine name binding',
-                "You haven't provided any binding for the name of the variable. Add the 'binding' property to your form.",
+                'You haven\'t provided any binding for the name of the variable. Add the \'binding\' property to your form.',
             );
             return;
         }

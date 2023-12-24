@@ -26,7 +26,7 @@ interface Props {
 }
 export function ListList<Value, Metadata>({ name }: Props) {
     const { queryParams, setParam } = useSearchQuery('created_at');
-    const {error: runtimeError} = getOptions(name);
+    const { error: runtimeError } = getOptions(name);
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);

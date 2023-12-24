@@ -1,5 +1,4 @@
-import type { SelectProps } from '@mantine/core';
-import { Fieldset, Pill } from '@mantine/core';
+import { Fieldset } from '@mantine/core';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import type { StoreApi, UseBoundStore } from 'zustand';
