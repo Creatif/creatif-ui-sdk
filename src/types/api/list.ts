@@ -55,7 +55,7 @@ export interface PaginateListBlueprint {
     locales?: string[];
     fields?: string[];
 }
-export interface PaginatedVariableResult<Value, Metadata> {
+export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
     id: string;
     name: string;
     shortId: string;
@@ -122,4 +122,11 @@ export interface DeleteRangeBlueprint {
     name: string;
     projectId: string;
     items: string[];
+}
+
+export interface RearrangeBlueprint {
+    name: string;
+    source: string;
+    destination: string;
+    projectId: string;
 }

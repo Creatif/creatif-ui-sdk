@@ -12,17 +12,25 @@ import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { ActionIcon, Button, Checkbox, Loader, Pill } from '@mantine/core';
 import { IconChevronDown, IconChevronRight, IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
 import UIError from '@app/components/UIError';
+import type { DragSourceMonitor } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
+import type { Identifier, XYCoord } from 'dnd-core';
+import type { DragItem } from '@app/uiComponents/lists/list/MainListView';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     listName: string;
     onDeleted: () => void;
     disabled?: boolean;
     onChecked: (itemId: string, checked: boolean) => void;
+    onMove: (fromIdx: number, toIdx: number) => void;
+    onDrop: (draggedItem: DragItem, dropTarget: DragItem) => void;
+    isHovered: boolean;
+    index: number;
 }
 export default function Item<Value, Metadata>({
     item,
@@ -30,11 +38,15 @@ export default function Item<Value, Metadata>({
     onDeleted,
     onChecked,
     disabled,
+    index,
+    onMove,
+    onDrop,
+    isHovered,
 }: Props<Value, Metadata>) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const useOptions = getOptions(listName);
+    const { store: useOptions } = getOptions(listName);
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
@@ -48,8 +60,78 @@ export default function Item<Value, Metadata>({
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
 
+    const ref = useRef<HTMLDivElement>(null);
+    const [{ handlerId }, drop] = useDrop<DragItem, DragItem, { handlerId: Identifier | null }>({
+        accept: 'card',
+        collect(monitor) {
+            return {
+                handlerId: monitor.getHandlerId(),
+            };
+        },
+        drop(dropItem) {
+            console.log('dropped');
+            onDrop(dropItem, {
+                id: item.id,
+                index: index,
+                name: item.name,
+            });
+
+            return dropItem;
+        },
+        hover(dragItem: DragItem, monitor) {
+            if (!ref.current) {
+                return;
+            }
+
+            const dragIndex = dragItem.index;
+            const hoverIndex = index;
+
+            if (dragIndex === hoverIndex) {
+                return;
+            }
+
+            const hoverBoundingRect = ref.current?.getBoundingClientRect();
+            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+            const clientOffset = monitor.getClientOffset();
+            const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY - 100) {
+                return;
+            }
+
+            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY + 100) {
+                return;
+            }
+
+            onMove(dragIndex, hoverIndex);
+        },
+    });
+
+    const [{ isDragging }, drag] = useDrag({
+        type: 'card',
+        item: () => ({
+            id: item.id,
+            index: index,
+            name: item.name,
+        }),
+        collect: (monitor: DragSourceMonitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+
+    const opacity = isDragging ? 0 : 1;
+    drag(drop(ref));
+
     return (
-        <div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
+        <div
+            ref={ref}
+            data-handler-id={handlerId}
+            style={{ opacity: opacity }}
+            className={classNames(
+                styles.item,
+                isDeleting ? styles.itemDisabled : undefined,
+                isHovered ? styles.hovered : undefined,
+            )}>
             {(isDeleting || disabled) && <div className={styles.disabled} />}
             <div onClick={() => setIsExpanded((item) => !item)} className={styles.visibleSectionWrapper}>
                 <div className={styles.checkboxWrapper}>
@@ -93,15 +175,17 @@ export default function Item<Value, Metadata>({
                             </Button>
 
                             <div className={styles.actionMenu}>
-                                <ActionIcon
-                                    component={Link}
-                                    to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
-                                    variant="white">
-                                    <IconEdit
-                                        className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
-                                        size={18}
-                                    />
-                                </ActionIcon>
+                                {useOptions && (
+                                    <ActionIcon
+                                        component={Link}
+                                        to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
+                                        variant="white">
+                                        <IconEdit
+                                            className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
+                                            size={18}
+                                        />
+                                    </ActionIcon>
+                                )}
 
                                 <ActionIcon
                                     loading={isDeleting}

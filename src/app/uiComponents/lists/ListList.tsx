@@ -22,11 +22,13 @@ import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 interface Props {
     listName: string;
 }
 export function ListList<Value, Metadata>({ listName }: Props) {
-    const { queryParams, setParam } = useSearchQuery();
+    const { queryParams, setParam } = useSearchQuery('index');
     const { error: errorNotification, success: successNotification } = useNotification();
 
     const [page, setPage] = useState(queryParams.page);
@@ -167,27 +169,29 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                 {!isFetching && data?.result && data.result.total !== 0 && (
                     <div className={styles.container}>
                         {isListView && (
-                            <MainListView<Value, Metadata>
-                                data={data.result}
-                                listName={listName}
-                                onDeleted={() => invalidateEntireQuery()}
-                                disabled={{
-                                    areItemsDeleting: areItemsDeleting,
-                                    checkedItems: checkedItems,
-                                }}
-                                onChecked={(itemId, checked) => {
-                                    const idx = checkedItems.findIndex((item) => item === itemId);
-                                    if (idx !== -1 && !checked) {
-                                        checkedItems.splice(idx, 1);
-                                        setCheckedItems([...checkedItems]);
-                                        return;
-                                    }
+                            <DndProvider backend={HTML5Backend}>
+                                <MainListView<Value, Metadata>
+                                    data={data.result}
+                                    listName={listName}
+                                    onDeleted={() => invalidateEntireQuery()}
+                                    disabled={{
+                                        areItemsDeleting: areItemsDeleting,
+                                        checkedItems: checkedItems,
+                                    }}
+                                    onChecked={(itemId, checked) => {
+                                        const idx = checkedItems.findIndex((item) => item === itemId);
+                                        if (idx !== -1 && !checked) {
+                                            checkedItems.splice(idx, 1);
+                                            setCheckedItems([...checkedItems]);
+                                            return;
+                                        }
 
-                                    if (checked) {
-                                        setCheckedItems([...checkedItems, itemId]);
-                                    }
-                                }}
-                            />
+                                        if (checked) {
+                                            setCheckedItems([...checkedItems, itemId]);
+                                        }
+                                    }}
+                                />
+                            </DndProvider>
                         )}
 
                         {!isListView && <MainTableView<Value, Metadata> data={data.result} />}

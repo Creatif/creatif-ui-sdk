@@ -38,6 +38,7 @@ import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
 import { useQueryClient } from 'react-query';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+
 interface Props<T extends FieldValues, Value, Metadata> {
     listName: string;
     bindings?: Bindings<T>;
@@ -196,6 +197,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                         invalidateQueries();
                         afterSave?.(response, e);
                         setIsSaving(false);
+                        queryClient.invalidateQueries(listName);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });

@@ -98,7 +98,7 @@ export default function Authentication({ apiKey, projectId, onSuccess, validatio
                                     }
                                 });
                             }}>
-                            Authenticate
+                            AUTHENTICATE
                         </button>
                     </div>
                 )}
