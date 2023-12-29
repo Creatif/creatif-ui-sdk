@@ -10,7 +10,15 @@ import ItemView from '@app/uiComponents/lists/list/ItemView';
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { ActionIcon, Button, Checkbox, Loader, Pill } from '@mantine/core';
-import { IconChevronDown, IconChevronRight, IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
+import {
+    IconChevronDown,
+    IconChevronRight,
+    IconEdit,
+    IconGridDots,
+    IconGripVertical,
+    IconReplace,
+    IconTrash,
+} from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -69,7 +77,6 @@ export default function Item<Value, Metadata>({
             };
         },
         drop(dropItem) {
-            console.log('dropped');
             onDrop(dropItem, {
                 id: item.id,
                 index: index,
@@ -135,6 +142,8 @@ export default function Item<Value, Metadata>({
             {(isDeleting || disabled) && <div className={styles.disabled} />}
             <div onClick={() => setIsExpanded((item) => !item)} className={styles.visibleSectionWrapper}>
                 <div className={styles.checkboxWrapper}>
+                    <IconGripVertical className={styles.dragAndDropIcon} color="gray" size={18} />
+
                     <Checkbox
                         onClick={(e) => {
                             e.stopPropagation();

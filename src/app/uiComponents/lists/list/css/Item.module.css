@@ -17,6 +17,10 @@
     box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
+.item:hover .dragAndDropIcon {
+    opacity: 1;
+}
+
 .itemDisabled:hover {
     border: 1px solid var(--mantine-color-gray-2);
 }
@@ -43,10 +47,19 @@
     height: 100px;
     padding: 1rem;
     cursor: pointer;
+    gap: 2rem;
+}
+
+.dragAndDropIcon {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .checkboxWrapper {
     width: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .expandedSection {

@@ -6,7 +6,6 @@ import { useCallback, useState } from 'react';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
-import { useQueryClient } from 'react-query';
 
 export interface DragItem {
     index: number;
@@ -34,11 +33,9 @@ export default function MainListView<Value, Metadata>({
     const [hoveredId, setHoveredId] = useState<string>('');
     const [movingItems, setMovingItems] = useState<string[] | undefined>(undefined);
     const { error: errorNotification } = useNotification();
-    const queryClient = useQueryClient();
 
     const onDrop = useCallback(
         (source: DragItem, destination: DragItem) => {
-            console.log('on drop');
             if (source.index === destination.index) {
                 setHoveredId('');
                 setMovingItems(undefined);
@@ -53,7 +50,7 @@ export default function MainListView<Value, Metadata>({
                 name: listName,
                 source: source.id,
                 destination: destination.id,
-            }).then(({ error }) => {
+            }).then(({ result, error }) => {
                 setMovingItems(undefined);
 
                 if (error) {
@@ -65,7 +62,17 @@ export default function MainListView<Value, Metadata>({
                     return;
                 }
 
-                queryClient.invalidateQueries([listName]);
+                if (result) {
+                    const sourceIdx = list.findIndex((t) => t.id === source.id);
+                    if (sourceIdx !== -1) {
+                        const t = list[sourceIdx];
+
+                        t.index = result;
+                        list.sort((a, b) => b.index - a.index);
+
+                        setList([...list]);
+                    }
+                }
             });
         },
         [list],
@@ -73,7 +80,6 @@ export default function MainListView<Value, Metadata>({
 
     const onMove = useCallback(
         (dragIndex: number, hoverIndex: number) => {
-            console.log('on move');
             if (list[hoverIndex]) {
                 setHoveredId(list[hoverIndex].id);
                 setMovingItems(undefined);

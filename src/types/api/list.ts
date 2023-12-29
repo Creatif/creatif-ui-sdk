@@ -59,6 +59,7 @@ export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
     id: string;
     name: string;
     shortId: string;
+    index: number;
     behaviour: Behaviour;
     locale: string;
     groups?: string[];
