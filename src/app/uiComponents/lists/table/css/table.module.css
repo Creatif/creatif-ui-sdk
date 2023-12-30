@@ -3,7 +3,8 @@
     overflow-y: scroll;
 }
 
-.table {
+.table th {
+    font-weight: bold;
 }
 
 .tableHead {

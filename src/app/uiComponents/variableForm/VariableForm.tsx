@@ -280,7 +280,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}

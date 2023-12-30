@@ -14,7 +14,7 @@ import NothingFound from '@app/uiComponents/lists/list/NothingFound';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import MainTableView from '@app/uiComponents/lists/table/MainTableView';
-import { Button, Pagination, Select } from '@mantine/core';
+import { Button, Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -39,6 +39,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
     const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
+    const [fields, setFields] = useState<string[]>(['groups']);
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
@@ -57,7 +58,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
         limit: limit as string,
         orderBy: orderBy,
         search: search as string,
-        fields: ['groups'],
+        fields: fields,
     });
 
     const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
@@ -119,23 +120,30 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                         </p>
 
                         <div className={styles.listChoiceListType}>
-                            <IconListDetails
-                                onClick={() => setIsListView(true)}
-                                className={classNames(
-                                    styles.listChoiceListType_Icon,
-                                    isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
-                                )}
-                                size={20}
-                            />
+                            <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
+                                <IconListDetails
+                                    onClick={() => setIsListView(true)}
+                                    className={classNames(
+                                        styles.listChoiceListType_Icon,
+                                        isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                    )}
+                                    size={24}
+                                />
+                            </Tooltip>
 
-                            <IconTable
-                                onClick={() => setIsListView(false)}
-                                className={classNames(
-                                    styles.listChoiceListType_Icon,
-                                    !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
-                                )}
-                                size={20}
-                            />
+                            <Tooltip label="Table view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
+                                <IconTable
+                                    onClick={() => {
+                                        setFields([...fields, 'value', 'metadata']);
+                                        setIsListView(false);
+                                    }}
+                                    className={classNames(
+                                        styles.listChoiceListType_Icon,
+                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                    )}
+                                    size={24}
+                                />
+                            </Tooltip>
                         </div>
                     </div>
                 )}
@@ -194,7 +202,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                             </DndProvider>
                         )}
 
-                        {!isListView && <MainTableView<Value, Metadata> data={data.result} />}
+                        {!isListView && <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />}
 
                         {data.result.data.length >= parseInt(limit) && (
                             <div className={styles.stickyPagination}>

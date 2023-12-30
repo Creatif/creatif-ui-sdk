@@ -18,7 +18,7 @@ export default function useQueryListItem<Value, Metadata>(
                 if (!listName || !itemId) {
                     return Promise.reject({
                         error: new ApiError(
-                            'List name and item ID not provided',
+                            'List name and item ID not provided. They should be provided in the URL',
                             { data: { message: 'List name and item ID not provided' } },
                             500,
                         ),
@@ -33,14 +33,15 @@ export default function useQueryListItem<Value, Metadata>(
                 });
             }),
             {
-                retry: 1,
-                enabled: enabled,
+                retry: 0,
                 staleTime: Infinity,
+                enabled: enabled,
                 keepPreviousData: true,
                 refetchOnWindowFocus: false,
+                refetchOnReconnect: true,
             },
         ),
-        invalidateQueries: () => {
+        invalidateQuery: () => {
             queryClient.invalidateQueries(key);
         },
     };

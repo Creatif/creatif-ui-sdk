@@ -11,7 +11,7 @@ import NothingFound from '@app/uiComponents/lists/list/NothingFound';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import MainTableView from '@app/uiComponents/lists/table/MainTableView';
-import { Pagination, Select } from '@mantine/core';
+import { Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -99,23 +99,29 @@ export function ListList<Value, Metadata>({ name }: Props) {
                         </p>
 
                         <div className={styles.listChoiceListType}>
-                            <IconListDetails
-                                onClick={() => setIsListView(true)}
-                                className={classNames(
-                                    styles.listChoiceListType_Icon,
-                                    isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
-                                )}
-                                size={20}
-                            />
+                            <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
+                                <IconListDetails
+                                    onClick={() => setIsListView(true)}
+                                    className={classNames(
+                                        styles.listChoiceListType_Icon,
+                                        isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                    )}
+                                    size={24}
+                                />
+                            </Tooltip>
 
-                            <IconTable
-                                onClick={() => setIsListView(false)}
-                                className={classNames(
-                                    styles.listChoiceListType_Icon,
-                                    !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
-                                )}
-                                size={20}
-                            />
+                            <Tooltip label="Table view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
+                                <IconTable
+                                    onClick={() => {
+                                        setIsListView(false);
+                                    }}
+                                    className={classNames(
+                                        styles.listChoiceListType_Icon,
+                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                    )}
+                                    size={24}
+                                />
+                            </Tooltip>
                         </div>
                     </div>
                 )}

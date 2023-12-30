@@ -98,11 +98,12 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
     const { store: useStructureOptionsStore, error: runtimeError } = getOptions(listName);
 
     const { structureId, itemId } = useParams();
+
     const {
         isFetching,
         data,
         error: getError,
-        invalidateQueries,
+        invalidateQuery,
     } = useQueryListItem(structureId, itemId, Boolean(mode && structureId && useStructureOptionsStore));
 
     const { success: successNotification, error: errorNotification } = useNotification();
@@ -194,10 +195,9 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                             `List item with name '${response.name}' and locale '${chosenLocale}' has been created.`,
                         );
 
-                        invalidateQueries();
+                        queryClient.invalidateQueries(listName);
                         afterSave?.(response, e);
                         setIsSaving(false);
-                        queryClient.invalidateQueries(listName);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
@@ -260,6 +260,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                             `List item with item name '${name}' has been updated.`,
                         );
 
+                        invalidateQuery();
                         queryClient.invalidateQueries(listName);
                         afterSave?.(result, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);
@@ -279,7 +280,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
