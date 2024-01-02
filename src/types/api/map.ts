@@ -1,0 +1,76 @@
+import type { Behaviour } from '@root/types/api/shared';
+
+export interface CreateMapBlueprint {
+    name: string;
+    projectId: string;
+}
+
+export interface CreatedMapVariable {
+    id: string;
+    name: string;
+    shortId: string;
+    locale: string;
+}
+
+export interface CreatedMap {
+    id: string;
+    shortId: string;
+    projectId: string;
+    name: string;
+    variables: [];
+}
+
+export interface AddToMapVariable {
+    name: string;
+    behaviour: Behaviour;
+    groups: string[];
+    value: unknown;
+    locale: string;
+    metadata: unknown;
+}
+
+export interface AddToMapBlueprint {
+    name: string;
+    projectId: string;
+    variable: AddToMapVariable;
+}
+
+export interface PaginateMapBlueprint {
+    name: string;
+    projectId: string;
+    search: string;
+    limit: string | number;
+    page: number;
+    groups?: string[];
+    orderBy?: string;
+    direction?: 'desc' | 'asc';
+    behaviour?: Behaviour;
+    locales?: string[];
+    fields?: string[];
+}
+
+export interface QueryMapVariableBlueprint {
+    structureId: string;
+    itemId: string;
+    projectId: string;
+}
+
+export interface QueriedMapItem<Value = unknown, Metadata = unknown> {
+    id: string;
+    locale: string;
+    shortId: string;
+    name: string;
+    behaviour: Behaviour;
+    groups: string[];
+    metadata: Metadata;
+    value: Value;
+
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface DeleteMapItemBlueprint {
+    name: string;
+    itemId: string;
+    projectId: string;
+}

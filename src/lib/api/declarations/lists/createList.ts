@@ -6,7 +6,7 @@ export default function createList(blueprint: CreateListBlueprint) {
     return tryHttp<CreatedList>(
         declarations(),
         'put',
-        `/list/${blueprint.projectId}/${blueprint.locale ? blueprint.locale : Initialize.Locale()}`,
+        `/list/${blueprint.projectId}`,
         {
             name: blueprint.name,
         },

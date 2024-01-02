@@ -1,14 +1,13 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
-import useEditLocale from '@app/uiComponents/lists/hooks/useEditLocale';
-import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
+import useEditLocale from '@app/uiComponents/maps/hooks/useEditLocale';
+import DeleteModal from '@app/uiComponents/maps/list/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/EditLocaleModal';
-import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
-import ItemView from '@app/uiComponents/lists/list/ItemView';
+import GroupsPopover from '@app/uiComponents/maps/list/GroupsPopover';
+import ItemView from '@app/uiComponents/maps/list/ItemView';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
-import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { ActionIcon, Button, Checkbox, Loader, Pill } from '@mantine/core';
 import {
     IconChevronDown,
@@ -19,41 +18,31 @@ import {
     IconTrash,
 } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
-import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
 import UIError from '@app/components/UIError';
-import type { DragSourceMonitor } from 'react-dnd';
-import { useDrag, useDrop } from 'react-dnd';
-import type { Identifier, XYCoord } from 'dnd-core';
-import type { DragItem } from '@app/uiComponents/lists/list/MainListView';
+import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
+import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
+import { Initialize } from '@app/initialize';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
-    listName: string;
+    mapName: string;
     onDeleted: () => void;
     disabled?: boolean;
     onChecked: (itemId: string, checked: boolean) => void;
-    onMove: (fromIdx: number, toIdx: number) => void;
-    onDrop: (draggedItem: DragItem, dropTarget: DragItem) => void;
-    isHovered: boolean;
-    index: number;
 }
 export default function Item<Value, Metadata>({
     item,
-    listName,
+    mapName,
     onDeleted,
     onChecked,
     disabled,
-    index,
-    onMove,
-    onDrop,
-    isHovered,
 }: Props<Value, Metadata>) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const { store: useOptions } = getOptions(listName);
+    const { store: useOptions } = getOptions(mapName);
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
@@ -61,83 +50,14 @@ export default function Item<Value, Metadata>({
         isFetching,
         data: queriedItem,
         error: queryError,
-    } = useQueryListItem<Value, Metadata>(listName, item.id, isExpanded);
+    } = useQueryMapVariable<Value, Metadata>(mapName, item.id, isExpanded);
 
-    const { mutate, isLoading, data } = useEditLocale(listName, item.id, item.name);
+    const { mutate, isLoading, data } = useEditLocale(mapName, item.id, item.name);
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
 
-    const ref = useRef<HTMLDivElement>(null);
-    const [{ handlerId }, drop] = useDrop<DragItem, DragItem, { handlerId: Identifier | null }>({
-        accept: 'card',
-        collect(monitor) {
-            return {
-                handlerId: monitor.getHandlerId(),
-            };
-        },
-        drop(dropItem) {
-            onDrop(dropItem, {
-                id: item.id,
-                index: index,
-                name: item.name,
-            });
-
-            return dropItem;
-        },
-        hover(dragItem: DragItem, monitor) {
-            if (!ref.current) {
-                return;
-            }
-
-            const dragIndex = dragItem.index;
-            const hoverIndex = index;
-
-            if (dragIndex === hoverIndex) {
-                return;
-            }
-
-            const hoverBoundingRect = ref.current?.getBoundingClientRect();
-            const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-            const clientOffset = monitor.getClientOffset();
-            const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-            if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY - 100) {
-                return;
-            }
-
-            if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY + 100) {
-                return;
-            }
-
-            onMove(dragIndex, hoverIndex);
-        },
-    });
-
-    const [{ isDragging }, drag] = useDrag({
-        type: 'card',
-        item: () => ({
-            id: item.id,
-            index: index,
-            name: item.name,
-        }),
-        collect: (monitor: DragSourceMonitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    });
-
-    const opacity = isDragging ? 0 : 1;
-    drag(drop(ref));
-
     return (
-        <div
-            ref={ref}
-            data-handler-id={handlerId}
-            style={{ opacity: opacity }}
-            className={classNames(
-                styles.item,
-                isDeleting ? styles.itemDisabled : undefined,
-                isHovered ? styles.hovered : undefined,
-            )}>
+        <div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
             {(isDeleting || disabled) && <div className={styles.disabled} />}
             <div onClick={() => setIsExpanded((item) => !item)} className={styles.visibleSectionWrapper}>
                 <div className={styles.checkboxWrapper}>
@@ -186,7 +106,7 @@ export default function Item<Value, Metadata>({
                                 {useOptions && (
                                     <ActionIcon
                                         component={Link}
-                                        to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
+                                        to={`${useOptions.getState().paths.update}/${mapName}/${item.id}`}
                                         variant="white">
                                         <IconEdit
                                             className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
@@ -267,20 +187,21 @@ export default function Item<Value, Metadata>({
                 onClose={() => setDeleteItemId(undefined)}
                 onDelete={async () => {
                     setIsDeleting(true);
-                    const { error, status } = await deleteListItemByID({
-                        name: listName,
+                    const { error, status } = await deleteMapItem({
+                        name: mapName,
                         itemId: item.id,
+                        projectId: Initialize.ProjectID(),
                     });
 
                     if (error) {
                         errorNotification(
-                            'Cannot delete list item',
-                            'An error occurred when trying to delete list item. Please, try again later.',
+                            'Cannot delete map item',
+                            'An error occurred when trying to delete map item. Please, try again later.',
                         );
                     }
 
                     if (status === 200) {
-                        success('List item deleted.', 'List item was deleted successfully');
+                        success('Map item deleted.', 'Map item was deleted successfully');
                     }
 
                     setIsDeleting(false);

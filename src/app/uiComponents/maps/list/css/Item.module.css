@@ -1,0 +1,183 @@
+.item {
+    border-radius: 0.5rem;
+    position: relative;
+    margin-bottom: 1rem;
+
+    transition:
+        transform 0.3s,
+        box-shadow 0.3s,
+        margin-left 0.3s,
+        border 0.3s;
+
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
+}
+
+.item:hover {
+    transform: translate(0, -4px);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+}
+
+.item:hover .dragAndDropIcon {
+    opacity: 1;
+}
+
+.itemDisabled:hover {
+    border: 1px solid var(--mantine-color-gray-2);
+}
+
+.hovered {
+    border-left: 4px solid var(--mantine-color-indigo-2);
+    margin-left: 0.5rem;
+}
+
+.disabled {
+    height: 100px;
+    position: absolute;
+    width: 100%;
+    background-color: var(--mantine-color-gray-1);
+    opacity: 0.6;
+    z-index: 4;
+    border-radius: 0.5rem;
+}
+
+.visibleSectionWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    padding: 1rem;
+    cursor: pointer;
+    gap: 2rem;
+}
+
+.dragAndDropIcon {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.checkboxWrapper {
+    width: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expandedSection {
+    overflow: hidden;
+    height: 0;
+}
+
+.expandedSectionExpanded {
+    height: auto;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.infoColumn {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0px;
+    gap: 1rem;
+}
+
+.locale {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: normal;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+
+    color: var(--mantine-color-gray-7);
+    border-right: 2px solid var(--mantine-color-gray-4);
+    padding-right: 1.1rem;
+}
+
+.local svg {
+    color: var(--mantine-primary-color-filled);
+}
+
+.nameRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    gap: 3rem;
+}
+
+.nameRowTitle {
+    color: var(--mantine-color-gray-8);
+    font-weight: 600;
+}
+
+.actionRow {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+}
+
+.information {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+    align-items: center;
+}
+
+.behaviour {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.behaviour .modifiable {
+    color: var(--mantine-primary-color-filled);
+}
+
+.behaviour .readonly {
+    color: var(--mantine-color-red-8);
+}
+
+.groups {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.menu {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+}
+
+.actionMenu {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.dropdownIcon {
+    color: var(--mantine-color-gray-4);
+    transition: color 0.3s;
+}
+
+.actionMenuIcon {
+    color: var(--mantine-color-gray-6);
+    transition: color 0.3s;
+}
+
+.actionMenuDelete:hover {
+    color: var(--mantine-color-red-9);
+}
+
+.actionMenuEdit:hover {
+    color: var(--mantine-primary-color-filled);
+}
+
+.item:hover .dropdownIcon {
+    color: var(--mantine-primary-color-filled);
+}

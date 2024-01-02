@@ -4,6 +4,7 @@ interface InternalStorage {
     variables: Record<string, string[]> | null;
     maps: Record<string, string[]> | null;
     lists: string[] | null;
+    projectName: string;
 }
 export default class StructureStorage {
     public static instance: StructureStorage;
@@ -20,6 +21,7 @@ export default class StructureStorage {
             variables: projectMetadata.variables || { [locale]: [] },
             maps: projectMetadata.maps ? projectMetadata.maps : { [locale]: [] },
             lists: projectMetadata.lists,
+            projectName: projectMetadata.name,
         };
 
         localStorage.setItem(StructureStorage.key, JSON.stringify(internalStorage));
@@ -60,6 +62,10 @@ export default class StructureStorage {
 
             this.storage.variables[locale].push(name);
         }
+    }
+
+    projectName(): string {
+        return this.storage.projectName;
     }
 
     hasVariable(name: string, locale: string) {

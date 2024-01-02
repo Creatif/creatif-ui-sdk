@@ -45,7 +45,7 @@ export default function SupportedLocalesModal({ open, onClose }: Props) {
             <Modal size="lg" opened={Boolean(open)} onClose={onClose} centered>
                 <TextInput
                     styles={{
-                        input: { borderRadius: 50 },
+                        input: { borderRadius: 4 },
                     }}
                     size="md"
                     value={value}

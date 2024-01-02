@@ -1,6 +1,6 @@
 .root {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 240px 1fr;
     font-family: var(--mantine-font-family);
 }
 

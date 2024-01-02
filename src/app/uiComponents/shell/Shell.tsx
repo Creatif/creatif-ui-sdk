@@ -1,5 +1,6 @@
 import { createOptions } from '@app/systems/stores/options';
 import { ListList as StructureListListing } from '@app/uiComponents/lists/ListList';
+import { ListList as StructuredMapsListing } from '@app/uiComponents/maps/ListList';
 import { ListList as VariableListListing } from '@app/uiComponents/variables/ListList';
 import Header from '@app/uiComponents/shell/Header';
 import Navigation from '@app/uiComponents/shell/Navigation';
@@ -58,6 +59,19 @@ export default function Shell({ options }: Props) {
                                         <Route
                                             path={`${item.routePath}`}
                                             element={<StructureListListing listName={item.structureName} />}
+                                        />
+                                    </>
+                                )}
+
+                                {item.structureType === 'map' && (
+                                    <>
+                                        <Route
+                                            path={`${item.routePath}/update/:structureId/:itemId`}
+                                            element={item.updateComponent}
+                                        />
+                                        <Route
+                                            path={`${item.routePath}`}
+                                            element={<StructuredMapsListing mapName={item.structureName} />}
                                         />
                                     </>
                                 )}

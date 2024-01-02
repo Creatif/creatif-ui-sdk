@@ -4,19 +4,13 @@ import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import useResolveBindings from '@app/uiComponents/variableForm/useResolveBindings';
+import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
-import { wrappedBeforeSave } from '@app/uiComponents/util';
-import { createVariable } from '@lib/api/declarations/variables/createVariable';
-import StructureStorage from '@lib/storage/structureStorage';
 import { Alert } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
-import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { CreatedVariable } from '@root/types/api/variable';
 import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
-
 import type {
     FieldValues,
     UseFormProps,
@@ -32,16 +26,21 @@ import type {
     UseFormWatch,
 } from 'react-hook-form';
 import { Initialize } from '@app/initialize';
-import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
-import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
-import Form from '@app/uiComponents/shared/Form';
-import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import UIError from '@app/components/UIError';
-import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
+import Form from '@app/uiComponents/shared/Form';
+import { wrappedBeforeSave } from '@app/uiComponents/util';
 import type { Behaviour } from '@root/types/api/shared';
+import type { CreatedVariable } from '@root/types/api/variable';
+import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
+import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
+import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
+import { useQueryClient } from 'react-query';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
+import addToMap from '@lib/api/declarations/maps/addToMap';
+
 interface Props<T extends FieldValues, Value, Metadata> {
-    variableName: string;
+    mapName: string;
     bindings?: Bindings<T>;
     formProps: UseFormProps<T>;
     mode?: 'update';
@@ -86,8 +85,9 @@ function chooseBehaviour(field: Behaviour, binding: Behaviour | undefined): Beha
     if (field) return field;
     return 'modifiable';
 }
-export default function VariableForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
-    variableName,
+
+export default function MapsForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
+    mapName,
     formProps,
     bindings,
     inputs,
@@ -95,21 +95,23 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
     afterSave,
     mode,
 }: Props<T, Value, Metadata>) {
-    const { success: successNotification, error: errorNotification } = useNotification();
-    const [beforeSaveError, setBeforeSaveError] = useState(false);
-    const { variableLocale, structureId } = useParams();
-    const [isSaving, setIsSaving] = useState(false);
+    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(mapName);
 
-    const queryClient = useQueryClient();
-    const navigate = useNavigate();
-    const resolveBindings = useResolveBindings();
-    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(variableName);
+    const { structureId, itemId } = useParams();
 
     const {
         isFetching,
         data,
         error: getError,
-    } = useGetVariable(variableName, variableLocale, Boolean(mode && variableLocale), () => {});
+        invalidateQuery,
+    } = useQueryMapVariable(structureId, itemId, Boolean(mode && structureId && useStructureOptionsStore));
+
+    const { success: successNotification, error: errorNotification } = useNotification();
+    const queryClient = useQueryClient();
+    const [beforeSaveError, setBeforeSaveError] = useState(false);
+    const navigate = useNavigate();
+    const resolveBindings = useResolveBindings();
+    const [isSaving, setIsSaving] = useState(false);
 
     const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
         if (!value) {
@@ -117,22 +119,23 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 'No data submitted.',
                 'undefined has been submitted which means there are no values to save. Have you added some fields to your form?',
             );
+
             return;
         }
 
         const binding = resolveBindings(value, bindings);
         if (!binding) return;
-        const { locale, groups, behaviour } = binding;
+        const { name, groups, behaviour, locale } = binding;
 
         wrappedBeforeSave(value, e, beforeSave).then((result) => {
-            setIsSaving(true);
             if (!valueMetadataValidator(result)) {
                 setBeforeSaveError(true);
-                setIsSaving(false);
                 return;
             }
 
-            if (mode && result && structureId && useStructureOptionsStore) {
+            setIsSaving(true);
+            if (!mode && result) {
+                console.log('create');
                 type localeType = { locale: string };
                 type groupsType = { groups: string[] };
                 type behaviourType = { behaviour: Behaviour };
@@ -160,24 +163,22 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     delete (result.value as behaviourType).behaviour;
                 }
 
-                updateVariable({
+                addToMap({
+                    name: mapName,
                     projectId: Initialize.ProjectID(),
-                    name: structureId,
-                    fields: ['value', 'metadata', 'groups', 'behaviour', 'locale', 'name'],
-                    values: {
+                    variable: {
+                        name: name,
                         behaviour: chosenBehaviour,
-                        name: variableName,
-                        groups: chosenGroups,
-                        metadata: result.metadata,
                         value: result.value,
+                        metadata: result.metadata,
+                        groups: chosenGroups,
                         locale: chosenLocale,
                     },
-                    locale: variableLocale || Initialize.Locale(),
-                }).then(({ result, error }) => {
+                }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
                     if (error && error.error.data['exists']) {
-                        errorNotification('Variable exists', 'Variable with this name and locale already exists');
+                        errorNotification('Map item exists', 'Map item with this name and locale already exists');
                         return;
                     } else if (error) {
                         errorNotification(
@@ -187,26 +188,26 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         return;
                     }
 
-                    if (result) {
+                    if (useStructureOptionsStore) {
                         successNotification(
-                            'Variable updated',
-                            `Variable with name '${variableName}' has been updated.`,
+                            'Map item created',
+                            `Map item with name '${name}' and locale '${chosenLocale}' has been created.`,
                         );
 
-                        queryClient.invalidateQueries(variableName);
-                        afterSave?.(result, e);
+                        queryClient.invalidateQueries(mapName);
+                        afterSave?.(response, e);
+                        setIsSaving(false);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
             }
 
-            if (!mode && result) {
-                setIsSaving(true);
+            if (mode && result && structureId && itemId) {
                 type localeType = { locale: string };
                 type groupsType = { groups: string[] };
                 type behaviourType = { behaviour: Behaviour };
                 const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (result && (result.value as localeType).locale) {
+                if (Object.hasOwn(result.value as object, 'locale')) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     delete (result.value as localeType).locale;
@@ -228,41 +229,39 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     // @ts-ignore
                     delete (result.value as behaviourType).behaviour;
                 }
-
-                createVariable<Value, Metadata>({
-                    name: variableName,
-                    behaviour: chosenBehaviour,
-                    groups: chosenGroups,
+                updateListItem({
+                    fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
+                    name: structureId,
                     projectId: Initialize.ProjectID(),
-                    locale: chosenLocale,
-                    metadata: result.metadata,
-                    value: result.value,
+                    itemId: itemId,
+                    values: {
+                        name: name,
+                        value: result.value,
+                        metadata: result.metadata,
+                        groups: chosenGroups,
+                        behaviour: chosenBehaviour,
+                        locale: chosenLocale,
+                    },
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
-                    if (error && error.error.data['exists']) {
-                        errorNotification('Variable name exists', 'Variable with this name and locale already exists');
-                        setIsSaving(false);
-                        return;
-                    } else if (error) {
+
+                    if (error) {
                         errorNotification(
-                            'Something went wrong.',
-                            'Variable could not be created. Please, try again later.',
+                            'Something went wrong',
+                            'Variable could not be updated. Please, try again later',
                         );
-                        setIsSaving(false);
                         return;
                     }
 
                     if (response && useStructureOptionsStore) {
                         successNotification(
-                            'Variable created',
-                            `Variable with name '${variableName}' and locale '${chosenLocale}' has been created.`,
+                            'List item updated',
+                            `List item with item name '${name}' has been updated.`,
                         );
 
-                        StructureStorage.instance.addVariable(variableName, response.locale);
-                        queryClient.invalidateQueries(variableName);
-                        queryClient.invalidateQueries(['get_groups']);
-                        afterSave?.(response, e);
-                        setIsSaving(false);
+                        invalidateQuery();
+                        queryClient.invalidateQueries(mapName);
+                        afterSave?.(result, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
@@ -280,7 +279,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
@@ -291,8 +290,8 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
 
             {!isFetching && !getError && (
                 <Form
-                    structureType={'variable'}
-                    structureId={variableName}
+                    structureType={'map'}
+                    structureId={mapName}
                     formProps={formProps}
                     inputs={inputs}
                     onSubmit={onInternalSubmit}

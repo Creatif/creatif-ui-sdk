@@ -12,22 +12,12 @@ import { Initialize } from '@app/initialize';
 import createList from '@lib/api/declarations/lists/createList';
 import UIError from '@app/components/UIError';
 import type { TryResult } from '@root/types/shared';
+import createMap from '@lib/api/declarations/maps/createMap';
+import InitialSetup from '@lib/storage/initialSetup';
 interface Props {
     lists: string[];
     maps: string[];
 }
-
-function checkAlreadyDone(
-    currentLists: string[],
-    currentMaps: string[],
-    incomingLists: string[],
-    incomingMaps: string[],
-): boolean {
-    const currentJoin = [currentLists.join(','), currentMaps.join(',')].join(',');
-    const incomingJoin = [incomingLists.join(','), incomingMaps.join(',')].join(',');
-    return currentJoin === incomingJoin;
-}
-
 function createPromise(fn: () => Promise<TryResult<unknown>>) {
     return new Promise((resolve, reject) => {
         fn().then(({ result, error }) => {
@@ -41,81 +31,74 @@ function createPromise(fn: () => Promise<TryResult<unknown>>) {
     });
 }
 
-// diff those that are in 'incoming' but not in 'current'
-function createPreparationDiff(
-    currentList: string[],
-    currentMaps: string[],
-    incomingList: string[],
-    incomingMaps: string[],
-) {
-    const diff: { type: 'list' | 'map'; name: string }[] = [];
+async function createLists(lists: { [key: string]: boolean }) {
+    const keys = Object.keys(lists);
+    for (const key of keys) {
+        if (lists[key]) continue;
 
-    for (const incoming of incomingList) {
-        if (!currentList.includes(incoming)) {
-            diff.push({
-                type: 'list',
-                name: incoming,
-            });
+        const { result, error } = await createList({
+            name: key,
+            projectId: Initialize.ProjectID(),
+        });
+
+        if (error) {
+            return error;
+        }
+
+        if (result) {
+            InitialSetup.instance.markListDone(key);
         }
     }
-
-    for (const incoming of incomingMaps) {
-        if (!currentMaps.includes(incoming)) {
-            diff.push({
-                type: 'map',
-                name: incoming,
-            });
-        }
-    }
-
-    return diff;
 }
+
+async function createMaps(maps: { [key: string]: boolean }) {
+    const keys = Object.keys(maps);
+    for (const key of keys) {
+        if (maps[key]) continue;
+
+        const { result, error } = await createMap({
+            name: key,
+            projectId: Initialize.ProjectID(),
+        });
+
+        if (error) {
+            return error;
+        }
+
+        if (result) {
+            InitialSetup.instance.markMapDone(key);
+        }
+    }
+}
+
 export default function FirstTimeSetup({ children, lists, maps }: Props & PropsWithChildren) {
     const [status, setStatus] = useState<'preparation' | 'checking' | 'ready' | 'error'>('preparation');
 
     useEffect(() => {
-        const key = 'creatif-initial-load';
-        const initialLoadKeys = Object.keys(localStorage);
-        if (!initialLoadKeys.includes(key)) {
-            localStorage.setItem(
-                key,
-                JSON.stringify({
-                    lists: [],
-                    maps: [],
-                }),
-            );
-        }
+        const currentLists = InitialSetup.instance.lists();
+        const currentMaps = InitialSetup.instance.maps();
 
-        const initialLoadData = JSON.parse(localStorage.getItem(key) as string);
-        if (checkAlreadyDone(initialLoadData.lists, initialLoadData.maps, lists, maps)) {
+        const ready = [...Object.values(currentLists), ...Object.values(currentMaps)].every((item) => item);
+        if (ready) {
             setStatus('ready');
             return;
         }
 
-        const diff = createPreparationDiff(initialLoadData.lists, initialLoadData.maps, lists, maps);
-        console.log(diff);
-        const promises: Promise<unknown>[] = [];
-        for (const t of diff) {
-            if (t.type === 'list') {
-                promises.push(createPromise(() => createList({ name: t.name, projectId: Initialize.ProjectID() })));
-            }
-        }
-
-        Promise.all(promises)
-            .then(() => {
-                setStatus('ready');
-                localStorage.removeItem(key);
-                localStorage.setItem(
-                    key,
-                    JSON.stringify({
-                        lists: lists,
-                        maps: maps,
-                    }),
-                );
-            })
-            .catch(() => {
+        createLists(currentLists).then((error) => {
+            if (error) {
                 setStatus('error');
-            });
+                return;
+            }
+        });
+
+        createMaps(currentMaps).then((error) => {
+            if (error) {
+                setStatus('error');
+                return;
+            }
+
+            setStatus('ready');
+        });
     }, []);
 
     return (

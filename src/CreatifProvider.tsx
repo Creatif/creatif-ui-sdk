@@ -25,6 +25,7 @@ import LocalesCache from '@lib/storage/localesCache';
 import FirstTimeSetup from '@app/uiComponents/shell/FirstTimeSetup';
 import AuthPage from '@app/uiComponents/shell/AuthPage';
 import Banner from '@app/uiComponents/shell/Banner';
+import InitialSetup from '@lib/storage/initialSetup';
 
 interface Props {
     apiKey: string;
@@ -55,13 +56,13 @@ const theme = createTheme({
 
 const queryClient = new QueryClient();
 
-function removePreviousStorageIfExists(currentKey: string) {
+function removePreviousStorageIfExists(currentKey: string, projectId: string) {
     const lsKeys = Object.keys(localStorage);
+    const incomingKey = `creatif-${projectId}`;
     // filter out the keys that are not project key
     const possibleAppKeys = lsKeys.filter((item) => new RegExp('creatif-').test(item));
-    const key = possibleAppKeys[0];
     // if this is a different app key, remove all creatif keys since they will be recreated later
-    if (key !== currentKey) {
+    if (!possibleAppKeys.includes(incomingKey)) {
         console.info('Removing previous app LS keys. They will be recreated.');
         for (const lsKey of lsKeys) {
             if (new RegExp('creatif-').test(lsKey)) {
@@ -71,8 +72,52 @@ function removePreviousStorageIfExists(currentKey: string) {
     }
 }
 
-async function loadLocalesAndMetadata(apiKey: string, projectId: string) {
-    removePreviousStorageIfExists(`creatif-${projectId}`);
+async function loadLocalesAndMetadata(apiKey: string, projectId: string, config: CreatifApp): Promise<boolean> {
+    const { result: projectMetadata, error } = await getProjectMetadata({ apiKey: apiKey, projectId: projectId });
+    if (error) return false;
+
+    removePreviousStorageIfExists(`creatif-${projectId}`, projectId);
+
+    InitialSetup.init({
+        lists: (function () {
+            const appLists = config.items
+                .map((item) => {
+                    if (item.structureType === 'list') return item.structureName;
+                })
+                .filter((item) => item);
+
+            const t: { [item: string]: boolean } = {};
+            for (const item of appLists) {
+                const metadataLists = projectMetadata?.lists || [];
+                if (item && metadataLists.includes(item)) {
+                    t[item] = true;
+                } else if (item) {
+                    t[item] = false;
+                }
+            }
+
+            return t;
+        })(),
+        maps: (function () {
+            const appLists = config.items
+                .map((item) => {
+                    if (item.structureType === 'map') return item.structureName;
+                })
+                .filter((item) => item);
+
+            const t: { [item: string]: boolean } = {};
+            for (const item of appLists) {
+                const metadataLists = projectMetadata?.maps || [];
+                if (item && metadataLists.includes(item)) {
+                    t[item] = true;
+                } else if (item) {
+                    t[item] = false;
+                }
+            }
+
+            return t;
+        })(),
+    });
 
     Initialize.init(apiKey, projectId);
     LocalesCache.init();
@@ -84,11 +129,12 @@ async function loadLocalesAndMetadata(apiKey: string, projectId: string) {
     }
 
     CurrentLocaleStorage.init('eng');
-    const { result: projectMetadata } = await getProjectMetadata({ apiKey: apiKey, projectId: projectId });
 
     if (projectMetadata) {
         StructureStorage.init(projectMetadata);
     }
+
+    return true;
 }
 
 function prepareConfigForFirstTimeSetup(config: CreatifApp) {
@@ -116,26 +162,26 @@ function validateConfig(app: CreatifApp) {
     }
 
     if (!Array.isArray(app.items)) {
-        messages.push('App config does not have the request \'config.items\'. It must be an array of of structures.');
+        messages.push("App config does not have the request 'config.items'. It must be an array of of structures.");
         return messages;
     }
 
     const structures = [];
     for (const item of app.items) {
         if (typeof item.menuText !== 'string' || !item.menuText) {
-            messages.push('Config item \'config.item.menuText\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.menuText' is invalid. It must be a string.");
         }
 
         if (typeof item.routePath !== 'string' || !item.routePath) {
-            messages.push('Config item \'config.item.menuPath\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.menuPath' is invalid. It must be a string.");
         }
 
         if (typeof item.structureName !== 'string' || !item.structureName) {
-            messages.push('Config item \'config.item.structureName\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.structureName' is invalid. It must be a string.");
         }
 
         if (typeof item.structureType !== 'string' || !item.structureType) {
-            messages.push('Config item \'config.item.structureType\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.structureType' is invalid. It must be a string.");
         }
 
         structures.push({
@@ -144,11 +190,11 @@ function validateConfig(app: CreatifApp) {
         });
 
         if (!item.createComponent) {
-            ('Config item \'config.item.createComponent\' is invalid. It must be a valid React component.');
+            ("Config item 'config.item.createComponent' is invalid. It must be a valid React component.");
         }
 
         if (!item.updateComponent) {
-            ('Config item \'config.item.updateComponent\' is invalid. It must be a valid React component.');
+            ("Config item 'config.item.updateComponent' is invalid. It must be a valid React component.");
         }
     }
 
@@ -181,7 +227,11 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
     const firstTimeSetup = prepareConfigForFirstTimeSetup(app);
 
     const init = useCallback(async () => {
-        await loadLocalesAndMetadata(apiKey, projectId);
+        if (!(await loadLocalesAndMetadata(apiKey, projectId, app))) {
+            setIsAuthCheck('fail');
+            return;
+        }
+
         setIsLoggedIn(true);
     }, []);
 
@@ -202,7 +252,7 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
 
             init();
         });
-    }, []);
+    }, [app]);
 
     return (
         <MantineProvider theme={theme}>

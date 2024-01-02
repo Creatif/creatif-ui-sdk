@@ -4,6 +4,6 @@ export interface ProjectMetadata {
     state: string;
     userId: string;
     variables: Record<string, string[]> | null;
-    maps: Record<string, string[]> | null;
-    lists: string[] | null;
+    maps: string[];
+    lists: string[];
 }

@@ -2,18 +2,18 @@ import { CreatifProvider } from '@root/CreatifProvider';
 import LandingPage from '@root/uiApp/forms/LandingPage';
 import LandingPageBanner from '@root/uiApp/forms/LandingPageBanner';
 import { IconCashBanknote, IconHome } from '@tabler/icons-react';
+import ButtonForm from '@root/uiApp/forms/ButtonForm';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$3nJCymRga4vl2aRWFBp2cOmLLNXkQYLntSQPjDY5riNcwgymaWYPy"
-            projectId="01HJV5PZQZ0T5FP9JWVNSMNRWQ"
+            apiKey="$2a$10$A40guY9o0lnh9cc.kIQL5edNcmvvpQ7DeccjC4rg59n9lvdCRdo4i"
+            projectId="01HK5J0B21E6Z3TYE52QBKMT9S"
             app={{
                 logo: 'Break free',
                 items: [
                     {
                         menuText: 'Parks',
                         routePath: 'parks',
-                        menuIcon: <IconHome size={20} />,
 
                         structureType: 'list',
                         structureName: 'Parks',
@@ -22,9 +22,18 @@ export default function App() {
                         updateComponent: <LandingPage structureName="Parks" mode="update" />,
                     },
                     {
+                        menuText: 'Buttons',
+                        routePath: 'buttons',
+
+                        structureType: 'map',
+                        structureName: 'Buttons',
+
+                        createComponent: <ButtonForm structureName="Buttons" />,
+                        updateComponent: <ButtonForm structureName="Buttons" mode="update" />,
+                    },
+                    {
                         menuText: 'Ad banner',
                         routePath: 'add-banner',
-                        menuIcon: <IconCashBanknote size={20} />,
 
                         structureName: 'add banner',
                         structureType: 'variable',

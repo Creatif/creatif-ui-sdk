@@ -1,7 +1,6 @@
 import type { Behaviour } from '@root/types/api/shared';
 export interface CreateListBlueprint {
     name: string;
-    locale?: string;
     projectId: string;
 }
 

@@ -2,12 +2,33 @@
     margin-top: 2rem;
 }
 
+.navigationIcon {
+    background-color: var(--mantine-color-gray-6);
+    color: white;
+    text-align: center;
+    padding: 0.6rem;
+
+    display: inline-block;
+    margin-left: 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+
+    transition: background-color 0.3s ease-in-out;
+}
+
 .navigationGrid {
-    min-height: 98vh;
+    min-height: 100vh;
     padding: 1rem;
     border-right: 1px solid var(--mantine-color-indigo-1);
 
     background-color: var(--mantine-color-indigo-0);
+}
+
+.innerFlex {
+    max-height: 95vh;
+    min-height: 95vh;
+
+    position: relative;
 }
 
 .navItem {
@@ -23,15 +44,10 @@
 
     padding: 0.5rem 0.5rem 0.5rem 0;
     border-radius: 0.2rem;
-
-    transition:
-        background-color 0.2s,
-        color 0.2s,
-        border 0.2s;
 }
 
 .navItem:hover {
-    background-color: var(--mantine-color-indigo-0);
+    outline: 1px solid var(--mantine-color-indigo-1);
 }
 
 .navItemIcon {
@@ -47,10 +63,80 @@
 
 .root a.active {
     color: var(--mantine-color-indigo-9);
-    background-color: var(--mantine-color-indigo-1);
-    font-weight: 500;
+    outline: 1px solid var(--mantine-color-indigo-2);
+    font-weight: 600;
 }
 
 .root a.active .navItemIcon {
     color: var(--mantine-color-indigo-9);
+}
+
+.root a.active .navigationIcon {
+    background-color: var(--mantine-primary-color-filled);
+}
+
+.project {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+
+    margin-top: 2rem;
+}
+
+.projectLogo {
+    background-color: var(--mantine-color-gray-9);
+    color: white;
+    padding: 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.projectName {
+    font-weight: 500;
+}
+
+.navFooter {
+    position: absolute;
+    bottom: 0;
+
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.footerUserLogo {
+    background-color: var(--mantine-color-indigo-9);
+}
+
+.footerUserName {
+    font-weight: 500;
+}
+
+.appMenu {
+    width: 100%;
+    margin-top: 5rem;
+}
+
+.appMenuButton {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    align-items: center;
+    text-align: center;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    border: none;
+
+    padding: 0.7rem;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.appMenuButton:hover {
+    outline: 1px solid var(--mantine-color-indigo-2);
 }
