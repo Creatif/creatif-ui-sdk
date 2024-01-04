@@ -1,4 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
+import type { UpdateListItemVariableBlueprint } from '@root/types/api/list';
 
 export interface CreateMapBlueprint {
     name: string;
@@ -73,4 +74,33 @@ export interface DeleteMapItemBlueprint {
     name: string;
     itemId: string;
     projectId: string;
+}
+
+export interface UpdateMapItemVariableBlueprint {
+    name?: string;
+    behaviour?: Behaviour;
+    groups?: string[];
+    locale?: string;
+    metadata?: unknown;
+    value?: unknown;
+}
+
+export interface UpdateMapVariableBlueprint {
+    name: string;
+    itemId: string;
+    projectId: string;
+    fields?: string[];
+    values: UpdateMapItemVariableBlueprint;
+}
+
+export interface UpdateMapItemResult<Value = unknown, Metadata = unknown> {
+    id: string;
+    name: string;
+    locale: string;
+    behaviour: Behaviour;
+    groups: string[];
+    metadata: Metadata;
+    value: Value;
+    createdAt: string;
+    updatedAt: string;
 }

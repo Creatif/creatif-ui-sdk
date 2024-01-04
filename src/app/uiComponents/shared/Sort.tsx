@@ -241,8 +241,8 @@ export default function Sort({
                 <h2 className={styles.sortTitle}>DIRECTION</h2>
 
                 <div className={classNames(styles.column, styles.behaviourColumn)}>
-                    <div
-                        onClick={() => {
+                    <AppPill
+                        onChange={() => {
                             setDirection((item) => {
                                 if (item === 'asc') {
                                     onDirectionChange(undefined);
@@ -253,13 +253,29 @@ export default function Sort({
                                 return 'asc';
                             });
                         }}
-                        className={classNames(
-                            styles.behaviourPill,
-                            direction === 'asc' ? styles.selectedBehaviourPill : undefined,
-                        )}>
-                        <IconSortAscending size={16} />
-                        <span>Ascending</span>
-                    </div>
+                        value="asc"
+                        icon={<IconSortAscending size={16} />}
+                        text="Ascending"
+                        selected={direction === 'asc'}
+                    />
+
+                    <AppPill
+                        onChange={() => {
+                            setDirection((item) => {
+                                if (item === 'desc') {
+                                    onDirectionChange(undefined);
+                                    return undefined;
+                                }
+
+                                onDirectionChange('desc');
+                                return 'desc';
+                            });
+                        }}
+                        value="desc"
+                        icon={<IconSortDescending size={16} />}
+                        text="Descending"
+                        selected={direction === 'desc'}
+                    />
 
                     <div
                         onClick={() => {

@@ -3,19 +3,19 @@ import useNotification from '@app/systems/notifications/useNotification';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
-import type { UpdateListItemResult, UpdateListItemVariableBlueprint } from '@root/types/api/list';
 import type { TryResult } from '@root/types/shared';
-import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
-export default function useEditLocale(listName: string, itemId: string, itemName: string) {
+import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
+import type { UpdateMapItemResult, UpdateMapItemVariableBlueprint } from '@root/types/api/map';
+export default function useEditLocale(mapName: string, itemId: string, itemName: string) {
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
 
     return {
-        ...useMutation<TryResult<UpdateListItemResult>, ApiError, { values: UpdateListItemVariableBlueprint }>(
-            async (body: { values: UpdateListItemVariableBlueprint }) => {
+        ...useMutation<TryResult<UpdateMapItemResult>, ApiError, { values: UpdateMapItemVariableBlueprint }>(
+            async (body: { values: UpdateMapItemVariableBlueprint }) => {
                 const fn = throwIfHttpFails(() =>
-                    updateListItem({
-                        name: listName,
+                    updateMapVariable({
+                        name: mapName,
                         itemId: itemId,
                         projectId: Initialize.ProjectID(),
                         values: body.values,
@@ -29,7 +29,7 @@ export default function useEditLocale(listName: string, itemId: string, itemName
                 onSuccess: () => {
                     successNotification(
                         'Locale changed.',
-                        `Locale for structure '${listName}' and item '${itemName}' has been updated.`,
+                        `Locale for structure '${mapName}' and item '${itemName}' has been updated.`,
                     );
                 },
                 onError: () => {

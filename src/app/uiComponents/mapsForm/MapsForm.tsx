@@ -33,11 +33,11 @@ import type { Behaviour } from '@root/types/api/shared';
 import type { CreatedVariable } from '@root/types/api/variable';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
-import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
 import { useQueryClient } from 'react-query';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
 import addToMap from '@lib/api/declarations/maps/addToMap';
+import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     mapName: string;
@@ -229,7 +229,8 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     // @ts-ignore
                     delete (result.value as behaviourType).behaviour;
                 }
-                updateListItem({
+
+                updateMapVariable({
                     fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
                     name: structureId,
                     projectId: Initialize.ProjectID(),
@@ -245,7 +246,10 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
-                    if (error) {
+                    if (error && error.error && error.error.data['exists']) {
+                        errorNotification('Map item exists', `Map item with name '${name}' already exists.`);
+                        return;
+                    } else if (error) {
                         errorNotification(
                             'Something went wrong',
                             'Variable could not be updated. Please, try again later',
@@ -254,12 +258,8 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     }
 
                     if (response && useStructureOptionsStore) {
-                        successNotification(
-                            'List item updated',
-                            `List item with item name '${name}' has been updated.`,
-                        );
+                        successNotification('Map item updated', `Map item with item name '${name}' has been updated.`);
 
-                        invalidateQuery();
                         queryClient.invalidateQueries(mapName);
                         afterSave?.(result, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);

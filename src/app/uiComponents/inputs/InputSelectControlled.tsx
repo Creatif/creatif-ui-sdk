@@ -12,8 +12,8 @@ interface Props extends SelectProps {
 }
 
 export function InputSelectControlled({ data, name, ...rest }: Props) {
-    const { control } = useFormContext();
-    const [value, setValue] = useState<string | null>('');
+    const { control, getValues } = useFormContext();
+    const [value, setValue] = useState<string | null>(getValues(name));
 
     return (
         <Controller

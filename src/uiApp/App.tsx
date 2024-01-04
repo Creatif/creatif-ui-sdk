@@ -1,13 +1,12 @@
 import { CreatifProvider } from '@root/CreatifProvider';
 import LandingPage from '@root/uiApp/forms/LandingPage';
 import LandingPageBanner from '@root/uiApp/forms/LandingPageBanner';
-import { IconCashBanknote, IconHome } from '@tabler/icons-react';
 import ButtonForm from '@root/uiApp/forms/ButtonForm';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$A40guY9o0lnh9cc.kIQL5edNcmvvpQ7DeccjC4rg59n9lvdCRdo4i"
-            projectId="01HK5J0B21E6Z3TYE52QBKMT9S"
+            apiKey="$2a$10$PsQUacjt2How34BHHu0Sv.za4825C/5KEasbCUykIg0HriTfjhEI6"
+            projectId="01HKARSQ8S5T6T9PSRHCZC3N4Z"
             app={{
                 logo: 'Break free',
                 items: [

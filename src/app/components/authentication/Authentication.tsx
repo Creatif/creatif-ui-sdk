@@ -38,6 +38,7 @@ export default function Authentication({ apiKey, projectId, onSuccess, validatio
                                     'X-CREATIF-API-KEY': apiKey,
                                     'X-CREATIF-PROJECT-ID': projectId,
                                 }).then(({ result }) => {
+                                    if (!result) return;
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
                                     const openedWindow = window.open(
