@@ -16,6 +16,10 @@
     transition: background-color 0.3s ease-in-out;
 }
 
+.selectedNavigationIcon {
+    background-color: var(--mantine-primary-color-filled);
+}
+
 .navigationGrid {
     min-height: 100vh;
     padding: 1rem;

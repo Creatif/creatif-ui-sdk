@@ -8,6 +8,8 @@
 }
 
 .initialAnimation {
+    position: relative;
+
     animation: fadeIn ease 1.2s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;

@@ -26,6 +26,7 @@ import FirstTimeSetup from '@app/uiComponents/shell/FirstTimeSetup';
 import AuthPage from '@app/uiComponents/shell/AuthPage';
 import Banner from '@app/uiComponents/shell/Banner';
 import InitialSetup from '@lib/storage/initialSetup';
+import DevBar from '@app/devBar/DevBar';
 
 interface Props {
     apiKey: string;
@@ -263,6 +264,8 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
                         <FirstTimeSetup lists={firstTimeSetup.lists} maps={firstTimeSetup.maps}>
                             <div className={animations.initialAnimation}>
                                 <Shell options={app} />
+
+                                <DevBar />
                             </div>
                         </FirstTimeSetup>
                     </QueryClientProvider>

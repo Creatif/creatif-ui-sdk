@@ -1,0 +1,27 @@
+.root {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+
+    width: 240px;
+    height: 56px;
+    padding: 0.8rem;
+
+    color: white;
+    border-top-left-radius: 4px;
+    background-color: var(--mantine-primary-color-filled);
+
+    cursor: pointer;
+}
+
+.logoHeading {
+    font-size: 0.6rem;
+}
+
+.devBarDescription {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 8px;
+}

@@ -1,0 +1,21 @@
+.root {
+    width: 100%;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.content {
+
+}
+
+.environmentWrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
