@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export type ContentState = 'variables' | 'maps' | 'lists' | 'switchEnvironment' | 'help';
+export type ContentState = 'variables' | 'maps' | 'lists' | 'switchEnvironment' | 'help' | 'history';
 
 export default function useContentState() {
     const [state, setState] = useState<ContentState>('variables');

@@ -4,6 +4,7 @@ import styles from '@app/devBar/css/devBarContent.module.css';
 import { Tabs } from '@mantine/core';
 import type { ContentState } from '@app/devBar/hooks/useContentState';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
+import { IconHistory } from '@tabler/icons-react';
 
 interface Props {
     currentTab: ContentState;
@@ -34,6 +35,9 @@ export default function TabContent({ currentTab, onTabChange }: Props) {
                             value="maps">
                             Maps
                         </Tabs.Tab>
+                        <Tabs.Tab leftSection={<IconHistory size={20} color="gray" />} value="history">
+                            History
+                        </Tabs.Tab>
                     </Tabs.List>
 
                     <Tabs.Panel value="variables">Variables</Tabs.Panel>
@@ -41,6 +45,8 @@ export default function TabContent({ currentTab, onTabChange }: Props) {
                     <Tabs.Panel value="lists">Lists</Tabs.Panel>
 
                     <Tabs.Panel value="maps">Maps</Tabs.Panel>
+
+                    <Tabs.Panel value="history">History</Tabs.Panel>
                 </Tabs>
             </div>
         </div>
