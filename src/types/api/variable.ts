@@ -44,6 +44,7 @@ export interface GetVariableBlueprint {
     projectId: string;
 }
 export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
+    id: string;
     name: string;
     shortID: string;
     behaviour: Behaviour;
@@ -51,6 +52,9 @@ export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
     metadata?: Value;
     value?: Metadata;
     locale: string;
+
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface DeleteVariableBlueprint {

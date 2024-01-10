@@ -1,0 +1,16 @@
+.groups {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.popoverTarget {
+    font-size: 0.9rem;
+    color: var(--mantine-color-gray-6);
+}
+
+.popoverTarget:hover {
+    color: var(--mantine-color-blue-4);
+    text-decoration: underline;
+}

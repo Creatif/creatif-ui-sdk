@@ -1,0 +1,67 @@
+.root {
+    position: relative;
+    max-width: 1280px;
+    margin: 2rem auto;
+    padding: 0 1rem 0 1rem;
+}
+
+.variableName {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--mantine-color-gray-9);
+}
+
+.createdAt {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.8rem;
+
+    margin-top: 0.5rem;
+
+    color: var(--mantine-color-gray-6);
+}
+
+.fieldset {
+    margin-bottom: 2rem;
+}
+
+.content {
+    margin-top: 2rem;
+}
+
+.contentGrid {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 1rem;
+}
+
+.textValue {
+    line-height: 1.6rem;
+    color: var(--mantine-color-gray-9);
+}
+
+.rowValue {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+
+    align-items: center;
+}
+
+.row h2 {
+    font-weight: 600;
+}
+
+.columnSpacing {
+    border-left: 1px solid var(--mantine-color-gray-1);
+    margin-left: 1rem;
+    padding-left: 0.5rem;
+}

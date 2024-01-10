@@ -1,6 +1,4 @@
 import Item from '@app/uiComponents/variables/Item';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import type { PaginationResult } from '@root/types/api/list';
 interface Props<Value, Metadata> {
     data: PaginationResult<Value, Metadata>;

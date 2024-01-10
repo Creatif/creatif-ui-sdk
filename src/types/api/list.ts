@@ -64,6 +64,9 @@ export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
     groups?: string[];
     value: Value;
     metadata: Metadata;
+
+    createdAt: string;
+    updatedAt: string;
 }
 export interface PaginationResult<Value, Metadata> {
     total: number;

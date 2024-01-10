@@ -9,11 +9,11 @@
         margin-left 0.3s,
         border 0.3s;
 
+    text-decoration: none;
     box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
 }
 
 .item:hover {
-    transform: translate(0, -4px);
     box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
@@ -124,6 +124,18 @@
     align-items: center;
 }
 
+.createdAt {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    align-items: center;
+
+    margin-top: 0.5rem;
+
+    color: var(--mantine-color-gray-7);
+}
+
 .behaviour {
     display: flex;
     justify-content: flex-start;
@@ -134,7 +146,7 @@
 }
 
 .behaviour .modifiable {
-    color: var(--mantine-primary-color-filled);
+    color: var(--mantine-color-gray-7);
 }
 
 .behaviour .readonly {

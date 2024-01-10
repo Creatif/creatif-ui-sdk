@@ -1,6 +1,6 @@
+import { Badge } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { Badge } from '@mantine/core';
 import styles from './css/ArrayBadges.module.css';
 interface Props {
     values: unknown[];
@@ -11,7 +11,15 @@ export default function ArrayBadges({ values }: Props) {
             {values.map((item, i) => {
                 if (typeof item === 'string' || typeof item === 'number') {
                     return (
-                        <Badge color="gray" key={i}>
+                        <Badge
+                            styles={{
+                                root: {
+                                    marginRight: '0.5rem',
+                                    marginBottom: '0.5rem',
+                                },
+                            }}
+                            color="gray"
+                            key={i}>
                             {item}
                         </Badge>
                     );
@@ -20,13 +28,29 @@ export default function ArrayBadges({ values }: Props) {
                 if (typeof item === 'boolean') {
                     if (item)
                         return (
-                            <Badge key={i} color="green">
+                            <Badge
+                                styles={{
+                                    root: {
+                                        marginRight: '0.5rem',
+                                        marginBottom: '0.5rem',
+                                    },
+                                }}
+                                key={i}
+                                color="green">
                                 true
                             </Badge>
                         );
 
                     return (
-                        <Badge key={i} color="red">
+                        <Badge
+                            styles={{
+                                root: {
+                                    marginRight: '0.5rem',
+                                    marginBottom: '0.5rem',
+                                },
+                            }}
+                            key={i}
+                            color="red">
                             false
                         </Badge>
                     );

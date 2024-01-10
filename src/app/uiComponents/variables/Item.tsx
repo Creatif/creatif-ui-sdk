@@ -3,12 +3,19 @@ import { getOptions } from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
-import ItemView from '@app/uiComponents/lists/list/ItemView';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
-import { ActionIcon, Button, Pill } from '@mantine/core';
-import { IconChevronDown, IconChevronRight, IconEdit, IconEyeOff, IconReplace, IconTrash } from '@tabler/icons-react';
+import { ActionIcon, Menu, Pill } from '@mantine/core';
+import {
+    IconCalendarTime,
+    IconDotsVertical,
+    IconEdit,
+    IconEyeOff,
+    IconLanguage,
+    IconReplace,
+    IconTrash,
+} from '@tabler/icons-react';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,13 +23,13 @@ import type { PaginatedVariableResult } from '@root/types/api/list';
 import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
 import { Initialize } from '@app/initialize';
 import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
+import appDate from '@lib/helpers/appDate';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     name: string;
     onDeleted: () => void;
 }
 export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<Value, Metadata>) {
-    const [isExpanded, setIsExpanded] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
     const { store: useOptions } = getOptions(name);
@@ -30,110 +37,101 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
 
-    const { mutate, isLoading, data } = useUpdateVariable(name);
+    const { mutate, data } = useUpdateVariable(name);
 
     item.locale = data?.result && data?.result.locale ? data?.result.locale : item.locale;
 
     return (
-        <div className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
+        <Link
+            to={`/variable/show/${item.name}/${item.locale}`}
+            className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
             {isDeleting && <div className={styles.disabled} />}
-            <div onClick={() => setIsExpanded((item) => !item)} className={styles.visibleSectionWrapper}>
+            <div className={styles.visibleSectionWrapper}>
                 <div className={styles.infoColumn}>
                     <div className={styles.nameRow}>
-                        <h2 className={styles.nameRowTitle}>{item.name}</h2>
+                        <div className={styles.information}>
+                            <h2 className={styles.nameRowTitle}>{item.name}</h2>
 
-                        <div className={styles.actionRow}>
-                            <Button
-                                disabled={isLoading}
-                                loading={isLoading}
-                                loaderProps={{ size: 12 }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsEditLocaleOpen(true);
-                                }}
-                                leftSection={
-                                    <IconEdit
-                                        style={{
-                                            color: isLoading
-                                                ? 'var(--mantine-color-gray-4)'
-                                                : 'var(--mantine-color-gray-8)',
-                                        }}
-                                        size={16}
-                                    />
-                                }
-                                size="xs"
-                                variant="default"
-                                className={styles.locale}>
-                                {item.locale} locale
-                            </Button>
-
-                            <div className={styles.actionMenu}>
-                                {useOptions && (
-                                    <ActionIcon
-                                        component={Link}
-                                        to={`${useOptions.getState().paths.update}/${item.id}/${item.locale}`}
-                                        variant="white">
-                                        <IconEdit
-                                            className={classNames(styles.actionMenuIcon, styles.actionMenuEdit)}
-                                            size={18}
-                                        />
-                                    </ActionIcon>
+                            <div className={styles.behaviour}>
+                                {item.behaviour === 'modifiable' && (
+                                    <IconReplace className={styles.modifiable} size={14} />
                                 )}
-
-                                <ActionIcon
-                                    loading={isDeleting}
-                                    variant="white"
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-                                        setDeleteItemId(item.id);
-                                    }}>
-                                    <IconTrash
-                                        className={classNames(styles.actionMenuIcon, styles.actionMenuDelete)}
-                                        size={18}
-                                    />{' '}
-                                </ActionIcon>
+                                {item.behaviour === 'readonly' && <IconEyeOff className={styles.readonly} size={16} />}
+                                <p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
                             </div>
 
-                            {!isExpanded ? (
-                                <IconChevronRight className={styles.dropdownIcon} />
-                            ) : (
-                                <IconChevronDown className={styles.dropdownIcon} />
+                            {item.groups && (
+                                <div className={styles.groups}>
+                                    {item.groups.slice(0, 3).map((item) => (
+                                        <Pill
+                                            key={item}
+                                            styles={{
+                                                root: { backgroundColor: 'var(--mantine-color-blue-0)' },
+                                                label: { cursor: 'pointer' },
+                                            }}>
+                                            {item}
+                                        </Pill>
+                                    ))}
+
+                                    <GroupsPopover groups={item.groups} />
+                                </div>
                             )}
+                        </div>
+
+                        <div className={styles.actionRow}>
+                            <Menu position="left">
+                                <Menu.Target>
+                                    <ActionIcon
+                                        className={styles.dropdownIcon}
+                                        size={24}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}
+                                        variant="white">
+                                        <IconDotsVertical />
+                                    </ActionIcon>
+                                </Menu.Target>
+
+                                <Menu.Dropdown>
+                                    {useOptions && (
+                                        <Menu.Item
+                                            component={Link}
+                                            to={`${useOptions.getState().paths.update}/${item.id}/${item.locale}`}
+                                            leftSection={<IconEdit size={16} />}>
+                                            Edit
+                                        </Menu.Item>
+                                    )}
+
+                                    <Menu.Item
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsEditLocaleOpen(true);
+                                        }}
+                                        leftSection={<IconLanguage size={16} />}>
+                                        Edit {item.locale} locale
+                                    </Menu.Item>
+
+                                    <Menu.Divider />
+
+                                    <Menu.Item
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setDeleteItemId(item.id);
+                                        }}
+                                        leftSection={<IconTrash size={16} color="red" />}>
+                                        Delete
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
                         </div>
                     </div>
 
-                    <div className={styles.information}>
-                        <div className={styles.behaviour}>
-                            {item.behaviour === 'modifiable' && <IconReplace className={styles.modifiable} size={16} />}
-                            {item.behaviour === 'readonly' && <IconEyeOff className={styles.readonly} size={16} />}
-                            <p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
-                        </div>
-
-                        {item.groups && (
-                            <div className={styles.groups}>
-                                {item.groups.slice(0, 3).map((item) => (
-                                    <Pill
-                                        key={item}
-                                        styles={{
-                                            root: { backgroundColor: 'var(--mantine-color-blue-0)' },
-                                            label: { cursor: 'pointer' },
-                                        }}>
-                                        {item}
-                                    </Pill>
-                                ))}
-
-                                <GroupsPopover groups={item.groups} />
-                            </div>
-                        )}
+                    <div className={styles.createdAt}>
+                        <IconCalendarTime size={16} color="var(--mantine-color-gray-7)" /> {appDate(item.createdAt)}
                     </div>
                 </div>
 
                 <div className={styles.menu} />
-            </div>
-
-            <div
-                className={classNames(styles.expandedSection, isExpanded ? styles.expandedSectionExpanded : undefined)}>
-                <ItemView<Value, Metadata> value={item.value} metadata={item.metadata} />
             </div>
 
             <DeleteModal
@@ -188,6 +186,6 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                     setIsEditLocaleOpen(false);
                 }}
             />
-        </div>
+        </Link>
     );
 }

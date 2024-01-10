@@ -11,6 +11,7 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 // @ts-ignore
 import styles from './css/root.module.css';
 import type { Shell, CreatifApp } from '@root/types/shell/shell';
+import Item from '@app/uiComponents/show/variable/Item';
 interface Props {
     options: CreatifApp;
 }
@@ -86,6 +87,8 @@ export default function Shell({ options }: Props) {
                                             path={`${item.routePath}`}
                                             element={<VariableListListing name={item.structureName} />}
                                         />
+
+                                        <Route path={'variable/show/:variableName/:locale'} element={<Item />} />
                                     </>
                                 )}
                             </React.Fragment>

@@ -18,14 +18,13 @@ export function useGetVariable<Value = unknown, Metadata = unknown>(
     return {
         ...useQuery(
             key,
-            () =>
-                throwIfHttpFails(() =>
-                    getVariable<Value, Metadata>({
-                        name: variableName,
-                        locale: locale,
-                        projectId: Initialize.ProjectID(),
-                    }),
-                )(),
+            throwIfHttpFails(() =>
+                getVariable<Value, Metadata>({
+                    name: variableName,
+                    locale: locale,
+                    projectId: Initialize.ProjectID(),
+                }),
+            ),
             {
                 onError: onError
                     ? onError
