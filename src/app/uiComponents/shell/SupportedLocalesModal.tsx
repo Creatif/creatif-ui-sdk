@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/DeleteModal.module.css';
+import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, Modal, ScrollArea, Table, TextInput } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';

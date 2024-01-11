@@ -1,4 +1,4 @@
-import ArrayBadges from '@app/uiComponents/lists/list/ArrayBadges';
+import ArrayBadges from '@app/uiComponents/shared/ArrayBadges';
 import { Badge } from '@mantine/core';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';

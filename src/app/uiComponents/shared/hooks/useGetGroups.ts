@@ -24,7 +24,6 @@ export default function useGetGroups(structureType: string, structureId: string,
             {
                 enabled: typeof enabled === 'boolean' ? enabled : true,
                 retry: 1,
-                staleTime: Infinity,
                 refetchOnWindowFocus: false,
             },
         ),

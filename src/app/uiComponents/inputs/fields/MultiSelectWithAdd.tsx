@@ -16,7 +16,16 @@ interface Props {
     label: string;
 }
 
-export default function MultiSelectWithAdd({onDropdownOpen, isLoading, onSearchChange, onChange, error, currentValues, selectableValues, label}: Props) {
+export default function MultiSelectWithAdd({
+    onDropdownOpen,
+    isLoading,
+    onSearchChange,
+    onChange,
+    error,
+    currentValues,
+    selectableValues,
+    label,
+}: Props) {
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
         onDropdownOpen: () => {
@@ -69,55 +78,65 @@ export default function MultiSelectWithAdd({onDropdownOpen, isLoading, onSearchC
 
     const exactOptionMatch = currentValues.some((item) => item === search);
 
-    return <div className={styles.root}>
-        <label className={styles.label}>{label}</label>
-        <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
-            <Combobox.DropdownTarget>
-                <PillsInput
-                    rightSection={isLoading && <Loader size={16} />}
-                    error={error}
-                    onClick={() => combobox.openDropdown()}>
-                    <Pill.Group>
-                        {renderedValues}
+    return (
+        <div className={styles.root}>
+            <label className={styles.label}>{label}</label>
+            <Combobox
+                position="bottom"
+                middlewares={{ flip: false, shift: false }}
+                store={combobox}
+                onOptionSubmit={handleValueSelect}
+                withinPortal={false}>
+                <Combobox.DropdownTarget>
+                    <PillsInput
+                        rightSection={isLoading && <Loader size={16} />}
+                        error={error}
+                        onClick={() => combobox.openDropdown()}>
+                        <Pill.Group>
+                            {renderedValues}
 
-                        <Combobox.EventsTarget>
-                            <PillsInput.Field
-                                onFocus={() => combobox.openDropdown()}
-                                onBlur={() => combobox.closeDropdown()}
-                                value={search}
-                                placeholder="Search..."
-                                onChange={(event) => {
-                                    combobox.updateSelectedOptionIndex();
-                                    setSearch(event.currentTarget.value);
-                                    onSearchChange?.(event.currentTarget.value);
-                                }}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Backspace' && search.length === 0) {
-                                        event.preventDefault();
-                                        handleValueRemove(value[value.length - 1]);
-                                    }
-                                }}
-                            />
-                        </Combobox.EventsTarget>
-                    </Pill.Group>
-                </PillsInput>
-            </Combobox.DropdownTarget>
+                            <Combobox.EventsTarget>
+                                <PillsInput.Field
+                                    onFocus={() => combobox.openDropdown()}
+                                    onBlur={() => combobox.closeDropdown()}
+                                    value={search}
+                                    placeholder="Search..."
+                                    onChange={(event) => {
+                                        combobox.updateSelectedOptionIndex();
+                                        setSearch(event.currentTarget.value);
+                                        onSearchChange?.(event.currentTarget.value);
+                                    }}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Backspace' && search.length === 0) {
+                                            event.preventDefault();
+                                            handleValueRemove(value[value.length - 1]);
+                                        }
+                                    }}
+                                />
+                            </Combobox.EventsTarget>
+                        </Pill.Group>
+                    </PillsInput>
+                </Combobox.DropdownTarget>
 
-            <Combobox.Dropdown >
-                <Combobox.Options>
-                    {options}
+                <Combobox.Dropdown>
+                    <Combobox.Options>
+                        {options}
 
-                    {!exactOptionMatch && search.trim().length > 0 && (
-                        <Combobox.Option value="$create">
-                            + Create <Pill onClick={() => combobox.closeDropdown()} color="blue">{search}</Pill>
-                        </Combobox.Option>
-                    )}
+                        {!exactOptionMatch && search.trim().length > 0 && (
+                            <Combobox.Option value="$create">
+                                + Create{' '}
+                                <Pill onClick={() => combobox.closeDropdown()} color="blue">
+                                    {search}
+                                </Pill>
+                            </Combobox.Option>
+                        )}
 
-                    {options && exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
-                        <Combobox.Empty>Nothing found</Combobox.Empty>
-                    )}
-                </Combobox.Options>
-            </Combobox.Dropdown>
-        </Combobox>
-    </div>;
+                        {options && exactOptionMatch && search.trim().length > 0 && options.length === 0 && (
+                            <Combobox.Empty>Nothing found</Combobox.Empty>
+                        )}
+                    </Combobox.Options>
+                </Combobox.Dropdown>
+            </Combobox>
+        </div>
+    );
 }

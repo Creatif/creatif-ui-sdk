@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/DeleteModal.module.css';
+import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, type ComboboxItem, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
 import LocalesCache from '@lib/storage/localesCache';

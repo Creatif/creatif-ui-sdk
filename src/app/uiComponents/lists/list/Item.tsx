@@ -1,7 +1,7 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 import useEditLocale from '@app/uiComponents/lists/hooks/useEditLocale';
-import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
+import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
 import ItemView from '@app/uiComponents/lists/list/ItemView';

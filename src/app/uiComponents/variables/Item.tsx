@@ -1,19 +1,19 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
-import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
+import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
-import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/Item.module.css';
-import { ActionIcon, Menu, Pill } from '@mantine/core';
+import { ActionIcon, Menu } from '@mantine/core';
 import {
     IconCalendarTime,
     IconDotsVertical,
     IconEdit,
     IconEyeOff,
     IconLanguage,
-    IconReplace, IconRoute,
+    IconReplace,
+    IconRoute,
     IconTrash,
 } from '@tabler/icons-react';
 import classNames from 'classnames';
@@ -26,6 +26,7 @@ import { Initialize } from '@app/initialize';
 import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
+import Groups from '@app/components/Groups';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     name: string;
@@ -45,12 +46,15 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
     item.locale = data?.result && data?.result.locale ? data?.result.locale : item.locale;
     item.groups = data?.result && data?.result.groups ? data?.result.groups : item.groups;
 
-    const preventClickEventOnModal = useCallback((e: MouseEvent) => {
-        if (isEditLocaleOpen || deleteItemId || isEditGroupsOpen) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    }, [isEditLocaleOpen, deleteItemId, isEditGroupsOpen]);
+    const preventClickEventOnModal = useCallback(
+        (e: MouseEvent) => {
+            if (isEditLocaleOpen || deleteItemId || isEditGroupsOpen) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        },
+        [isEditLocaleOpen, deleteItemId, isEditGroupsOpen],
+    );
 
     return (
         <Link
@@ -68,26 +72,13 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                 {item.behaviour === 'modifiable' && (
                                     <IconReplace color="var(--mantine-color-gray-8)" size={14} />
                                 )}
-                                {item.behaviour === 'readonly' && <IconEyeOff color="var(--mantine-color-gray-8)" size={14} />}
+                                {item.behaviour === 'readonly' && (
+                                    <IconEyeOff color="var(--mantine-color-gray-8)" size={14} />
+                                )}
                                 <p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
                             </div>
 
-                            {item.groups && (
-                                <div className={styles.groups}>
-                                    {item.groups.slice(0, 3).map((item) => (
-                                        <Pill
-                                            key={item}
-                                            styles={{
-                                                root: { backgroundColor: 'var(--mantine-color-blue-0)' },
-                                                label: { cursor: 'pointer' },
-                                            }}>
-                                            {item}
-                                        </Pill>
-                                    ))}
-
-                                    <GroupsPopover groups={item.groups} />
-                                </div>
-                            )}
+                            <Groups groups={item.groups || []} />
 
                             <div className={styles.behaviour}>
                                 <span className={styles.localeStrong}>{item.locale}</span>
@@ -139,15 +130,6 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                         }}
                                         leftSection={<IconRoute size={16} />}>
                                         Edit groups
-                                    </Menu.Item>
-
-                                    <Menu.Item
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                        }}
-                                        leftSection={<IconReplace size={16} />}>
-                                        Edit behaviour
                                     </Menu.Item>
 
                                     <Menu.Divider />

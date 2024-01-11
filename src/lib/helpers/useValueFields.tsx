@@ -1,5 +1,5 @@
 import React from 'react';
-import ArrayBadges from '@app/uiComponents/lists/list/ArrayBadges';
+import ArrayBadges from '@app/uiComponents/shared/ArrayBadges';
 import { Badge } from '@mantine/core';
 
 export type Column = {
@@ -49,7 +49,7 @@ function recursiveFieldsResolved(value: object) {
                             values.push({
                                 column: '',
                                 value: '',
-                                innerColumn: recursiveFieldsResolved(v)
+                                innerColumn: recursiveFieldsResolved(v),
                             });
                         }
                     }

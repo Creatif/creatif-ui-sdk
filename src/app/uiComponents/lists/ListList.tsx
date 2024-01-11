@@ -5,9 +5,9 @@ import useNotification from '@app/systems/notifications/useNotification';
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useDeleteRange from '@app/uiComponents/lists/hooks/useDeleteRange';
 import useHttpPaginationQuery from '@app/uiComponents/lists/hooks/useHttpPaginationQuery';
-import useSearchQuery from '@app/uiComponents/lists/hooks/useSearchQuery';
+import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
-import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
+import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import MainListView from '@app/uiComponents/lists/list/MainListView';
 import NothingFound from '@app/uiComponents/lists/list/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

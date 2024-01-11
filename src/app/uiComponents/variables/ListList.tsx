@@ -3,7 +3,7 @@ import CenteredError from '@app/components/CenteredError';
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useHttpPaginationQuery from '@app/uiComponents/variables/hooks/useHttpPaginationQuery';
-import useSearchQuery from '@app/uiComponents/lists/hooks/useSearchQuery';
+import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import MainListView from '@app/uiComponents/variables/MainListView';
 import NothingFound from '@app/uiComponents/lists/list/NothingFound';
@@ -102,7 +102,9 @@ export function ListList<Value, Metadata>({ name }: Props) {
                                     onClick={() => setParam('listingType', 'list')}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        queryParams.listingType === 'list' ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'list'
+                                            ? styles.listChoiceListType_Icon_Highlighted
+                                            : undefined,
                                     )}
                                     size={24}
                                 />
@@ -115,7 +117,9 @@ export function ListList<Value, Metadata>({ name }: Props) {
                                     }}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        queryParams.listingType === 'table' ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'table'
+                                            ? styles.listChoiceListType_Icon_Highlighted
+                                            : undefined,
                                     )}
                                     size={24}
                                 />

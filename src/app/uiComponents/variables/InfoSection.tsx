@@ -1,16 +1,16 @@
 import { getOptions } from '@app/systems/stores/options';
-import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
-import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
+import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/variables/css/VariableDisplay.module.css';
-import { Button, Pill } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { IconEdit, IconReplace, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Behaviour } from '@root/types/api/shared';
 import { Initialize } from '@app/initialize';
 import useDeleteVariable from '@app/uiComponents/variables/hooks/useDeleteVariable';
+import Groups from '@app/components/Groups';
 interface Props {
     name: string;
     behaviour: Behaviour;
@@ -35,22 +35,7 @@ export default function InfoSection({ name, behaviour, groups, shortId, structur
                     <span>{behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</span>
                 </p>
 
-                {groups && (
-                    <div className={styles.groups}>
-                        {groups.slice(0, 3).map((item) => (
-                            <Pill
-                                key={item}
-                                styles={{
-                                    root: { backgroundColor: 'var(--mantine-color-blue-0)' },
-                                    label: { cursor: 'pointer' },
-                                }}>
-                                {item}
-                            </Pill>
-                        ))}
-
-                        <GroupsPopover groups={groups} />
-                    </div>
-                )}
+                <Groups groups={groups || []} />
             </div>
 
             <div className={styles.actionButtonGroup}>
