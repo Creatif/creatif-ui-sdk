@@ -1,7 +1,7 @@
 import { DataTable } from 'mantine-datatable';
 import type { PaginationResult } from '@root/types/api/list';
 import { Badge } from '@mantine/core';
-import styles from './css/table.module.css';
+import styles from '@app/uiComponents/lists/table/css/table.module.css';
 import React from 'react';
 import type { Behaviour } from '@root/types/api/shared';
 interface Props<Value, Metadata> {
@@ -52,6 +52,26 @@ function resolveColumns(values: never) {
             sortable: false,
         });
     }
+
+    columns.push({
+        accessor: 'groups',
+        sortable: false,
+        width: '240px',
+        render: (item: Record) => (
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: '1rem',
+                }}>
+                {item.groups.map((group, i) => (
+                    <Badge color="var(--mantine-color-indigo-4)" key={i}>
+                        {group}
+                    </Badge>
+                ))}
+            </div>
+        ),
+    });
 
     return columns;
 }
@@ -121,13 +141,12 @@ export default function MainTableView<Value, Metadata>({ data, isFetching }: Pro
                     <DataTable
                         className={styles.table}
                         withTableBorder
-                        highlightOnHover
+                        pinLastColumn
                         striped
                         borderRadius="sm"
                         withColumnBorders
                         columns={resolveColumns(data.data[0].value)}
                         records={createRecords(data)}
-                        fetching={isFetching}
                     />
                 </div>
             )}

@@ -5,6 +5,10 @@
     padding: 0 1rem 0 1rem;
 }
 
+.loadingRoot {
+    min-height: 50vh;
+}
+
 .variableName {
     display: flex;
     justify-content: flex-start;

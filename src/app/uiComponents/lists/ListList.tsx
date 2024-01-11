@@ -46,7 +46,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
     const [isListView, setIsListView] = useState(true);
 
-    const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
+    const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
         listName: listName,
@@ -82,6 +82,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                 isLoading={isFetching}
                 sortBy={orderBy}
                 locales={locales}
+                search={search}
                 direction={direction}
                 behaviour={behaviour}
                 groups={groups}
@@ -181,7 +182,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                                 <MainListView<Value, Metadata>
                                     data={data.result}
                                     listName={listName}
-                                    onDeleted={() => invalidateEntireQuery()}
+                                    onDeleted={() => invalidateQuery()}
                                     disabled={{
                                         areItemsDeleting: areItemsDeleting,
                                         checkedItems: checkedItems,

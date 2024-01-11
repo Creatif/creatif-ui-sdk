@@ -34,6 +34,7 @@ interface Props {
     groups: string[];
     isLoading: boolean;
     locales: string[];
+    search: string;
 }
 export default function ActionSection({
     onSearch,
@@ -41,6 +42,7 @@ export default function ActionSection({
     structureType,
     includeSortBy = ['created_at', 'index', 'updated_at'],
     isLoading,
+    search,
     onSelectedGroups,
     onSortChange,
     onSelectedLocales,
@@ -53,7 +55,7 @@ export default function ActionSection({
     locales,
 }: Props) {
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(search);
     const [debounced] = useDebouncedValue(value, 500);
 
     useEffect(() => {

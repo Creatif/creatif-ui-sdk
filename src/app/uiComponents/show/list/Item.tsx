@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
 import UIError from '@app/components/UIError';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -15,6 +14,7 @@ import useValueFields from '@lib/helpers/useValueFields';
 import Copy from '@app/components/Copy';
 import classNames from 'classnames';
 import { getOptions } from '@app/systems/stores/options';
+import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -57,8 +57,8 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
 }
 
 export function Item() {
-    const { variableName, locale } = useParams();
-    if (!variableName || !locale) {
+    const { listName, listId } = useParams();
+    if (!listId || !listId) {
         return (
             <UIError title="Invalid route">
                 We tried to show a variable but the route is invalid. A variable route needs to have a variable name and
@@ -67,23 +67,21 @@ export function Item() {
         );
     }
 
-    const { isFetching, data } = useGetVariable(variableName, locale, Boolean(variableName && locale));
+    const { isFetching, data } = useQueryListItem(listName, listId, true);
     if (!data?.result) {
         return (
-            <div className={styles.root}>
-                <Loading isLoading={isFetching} />
+            <div className={classNames(styles.root, styles.loadingRoot)}>
+                <Loading isLoading={true} />
             </div>
         );
     }
 
-    const { store: useOptions } = getOptions(variableName);
+    const { store: useOptions } = getOptions(listName as string);
 
     const values = useValueFields(data.result.value);
 
     return (
         <div className={styles.root}>
-            <Loading isLoading={isFetching} />
-
             <h2 className={styles.variableName}>
                 {data.result.name}
                 {useOptions && (
@@ -118,7 +116,7 @@ export function Item() {
                         <div className={styles.row}>
                             <h2>Short ID</h2>
                             <div className={styles.rowValue}>
-                                {data.result.shortID}{' '}
+                                {data.result.shortId}{' '}
                                 <Copy onClick={() => navigator.clipboard.writeText(data?.result?.id || '')} />
                             </div>
                         </div>

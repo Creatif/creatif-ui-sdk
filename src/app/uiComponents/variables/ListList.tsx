@@ -148,7 +148,9 @@ export function ListList<Value, Metadata>({ name }: Props) {
                             />
                         )}
 
-                        {queryParams.listingType === 'table' && <MainTableView<Value, Metadata> data={data.result} />}
+                        {queryParams.listingType === 'table' && (
+                            <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />
+                        )}
 
                         {data.result.data.length >= parseInt(limit) && (
                             <div className={styles.stickyPagination}>

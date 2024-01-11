@@ -7,7 +7,7 @@ import GroupsPopover from '@app/uiComponents/maps/list/GroupsPopover';
 import ItemView from '@app/uiComponents/maps/list/ItemView';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/Item.module.css';
+import styles from '@app/uiComponents/shared/css/Item.module.css';
 import { ActionIcon, Button, Checkbox, Loader, Pill } from '@mantine/core';
 import {
     IconChevronDown,

@@ -2,7 +2,7 @@ import Item from '@app/uiComponents/lists/list/Item';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
@@ -33,6 +33,10 @@ export default function MainListView<Value, Metadata>({
     const [hoveredId, setHoveredId] = useState<string>('');
     const [movingItems, setMovingItems] = useState<string[] | undefined>(undefined);
     const { error: errorNotification } = useNotification();
+
+    useEffect(() => {
+        setList(data.data);
+    }, [data]);
 
     const onDrop = useCallback(
         (source: DragItem, destination: DragItem) => {

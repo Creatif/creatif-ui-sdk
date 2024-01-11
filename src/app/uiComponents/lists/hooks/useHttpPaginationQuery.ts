@@ -1,9 +1,9 @@
 import { Initialize } from '@app/initialize';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import useHttpQuery from '@lib/http/useHttpQuery';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateList from '@lib/api/declarations/lists/paginateList';
+import type { ApiError } from '@lib/http/apiError';
 interface Props {
     listName: string;
     locales?: string[];
@@ -30,22 +30,11 @@ export default function useHttpPaginationQuery<Response>({
 }: Props) {
     const queryClient = useQueryClient();
 
+    const key = [listName, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
+
     return {
-        ...useHttpQuery<Response>(
-            [
-                listName,
-                {
-                    page: page,
-                    limit: limit,
-                    groups: groups,
-                    behaviour: behaviour,
-                    orderBy: orderBy,
-                    locale: locales,
-                    direction: direction,
-                    search: search,
-                    fields: fields,
-                },
-            ],
+        ...useQuery<unknown, ApiError, Response>(
+            key,
             throwIfHttpFails(() =>
                 paginateList({
                     name: listName,
@@ -61,32 +50,15 @@ export default function useHttpPaginationQuery<Response>({
                     fields,
                 }),
             ),
+            {
+                retry: 1,
+                staleTime: Infinity,
+                keepPreviousData: true,
+                refetchOnWindowFocus: false,
+            },
         ),
-        invalidateQuery(
-            listName: string,
-            page = 1,
-            limit = '15',
-            groups: string[] = [],
-            orderBy = 'created_at',
-            direction = 'desc',
-            locales: string[] = [],
-        ) {
-            queryClient.invalidateQueries([
-                listName,
-                {
-                    page: page,
-                    limit: limit,
-                    groups: groups,
-                    behaviour: behaviour,
-                    orderBy: orderBy,
-                    direction: direction,
-                    search: search,
-                    locales: locales,
-                },
-            ]);
-        },
-        invalidateEntireQuery() {
-            queryClient.invalidateQueries(listName);
+        invalidateQuery() {
+            queryClient.invalidateQueries(key);
         },
     };
 }

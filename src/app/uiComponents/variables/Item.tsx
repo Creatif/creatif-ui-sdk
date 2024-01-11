@@ -4,7 +4,7 @@ import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/Item.module.css';
+import styles from '@app/uiComponents/shared/css/Item.module.css';
 import { ActionIcon, Menu } from '@mantine/core';
 import {
     IconCalendarTime,
