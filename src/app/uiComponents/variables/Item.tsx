@@ -1,7 +1,7 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/lists/list/DeleteModal';
-import EditLocaleModal from '@app/uiComponents/shared/EditLocaleModal';
+import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/lists/list/GroupsPopover';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -13,17 +13,19 @@ import {
     IconEdit,
     IconEyeOff,
     IconLanguage,
-    IconReplace,
+    IconReplace, IconRoute,
     IconTrash,
 } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
 import { Initialize } from '@app/initialize';
 import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
 import appDate from '@lib/helpers/appDate';
+import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     name: string;
@@ -36,14 +38,24 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
+    const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
     const { mutate, data } = useUpdateVariable(name);
 
     item.locale = data?.result && data?.result.locale ? data?.result.locale : item.locale;
+    item.groups = data?.result && data?.result.groups ? data?.result.groups : item.groups;
+
+    const preventClickEventOnModal = useCallback((e: MouseEvent) => {
+        if (isEditLocaleOpen || deleteItemId || isEditGroupsOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, [isEditLocaleOpen, deleteItemId, isEditGroupsOpen]);
 
     return (
         <Link
             to={`/variable/show/${item.name}/${item.locale}`}
+            onClick={preventClickEventOnModal}
             className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
             {isDeleting && <div className={styles.disabled} />}
             <div className={styles.visibleSectionWrapper}>
@@ -54,9 +66,9 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
 
                             <div className={styles.behaviour}>
                                 {item.behaviour === 'modifiable' && (
-                                    <IconReplace className={styles.modifiable} size={14} />
+                                    <IconReplace color="var(--mantine-color-gray-8)" size={14} />
                                 )}
-                                {item.behaviour === 'readonly' && <IconEyeOff className={styles.readonly} size={16} />}
+                                {item.behaviour === 'readonly' && <IconEyeOff color="var(--mantine-color-gray-8)" size={14} />}
                                 <p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
                             </div>
 
@@ -76,6 +88,10 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                     <GroupsPopover groups={item.groups} />
                                 </div>
                             )}
+
+                            <div className={styles.behaviour}>
+                                <span className={styles.localeStrong}>{item.locale}</span>
+                            </div>
                         </div>
 
                         <div className={styles.actionRow}>
@@ -86,6 +102,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                         size={24}
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                         }}
                                         variant="white">
                                         <IconDotsVertical />
@@ -102,13 +119,35 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                         </Menu.Item>
                                     )}
 
+                                    <Menu.Divider />
+
                                     <Menu.Item
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             setIsEditLocaleOpen(true);
                                         }}
                                         leftSection={<IconLanguage size={16} />}>
                                         Edit {item.locale} locale
+                                    </Menu.Item>
+
+                                    <Menu.Item
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            setIsEditGroupsOpen(true);
+                                        }}
+                                        leftSection={<IconRoute size={16} />}>
+                                        Edit groups
+                                    </Menu.Item>
+
+                                    <Menu.Item
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                        }}
+                                        leftSection={<IconReplace size={16} />}>
+                                        Edit behaviour
                                     </Menu.Item>
 
                                     <Menu.Divider />
@@ -116,6 +155,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                                     <Menu.Item
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             setDeleteItemId(item.id);
                                         }}
                                         leftSection={<IconTrash size={16} color="red" />}>
@@ -184,6 +224,27 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                         locale: item.locale,
                     });
                     setIsEditLocaleOpen(false);
+                }}
+            />
+
+            <EditGroups
+                structureType="variable"
+                structureName={item.name}
+                open={isEditGroupsOpen}
+                currentGroups={item.groups || []}
+                onClose={() => setIsEditGroupsOpen(false)}
+                onEdit={(groups) => {
+                    mutate({
+                        projectId: Initialize.ProjectID(),
+                        name: item.id,
+                        fields: ['groups'],
+                        values: {
+                            groups: groups,
+                        },
+                        locale: item.locale,
+                    });
+
+                    setIsEditGroupsOpen(false);
                 }}
             />
         </Link>

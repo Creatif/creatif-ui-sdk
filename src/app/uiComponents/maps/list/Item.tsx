@@ -2,7 +2,7 @@ import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
 import useEditLocale from '@app/uiComponents/maps/hooks/useEditLocale';
 import DeleteModal from '@app/uiComponents/maps/list/DeleteModal';
-import EditLocaleModal from '@app/uiComponents/shared/EditLocaleModal';
+import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 import GroupsPopover from '@app/uiComponents/maps/list/GroupsPopover';
 import ItemView from '@app/uiComponents/maps/list/ItemView';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

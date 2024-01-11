@@ -19,6 +19,7 @@ class QueryParams {
         private readonly hiddenGroups: string | undefined,
         private readonly hiddenBehaviour: string | undefined,
         readonly search: string | undefined,
+        readonly listingType: string,
     ) {
         if (!hiddenPage) {
             this.page = 1;
@@ -82,6 +83,7 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
         params.get('groups') || '',
         params.get('behaviour') || '',
         params.get('search') || '',
+        params.get('listingType') || 'list',
     );
 
     return {
@@ -96,6 +98,7 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
                 orderBy: q.orderBy || orderBy,
                 behaviour: q.behaviour ? q.behaviour : '',
                 search: q.search ? q.search : '',
+                listingType: q.listingType,
                 [key]: value,
             });
         },

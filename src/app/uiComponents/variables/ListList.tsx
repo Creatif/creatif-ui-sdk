@@ -37,8 +37,6 @@ export function ListList<Value, Metadata>({ name }: Props) {
     const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
 
-    const [isListView, setIsListView] = useState(true);
-
     const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
@@ -101,10 +99,10 @@ export function ListList<Value, Metadata>({ name }: Props) {
                         <div className={styles.listChoiceListType}>
                             <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
                                 <IconListDetails
-                                    onClick={() => setIsListView(true)}
+                                    onClick={() => setParam('listingType', 'list')}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'list' ? styles.listChoiceListType_Icon_Highlighted : undefined,
                                     )}
                                     size={24}
                                 />
@@ -113,11 +111,11 @@ export function ListList<Value, Metadata>({ name }: Props) {
                             <Tooltip label="Table view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
                                 <IconTable
                                     onClick={() => {
-                                        setIsListView(false);
+                                        setParam('listingType', 'table');
                                     }}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'table' ? styles.listChoiceListType_Icon_Highlighted : undefined,
                                     )}
                                     size={24}
                                 />
@@ -138,7 +136,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
 
                 {!isFetching && data?.result && data.result.total !== 0 && !runtimeError && (
                     <div className={styles.container}>
-                        {isListView && (
+                        {queryParams.listingType === 'list' && (
                             <MainListView<Value, Metadata>
                                 data={data.result}
                                 name={name}
@@ -146,7 +144,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
                             />
                         )}
 
-                        {!isListView && <MainTableView<Value, Metadata> data={data.result} />}
+                        {queryParams.listingType === 'table' && <MainTableView<Value, Metadata> data={data.result} />}
 
                         {data.result.data.length >= parseInt(limit) && (
                             <div className={styles.stickyPagination}>

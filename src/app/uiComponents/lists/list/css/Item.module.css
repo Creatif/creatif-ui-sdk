@@ -10,7 +10,7 @@
         border 0.3s;
 
     text-decoration: none;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 3px;
 }
 
 .item:hover {
@@ -19,6 +19,10 @@
 
 .item:hover .dragAndDropIcon {
     opacity: 1;
+}
+
+.item:focus {
+    outline: 1px solid var(--mantine-color-gray-3);
 }
 
 .itemDisabled:hover {
@@ -143,14 +147,13 @@
     align-content: center;
     gap: 0.5rem;
     font-size: 0.9rem;
+    color: var(--mantine-color-gray-9);
+
 }
 
-.behaviour .modifiable {
-    color: var(--mantine-color-gray-7);
-}
-
-.behaviour .readonly {
-    color: var(--mantine-color-red-8);
+.localeStrong {
+    font-weight: 500;
+    color: var(--mantine-color-gray-9);
 }
 
 .groups {

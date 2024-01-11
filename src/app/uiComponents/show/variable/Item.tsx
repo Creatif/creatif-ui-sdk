@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
 import UIError from '@app/components/UIError';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/show/css/item.module.css';
-import { Fieldset } from '@mantine/core';
+import { Button, Fieldset } from '@mantine/core';
 import { IconChevronDown, IconChevronRight, IconClock } from '@tabler/icons-react';
 import appDate from '@lib/helpers/appDate';
 import Loading from '@app/components/Loading';
@@ -14,6 +14,7 @@ import type { Column } from '@lib/helpers/useValueFields';
 import useValueFields from '@lib/helpers/useValueFields';
 import Copy from '@app/components/Copy';
 import classNames from 'classnames';
+import { getOptions } from '@app/systems/stores/options';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -45,6 +46,7 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
 
 export default function Item() {
     const { variableName, locale } = useParams();
+    const { store: useOptions } = getOptions(variableName);
 
     if (!variableName || !locale) {
         return (
@@ -131,7 +133,10 @@ export default function Item() {
         <div className={styles.root}>
             <Loading isLoading={isFetching} />
 
-            <h2 className={styles.variableName}>{data.result.name}</h2>
+            <h2 className={styles.variableName}>{data.result.name}
+                {useOptions && <Button size="compact-xs" component={Link}
+                         to={`${useOptions.getState().paths.update}/${data.result.id}/${data.result.locale}`}>Edit</Button>}
+            </h2>
             <p className={styles.createdAt}>
                 <IconClock size={14} color="var(--mantine-color-gray-6)" />
                 {appDate(data.result.createdAt)}

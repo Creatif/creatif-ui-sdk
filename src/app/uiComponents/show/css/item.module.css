@@ -6,6 +6,11 @@
 }
 
 .variableName {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: center;
+
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--mantine-color-gray-9);
