@@ -39,10 +39,20 @@ function recursiveFieldsResolved(value: object) {
                         value: '-',
                     });
                 } else {
-                    values.push({
-                        column: key,
-                        value: <ArrayBadges values={val} />,
-                    });
+                    if (val.every((val) => typeof val !== 'object')) {
+                        values.push({
+                            column: key,
+                            value: <ArrayBadges values={val} />,
+                        });
+                    } else {
+                        for (const v of val) {
+                            values.push({
+                                column: '',
+                                value: '',
+                                innerColumn: recursiveFieldsResolved(v)
+                            });
+                        }
+                    }
                 }
             }
 

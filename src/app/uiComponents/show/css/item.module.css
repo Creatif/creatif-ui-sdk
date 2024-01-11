@@ -43,6 +43,19 @@
     margin-bottom: 1rem;
 }
 
+.expandableHeader {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.hasExpandableRow {
+    border-bottom: 1px solid var(--mantine-color-gray-1);
+    padding-bottom: 0.4rem;
+}
+
 .textValue {
     line-height: 1.6rem;
     color: var(--mantine-color-gray-9);
