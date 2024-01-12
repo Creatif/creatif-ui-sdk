@@ -26,7 +26,7 @@ import type { PaginatedVariableResult } from '@root/types/api/list';
 import type { DragSourceMonitor } from 'react-dnd';
 import { useDrag, useDrop } from 'react-dnd';
 import type { Identifier, XYCoord } from 'dnd-core';
-import type { DragItem } from '@app/uiComponents/lists/list/MainListView';
+import type { DragItem } from '@app/uiComponents/shared/listView/DraggableList';
 import Groups from '@app/components/Groups';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';

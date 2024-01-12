@@ -7,7 +7,7 @@ export default function paginateMap<Value = unknown, Metadata = unknown>(bluepri
     return tryHttp<PaginatedVariableResult<Value, Metadata>>(
         declarations(),
         'get',
-        `/maps/${blueprint.projectId}/${blueprint.name}${queryConstructor(
+        `/maps/items/${blueprint.projectId}/${blueprint.name}${queryConstructor(
             blueprint.page,
             blueprint.limit as string,
             blueprint.groups,

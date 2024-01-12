@@ -22,6 +22,8 @@ import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 interface Props {
     mapName: string;
 }
@@ -79,6 +81,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                 structureType={'map'}
                 isLoading={isFetching}
                 sortBy={orderBy}
+                search={search || ''}
                 locales={locales}
                 direction={direction}
                 behaviour={behaviour}
@@ -175,27 +178,29 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                 {!isFetching && data?.result && data.result.total !== 0 && (
                     <div className={styles.container}>
                         {isListView && (
-                            <MainListView<Value, Metadata>
-                                data={data.result}
-                                mapName={mapName}
-                                onDeleted={() => invalidateEntireQuery()}
-                                disabled={{
-                                    areItemsDeleting: areItemsDeleting,
-                                    checkedItems: checkedItems,
-                                }}
-                                onChecked={(itemId, checked) => {
-                                    const idx = checkedItems.findIndex((item) => item === itemId);
-                                    if (idx !== -1 && !checked) {
-                                        checkedItems.splice(idx, 1);
-                                        setCheckedItems([...checkedItems]);
-                                        return;
-                                    }
+                            <DndProvider backend={HTML5Backend}>
+                                <MainListView<Value, Metadata>
+                                    data={data.result}
+                                    mapName={mapName}
+                                    onDeleted={() => invalidateQuery()}
+                                    disabled={{
+                                        areItemsDeleting: areItemsDeleting,
+                                        checkedItems: checkedItems,
+                                    }}
+                                    onChecked={(itemId, checked) => {
+                                        const idx = checkedItems.findIndex((item) => item === itemId);
+                                        if (idx !== -1 && !checked) {
+                                            checkedItems.splice(idx, 1);
+                                            setCheckedItems([...checkedItems]);
+                                            return;
+                                        }
 
-                                    if (checked) {
-                                        setCheckedItems([...checkedItems, itemId]);
-                                    }
-                                }}
-                            />
+                                        if (checked) {
+                                            setCheckedItems([...checkedItems, itemId]);
+                                        }
+                                    }}
+                                />
+                            </DndProvider>
                         )}
 
                         {!isListView && <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />}

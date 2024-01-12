@@ -1,12 +1,12 @@
-import Item from '@app/uiComponents/lists/list/Item';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
+import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 
+type OnDrop = (source: DragItem, destination: DragItem) => void;
+type OnMove = (dragIndex: number, hoverIdx: number) => void;
 export interface DragItem {
     index: number;
     id: string;
@@ -14,21 +14,17 @@ export interface DragItem {
 }
 interface Props<Value, Metadata> {
     data: PaginationResult<Value, Metadata>;
-    onChecked: (itemId: string, checked: boolean) => void;
-    onDeleted: () => void;
     listName: string;
-    disabled: {
-        areItemsDeleting: boolean;
-        checkedItems: string[];
-    };
+    renderItems: (
+        onDrop: OnDrop,
+        onMove: OnMove,
+        list: PaginatedVariableResult[],
+        hoveredId: string,
+        movingSource: string | undefined,
+        movingDestination: string | undefined,
+    ) => React.ReactNode;
 }
-export default function MainListView<Value, Metadata>({
-    data,
-    onChecked,
-    onDeleted,
-    listName,
-    disabled,
-}: Props<Value, Metadata>) {
+export default function DraggableList<Value, Metadata>({ data, listName, renderItems }: Props<Value, Metadata>) {
     const [list, setList] = useState<PaginatedVariableResult[]>(data.data);
     const [hoveredId, setHoveredId] = useState<string>('');
     const [movingItems, setMovingItems] = useState<string[] | undefined>(undefined);
@@ -96,26 +92,5 @@ export default function MainListView<Value, Metadata>({
         [list],
     );
 
-    return (
-        <div>
-            {list.map((item, i) => (
-                <Item
-                    onMove={onMove}
-                    onDrop={onDrop}
-                    isHovered={item.id === hoveredId}
-                    onChecked={onChecked}
-                    onDeleted={onDeleted}
-                    disabled={
-                        (disabled.areItemsDeleting && disabled.checkedItems.includes(item.id)) ||
-                        (movingItems && movingItems[0] === item.id) ||
-                        (movingItems && movingItems[1] === item.id)
-                    }
-                    key={item.id}
-                    index={i}
-                    item={item}
-                    listName={listName}
-                />
-            ))}
-        </div>
-    );
+    return renderItems(onDrop, onMove, list, hoveredId, movingItems && movingItems[0], movingItems && movingItems[1]);
 }
