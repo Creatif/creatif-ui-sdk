@@ -1,7 +1,7 @@
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import rearrange from '@lib/api/declarations/lists/rearrange';
+import type rearrange from '@lib/api/declarations/lists/rearrange';
 import { Initialize } from '@app/initialize';
 import useNotification from '@app/systems/notifications/useNotification';
 
@@ -14,7 +14,9 @@ export interface DragItem {
 }
 interface Props<Value, Metadata> {
     data: PaginationResult<Value, Metadata>;
-    listName: string;
+    structureName: string;
+    structureType: 'list' | 'map';
+    onRearrange: typeof rearrange;
     renderItems: (
         onDrop: OnDrop,
         onMove: OnMove,
@@ -24,7 +26,13 @@ interface Props<Value, Metadata> {
         movingDestination: string | undefined,
     ) => React.ReactNode;
 }
-export default function DraggableList<Value, Metadata>({ data, listName, renderItems }: Props<Value, Metadata>) {
+export default function DraggableList<Value, Metadata>({
+    data,
+    structureName,
+    structureType,
+    renderItems,
+    onRearrange,
+}: Props<Value, Metadata>) {
     const [list, setList] = useState<PaginatedVariableResult[]>(data.data);
     const [hoveredId, setHoveredId] = useState<string>('');
     const [movingItems, setMovingItems] = useState<string[] | undefined>(undefined);
@@ -45,12 +53,15 @@ export default function DraggableList<Value, Metadata>({ data, listName, renderI
             setHoveredId('');
             setMovingItems([source.id, destination.id]);
 
-            rearrange({
-                projectId: Initialize.ProjectID(),
-                name: listName,
-                source: source.id,
-                destination: destination.id,
-            }).then(({ result, error }) => {
+            onRearrange(
+                {
+                    projectId: Initialize.ProjectID(),
+                    name: structureName,
+                    source: source.id,
+                    destination: destination.id,
+                },
+                structureType,
+            ).then(({ result, error }) => {
                 setMovingItems(undefined);
 
                 if (error) {

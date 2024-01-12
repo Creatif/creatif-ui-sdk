@@ -25,6 +25,7 @@ import type { TryResult } from '@root/types/shared';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Item from '@app/uiComponents/lists/list/Item';
+import rearrange from '@lib/api/declarations/lists/rearrange';
 interface Props {
     listName: string;
 }
@@ -185,7 +186,9 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
                                     data={data.result}
-                                    listName={listName}
+                                    structureName={listName}
+                                    structureType="list"
+                                    onRearrange={rearrange}
                                     renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
                                         <>
                                             {list.map((item, i) => (

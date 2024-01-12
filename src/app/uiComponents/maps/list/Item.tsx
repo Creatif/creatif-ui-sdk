@@ -1,11 +1,11 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { getOptions } from '@app/systems/stores/options';
-import useEditLocale from '@app/uiComponents/maps/hooks/useEditLocale';
-import DeleteModal from '@app/uiComponents/maps/list/DeleteModal';
+import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/shared/css/Item.module.css';
+import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { ActionIcon, Checkbox, Menu } from '@mantine/core';
 import {
     IconCalendarTime,
@@ -22,13 +22,14 @@ import classNames from 'classnames';
 import { type MouseEvent, useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
+import type { DragSourceMonitor } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
+import type { Identifier, XYCoord } from 'dnd-core';
+import type { DragItem } from '@app/uiComponents/shared/listView/DraggableList';
 import Groups from '@app/components/Groups';
 import appDate from '@lib/helpers/appDate';
-import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
-import { type DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
-import type { DragItem } from '@app/uiComponents/shared/listView/DraggableList';
-import type { Identifier, XYCoord } from 'dnd-core';
+import useUpdateMapVariable from '@app/uiComponents/maps/hooks/useUpdateMapVariable';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     mapName: string;
@@ -59,7 +60,7 @@ export default function Item<Value, Metadata>({
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
-    const { mutate, data } = useEditLocale(mapName, item.id, item.name);
+    const { mutate, data } = useUpdateMapVariable(mapName, item.id, item.name);
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
     item.groups = data?.result && data.result.groups ? data.result.groups : item.groups;

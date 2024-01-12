@@ -13,6 +13,7 @@ import styles from './css/root.module.css';
 import type { Shell, CreatifApp } from '@root/types/shell/shell';
 import { Item as VariableShowItem } from '@app/uiComponents/show/variable/Item';
 import { Item as ListItemShowItem } from '@app/uiComponents/show/list/Item';
+import { Item as MapItemShowItem } from '@app/uiComponents/show/map/Item';
 interface Props {
     options: CreatifApp;
 }
@@ -77,6 +78,8 @@ export default function Shell({ options }: Props) {
                                             path={`${item.routePath}`}
                                             element={<StructuredMapsListing mapName={item.structureName} />}
                                         />
+
+                                        <Route path={'map/show/:mapName/:mapId'} element={<MapItemShowItem />} />
                                     </>
                                 )}
 

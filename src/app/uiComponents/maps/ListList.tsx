@@ -8,7 +8,6 @@ import useHttpPaginationQuery from '@app/uiComponents/maps/hooks/useHttpPaginati
 import useSearchQuery from '@app/uiComponents/maps/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import DeleteModal from '@app/uiComponents/maps/list/DeleteModal';
-import MainListView from '@app/uiComponents/maps/list/MainListView';
 import NothingFound from '@app/uiComponents/maps/list/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -17,13 +16,16 @@ import MainTableView from '@app/uiComponents/maps/table/MainTableView';
 import { Button, Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
+import rearrange from '@lib/api/declarations/lists/rearrange';
+import Item from '@app/uiComponents/maps/list/Item';
 interface Props {
     mapName: string;
 }
@@ -179,26 +181,44 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                     <div className={styles.container}>
                         {isListView && (
                             <DndProvider backend={HTML5Backend}>
-                                <MainListView<Value, Metadata>
+                                <DraggableList<Value, Metadata>
                                     data={data.result}
-                                    mapName={mapName}
-                                    onDeleted={() => invalidateQuery()}
-                                    disabled={{
-                                        areItemsDeleting: areItemsDeleting,
-                                        checkedItems: checkedItems,
-                                    }}
-                                    onChecked={(itemId, checked) => {
-                                        const idx = checkedItems.findIndex((item) => item === itemId);
-                                        if (idx !== -1 && !checked) {
-                                            checkedItems.splice(idx, 1);
-                                            setCheckedItems([...checkedItems]);
-                                            return;
-                                        }
+                                    structureName={mapName}
+                                    structureType="map"
+                                    onRearrange={rearrange}
+                                    renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
+                                        <>
+                                            {list.map((item, i) => (
+                                                <Item
+                                                    onMove={onMove}
+                                                    onDrop={onDrop}
+                                                    isHovered={item.id === hoveredId}
+                                                    onChecked={(itemId, checked) => {
+                                                        const idx = checkedItems.findIndex((item) => item === itemId);
+                                                        if (idx !== -1 && !checked) {
+                                                            checkedItems.splice(idx, 1);
+                                                            setCheckedItems([...checkedItems]);
+                                                            return;
+                                                        }
 
-                                        if (checked) {
-                                            setCheckedItems([...checkedItems, itemId]);
-                                        }
-                                    }}
+                                                        if (checked) {
+                                                            setCheckedItems([...checkedItems, itemId]);
+                                                        }
+                                                    }}
+                                                    onDeleted={console.log}
+                                                    disabled={Boolean(
+                                                        (areItemsDeleting && checkedItems.includes(item.id)) ||
+                                                            (movingSource && movingSource === item.id) ||
+                                                            (movingDestination && movingDestination === item.id),
+                                                    )}
+                                                    key={item.id}
+                                                    index={i}
+                                                    item={item}
+                                                    mapName={mapName}
+                                                />
+                                            ))}
+                                        </>
+                                    )}
                                 />
                             </DndProvider>
                         )}
