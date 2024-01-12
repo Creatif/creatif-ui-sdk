@@ -48,7 +48,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
     const [isListView, setIsListView] = useState(true);
 
-    const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
+    const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
         listName: mapName,
@@ -205,7 +205,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                                                             setCheckedItems([...checkedItems, itemId]);
                                                         }
                                                     }}
-                                                    onDeleted={console.log}
+                                                    onDeleted={() => invalidateQuery()}
                                                     disabled={Boolean(
                                                         (areItemsDeleting && checkedItems.includes(item.id)) ||
                                                             (movingSource && movingSource === item.id) ||

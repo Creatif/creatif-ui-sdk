@@ -1,5 +1,4 @@
 import type { Behaviour } from '@root/types/api/shared';
-import type { UpdateListItemVariableBlueprint } from '@root/types/api/list';
 
 export interface CreateMapBlueprint {
     name: string;

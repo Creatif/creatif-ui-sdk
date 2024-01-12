@@ -4,7 +4,6 @@ import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
 import useGetGroups from '@app/uiComponents/shared/hooks/useGetGroups';
-import { useDebouncedValue } from '@mantine/hooks';
 import MultiSelectWithAdd from '@app/uiComponents/inputs/fields/MultiSelectWithAdd';
 
 interface Props {
@@ -19,7 +18,6 @@ interface Props {
 export default function EditGroups({ open, onClose, onEdit, currentGroups, structureName, structureType }: Props) {
     const [groups, setGroups] = useState<string[]>(currentGroups);
     const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups(structureType, structureName, open);
-    const [debouncedGroups] = useDebouncedValue(groups, 500);
 
     return (
         <>

@@ -11,26 +11,8 @@ import classNames from 'classnames';
 import { Initialize } from '@app/initialize';
 import createList from '@lib/api/declarations/lists/createList';
 import UIError from '@app/components/UIError';
-import type { TryResult } from '@root/types/shared';
 import createMap from '@lib/api/declarations/maps/createMap';
 import InitialSetup from '@lib/storage/initialSetup';
-interface Props {
-    lists: string[];
-    maps: string[];
-}
-function createPromise(fn: () => Promise<TryResult<unknown>>) {
-    return new Promise((resolve, reject) => {
-        fn().then(({ result, error }) => {
-            if (result) resolve(result);
-            if (error && error.error.data['exists']) {
-                resolve(true);
-                return;
-            }
-            if (error) reject(error);
-        });
-    });
-}
-
 async function createLists(lists: { [key: string]: boolean }) {
     const keys = Object.keys(lists);
     for (const key of keys) {
@@ -71,7 +53,7 @@ async function createMaps(maps: { [key: string]: boolean }) {
     }
 }
 
-export default function FirstTimeSetup({ children, lists, maps }: Props & PropsWithChildren) {
+export default function FirstTimeSetup({ children }: PropsWithChildren) {
     const [status, setStatus] = useState<'preparation' | 'checking' | 'ready' | 'error'>('preparation');
 
     useEffect(() => {

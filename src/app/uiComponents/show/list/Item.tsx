@@ -71,7 +71,7 @@ export function Item() {
     if (!data?.result) {
         return (
             <div className={classNames(styles.root, styles.loadingRoot)}>
-                <Loading isLoading={true} />
+                <Loading isLoading={isFetching} />
             </div>
         );
     }

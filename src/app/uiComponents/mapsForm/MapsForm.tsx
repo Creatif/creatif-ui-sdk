@@ -103,7 +103,6 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
         isFetching,
         data,
         error: getError,
-        invalidateQuery,
     } = useQueryMapVariable(structureId, itemId, Boolean(mode && structureId && useStructureOptionsStore));
 
     const { success: successNotification, error: errorNotification } = useNotification();
@@ -279,7 +278,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}

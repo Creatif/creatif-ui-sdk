@@ -163,26 +163,26 @@ function validateConfig(app: CreatifApp) {
     }
 
     if (!Array.isArray(app.items)) {
-        messages.push("App config does not have the request 'config.items'. It must be an array of of structures.");
+        messages.push('App config does not have the request \'config.items\'. It must be an array of of structures.');
         return messages;
     }
 
     const structures = [];
     for (const item of app.items) {
         if (typeof item.menuText !== 'string' || !item.menuText) {
-            messages.push("Config item 'config.item.menuText' is invalid. It must be a string.");
+            messages.push('Config item \'config.item.menuText\' is invalid. It must be a string.');
         }
 
         if (typeof item.routePath !== 'string' || !item.routePath) {
-            messages.push("Config item 'config.item.menuPath' is invalid. It must be a string.");
+            messages.push('Config item \'config.item.menuPath\' is invalid. It must be a string.');
         }
 
         if (typeof item.structureName !== 'string' || !item.structureName) {
-            messages.push("Config item 'config.item.structureName' is invalid. It must be a string.");
+            messages.push('Config item \'config.item.structureName\' is invalid. It must be a string.');
         }
 
         if (typeof item.structureType !== 'string' || !item.structureType) {
-            messages.push("Config item 'config.item.structureType' is invalid. It must be a string.");
+            messages.push('Config item \'config.item.structureType\' is invalid. It must be a string.');
         }
 
         structures.push({
@@ -191,11 +191,11 @@ function validateConfig(app: CreatifApp) {
         });
 
         if (!item.createComponent) {
-            ("Config item 'config.item.createComponent' is invalid. It must be a valid React component.");
+            ('Config item \'config.item.createComponent\' is invalid. It must be a valid React component.');
         }
 
         if (!item.updateComponent) {
-            ("Config item 'config.item.updateComponent' is invalid. It must be a valid React component.");
+            ('Config item \'config.item.updateComponent\' is invalid. It must be a valid React component.');
         }
     }
 

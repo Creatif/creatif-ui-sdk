@@ -2,7 +2,6 @@
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
 import { CheckIcon, Combobox, Group, Loader, Pill, PillsInput, useCombobox } from '@mantine/core';
-import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { useEffect, useState } from 'react';
 
 interface Props {
