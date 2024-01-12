@@ -44,7 +44,6 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
-    const [isListView, setIsListView] = useState(true);
 
     const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
@@ -82,7 +81,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                 isLoading={isFetching}
                 sortBy={orderBy}
                 locales={locales}
-                search={search}
+                search={search || ''}
                 direction={direction}
                 behaviour={behaviour}
                 groups={groups}
@@ -123,10 +122,12 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                         <div className={styles.listChoiceListType}>
                             <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
                                 <IconListDetails
-                                    onClick={() => setIsListView(true)}
+                                    onClick={() => setParam('listingType', 'list')}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'list'
+                                            ? styles.listChoiceListType_Icon_Highlighted
+                                            : undefined,
                                     )}
                                     size={24}
                                 />
@@ -136,11 +137,13 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                                 <IconTable
                                     onClick={() => {
                                         setFields([...fields, 'value', 'metadata']);
-                                        setIsListView(false);
+                                        setParam('listingType', 'table');
                                     }}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'table'
+                                            ? styles.listChoiceListType_Icon_Highlighted
+                                            : undefined,
                                     )}
                                     size={24}
                                 />
@@ -177,7 +180,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
 
                 {!isFetching && data?.result && data.result.total !== 0 && (
                     <div className={styles.container}>
-                        {isListView && (
+                        {queryParams.listingType === 'list' && (
                             <DndProvider backend={HTML5Backend}>
                                 <MainListView<Value, Metadata>
                                     data={data.result}
@@ -203,7 +206,9 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                             </DndProvider>
                         )}
 
-                        {!isListView && <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />}
+                        {queryParams.listingType === 'table' && (
+                            <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />
+                        )}
 
                         {data.result.data.length >= parseInt(limit) && (
                             <div className={styles.stickyPagination}>
