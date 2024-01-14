@@ -1,43 +1,33 @@
 import { CreatifProvider } from '@root/CreatifProvider';
-import LandingPage from '@root/uiApp/forms/LandingPage';
-import LandingPageBanner from '@root/uiApp/forms/LandingPageBanner';
-import ButtonForm from '@root/uiApp/forms/ButtonForm';
+import OrganizationForm from '@root/uiApp/forms/OrganizationForm';
+import ProjectsForm from '@root/uiApp/forms/ProjectsForm';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$pJJfsc1kC8wGJRSUD4NoU.u76dVp7HKVjKDsrPg4x.AmUU3XmDiX."
-            projectId="01HKZ76ZZMCS307PF054DC34Q3"
+            apiKey="$2a$10$aOeeFWlxqy7kJbUKujAM.e5GFm9lUy/jtEZHXQogH0CMibLHYN.qW"
+            projectId="01HM1N6QH4N4XKKDV1R5S5ZWEG"
             app={{
                 logo: 'Break free',
                 items: [
                     {
-                        menuText: 'Parks',
-                        routePath: 'parks',
-
-                        structureType: 'list',
-                        structureName: 'Parks',
-
-                        createComponent: <LandingPage structureName="Parks" />,
-                        updateComponent: <LandingPage structureName="Parks" mode="update" />,
-                    },
-                    {
-                        menuText: 'Buttons',
-                        routePath: 'buttons',
+                        menuText: 'Organizations',
+                        routePath: 'organizations',
 
                         structureType: 'map',
-                        structureName: 'Buttons',
+                        structureName: 'Organizations',
 
-                        createComponent: <ButtonForm structureName="Buttons" />,
-                        updateComponent: <ButtonForm structureName="Buttons" mode="update" />,
+                        createComponent: <OrganizationForm structureName="Organizations" />,
+                        updateComponent: <OrganizationForm structureName="Organizations" mode="update" />,
                     },
                     {
-                        menuText: 'Ad banner',
-                        routePath: 'add-banner',
+                        menuText: 'Projects',
+                        routePath: 'projects',
 
-                        structureName: 'add banner',
-                        structureType: 'variable',
-                        createComponent: <LandingPageBanner variableName="add banner" />,
-                        updateComponent: <LandingPageBanner variableName="add banner" mode="update" />,
+                        structureType: 'map',
+                        structureName: 'Projects',
+
+                        createComponent: <ProjectsForm structureName="Projects" />,
+                        updateComponent: <ProjectsForm structureName="Projects" mode="update" />,
                     },
                 ],
             }}

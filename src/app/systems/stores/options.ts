@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand';
+import type { StructureType } from '@root/types/shell/shell';
 interface OptionsStore {
     structureName: string;
     paths: {
@@ -12,12 +13,12 @@ interface OptionsStore {
 interface Props {
     structureName: string;
     path: string;
-    type: string;
+    type: StructureType;
 }
 
 const store: Record<string, UseBoundStore<StoreApi<OptionsStore>>> = {};
 export function createOptions({ structureName, path, type }: Props) {
-    const name = `${structureName}-options`;
+    const name = `${structureName}_${type}-options`;
 
     if (store[name]) throw new Error(`Store with name '${name}' already exists. This is definitely a bug.`);
 
@@ -32,8 +33,8 @@ export function createOptions({ structureName, path, type }: Props) {
     }));
 }
 
-export function getOptions(structureName: string) {
-    const name = `${structureName}-options`;
+export function getOptions(structureName: string, structureType: StructureType) {
+    const name = `${structureName}_${structureType}-options`;
 
     if (!store[name])
         return {

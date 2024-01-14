@@ -38,8 +38,10 @@ import Form from '@app/uiComponents/shared/Form';
 import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import UIError from '@app/components/UIError';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
-import type { Behaviour } from '@root/types/api/shared';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import chooseAndDeleteBindings from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+import type { IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+
 interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
     bindings?: Bindings<T>;
@@ -68,24 +70,6 @@ interface Props<T extends FieldValues, Value, Metadata> {
     afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
     form?: HTMLAttributes<HTMLFormElement>;
 }
-
-function chooseLocale(fieldLocale: string, bindingLocale: string): string {
-    if (bindingLocale) return bindingLocale;
-    if (fieldLocale) return fieldLocale;
-    return Initialize.Locale();
-}
-
-function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {
-    if (bindingGroups.length !== 0) return bindingGroups;
-    if (fieldGroups.length !== 0) return fieldGroups;
-    return ['default'];
-}
-
-function chooseBehaviour(field: Behaviour, binding: Behaviour | undefined): Behaviour {
-    if (binding) return binding;
-    if (field) return field;
-    return 'modifiable';
-}
 export default function VariableForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
     variableName,
     formProps,
@@ -105,6 +89,10 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
     const resolveBindings = useResolveBindings();
     const { store: useStructureOptionsStore, error: runtimeError } = getOptions(variableName);
 
+    const [isVariableExistsError, setIsVariableExistsError] = useState(false);
+    const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
+    const [isVariableReadonly, setIsVariableReadonly] = useState(false);
+
     const {
         isFetching,
         data,
@@ -120,45 +108,33 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
             return;
         }
 
+        setIsVariableExistsError(false);
+        setIsGenericUpdateError(false);
+        setIsVariableReadonly(false);
+
         const binding = resolveBindings(value, bindings);
         if (!binding) return;
         const { locale, groups, behaviour } = binding;
 
         wrappedBeforeSave(value, e, beforeSave).then((result) => {
-            setIsSaving(true);
             if (!valueMetadataValidator(result)) {
                 setBeforeSaveError(true);
                 setIsSaving(false);
                 return;
             }
 
+            setIsVariableExistsError(false);
+            setIsGenericUpdateError(false);
+            setIsVariableReadonly(false);
+            setIsSaving(true);
+
             if (mode && result && structureId && useStructureOptionsStore) {
-                type localeType = { locale: string };
-                type groupsType = { groups: string[] };
-                type behaviourType = { behaviour: Behaviour };
-                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (Object.hasOwn(result.value as object, 'locale')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as localeType).locale;
-                }
-
-                const chosenGroups = chooseGroups(
-                    (result.value as groupsType).groups || ['default'],
-                    groups || ['default'],
+                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                    result.value as IncomingValues,
+                    locale,
+                    behaviour,
+                    groups,
                 );
-                if (Object.hasOwn(result.value as object, 'groups')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as groupsType).groups;
-                }
-
-                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
-                if (Object.hasOwn(result.value as object, 'behaviour')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as behaviourType).behaviour;
-                }
 
                 updateVariable({
                     projectId: Initialize.ProjectID(),
@@ -173,17 +149,17 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         locale: chosenLocale,
                     },
                     locale: variableLocale || Initialize.Locale(),
-                }).then(({ result, error }) => {
+                }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
                     if (error && error.error.data['exists']) {
-                        errorNotification('Variable exists', 'Variable with this name and locale already exists');
+                        setIsVariableExistsError(true);
+                        return;
+                    } else if (error && error.error.data['behaviourReadonly']) {
+                        setIsVariableReadonly(true);
                         return;
                     } else if (error) {
-                        errorNotification(
-                            'Something went wrong',
-                            'Variable could not be updated. Please, try again later',
-                        );
+                        setIsGenericUpdateError(true);
                         return;
                     }
 
@@ -194,40 +170,19 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         );
 
                         queryClient.invalidateQueries(variableName);
-                        afterSave?.(result, e);
+                        afterSave?.(response, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
             }
 
             if (!mode && result) {
-                setIsSaving(true);
-                type localeType = { locale: string };
-                type groupsType = { groups: string[] };
-                type behaviourType = { behaviour: Behaviour };
-                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (result && (result.value as localeType).locale) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as localeType).locale;
-                }
-
-                const chosenGroups = chooseGroups(
-                    (result.value as groupsType).groups || ['default'],
-                    groups || ['default'],
+                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                    result.value as IncomingValues,
+                    locale,
+                    behaviour,
+                    groups,
                 );
-                if (Object.hasOwn(result.value as object, 'groups')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as groupsType).groups;
-                }
-
-                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
-                if (Object.hasOwn(result.value as object, 'behaviour')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as behaviourType).behaviour;
-                }
 
                 createVariable<Value, Metadata>({
                     name: variableName,
@@ -285,8 +240,38 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 </Alert>
             )}
 
-            {getError && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+            {Boolean(getError) && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+            {isVariableExistsError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Item exists">Item with this name already exists</UIError>
+                </div>
+            )}
 
+            {isGenericUpdateError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Something went wrong">
+                        We cannot update this item at this moment. We are working to solve this issue. Please, try again
+                        later.
+                    </UIError>
+                </div>
+            )}
+
+            {isVariableReadonly && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Item is readonly">
+                        This is a readonly item and can be updated only by the administrator.
+                    </UIError>
+                </div>
+            )}
             <Loading isLoading={isFetching} />
 
             {!isFetching && !getError && (

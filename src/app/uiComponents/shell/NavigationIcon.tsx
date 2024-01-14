@@ -2,8 +2,9 @@
 // @ts-ignore
 import styles from './css/navigation.module.css';
 import classNames from 'classnames';
+import type { StructureType } from '@root/types/shell/shell';
 interface Props {
-    type: 'map' | 'variable' | 'list';
+    type: StructureType;
     selected?: boolean;
 }
 export default function NavigationIcon({ type, selected }: Props) {

@@ -11,6 +11,10 @@
     position: relative;
 }
 
+.bold {
+    font-weight: 600;
+}
+
 .listChoiceHeading {
     display: flex;
     justify-content: space-between;

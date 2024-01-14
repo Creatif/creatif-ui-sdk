@@ -4,7 +4,7 @@ import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
+import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
@@ -28,8 +28,8 @@ import type {
 import { Initialize } from '@app/initialize';
 import UIError from '@app/components/UIError';
 import Form from '@app/uiComponents/shared/Form';
+import type { ReferenceInputProps } from '@app/uiComponents/shared/Form';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
-import type { Behaviour } from '@root/types/api/shared';
 import type { CreatedVariable } from '@root/types/api/variable';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
@@ -38,6 +38,8 @@ import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
 import addToMap from '@lib/api/declarations/maps/addToMap';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
+import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+import getReferences from '@app/uiComponents/shared/hooks/getReferences';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     mapName: string;
@@ -61,31 +63,13 @@ interface Props<T extends FieldValues, Value, Metadata> {
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
+            inputReference: (props: ReferenceInputProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
     afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
     form?: HTMLAttributes<HTMLFormElement>;
 }
-
-function chooseLocale(fieldLocale: string, bindingLocale: string): string {
-    if (bindingLocale) return bindingLocale;
-    if (fieldLocale) return fieldLocale;
-    return Initialize.Locale();
-}
-
-function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {
-    if (bindingGroups.length !== 0) return bindingGroups;
-    if (fieldGroups.length !== 0) return fieldGroups;
-    return ['default'];
-}
-
-function chooseBehaviour(field: Behaviour, binding: Behaviour | undefined): Behaviour {
-    if (binding) return binding;
-    if (field) return field;
-    return 'modifiable';
-}
-
 export default function MapsForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
     mapName,
     formProps,
@@ -95,7 +79,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     afterSave,
     mode,
 }: Props<T, Value, Metadata>) {
-    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(mapName);
+    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(mapName, 'map');
 
     const { structureId, itemId } = useParams();
 
@@ -111,6 +95,10 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     const navigate = useNavigate();
     const resolveBindings = useResolveBindings();
     const [isSaving, setIsSaving] = useState(false);
+
+    const [isVariableExistsError, setIsVariableExistsError] = useState(false);
+    const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
+    const [isVariableReadonly, setIsVariableReadonly] = useState(false);
 
     const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
         if (!value) {
@@ -132,35 +120,22 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                 return;
             }
 
+            setIsVariableExistsError(false);
+            setIsGenericUpdateError(false);
+            setIsVariableReadonly(false);
+
             setIsSaving(true);
             if (!mode && result) {
-                console.log('create');
-                type localeType = { locale: string };
-                type groupsType = { groups: string[] };
-                type behaviourType = { behaviour: Behaviour };
-                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (Object.hasOwn(result.value as object, 'locale')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as localeType).locale;
-                }
-
-                const chosenGroups = chooseGroups(
-                    (result.value as groupsType).groups || ['default'],
-                    groups || ['default'],
+                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                    result.value as IncomingValues,
+                    locale,
+                    behaviour,
+                    groups,
                 );
-                if (Object.hasOwn(result.value as object, 'groups')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as groupsType).groups;
-                }
 
-                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
-                if (Object.hasOwn(result.value as object, 'behaviour')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as behaviourType).behaviour;
-                }
+                const references = getReferences(result.value as { [key: string]: unknown });
+
+                console.log(references);
 
                 addToMap({
                     name: mapName,
@@ -173,17 +148,16 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                         groups: chosenGroups,
                         locale: chosenLocale,
                     },
+                    references: references,
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
                     if (error && error.error.data['exists']) {
+                        setIsVariableExistsError(true);
                         errorNotification('Map item exists', 'Map item with this name and locale already exists');
                         return;
                     } else if (error) {
-                        errorNotification(
-                            'Something went wrong',
-                            'Variable could not be updated. Please, try again later',
-                        );
+                        setIsGenericUpdateError(true);
                         return;
                     }
 
@@ -202,32 +176,12 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
             }
 
             if (mode && result && structureId && itemId) {
-                type localeType = { locale: string };
-                type groupsType = { groups: string[] };
-                type behaviourType = { behaviour: Behaviour };
-                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (Object.hasOwn(result.value as object, 'locale')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as localeType).locale;
-                }
-
-                const chosenGroups = chooseGroups(
-                    (result.value as groupsType).groups || ['default'],
-                    groups || ['default'],
+                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                    result.value as IncomingValues,
+                    locale,
+                    behaviour,
+                    groups,
                 );
-                if (Object.hasOwn(result.value as object, 'groups')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as groupsType).groups;
-                }
-
-                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
-                if (Object.hasOwn(result.value as object, 'behaviour')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as behaviourType).behaviour;
-                }
 
                 updateMapVariable({
                     fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
@@ -246,13 +200,13 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     setIsSaving(false);
 
                     if (error && error.error && error.error.data['exists']) {
-                        errorNotification('Map item exists', `Map item with name '${name}' already exists.`);
+                        setIsVariableExistsError(true);
+                        return;
+                    } else if (error && error.error && error.error.data['behaviourReadonly']) {
+                        setIsVariableReadonly(true);
                         return;
                     } else if (error) {
-                        errorNotification(
-                            'Something went wrong',
-                            'Variable could not be updated. Please, try again later',
-                        );
+                        setIsGenericUpdateError(true);
                         return;
                     }
 
@@ -278,12 +232,43 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
 
-            {getError && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+            {Boolean(getError) && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+            {isVariableExistsError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Item exists">Item with this name already exists</UIError>
+                </div>
+            )}
+
+            {isGenericUpdateError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Something went wrong">
+                        We cannot update this item at this moment. We are working to solve this issue. Please, try again
+                        later.
+                    </UIError>
+                </div>
+            )}
+
+            {isVariableReadonly && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Item is readonly">
+                        This is a readonly item and can be updated only by the administrator.
+                    </UIError>
+                </div>
+            )}
 
             <Loading isLoading={isFetching} />
 

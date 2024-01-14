@@ -25,6 +25,15 @@ import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
 import InputBehaviour from '@app/uiComponents/inputs/InputBehaviour';
 import type { QueriedListItem } from '@root/types/api/list';
+import InputReference from '@app/uiComponents/inputs/InputReference';
+import type { StructureType } from '@root/types/shell/shell';
+
+export interface ReferenceInputProps {
+    structureName: string;
+    structureType: StructureType;
+    label?: string;
+    placeholder: string;
+}
 
 interface Props<T extends FieldValues> {
     structureId: string;
@@ -47,6 +56,7 @@ interface Props<T extends FieldValues> {
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
+            inputReference: (props: ReferenceInputProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
@@ -131,6 +141,9 @@ export default function Form<T extends FieldValues>({
                                 />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
+                            inputReference: (props: ReferenceInputProps) => (
+                                <InputReference {...props} store={useSpecialFields} />
+                            ),
                         },
                     )}
             </form>

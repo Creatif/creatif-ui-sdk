@@ -17,8 +17,10 @@ export interface AppShellItem {
     menuIcon?: React.ReactNode;
 
     structureName: string;
-    structureType: 'list' | 'variable' | 'map';
+    structureType: StructureType;
 
     createComponent: React.ReactNode;
     updateComponent: React.ReactNode;
 }
+
+export type StructureType = 'map' | 'list' | 'variable';

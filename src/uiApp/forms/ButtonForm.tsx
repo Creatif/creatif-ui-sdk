@@ -27,7 +27,7 @@ export default function ButtonForm({ structureName, mode }: Props) {
                     buttonType: 'primary',
                 },
             }}
-            inputs={(submitButton) => (
+            inputs={(submitButton, { inputBehaviour }) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>
@@ -49,6 +49,8 @@ export default function ButtonForm({ structureName, mode }: Props) {
                                 }}
                             />
                         </Grid.Col>
+
+                        <Grid.Col span={6}>{inputBehaviour()}</Grid.Col>
 
                         <Grid.Col span={6}>
                             <InputSelectControlled

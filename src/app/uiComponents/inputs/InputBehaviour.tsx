@@ -34,7 +34,7 @@ export default function InputBehaviour({ store }: InputBehaviourProps) {
                         onChange={(value) => {
                             setFormValue('behaviour', value);
                             onChange(value);
-                            setValue(value);
+                            setValue(value as Behaviour);
                         }}
                         icon={<IconReplace size={16} />}
                         value="modifiable"
@@ -46,7 +46,7 @@ export default function InputBehaviour({ store }: InputBehaviourProps) {
                         onChange={(value) => {
                             setFormValue('behaviour', value);
                             onChange(value);
-                            setValue(value);
+                            setValue(value as Behaviour);
                         }}
                         icon={<IconEyeOff size={16} />}
                         value="readonly"

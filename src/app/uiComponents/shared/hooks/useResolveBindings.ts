@@ -2,6 +2,7 @@ import useNotification from '@app/systems/notifications/useNotification';
 import type { Behaviour } from '@root/types/api/shared';
 import type { Bindings } from '@root/types/forms/forms';
 import type { FieldValues } from 'react-hook-form';
+import { Initialize } from '@app/initialize';
 function resolveBindings<T extends FieldValues>(values: T, bindings: Bindings<T>, t: keyof Bindings<T>) {
     if (!bindings[t]) return false;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -32,7 +33,7 @@ export default function useResolveBindings() {
                 name: '',
                 groups: [],
                 locale: '',
-                behaviour: 'modifiable' as Behaviour,
+                behaviour: undefined,
             };
         }
 
@@ -79,11 +80,29 @@ export default function useResolveBindings() {
             return;
         }
 
-        let behaviour: Behaviour = 'modifiable';
+        let behaviour: Behaviour | undefined = undefined;
         if (b) {
             behaviour = b;
         }
 
         return { name, groups, behaviour };
     };
+}
+
+export function chooseLocale(fieldLocale: string, bindingLocale: string | undefined): string {
+    if (bindingLocale) return bindingLocale;
+    if (fieldLocale) return fieldLocale;
+    return Initialize.Locale();
+}
+
+export function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {
+    if (bindingGroups.length !== 0) return bindingGroups;
+    if (fieldGroups.length !== 0) return fieldGroups;
+    return ['default'];
+}
+
+export function chooseBehaviour(field: Behaviour | undefined, binding: Behaviour | undefined): Behaviour {
+    if (binding) return binding;
+    if (field) return field;
+    return 'modifiable';
 }

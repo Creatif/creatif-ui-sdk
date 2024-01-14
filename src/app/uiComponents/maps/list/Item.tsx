@@ -6,7 +6,7 @@ import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // @ts-ignore
 import styles from '@app/uiComponents/shared/css/Item.module.css';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
-import { ActionIcon, Checkbox, Menu } from '@mantine/core';
+import { ActionIcon, Checkbox, Menu, Tooltip } from '@mantine/core';
 import {
     IconCalendarTime,
     IconDotsVertical,
@@ -54,7 +54,7 @@ export default function Item<Value, Metadata>({
 }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const { store: useOptions } = getOptions(mapName);
+    const { store: useOptions } = getOptions(mapName, 'map');
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
@@ -164,7 +164,13 @@ export default function Item<Value, Metadata>({
                 <div className={styles.infoColumn}>
                     <div className={styles.nameRow}>
                         <div className={styles.information}>
-                            <h2 className={styles.nameRowTitle}>{item.name}</h2>
+                            {item.name.length > 20 && (
+                                <Tooltip w={320} transitionProps={{ duration: 200 }} multiline label={item.name}>
+                                    <h2 className={styles.nameRowTitle}>{item.name.substring(0, 20)}...</h2>
+                                </Tooltip>
+                            )}
+
+                            {item.name.length < 20 && <h2 className={styles.nameRowTitle}>{item.name}</h2>}
 
                             <div className={styles.behaviour}>
                                 {item.behaviour === 'modifiable' && (
@@ -303,8 +309,8 @@ export default function Item<Value, Metadata>({
             />
 
             <EditGroups
-                structureType="list"
-                structureName={item.name}
+                structureType="map"
+                structureName={mapName}
                 open={isEditGroupsOpen}
                 currentGroups={item.groups || []}
                 onClose={() => setIsEditGroupsOpen(false)}

@@ -9,7 +9,7 @@ import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
-import NothingFound from '@app/uiComponents/lists/list/NothingFound';
+import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
@@ -26,12 +26,14 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Item from '@app/uiComponents/lists/list/Item';
 import rearrange from '@lib/api/declarations/lists/rearrange';
+import { getOptions } from '@app/systems/stores/options';
 interface Props {
     listName: string;
 }
 export function ListList<Value, Metadata>({ listName }: Props) {
     const { queryParams, setParam } = useSearchQuery('index');
     const { error: errorNotification, success: successNotification } = useNotification();
+    const { store: optionsStore } = getOptions(listName, 'list');
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -178,7 +180,9 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                     </div>
                 )}
 
-                {data?.result && data.result.total === 0 && <NothingFound structureName={listName} />}
+                {data?.result && data.result.total === 0 && (
+                    <NothingFound createNewPath={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                )}
 
                 {!isFetching && data?.result && data.result.total !== 0 && (
                     <div className={styles.container}>

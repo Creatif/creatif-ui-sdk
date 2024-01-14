@@ -35,7 +35,7 @@ interface Props<Value, Metadata> {
 export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const { store: useOptions } = getOptions(name);
+    const { store: useOptions } = getOptions(name, 'variable');
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);

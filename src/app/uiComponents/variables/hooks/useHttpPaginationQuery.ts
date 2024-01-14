@@ -1,10 +1,10 @@
 import { Initialize } from '@app/initialize';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import useHttpQuery from '@lib/http/useHttpQuery';
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import type { CurrentSortType } from '@root/types/components/components';
+import type { ApiError } from '@lib/http/apiError';
 interface Props {
     name: string;
     locales?: string[];
@@ -29,22 +29,11 @@ export default function useHttpPaginationQuery<Response>({
     locales = [],
 }: Props) {
     const queryClient = useQueryClient();
+    const key = [name, page, limit, groups, behaviour, orderBy, direction, search, locales];
 
     return {
-        ...useHttpQuery<Response>(
-            [
-                name,
-                {
-                    page: page,
-                    limit: limit,
-                    groups: groups,
-                    behaviour: behaviour,
-                    orderBy: orderBy,
-                    direction: direction,
-                    search: search,
-                    locales: locales,
-                },
-            ],
+        ...useQuery<unknown, ApiError, Response>(
+            key,
             throwIfHttpFails(() =>
                 paginateVariables({
                     name: name,
@@ -59,30 +48,14 @@ export default function useHttpPaginationQuery<Response>({
                     locales,
                 }),
             ),
+            {
+                retry: 1,
+                keepPreviousData: true,
+                refetchOnWindowFocus: false,
+            },
         ),
-        invalidateQuery(
-            name: string,
-            page = 1,
-            limit = '15',
-            groups: string[] = [],
-            orderBy = 'created_at',
-            direction = 'desc',
-        ) {
-            queryClient.invalidateQueries([
-                name,
-                {
-                    page: page,
-                    limit: limit,
-                    groups: groups,
-                    behaviour: behaviour,
-                    orderBy: orderBy,
-                    direction: direction,
-                    search: search,
-                },
-            ]);
-        },
-        invalidateEntireQuery() {
-            queryClient.invalidateQueries(name);
+        invalidateQuery() {
+            queryClient.invalidateQueries(key);
         },
     };
 }

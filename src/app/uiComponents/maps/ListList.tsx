@@ -8,7 +8,7 @@ import useHttpPaginationQuery from '@app/uiComponents/maps/hooks/useHttpPaginati
 import useSearchQuery from '@app/uiComponents/maps/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import DeleteModal from '@app/uiComponents/maps/list/DeleteModal';
-import NothingFound from '@app/uiComponents/maps/list/NothingFound';
+import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/maps/list/css/ListTable.module.css';
@@ -26,12 +26,14 @@ import { DndProvider } from 'react-dnd';
 import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import Item from '@app/uiComponents/maps/list/Item';
+import { getOptions } from '@app/systems/stores/options';
 interface Props {
     mapName: string;
 }
 export function ListList<Value, Metadata>({ mapName }: Props) {
     const { queryParams, setParam } = useSearchQuery();
     const { error: errorNotification, success: successNotification } = useNotification();
+    const { store: optionsStore } = getOptions(mapName, 'map');
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -170,12 +172,15 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                 {error && (
                     <div className={styles.skeleton}>
                         <CenteredError title="An error occurred">
-                            Something went wrong when trying to fetch list {mapName}. Please, try again later.
+                            Something went wrong when trying to fetch items for{' '}
+                            <span className={styles.bold}>{mapName}</span>. Please, try again later.
                         </CenteredError>
                     </div>
                 )}
 
-                {data?.result && data.result.total === 0 && <NothingFound structureName={mapName} />}
+                {data?.result && data.result.total === 0 && (
+                    <NothingFound createNewPath={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                )}
 
                 {!isFetching && data?.result && data.result.total !== 0 && (
                     <div className={styles.container}>

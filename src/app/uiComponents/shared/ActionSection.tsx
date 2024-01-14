@@ -17,6 +17,8 @@ import { useEffect, useState } from 'react';
 import styles from './css/ActionSection.module.css';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
+import type { StructureType } from '@root/types/shell/shell';
+import { getOptions } from '@app/systems/stores/options';
 interface Props {
     onSearch: (text: string) => void;
     onSelectedGroups: (groups: string[]) => void;
@@ -25,7 +27,7 @@ interface Props {
     onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
     onSelectedLocales: (locales: string[]) => void;
     includeSortBy: string[];
-    structureType: 'variable' | 'map' | 'list';
+    structureType: StructureType;
 
     direction: 'desc' | 'asc' | undefined;
     sortBy: CurrentSortType;
@@ -57,6 +59,7 @@ export default function ActionSection({
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);
     const [value, setValue] = useState(search);
     const [debounced] = useDebouncedValue(value, 500);
+    const { store: optionsStore } = getOptions(structureName, structureType);
 
     useEffect(() => {
         onSearch(debounced);
@@ -159,7 +162,7 @@ export default function ActionSection({
 
                     <div className={styles.buttonWidthLoadingWrapper}>
                         {isLoading && <Loader size={20} />}
-                        <CreateNew structureName={structureName} />
+                        <CreateNew path={(optionsStore && optionsStore.getState().paths.create) || ''} />
                     </div>
                 </div>
             </div>

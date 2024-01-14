@@ -76,7 +76,7 @@ export function Item() {
         );
     }
 
-    const { store: useOptions } = getOptions(mapName as string);
+    const { store: useOptions } = getOptions(mapName as string, 'map');
 
     const values = useValueFields(data.result.value);
 

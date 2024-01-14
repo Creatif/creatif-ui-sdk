@@ -8,9 +8,8 @@
 }
 
 .sortTitle {
-    font-size: 0.8rem;
-    color: var(--mantine-color-gray-5);
-    border-bottom: 1px solid var(--mantine-color-gray-2);
+    font-size: 0.7rem;
+    color: var(--mantine-color-gray-9);
 }
 
 .column {
@@ -20,11 +19,25 @@
     align-content: center;
     gap: 0.5rem;
     color: var(--mantine-color-gray-6);
-    margin: 1rem 0 1rem 0;
+    margin: 0.5rem 0 1rem 0;
 }
 
 .behaviourColumn {
     flex-direction: row;
+    align-items: center;
+}
+
+.behaviourReset {
+    font-size: 0.7rem;
+    margin-left: 1rem;
+    color: var(--mantine-color-gray-9);
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.behaviourReset:hover {
+    text-decoration: underline;
 }
 
 .row {

@@ -4,7 +4,7 @@ import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import useResolveBindings from '@app/uiComponents/listForm/helpers/useResolveBindings';
+import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
@@ -31,15 +31,15 @@ import Form from '@app/uiComponents/shared/Form';
 import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { appendToList } from '@lib/api/declarations/lists/appendToList';
-import type { Behaviour } from '@root/types/api/shared';
-import type { CreatedVariable } from '@root/types/api/variable';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
 import { useQueryClient } from 'react-query';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import type { UpdateListItemResult } from '@root/types/api/list';
+import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
 
-interface Props<T extends FieldValues, Value, Metadata> {
+interface Props<T extends FieldValues> {
     listName: string;
     bindings?: Bindings<T>;
     formProps: UseFormProps<T>;
@@ -64,26 +64,8 @@ interface Props<T extends FieldValues, Value, Metadata> {
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
-    afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
+    afterSave?: AfterSaveFn<unknown>;
     form?: HTMLAttributes<HTMLFormElement>;
-}
-
-function chooseLocale(fieldLocale: string, bindingLocale: string): string {
-    if (bindingLocale) return bindingLocale;
-    if (fieldLocale) return fieldLocale;
-    return Initialize.Locale();
-}
-
-function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {
-    if (bindingGroups.length !== 0) return bindingGroups;
-    if (fieldGroups.length !== 0) return fieldGroups;
-    return ['default'];
-}
-
-function chooseBehaviour(field: Behaviour, binding: Behaviour | undefined): Behaviour {
-    if (binding) return binding;
-    if (field) return field;
-    return 'modifiable';
 }
 
 export default function ListForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
@@ -95,7 +77,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
     afterSave,
     mode,
 }: Props<T, Value, Metadata>) {
-    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(listName);
+    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(listName, 'list');
 
     const { structureId, itemId } = useParams();
 
@@ -112,6 +94,10 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
     const navigate = useNavigate();
     const resolveBindings = useResolveBindings();
     const [isSaving, setIsSaving] = useState(false);
+
+    const [isVariableExistsError, setIsVariableExistsError] = useState(false);
+    const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
+    const [isVariableReadonly, setIsVariableReadonly] = useState(false);
 
     const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
         if (!value) {
@@ -133,34 +119,18 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                 return;
             }
 
+            setIsVariableExistsError(false);
+            setIsGenericUpdateError(false);
+            setIsVariableReadonly(false);
             setIsSaving(true);
+
             if (!mode && result) {
-                type localeType = { locale: string };
-                type groupsType = { groups: string[] };
-                type behaviourType = { behaviour: Behaviour };
-                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (Object.hasOwn(result.value as object, 'locale')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as localeType).locale;
-                }
-
-                const chosenGroups = chooseGroups(
-                    (result.value as groupsType).groups || ['default'],
-                    groups || ['default'],
+                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                    result.value as IncomingValues,
+                    locale,
+                    behaviour,
+                    groups,
                 );
-                if (Object.hasOwn(result.value as object, 'groups')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as groupsType).groups;
-                }
-
-                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
-                if (Object.hasOwn(result.value as object, 'behaviour')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as behaviourType).behaviour;
-                }
 
                 appendToList({
                     name: listName,
@@ -179,20 +149,17 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     setIsSaving(false);
 
                     if (error && error.error.data['exists']) {
-                        errorNotification('List item exists', 'List item with this name and locale already exists');
+                        setIsVariableExistsError(true);
                         return;
                     } else if (error) {
-                        errorNotification(
-                            'Something went wrong',
-                            'Variable could not be updated. Please, try again later',
-                        );
+                        setIsGenericUpdateError(true);
                         return;
                     }
 
                     if (response && useStructureOptionsStore) {
                         successNotification(
                             'List item created',
-                            `List item with name '${response.name}' and locale '${chosenLocale}' has been created.`,
+                            `List item with name '${name}' and locale '${chosenLocale}' has been created.`,
                         );
 
                         queryClient.invalidateQueries(listName);
@@ -204,32 +171,13 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
             }
 
             if (mode && result && structureId && itemId) {
-                type localeType = { locale: string };
-                type groupsType = { groups: string[] };
-                type behaviourType = { behaviour: Behaviour };
-                const chosenLocale = chooseLocale((result.value as localeType).locale, locale);
-                if (Object.hasOwn(result.value as object, 'locale')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as localeType).locale;
-                }
-
-                const chosenGroups = chooseGroups(
-                    (result.value as groupsType).groups || ['default'],
-                    groups || ['default'],
+                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                    result.value as IncomingValues,
+                    locale,
+                    behaviour,
+                    groups,
                 );
-                if (Object.hasOwn(result.value as object, 'groups')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as groupsType).groups;
-                }
 
-                const chosenBehaviour = chooseBehaviour((result.value as behaviourType).behaviour, behaviour);
-                if (Object.hasOwn(result.value as object, 'behaviour')) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    delete (result.value as behaviourType).behaviour;
-                }
                 updateListItem({
                     fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
                     name: structureId,
@@ -246,11 +194,11 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
-                    if (error) {
-                        errorNotification(
-                            'Something went wrong',
-                            'Variable could not be updated. Please, try again later',
-                        );
+                    if (error && error.error.data['behaviourReadonly']) {
+                        setIsVariableReadonly(true);
+                        return;
+                    } else if (error) {
+                        setIsGenericUpdateError(true);
                         return;
                     }
 
@@ -262,7 +210,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
 
                         invalidateQuery();
                         queryClient.invalidateQueries(listName);
-                        afterSave?.(result, e);
+                        afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
                         navigate(useStructureOptionsStore.getState().paths.listing);
                     }
                 });
@@ -280,12 +228,43 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
 
-            {getError && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+            {Boolean(getError) && <UIError title="Not found">{'This item could not be found.'}</UIError>}
+            {isVariableExistsError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Item exists">Item with this name already exists</UIError>
+                </div>
+            )}
+
+            {isGenericUpdateError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Something went wrong">
+                        We cannot update this item at this moment. We are working to solve this issue. Please, try again
+                        later.
+                    </UIError>
+                </div>
+            )}
+
+            {isVariableReadonly && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Item is readonly">
+                        This is a readonly item and can be updated only by the administrator.
+                    </UIError>
+                </div>
+            )}
 
             <Loading isLoading={isFetching} />
 

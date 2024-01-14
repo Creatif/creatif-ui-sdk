@@ -54,7 +54,7 @@ export default function Item<Value, Metadata>({
 }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const { store: useOptions } = getOptions(listName);
+    const { store: useOptions } = getOptions(listName, 'list');
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
@@ -304,7 +304,7 @@ export default function Item<Value, Metadata>({
 
             <EditGroups
                 structureType="list"
-                structureName={item.name}
+                structureName={listName}
                 open={isEditGroupsOpen}
                 currentGroups={item.groups || []}
                 onClose={() => setIsEditGroupsOpen(false)}

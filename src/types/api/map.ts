@@ -5,6 +5,19 @@ export interface CreateMapBlueprint {
     projectId: string;
 }
 
+export interface GetMapBlueprint {
+    name: string;
+    projectId: string;
+}
+
+export interface AppMap {
+    id: string;
+    name: string;
+    projectId: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface CreatedMapVariable {
     id: string;
     name: string;
@@ -29,10 +42,17 @@ export interface AddToMapVariable {
     metadata: unknown;
 }
 
+export interface Reference {
+    structureName: string;
+    structureType: string;
+    structureId: string;
+}
+
 export interface AddToMapBlueprint {
     name: string;
     projectId: string;
     variable: AddToMapVariable;
+    references?: Reference[];
 }
 
 export interface PaginateMapBlueprint {

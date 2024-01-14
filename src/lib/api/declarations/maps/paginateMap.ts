@@ -1,10 +1,10 @@
-import type { PaginatedVariableResult } from '@root/types/api/list';
+import type { PaginationResult } from '@root/types/api/list';
 import { authHeaders, tryHttp } from '@lib/http/tryHttp';
 import { declarations } from '@lib/http/fetchInstance';
 import { queryConstructor } from '@lib/api/declarations/queryConstructor';
 import type { PaginateMapBlueprint } from '@root/types/api/map';
 export default function paginateMap<Value = unknown, Metadata = unknown>(blueprint: PaginateMapBlueprint) {
-    return tryHttp<PaginatedVariableResult<Value, Metadata>>(
+    return tryHttp<PaginationResult<Value, Metadata>>(
         declarations(),
         'get',
         `/maps/items/${blueprint.projectId}/${blueprint.name}${queryConstructor(

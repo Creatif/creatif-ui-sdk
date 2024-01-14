@@ -76,7 +76,7 @@ export function Item() {
         );
     }
 
-    const { store: useOptions } = getOptions(listName as string);
+    const { store: useOptions } = getOptions(listName as string, 'list');
 
     const values = useValueFields(data.result.value);
 

@@ -220,6 +220,7 @@ export default function Sort({
                     <AppPill
                         onChange={(item) => {
                             setBehaviour(() => {
+                                console.log(item);
                                 if (item === 'readonly') {
                                     onBehaviourChange(undefined);
                                     return undefined;
@@ -234,6 +235,17 @@ export default function Sort({
                         text="Readonly"
                         selected={behaviour === 'readonly'}
                     />
+
+                    {behaviour && (
+                        <span
+                            onClick={() => {
+                                setBehaviour(undefined);
+                                onBehaviourChange(undefined);
+                            }}
+                            className={styles.behaviourReset}>
+                            RESET
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -276,26 +288,6 @@ export default function Sort({
                         text="Descending"
                         selected={direction === 'desc'}
                     />
-
-                    <div
-                        onClick={() => {
-                            setDirection((item) => {
-                                if (item === 'desc') {
-                                    onDirectionChange(undefined);
-                                    return undefined;
-                                }
-
-                                onDirectionChange('desc');
-                                return 'desc';
-                            });
-                        }}
-                        className={classNames(
-                            styles.behaviourPill,
-                            direction === 'desc' ? styles.selectedBehaviourPill : undefined,
-                        )}>
-                        <IconSortDescending size={16} />
-                        <span>Descending</span>
-                    </div>
                 </div>
             </div>
         </div>

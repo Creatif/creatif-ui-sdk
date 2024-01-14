@@ -6,7 +6,7 @@ import useHttpPaginationQuery from '@app/uiComponents/variables/hooks/useHttpPag
 import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import MainListView from '@app/uiComponents/variables/MainListView';
-import NothingFound from '@app/uiComponents/lists/list/NothingFound';
+import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
@@ -26,7 +26,7 @@ interface Props {
 }
 export function ListList<Value, Metadata>({ name }: Props) {
     const { queryParams, setParam } = useSearchQuery('created_at');
-    const { error: runtimeError } = getOptions(name);
+    const { store: optionsStore, error: runtimeError } = getOptions(name, 'variable');
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -37,7 +37,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
     const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
 
-    const { data, error, invalidateEntireQuery, isFetching } = useHttpPaginationQuery<
+    const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
         name: name,
@@ -58,6 +58,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
                 includeSortBy={['created_at', 'updated_at']}
                 isLoading={isFetching}
                 sortBy={orderBy}
+                search={search || ''}
                 locales={locales}
                 direction={direction}
                 behaviour={behaviour}
@@ -136,7 +137,9 @@ export function ListList<Value, Metadata>({ name }: Props) {
                     </div>
                 )}
 
-                {data?.result && data.result.total === 0 && <NothingFound structureName={name} />}
+                {data?.result && data.result.total === 0 && (
+                    <NothingFound createNewPath={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                )}
 
                 {!isFetching && data?.result && data.result.total !== 0 && !runtimeError && (
                     <div className={styles.container}>
@@ -144,7 +147,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
                             <MainListView<Value, Metadata>
                                 data={data.result}
                                 name={name}
-                                onDeleted={() => invalidateEntireQuery()}
+                                onDeleted={() => invalidateQuery()}
                             />
                         )}
 
