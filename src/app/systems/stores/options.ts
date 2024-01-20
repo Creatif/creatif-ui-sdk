@@ -20,7 +20,7 @@ const store: Record<string, UseBoundStore<StoreApi<OptionsStore>>> = {};
 export function createOptions({ structureName, path, type }: Props) {
     const name = `${structureName}_${type}-options`;
 
-    if (store[name]) throw new Error(`Store with name '${name}' already exists. This is definitely a bug.`);
+    if (store[name]) return;
 
     store[name] = create<OptionsStore>(() => ({
         paths: {

@@ -1,4 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
+import type { QueryReference } from '@root/types/api/reference';
 export interface CreateVariableBlueprint {
     name: string;
     behaviour: Behaviour;
@@ -52,6 +53,7 @@ export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
     metadata?: Value;
     value?: Metadata;
     locale: string;
+    references: QueryReference[];
 
     createdAt: string;
     updatedAt: string;

@@ -39,7 +39,9 @@ import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariabl
 import addToMap from '@lib/api/declarations/maps/addToMap';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
 import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
-import getReferences from '@app/uiComponents/shared/hooks/getReferences';
+import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
+import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
+import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     mapName: string;
@@ -80,6 +82,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     mode,
 }: Props<T, Value, Metadata>) {
     const { store: useStructureOptionsStore, error: runtimeError } = getOptions(mapName, 'map');
+    const referenceStore = createInputReferenceStore();
 
     const { structureId, itemId } = useParams();
 
@@ -100,127 +103,144 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
     const [isVariableReadonly, setIsVariableReadonly] = useState(false);
 
-    const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
-        if (!value) {
-            errorNotification(
-                'No data submitted.',
-                'undefined has been submitted which means there are no values to save. Have you added some fields to your form?',
-            );
+    const onInternalSubmit = useCallback(
+        (value: T, e: BaseSyntheticEvent | undefined) => {
+            if (!value) {
+                errorNotification(
+                    'No data submitted.',
+                    'undefined has been submitted which means there are no values to save. Have you added some fields to your form?',
+                );
 
-            return;
-        }
-
-        const binding = resolveBindings(value, bindings);
-        if (!binding) return;
-        const { name, groups, behaviour, locale } = binding;
-
-        wrappedBeforeSave(value, e, beforeSave).then((result) => {
-            if (!valueMetadataValidator(result)) {
-                setBeforeSaveError(true);
                 return;
             }
 
-            setIsVariableExistsError(false);
-            setIsGenericUpdateError(false);
-            setIsVariableReadonly(false);
+            const binding = resolveBindings(value, bindings);
+            if (!binding) return;
+            const { name, groups, behaviour, locale } = binding;
 
-            setIsSaving(true);
-            if (!mode && result) {
-                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
-                    result.value as IncomingValues,
-                    locale,
-                    behaviour,
-                    groups,
-                );
+            wrappedBeforeSave(value, e, beforeSave).then((result) => {
+                if (!valueMetadataValidator(result)) {
+                    setBeforeSaveError(true);
+                    return;
+                }
 
-                const references = getReferences(result.value as { [key: string]: unknown });
+                setIsVariableExistsError(false);
+                setIsGenericUpdateError(false);
+                setIsVariableReadonly(false);
 
-                console.log(references);
+                setIsSaving(true);
+                if (!mode && result) {
+                    const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                        result.value as IncomingValues,
+                        locale,
+                        behaviour,
+                        groups,
+                    );
 
-                addToMap({
-                    name: mapName,
-                    projectId: Initialize.ProjectID(),
-                    variable: {
-                        name: name,
-                        behaviour: chosenBehaviour,
-                        value: result.value,
-                        metadata: result.metadata,
-                        groups: chosenGroups,
-                        locale: chosenLocale,
-                    },
-                    references: references,
-                }).then(({ result: response, error }) => {
-                    setIsSaving(false);
+                    removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
-                    if (error && error.error.data['exists']) {
-                        setIsVariableExistsError(true);
-                        errorNotification('Map item exists', 'Map item with this name and locale already exists');
-                        return;
-                    } else if (error) {
-                        setIsGenericUpdateError(true);
-                        return;
-                    }
-
-                    if (useStructureOptionsStore) {
-                        successNotification(
-                            'Map item created',
-                            `Map item with name '${name}' and locale '${chosenLocale}' has been created.`,
-                        );
-
-                        queryClient.invalidateQueries(mapName);
-                        afterSave?.(response, e);
+                    addToMap({
+                        name: mapName,
+                        projectId: Initialize.ProjectID(),
+                        variable: {
+                            name: name,
+                            behaviour: chosenBehaviour,
+                            value: result.value,
+                            metadata: result.metadata,
+                            groups: chosenGroups,
+                            locale: chosenLocale,
+                        },
+                        references: referenceStore.getState().references.map((item) => ({
+                            structureName: item.structureName,
+                            structureType: item.structureType,
+                            name: item.name,
+                            variableId: item.variableId,
+                        })) as Reference[],
+                    }).then(({ result: response, error }) => {
                         setIsSaving(false);
-                        navigate(useStructureOptionsStore.getState().paths.listing);
-                    }
-                });
-            }
 
-            if (mode && result && structureId && itemId) {
-                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
-                    result.value as IncomingValues,
-                    locale,
-                    behaviour,
-                    groups,
-                );
+                        if (error && error.error.data['exists']) {
+                            setIsVariableExistsError(true);
+                            errorNotification('Map item exists', 'Map item with this name and locale already exists');
+                            return;
+                        } else if (error) {
+                            setIsGenericUpdateError(true);
+                            return;
+                        }
 
-                updateMapVariable({
-                    fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
-                    name: structureId,
-                    projectId: Initialize.ProjectID(),
-                    itemId: itemId,
-                    values: {
-                        name: name,
-                        value: result.value,
-                        metadata: result.metadata,
-                        groups: chosenGroups,
-                        behaviour: chosenBehaviour,
-                        locale: chosenLocale,
-                    },
-                }).then(({ result: response, error }) => {
-                    setIsSaving(false);
+                        if (useStructureOptionsStore) {
+                            successNotification(
+                                'Map item created',
+                                `Map item with name '${name}' and locale '${chosenLocale}' has been created.`,
+                            );
 
-                    if (error && error.error && error.error.data['exists']) {
-                        setIsVariableExistsError(true);
-                        return;
-                    } else if (error && error.error && error.error.data['behaviourReadonly']) {
-                        setIsVariableReadonly(true);
-                        return;
-                    } else if (error) {
-                        setIsGenericUpdateError(true);
-                        return;
-                    }
+                            queryClient.invalidateQueries(mapName);
+                            afterSave?.(response, e);
+                            setIsSaving(false);
+                            navigate(useStructureOptionsStore.getState().paths.listing);
+                        }
+                    });
+                }
 
-                    if (response && useStructureOptionsStore) {
-                        successNotification('Map item updated', `Map item with item name '${name}' has been updated.`);
+                if (mode && result && structureId && itemId) {
+                    const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
+                        result.value as IncomingValues,
+                        locale,
+                        behaviour,
+                        groups,
+                    );
 
-                        queryClient.invalidateQueries(mapName);
-                        afterSave?.(result, e);
-                        navigate(useStructureOptionsStore.getState().paths.listing);
-                    }
-                });
-            }
-        });
-    }, []);
+                    removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
+
+                    updateMapVariable({
+                        fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
+                        name: structureId,
+                        projectId: Initialize.ProjectID(),
+                        itemId: itemId,
+                        values: {
+                            name: name,
+                            value: result.value,
+                            metadata: result.metadata,
+                            groups: chosenGroups,
+                            behaviour: chosenBehaviour,
+                            locale: chosenLocale,
+                        },
+                        references: referenceStore.getState().references.map((item) => ({
+                            name: item.name,
+                            structureType: item.structureType,
+                            variableId: item.variableId,
+                            structureName: item.structureName,
+                        })) as UpdateMapVariableReferenceBlueprint[],
+                    }).then(({ result: response, error }) => {
+                        setIsSaving(false);
+
+                        if (error && error.error && error.error.data['exists']) {
+                            setIsVariableExistsError(true);
+                            return;
+                        } else if (error && error.error && error.error.data['behaviourReadonly']) {
+                            setIsVariableReadonly(true);
+                            return;
+                        } else if (error) {
+                            setIsGenericUpdateError(true);
+                            return;
+                        }
+
+                        if (response && useStructureOptionsStore) {
+                            successNotification(
+                                'Map item updated',
+                                `Map item with item name '${name}' has been updated.`,
+                            );
+
+                            queryClient.invalidateQueries(mapName);
+                            afterSave?.(result, e);
+                            navigate(useStructureOptionsStore.getState().paths.listing);
+                        }
+                    });
+                }
+            });
+        },
+        [referenceStore],
+    );
 
     return (
         <div className={contentContainerStyles.root}>
@@ -278,6 +298,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     structureId={mapName}
                     formProps={formProps}
                     inputs={inputs}
+                    referenceStore={referenceStore}
                     onSubmit={onInternalSubmit}
                     isSaving={isSaving}
                     mode={mode}

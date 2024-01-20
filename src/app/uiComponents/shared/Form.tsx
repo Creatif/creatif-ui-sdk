@@ -27,18 +27,25 @@ import InputBehaviour from '@app/uiComponents/inputs/InputBehaviour';
 import type { QueriedListItem } from '@root/types/api/list';
 import InputReference from '@app/uiComponents/inputs/InputReference';
 import type { StructureType } from '@root/types/shell/shell';
+import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
+import type { QueriedMapItem } from '@root/types/api/map';
+import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
+import type { StoreApi, UseBoundStore } from 'zustand';
 
 export interface ReferenceInputProps {
+    name: string;
     structureName: string;
     structureType: StructureType;
     label?: string;
     placeholder: string;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
 interface Props<T extends FieldValues> {
     structureId: string;
     structureType: string;
     formProps: UseFormProps<T>;
+    referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
     inputs: (
         submitButton: React.ReactNode,
         actions: {
@@ -62,12 +69,13 @@ interface Props<T extends FieldValues> {
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
     isSaving: boolean;
     mode: 'update' | undefined;
-    currentData: GetVariableResponse | QueriedListItem | undefined;
+    currentData: GetVariableResponse | QueriedListItem | QueriedMapItem | undefined;
 }
 export default function Form<T extends FieldValues>({
     structureType,
     structureId,
     formProps,
+    referenceStore,
     inputs,
     onSubmit,
     isSaving,
@@ -79,10 +87,22 @@ export default function Form<T extends FieldValues>({
     const setGroups = useSpecialFields((state) => state.setGroups);
     const setBehaviour = useSpecialFields((state) => state.setBehaviour);
 
+    const assignReferences = referenceStore((state) => state.assign);
+
     if (mode === 'update' && currentData) {
         setLocale(currentData.locale);
         setGroups(currentData.groups || ['default']);
         setBehaviour(currentData.behaviour);
+
+        assignReferences(
+            currentData.references.map((item) => ({
+                name: item.name,
+                structureType: item.structureType,
+                structureName: item.structureId,
+                variableId: item.ownerId,
+            })),
+        );
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         formProps.defaultValues = currentData.value;
@@ -142,7 +162,7 @@ export default function Form<T extends FieldValues>({
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputReference: (props: ReferenceInputProps) => (
-                                <InputReference {...props} store={useSpecialFields} />
+                                <InputReference {...props} store={referenceStore} />
                             ),
                         },
                     )}

@@ -5,7 +5,6 @@ import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/shared/css/Item.module.css';
-import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { ActionIcon, Checkbox, Menu, Tooltip } from '@mantine/core';
 import {
     IconCalendarTime,
@@ -30,6 +29,8 @@ import Groups from '@app/components/Groups';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import useUpdateMapVariable from '@app/uiComponents/maps/hooks/useUpdateMapVariable';
+import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
+import { Initialize } from '@app/initialize';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     mapName: string;
@@ -266,9 +267,10 @@ export default function Item<Value, Metadata>({
                 onClose={() => setDeleteItemId(undefined)}
                 onDelete={async () => {
                     setIsDeleting(true);
-                    const { error, status } = await deleteListItemByID({
+                    const { error, status } = await deleteMapItem({
                         name: mapName,
                         itemId: item.id,
+                        projectId: Initialize.ProjectID(),
                     });
 
                     if (error) {
@@ -276,6 +278,11 @@ export default function Item<Value, Metadata>({
                             'Cannot delete list item',
                             'An error occurred when trying to delete list item. Please, try again later.',
                         );
+
+                        setIsDeleting(false);
+                        setDeleteItemId(undefined);
+
+                        return;
                     }
 
                     if (status === 200) {

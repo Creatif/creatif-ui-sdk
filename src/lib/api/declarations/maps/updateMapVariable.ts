@@ -19,6 +19,7 @@ export async function updateMapVariable(blueprint: UpdateMapVariableBlueprint) {
                 value: blueprint.values.value ? JSON.stringify(blueprint.values.value) : null,
                 metadata: blueprint.values.metadata ? JSON.stringify(blueprint.values.metadata) : null,
             },
+            references: blueprint.references,
         },
         authHeaders(),
     );

@@ -1,159 +1,190 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Autocomplete } from '@mantine/core';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import paginateMap from '@lib/api/declarations/maps/paginateMap';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
-import { useDebouncedValue } from '@mantine/hooks';
 import type { StructureType } from '@root/types/shell/shell';
 import { Initialize } from '@app/initialize';
 import { Controller, useFormContext } from 'react-hook-form';
-import type { ApiError } from '@lib/http/apiError';
 import type { StoreApi, UseBoundStore } from 'zustand';
-import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
+import type { AsyncAutocompleteSelectOption } from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
+import AsyncAutocompleteSelect from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
+import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
+import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
+
+/**
+ *
+ */
 
 export interface ReferenceValue {
+    name: string;
     structureName: string;
     structureType: StructureType;
     value: string;
 }
 
 interface Props {
+    name: string;
     structureName: string;
     structureType: StructureType;
     placeholder: string;
     label?: string;
-    store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    store: UseBoundStore<StoreApi<ReferencesStore>>;
 }
 
-function usePagination(structureName: string, structureType: StructureType) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
-    const [error, setError] = useState<ApiError | undefined>();
+async function searchAndCreateOptions(
+    structureName: string,
+    structureType: StructureType,
+    search: string,
+): Promise<AsyncAutocompleteSelectOption[]> {
+    if (structureType === 'list') {
+        const { result, error } = await paginateList({
+            search: search,
+            name: structureName,
+            limit: 1000,
+            page: 1,
+            orderBy: 'created_at',
+            projectId: Initialize.ProjectID(),
+        });
 
-    const paginate = useCallback((search: string) => {
-        setIsLoading(true);
-
-        if (structureType === 'list') {
-            paginateList({
-                search: search,
-                name: structureName,
-                limit: 1000,
-                page: 1,
-                orderBy: 'created_at',
-                projectId: Initialize.ProjectID(),
-            }).then(({ result, error }) => {
-                setIsLoading(false);
-
-                if (result && result.data) {
-                    setOptions(
-                        result.data.map((item) => ({
-                            label: item.name,
-                            value: item.id,
-                        })),
-                    );
-                }
-
-                if (error) {
-                    setError(error);
-                }
-            });
-
-            return;
+        if (result) {
+            return result.data.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }));
         }
 
-        if (structureType === 'map') {
-            paginateMap({
-                search: search,
-                name: structureName,
-                limit: 100,
-                page: 1,
-                projectId: Initialize.ProjectID(),
-            }).then(({ result, error }) => {
-                setIsLoading(false);
-
-                if (result && result.data) {
-                    setOptions(
-                        result.data.map((item) => ({
-                            label: item.name,
-                            value: item.id,
-                        })),
-                    );
-                }
-
-                if (error) {
-                    setError(error);
-                }
-            });
-
-            return;
+        if (error) {
+            throw error;
         }
 
-        paginateVariables({
+        return [];
+    }
+
+    if (structureType === 'map') {
+        const { result, error } = await paginateMap({
             search: search,
             name: structureName,
             limit: 100,
             page: 1,
             projectId: Initialize.ProjectID(),
-        }).then(({ result, error }) => {
-            setIsLoading(false);
-
-            if (result && result.data) {
-                setOptions(
-                    result.data.map((item) => ({
-                        label: item.name,
-                        value: item.id,
-                    })),
-                );
-            }
-
-            if (error) {
-                setError(error);
-            }
         });
-    }, []);
 
-    return {
-        data: options,
-        isLoading,
-        error,
-        paginate: paginate,
-    };
+        if (result) {
+            return result.data.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }));
+        }
+
+        if (error) {
+            throw error;
+        }
+
+        return [];
+    }
+
+    const { result, error } = await paginateVariables({
+        search: search,
+        name: structureName,
+        limit: 100,
+        page: 1,
+        projectId: Initialize.ProjectID(),
+    });
+
+    if (result) {
+        return result.data.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }));
+    }
+
+    if (error) {
+        throw error;
+    }
+
+    return [];
 }
 
-export default function InputReference({ structureName, structureType, placeholder, label }: Props) {
-    const [search, setSearch] = useState<string>('');
-    const { data, paginate, isLoading, error } = usePagination(structureName, structureType);
+export default function InputReference({
+    structureName,
+    structureType,
+    placeholder,
+    label,
+    validation,
+    name,
+    store,
+}: Props) {
     const { control, setValue: setFormValue } = useFormContext();
-    const name = `${structureName}_${structureType}_reference`;
+    const [selected, setSelected] = useState<AsyncAutocompleteSelectOption | undefined>();
 
-    const [debounced] = useDebouncedValue(search, 200);
+    const hasReference = store((state) => state.has);
+    const updateReference = store((state) => state.update);
+    const addReference = store((state) => state.add);
 
     useEffect(() => {
-        paginate(debounced);
-    }, [debounced]);
+        if (selected) {
+            setFormValue(name, {
+                name: name,
+                structureType: structureType,
+                structureName: structureName,
+                value: selected.value,
+            });
+        }
+    }, [selected]);
+
+    const searchFn = useCallback(
+        async (searchValue: string) => {
+            const result = await searchAndCreateOptions(structureName, structureType, searchValue);
+            const existingReferences = store.getState().references;
+
+            if (existingReferences.length) {
+                for (const ref of existingReferences) {
+                    const existingRef = result.find((item) => item.value === ref.structureName);
+
+                    if (existingRef && !selected) {
+                        setSelected(existingRef);
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        },
+        [selected],
+    );
 
     return (
         <Controller
             control={control}
+            rules={validation}
             render={({ field: { onChange } }) => (
-                <Autocomplete
-                    error={
-                        error &&
-                        `Structure '${structureName}' could not be fetched at this moment. Please, try again later.`
-                    }
-                    disabled={isLoading}
-                    value={search}
-                    onChange={(item) => {
-                        setSearch(item);
-                        onChange({
-                            structureType: structureType,
-                            structureName: structureName,
-                            value: item,
-                        });
+                <AsyncAutocompleteSelect
+                    selected={selected}
+                    error={useFirstError(name)}
+                    onOptionSelected={(item) => {
+                        if (item) {
+                            const ref = {
+                                name: name,
+                                structureType: structureType,
+                                structureName: structureName,
+                                variableId: item.value,
+                            };
+
+                            onChange(ref);
+
+                            if (hasReference(name)) {
+                                updateReference(ref);
+                                return;
+                            }
+
+                            addReference(ref);
+                        }
                     }}
+                    searchFn={searchFn}
                     label={label}
                     placeholder={placeholder}
-                    data={data}
                 />
             )}
             name={name}

@@ -38,9 +38,13 @@ export default function ProjectsForm({ structureName, mode }: Props) {
 
                         <Grid.Col span={12}>
                             {inputReference({
+                                name: 'organizations',
                                 structureName: 'Organizations',
                                 structureType: 'map',
                                 placeholder: 'Organization',
+                                validation: {
+                                    required: 'Organization is required',
+                                },
                             })}
                         </Grid.Col>
                     </Grid>

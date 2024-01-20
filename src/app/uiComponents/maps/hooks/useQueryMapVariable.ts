@@ -34,7 +34,6 @@ export default function useQueryMapVariable<Value, Metadata>(
             }),
             {
                 retry: 0,
-                staleTime: Infinity,
                 enabled: enabled,
                 keepPreviousData: true,
                 refetchOnWindowFocus: false,

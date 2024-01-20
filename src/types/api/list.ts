@@ -1,4 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
+import type { QueryReference } from '@root/types/api/reference';
 export interface CreateListBlueprint {
     name: string;
     projectId: string;
@@ -36,6 +37,7 @@ export interface QueriedListItem<Value = unknown, Metadata = unknown> {
     groups: string[];
     metadata: Metadata;
     value: Value;
+    references: QueryReference[];
 
     createdAt: string;
     updatedAt: string;

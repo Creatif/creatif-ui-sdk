@@ -4,8 +4,8 @@ import ProjectsForm from '@root/uiApp/forms/ProjectsForm';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$aOeeFWlxqy7kJbUKujAM.e5GFm9lUy/jtEZHXQogH0CMibLHYN.qW"
-            projectId="01HM1N6QH4N4XKKDV1R5S5ZWEG"
+            apiKey="$2a$10$QtePipfMUKWOBxKjti6mx./o8oJQfRcSaR0xtRVcKduXZMUuQtkT2"
+            projectId="01HMKVB4KPW81MF4YM5GN3EXDM"
             app={{
                 logo: 'Break free',
                 items: [
