@@ -5,7 +5,11 @@ import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import useSearchQuery from '@app/uiComponents/maps/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from '@app/uiComponents/maps/list/css/ListTable.module.css';
 import { Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
@@ -53,6 +57,7 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
     return (
         <>
             <ActionSection
+                includeCreateButton={false}
                 includeSortBy={['created_at', 'updated_at']}
                 structureType={'map'}
                 isLoading={isFetching}

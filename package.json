@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "description": "API SDK for Creatif",
     "license": "MIT",
+    "type": "module",
     "repository": {
         "url": "git@github.com:Creatif/creatif-ui-sdk.git"
     },

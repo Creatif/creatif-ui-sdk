@@ -21,7 +21,7 @@ export default function AttributesForm({ structureName, mode }: Props) {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputReference }) => (
+            inputs={(submitButton) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>

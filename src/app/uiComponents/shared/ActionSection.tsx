@@ -37,6 +37,8 @@ interface Props {
     isLoading: boolean;
     locales: string[];
     search: string;
+
+    includeCreateButton?: boolean;
 }
 export default function ActionSection({
     onSearch,
@@ -55,6 +57,7 @@ export default function ActionSection({
     groups,
     sortBy,
     locales,
+    includeCreateButton = true,
 }: Props) {
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);
     const [value, setValue] = useState(search);
@@ -162,7 +165,9 @@ export default function ActionSection({
 
                     <div className={styles.buttonWidthLoadingWrapper}>
                         {isLoading && <Loader size={20} />}
-                        <CreateNew path={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                        {includeCreateButton && (
+                            <CreateNew path={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                        )}
                     </div>
                 </div>
             </div>

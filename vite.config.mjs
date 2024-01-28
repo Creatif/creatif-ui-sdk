@@ -23,13 +23,13 @@ export default defineConfig({
         },
     },
     build: {
-        minify: true,
+        target: 'modules',
         lib: {
             // Could also be a dictionary or array of multiple entry points
             entry: [resolve(__dirname, 'src/CreatifProvider.tsx')],
             name: 'creatif-ui-sdk',
             // the proper extensions will be added
-            fileName: 'creatif',
+            fileName: 'index',
         },
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled

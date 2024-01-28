@@ -1,9 +1,10 @@
-import { CreatifProvider } from '@root/CreatifProvider';
 import OrganizationForm from '@root/uiApp/forms/OrganizationForm';
 import ProjectsForm from '@root/uiApp/forms/ProjectsForm';
 import AttributesForm from '@root/uiApp/forms/AttributesForm';
 import React from 'react';
 import ColorForm from '@root/uiApp/forms/ColorForm';
+import { CreatifProvider } from '@root/CreatifProvider';
+
 export default function App() {
     return (
         <CreatifProvider
@@ -13,9 +14,7 @@ export default function App() {
                 logo: 'Break free',
                 items: [
                     {
-                        menuText: 'Organizations',
-                        routePath: 'organizations',
-
+                        routePath: 'shitter',
                         structureType: 'map',
                         structureName: 'Organizations',
 
@@ -23,9 +22,6 @@ export default function App() {
                         updateComponent: <OrganizationForm structureName="Organizations" mode="update" />,
                     },
                     {
-                        menuText: 'Attributes',
-                        routePath: 'attributes',
-
                         structureType: 'map',
                         structureName: 'Attributes',
 
@@ -33,9 +29,6 @@ export default function App() {
                         updateComponent: <AttributesForm structureName="Attributes" mode="update" />,
                     },
                     {
-                        menuText: 'Colors',
-                        routePath: 'colors',
-
                         structureType: 'map',
                         structureName: 'Colors',
 
@@ -43,9 +36,6 @@ export default function App() {
                         updateComponent: <ColorForm structureName="Colors" mode="update" />,
                     },
                     {
-                        menuText: 'Projects',
-                        routePath: 'projects',
-
                         structureType: 'map',
                         structureName: 'Projects',
 

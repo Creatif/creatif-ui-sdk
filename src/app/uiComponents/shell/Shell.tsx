@@ -1,4 +1,4 @@
-import { createOptions } from '@app/systems/stores/options';
+import { createAppConfig, getOptions } from '@app/systems/stores/options';
 import { ListList as StructureListListing } from '@app/uiComponents/lists/ListList';
 import { ListList as StructuredMapsListing } from '@app/uiComponents/maps/ListList';
 import { ListList as VariableListListing } from '@app/uiComponents/variables/ListList';
@@ -23,9 +23,14 @@ export default function Shell({ options }: Props) {
         for (const option of options.items) {
             const { structureName, structureType, routePath } = option;
 
-            createOptions({
+            let path = routePath;
+            if (!path) {
+                path = structureName.toLowerCase().replace(/\s+/, '-');
+            }
+
+            createAppConfig({
                 structureName: structureName,
-                path: routePath,
+                path: path,
                 type: structureType,
             });
         }
@@ -50,58 +55,65 @@ export default function Shell({ options }: Props) {
                                 </div>
                             </div>
                         }>
-                        {options.items.map((item, i) => (
-                            <React.Fragment key={i}>
-                                <Route path={`${item.routePath}/create`} element={item.createComponent} />
-                                {item.structureType === 'list' && (
-                                    <>
-                                        <Route
-                                            path={`${item.routePath}/update/:structureId/:itemId`}
-                                            element={item.updateComponent}
-                                        />
-                                        <Route
-                                            path={`${item.routePath}`}
-                                            element={<StructureListListing listName={item.structureName} />}
-                                        />
+                        {options.items.map((item, i) => {
+                            const { store } = getOptions(item.structureName, item.structureType);
 
-                                        <Route path={'list/show/:listName/:listId'} element={<ListItemShowItem />} />
-                                    </>
-                                )}
+                            return (
+                                <React.Fragment key={i}>
+                                    <Route path={store?.getState().paths.create} element={item.createComponent} />
+                                    {item.structureType === 'list' && (
+                                        <>
+                                            <Route
+                                                path={`${store?.getState().paths.update}/:structureId/:itemId`}
+                                                element={item.updateComponent}
+                                            />
+                                            <Route
+                                                path={`${store?.getState().paths.listing}`}
+                                                element={<StructureListListing listName={item.structureName} />}
+                                            />
 
-                                {item.structureType === 'map' && (
-                                    <>
-                                        <Route
-                                            path={`${item.routePath}/update/:structureId/:itemId`}
-                                            element={item.updateComponent}
-                                        />
-                                        <Route
-                                            path={`${item.routePath}`}
-                                            element={<StructuredMapsListing mapName={item.structureName} />}
-                                        />
+                                            <Route
+                                                path={'list/show/:listName/:listId'}
+                                                element={<ListItemShowItem />}
+                                            />
+                                        </>
+                                    )}
 
-                                        <Route path={'map/show/:mapName/:mapId'} element={<MapItemShowItem />} />
-                                    </>
-                                )}
+                                    {item.structureType === 'map' && (
+                                        <>
+                                            <Route
+                                                path={`${store?.getState().paths.update}/:structureId/:itemId`}
+                                                element={item.updateComponent}
+                                            />
+                                            <Route
+                                                path={`${store?.getState().paths.listing}`}
+                                                element={<StructuredMapsListing mapName={item.structureName} />}
+                                            />
 
-                                {item.structureType === 'variable' && (
-                                    <>
-                                        <Route
-                                            path={`${item.routePath}/update/:structureId/:variableLocale`}
-                                            element={item.updateComponent}
-                                        />
-                                        <Route
-                                            path={`${item.routePath}`}
-                                            element={<VariableListListing name={item.structureName} />}
-                                        />
+                                            <Route path={'map/show/:mapName/:mapId'} element={<MapItemShowItem />} />
+                                        </>
+                                    )}
 
-                                        <Route
-                                            path={'variable/show/:variableName/:locale'}
-                                            element={<VariableShowItem />}
-                                        />
-                                    </>
-                                )}
-                            </React.Fragment>
-                        ))}
+                                    {item.structureType === 'variable' && (
+                                        <>
+                                            <Route
+                                                path={`${store?.getState().paths.update}/:structureId/:variableLocale`}
+                                                element={item.updateComponent}
+                                            />
+                                            <Route
+                                                path={`${store?.getState().paths.listing}`}
+                                                element={<VariableListListing name={item.structureName} />}
+                                            />
+
+                                            <Route
+                                                path={'variable/show/:variableName/:locale'}
+                                                element={<VariableShowItem />}
+                                            />
+                                        </>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
                     </Route>
                 </Routes>
             </BrowserRouter>

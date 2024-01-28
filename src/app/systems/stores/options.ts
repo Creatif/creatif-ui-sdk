@@ -17,7 +17,7 @@ interface Props {
 }
 
 const store: Record<string, UseBoundStore<StoreApi<OptionsStore>>> = {};
-export function createOptions({ structureName, path, type }: Props) {
+export function createAppConfig({ structureName, path, type }: Props) {
     const name = `${structureName}_${type}-options`;
 
     if (store[name]) return;

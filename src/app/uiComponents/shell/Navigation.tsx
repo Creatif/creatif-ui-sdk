@@ -6,25 +6,18 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import type { AppShellItem } from '@root/types/shell/shell';
 import StructureStorage from '@lib/storage/structureStorage';
-import { Badge, Tooltip } from '@mantine/core';
+import { Tooltip } from '@mantine/core';
 import { IconLogout } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
-import { getEnvironmentStore } from '@app/systems/stores/environmentStore';
+import { getOptions } from '@app/systems/stores/options';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];
 }
 export default function Navigation({ navItems, logo }: Props) {
     const projectName = StructureStorage.instance.projectName();
-    const useEnvironment = getEnvironmentStore();
-    const currentEnv = useEnvironment((state) => state.environment);
 
-    const envBadge = currentEnv === 'dev' ? <Badge color="orange">DEV</Badge> : <Badge color="green">PROD</Badge>;
-    const envTooltip =
-        currentEnv === 'dev'
-            ? 'When in DEV mode, data is not persisted on the cloud but saved locally.'
-            : 'When in PROD mode, data is persisted in the cloud.';
     return (
         <div className={styles.navigationGrid}>
             {logo && <div className={styles.logo}>{logo}</div>}
@@ -42,25 +35,33 @@ export default function Navigation({ navItems, logo }: Props) {
                     )}
 
                     {projectName.length < 10 && <p className={styles.projectName}>{projectName}</p>}
-                    <Tooltip label={envTooltip}>{envBadge}</Tooltip>
                 </div>
             </div>
 
             <nav className={styles.root}>
-                {navItems.map((item, index) => (
-                    <NavLink
-                        key={index}
-                        className={({ isActive }) => {
-                            if (isActive) return classNames(styles.navItem, styles.active);
+                {navItems.map((item, index) => {
+                    const { store } = getOptions(item.structureName, item.structureType);
 
-                            return styles.navItem;
-                        }}
-                        to={item.routePath}>
-                        {!item.menuIcon && <NavigationIcon type={item.structureType} />}
-                        {item.menuIcon && <span className={styles.navItemIcon}>{item.menuIcon}</span>}
-                        <span className={styles.navItemText}>{item.menuText}</span>
-                    </NavLink>
-                ))}
+                    return (
+                        <React.Fragment key={index}>
+                            {store && (
+                                <NavLink
+                                    className={({ isActive }) => {
+                                        if (isActive) return classNames(styles.navItem, styles.active);
+
+                                        return styles.navItem;
+                                    }}
+                                    to={store.getState().paths.listing}>
+                                    {!item.menuIcon && <NavigationIcon type={item.structureType} />}
+                                    {item.menuIcon && <span className={styles.navItemIcon}>{item.menuIcon}</span>}
+                                    <span className={styles.navItemText}>
+                                        {item.menuText ? item.menuText : item.structureName}
+                                    </span>
+                                </NavLink>
+                            )}
+                        </React.Fragment>
+                    );
+                })}
             </nav>
 
             <nav className={styles.appMenu}>
