@@ -2,10 +2,15 @@ import { Initialize } from '@app/initialize';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
-import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import type { ApiError } from '@lib/http/apiError';
+import paginateReferences from '@lib/api/declarations/references/paginateMapVariables';
 interface Props {
-    listName: string;
+    parentId: string;
+    childId: string;
+    childStructureId: string;
+    parentStructureId: string;
+    structureType: string;
+    relationshipType: string;
     locales?: string[];
     limit?: string;
     page?: number;
@@ -16,8 +21,13 @@ interface Props {
     direction?: 'desc' | 'asc';
     fields?: string[];
 }
-export default function useHttpPaginationQuery<Response>({
-    listName,
+export default function usePaginateReferences<Response>({
+    parentId,
+    childId,
+    structureType,
+    relationshipType,
+    childStructureId,
+    parentStructureId,
     search = '',
     limit = '15',
     page = 1,
@@ -29,14 +39,33 @@ export default function useHttpPaginationQuery<Response>({
     fields = [],
 }: Props) {
     const queryClient = useQueryClient();
-    const key = [listName, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
+    const key = [
+        parentId,
+        childId,
+        structureType,
+        relationshipType,
+        page,
+        limit,
+        groups,
+        behaviour,
+        orderBy,
+        locales,
+        direction,
+        search,
+        fields,
+    ];
 
     return {
         ...useQuery<unknown, ApiError, Response>(
             key,
             throwIfHttpFails(() =>
-                paginateMapVariables({
-                    name: listName,
+                paginateReferences({
+                    parentId,
+                    childId,
+                    structureType,
+                    relationshipType,
+                    parentStructureId,
+                    childStructureId,
                     projectId: Initialize.ProjectID(),
                     page,
                     limit,

@@ -27,7 +27,7 @@ import AuthPage from '@app/uiComponents/shell/AuthPage';
 import Banner from '@app/uiComponents/shell/Banner';
 import InitialSetup from '@lib/storage/initialSetup';
 import DevBar from '@app/devBar/DevBar';
-import { createAppConfigStore, getAppConfigStore } from '@app/systems/stores/appConfigStore';
+import { createAppConfigStore } from '@app/systems/stores/appConfigStore';
 
 interface Props {
     apiKey: string;

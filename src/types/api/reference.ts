@@ -1,4 +1,5 @@
 import type { StructureType } from '@root/types/shell/shell';
+import type { Behaviour } from '@root/types/api/shared';
 
 interface Reference {
     id: string;
@@ -18,7 +19,30 @@ interface Reference {
 export interface QueryReference {
     id: string;
     name: string;
-    structureType: StructureType;
-    structureId: string;
-    ownerId: string;
+    structureName: string;
+    parentType: string;
+    childType: string;
+    childStructureId: string;
+    parentStructureId: string;
+    parentId: string;
+    childId: string;
+}
+
+export interface PaginateReferencesBlueprint {
+    projectId: string;
+    parentId: string;
+    childId: string;
+    structureType: string;
+    relationshipType: string;
+    parentStructureId: string;
+    childStructureId: string;
+    search: string;
+    limit: string | number;
+    page: number;
+    groups?: string[];
+    orderBy?: string;
+    direction?: 'desc' | 'asc';
+    behaviour?: Behaviour;
+    locales?: string[];
+    fields?: string[];
 }

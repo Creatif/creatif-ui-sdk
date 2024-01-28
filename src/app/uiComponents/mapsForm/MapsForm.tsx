@@ -7,7 +7,7 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
@@ -82,7 +82,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     mode,
 }: Props<T, Value, Metadata>) {
     const { store: useStructureOptionsStore, error: runtimeError } = getOptions(mapName, 'map');
-    const referenceStore = createInputReferenceStore();
+    const referenceStore = useMemo(() => createInputReferenceStore(), []);
 
     const { structureId, itemId } = useParams();
 
@@ -152,7 +152,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                         },
                         references: referenceStore.getState().references.map((item) => ({
                             structureName: item.structureName,
-                            structureType: item.structureType,
+                            structureType: 'map',
                             name: item.name,
                             variableId: item.variableId,
                         })) as Reference[],
@@ -206,10 +206,10 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                             locale: chosenLocale,
                         },
                         references: referenceStore.getState().references.map((item) => ({
-                            name: item.name,
-                            structureType: item.structureType,
-                            variableId: item.variableId,
                             structureName: item.structureName,
+                            name: item.name,
+                            structureType: 'map',
+                            variableId: item.variableId,
                         })) as UpdateMapVariableReferenceBlueprint[],
                     }).then(({ result: response, error }) => {
                         setIsSaving(false);

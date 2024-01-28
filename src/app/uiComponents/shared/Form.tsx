@@ -97,9 +97,9 @@ export default function Form<T extends FieldValues>({
         assignReferences(
             currentData.references.map((item) => ({
                 name: item.name,
-                structureType: item.structureType,
-                structureName: item.structureId,
-                variableId: item.ownerId,
+                structureType: structureType,
+                structureName: item.parentId,
+                variableId: item.parentId,
             })),
         );
 
@@ -162,7 +162,7 @@ export default function Form<T extends FieldValues>({
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputReference: (props: ReferenceInputProps) => (
-                                <InputReference {...props} store={referenceStore} />
+                                <InputReference {...props} store={referenceStore} internalStructureName={structureId} />
                             ),
                         },
                     )}

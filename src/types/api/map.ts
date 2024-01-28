@@ -109,8 +109,9 @@ export interface UpdateMapItemVariableBlueprint {
 }
 
 export interface UpdateMapVariableReferenceBlueprint {
+    name: string;
     structureName: string;
-    structureType: StructureType;
+    structureType: string;
     variableId: string;
 }
 

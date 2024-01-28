@@ -79,6 +79,12 @@ export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
     variables: AppendingVariableBlueprint<Value, Metadata>[];
     projectId: string;
 }
+
+export interface AddToListBlueprint<Value = unknown, Metadata = unknown> {
+    name: string;
+    variable: AppendingVariableBlueprint<Value, Metadata>;
+    projectId: string;
+}
 export interface UpdateListItemBlueprint {
     name: string;
     itemId: string;

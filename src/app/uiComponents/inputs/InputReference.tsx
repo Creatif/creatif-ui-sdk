@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import paginateList from '@lib/api/declarations/lists/paginateList';
-import paginateMap from '@lib/api/declarations/maps/paginateMap';
+import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import type { StructureType } from '@root/types/shell/shell';
 import { Initialize } from '@app/initialize';
@@ -11,20 +11,11 @@ import AsyncAutocompleteSelect from '@app/uiComponents/inputs/fields/AsyncAutoco
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
-
-/**
- *
- */
-
-export interface ReferenceValue {
-    name: string;
-    structureName: string;
-    structureType: StructureType;
-    value: string;
-}
+import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 
 interface Props {
     name: string;
+    internalStructureName: string;
     structureName: string;
     structureType: StructureType;
     placeholder: string;
@@ -63,7 +54,7 @@ async function searchAndCreateOptions(
     }
 
     if (structureType === 'map') {
-        const { result, error } = await paginateMap({
+        const { result, error } = await paginateMapVariables({
             search: search,
             name: structureName,
             limit: 100,
@@ -109,6 +100,7 @@ async function searchAndCreateOptions(
 
 export default function InputReference({
     structureName,
+    internalStructureName,
     structureType,
     placeholder,
     label,
@@ -119,18 +111,35 @@ export default function InputReference({
     const { control, setValue: setFormValue } = useFormContext();
     const [selected, setSelected] = useState<AsyncAutocompleteSelectOption | undefined>();
 
+    const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
+
     const hasReference = store((state) => state.has);
     const updateReference = store((state) => state.update);
     const addReference = store((state) => state.add);
 
     useEffect(() => {
+        if (internalStructureName === structureName) {
+            setIsEqualStructureNameError(true);
+        }
+    }, [internalStructureName, structureName]);
+
+    useEffect(() => {
         if (selected) {
-            setFormValue(name, {
+            const ref = {
                 name: name,
                 structureType: structureType,
                 structureName: structureName,
-                value: selected.value,
-            });
+                variableId: selected.value,
+            };
+
+            setFormValue(name, ref);
+
+            if (hasReference(name)) {
+                updateReference(ref);
+                return;
+            }
+
+            addReference(ref);
         }
     }, [selected]);
 
@@ -156,38 +165,51 @@ export default function InputReference({
     );
 
     return (
-        <Controller
-            control={control}
-            rules={validation}
-            render={({ field: { onChange } }) => (
-                <AsyncAutocompleteSelect
-                    selected={selected}
-                    error={useFirstError(name)}
-                    onOptionSelected={(item) => {
-                        if (item) {
-                            const ref = {
-                                name: name,
-                                structureType: structureType,
-                                structureName: structureName,
-                                variableId: item.value,
-                            };
-
-                            onChange(ref);
-
-                            if (hasReference(name)) {
-                                updateReference(ref);
-                                return;
-                            }
-
-                            addReference(ref);
-                        }
+        <>
+            {isEqualStructureNameError && (
+                <RuntimeErrorModal
+                    open={isEqualStructureNameError}
+                    error={{
+                        message: `You are trying to create a reference to itself which is not allowed. Structure '${structureName}' cannot reference itself in a form.`,
                     }}
-                    searchFn={searchFn}
-                    label={label}
-                    placeholder={placeholder}
                 />
             )}
-            name={name}
-        />
+
+            {!isEqualStructureNameError && (
+                <Controller
+                    control={control}
+                    rules={validation}
+                    render={({ field: { onChange } }) => (
+                        <AsyncAutocompleteSelect
+                            selected={selected}
+                            error={useFirstError(name)}
+                            onOptionSelected={(item) => {
+                                if (item) {
+                                    const ref = {
+                                        name: name,
+                                        structureType: structureType,
+                                        structureName: structureName,
+                                        variableId: item.value,
+                                    };
+
+                                    onChange(ref);
+
+                                    if (hasReference(name)) {
+                                        updateReference(ref);
+                                        return;
+                                    }
+
+                                    addReference(ref);
+                                }
+                            }}
+                            searchFn={searchFn}
+                            label={label}
+                            placeholder={placeholder}
+                        />
+                    )}
+                    name={name}
+                />
+            )}
+        </>
     );
 }

@@ -38,6 +38,9 @@ import { useQueryClient } from 'react-query';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import type { UpdateListItemResult } from '@root/types/api/list';
 import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+import { addToList } from '@lib/api/declarations/lists/addToList';
+import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
+import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
 
 interface Props<T extends FieldValues> {
     listName: string;
@@ -94,6 +97,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
     const navigate = useNavigate();
     const resolveBindings = useResolveBindings();
     const [isSaving, setIsSaving] = useState(false);
+    const referenceStore = createInputReferenceStore();
 
     const [isVariableExistsError, setIsVariableExistsError] = useState(false);
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
@@ -132,19 +136,17 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     groups,
                 );
 
-                appendToList({
+                addToList({
                     name: listName,
                     projectId: Initialize.ProjectID(),
-                    variables: [
-                        {
-                            name: name,
-                            behaviour: chosenBehaviour,
-                            value: result.value,
-                            metadata: result.metadata,
-                            groups: chosenGroups,
-                            locale: chosenLocale,
-                        },
-                    ],
+                    variable: {
+                        name: name,
+                        behaviour: chosenBehaviour,
+                        value: result.value,
+                        metadata: result.metadata,
+                        groups: chosenGroups,
+                        locale: chosenLocale,
+                    },
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
@@ -228,7 +230,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}
@@ -277,6 +279,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     onSubmit={onInternalSubmit}
                     isSaving={isSaving}
                     mode={mode}
+                    referenceStore={referenceStore}
                     currentData={data?.result}
                 />
             )}

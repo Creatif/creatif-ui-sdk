@@ -9,11 +9,19 @@
     min-height: 50vh;
 }
 
-.variableName {
+.actionCollection {
     display: flex;
     justify-content: flex-start;
     gap: 1rem;
+}
+
+.variableName {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
     align-items: center;
+    align-content: center;
 
     font-size: 1.5rem;
     font-weight: 600;
@@ -44,6 +52,7 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
+    margin-top: 2rem;
 }
 
 .row {

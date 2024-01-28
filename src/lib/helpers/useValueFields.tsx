@@ -90,6 +90,6 @@ function recursiveFieldsResolved(value: object) {
     return values;
 }
 
-export default function useValueFields<Value>(value: Value) {
-    return recursiveFieldsResolved(value as object);
+export default function useValueFields<Value>(value?: Value) {
+    if (value) return recursiveFieldsResolved(value);
 }

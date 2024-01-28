@@ -1,12 +1,11 @@
 import InputText from '@app/uiComponents/inputs/InputText';
 import { Grid } from '@mantine/core';
-import { InputSelectControlled } from '@app/uiComponents/inputs/InputSelectControlled';
 import MapsForm from '@app/uiComponents/mapsForm/MapsForm';
 interface Props {
     structureName: string;
     mode?: 'update';
 }
-export default function OrganizationForm({ structureName, mode }: Props) {
+export default function ColorForm({ structureName, mode }: Props) {
     return (
         <MapsForm<{
             name: string;
@@ -21,29 +20,27 @@ export default function OrganizationForm({ structureName, mode }: Props) {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputBehaviour, inputReference }) => (
+            inputs={(submitButton, { inputReference }) => (
                 <>
                     <Grid>
-                        <Grid.Col span={12}>
+                        <Grid.Col span={6}>
                             <InputText
-                                label="Name"
+                                label="Color name"
                                 name="name"
                                 options={{
-                                    required: 'Organization name is required',
+                                    required: 'Color name is required',
                                 }}
                             />
                         </Grid.Col>
 
-                        <Grid.Col span={12}>{inputBehaviour()}</Grid.Col>
-
-                        <Grid.Col span={12}>
+                        <Grid.Col span={6}>
                             {inputReference({
-                                name: 'attributes',
+                                name: 'color',
                                 structureName: 'Attributes',
                                 structureType: 'map',
                                 placeholder: 'Attributes',
                                 validation: {
-                                    required: 'Attributes is required',
+                                    required: 'Color is required',
                                 },
                             })}
                         </Grid.Col>

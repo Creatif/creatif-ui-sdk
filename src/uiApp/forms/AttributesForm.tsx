@@ -6,7 +6,7 @@ interface Props {
     structureName: string;
     mode?: 'update';
 }
-export default function OrganizationForm({ structureName, mode }: Props) {
+export default function AttributesForm({ structureName, mode }: Props) {
     return (
         <MapsForm<{
             name: string;
@@ -21,31 +21,17 @@ export default function OrganizationForm({ structureName, mode }: Props) {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputBehaviour, inputReference }) => (
+            inputs={(submitButton, { inputReference }) => (
                 <>
                     <Grid>
-                        <Grid.Col span={12}>
+                        <Grid.Col span={6}>
                             <InputText
-                                label="Name"
+                                label="Attribute name"
                                 name="name"
                                 options={{
-                                    required: 'Organization name is required',
+                                    required: 'Attribute name is required',
                                 }}
                             />
-                        </Grid.Col>
-
-                        <Grid.Col span={12}>{inputBehaviour()}</Grid.Col>
-
-                        <Grid.Col span={12}>
-                            {inputReference({
-                                name: 'attributes',
-                                structureName: 'Attributes',
-                                structureType: 'map',
-                                placeholder: 'Attributes',
-                                validation: {
-                                    required: 'Attributes is required',
-                                },
-                            })}
                         </Grid.Col>
                     </Grid>
 
