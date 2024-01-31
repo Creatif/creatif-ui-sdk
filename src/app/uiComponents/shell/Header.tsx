@@ -1,7 +1,6 @@
 import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/shell/SupportedLocalesModal';
-import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { Button, type ComboboxItem, Select } from '@mantine/core';
 import { IconStackPush } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
@@ -9,7 +8,7 @@ import { useEffect, useState } from 'react';
 // @ts-ignore
 import styles from './css/header.module.css';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
-import LocalesCache from '@lib/storage/localesCache';
+import { Runtime } from '@app/runtime/Runtime';
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];
 
@@ -21,11 +20,11 @@ function localesToSelectOptions(data: Locale[] | undefined) {
 export default function Header() {
     const { info } = useNotification();
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
-    const [currentLocale, setCurrentLocale] = useState<string>(Credentials.Locale());
+    const [currentLocale, setCurrentLocale] = useState<string>(Runtime.instance.currentLocaleStorage.getLocale());
     const [isLocalesModalOpen, setIsLocalesModalOpen] = useState(false);
 
     useEffect(() => {
-        setLocales(LocalesCache.instance.getLocales() || []);
+        setLocales(Runtime.instance.localesCache.getLocales() || []);
     }, []);
 
     return (
@@ -38,9 +37,8 @@ export default function Header() {
                             onChange={(val) => {
                                 if (val) {
                                     setCurrentLocale(val);
-                                    CurrentLocaleStorage.instance.setLocale(val);
-                                    Credentials.changeLocale(val);
-                                    info('Locale changed', `Locale changed to '${Credentials.Locale()}'`);
+                                    Runtime.instance.currentLocaleStorage.setLocale(val);
+                                    info('Locale changed', `Locale changed to '${Runtime.instance.currentLocaleStorage.getLocale()}'`);
                                 }
                             }}
                             filter={({ options, search }) => {

@@ -1,4 +1,3 @@
-import { getOptions } from '@app/systems/stores/options';
 import { ListList as StructureListListing } from '@app/uiComponents/lists/ListList';
 import { ListList as StructuredMapsListing } from '@app/uiComponents/maps/ListList';
 import { ListList as VariableListListing } from '@app/uiComponents/variables/ListList';
@@ -14,10 +13,14 @@ import type { Shell, CreatifApp } from '@root/types/shell/shell';
 import { Item as VariableShowItem } from '@app/uiComponents/show/variable/Item';
 import { Item as ListItemShowItem } from '@app/uiComponents/show/list/Item';
 import { Item as MapItemShowItem } from '@app/uiComponents/show/map/Item';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 interface Props {
     options: CreatifApp;
 }
 export default function Shell({ options }: Props) {
+    const store = getProjectMetadataStore();
+    const structures = store.getState().structureItems;
+
     return (
         <Container fluid m={0} p={0}>
             <BrowserRouter>
@@ -35,25 +38,26 @@ export default function Shell({ options }: Props) {
                                 </div>
                             </div>
                         }>
-                        {options.items.map((item, i) => {
-                            const { store } = getOptions(item.structureName, item.structureType);
+                        {structures.map((item, i) => {
+                            const configOption = options.items.find(option => option.structureName === item.name);
+                            if (!configOption) return null;
 
                             return (
                                 <React.Fragment key={i}>
-                                    <Route path={store?.getState().paths.create} element={item.createComponent} />
+                                    <Route path={item.createPath} element={configOption.createComponent} />
                                     {item.structureType === 'list' && (
                                         <>
                                             <Route
-                                                path={`${store?.getState().paths.update}/:structureId/:itemId`}
-                                                element={item.updateComponent}
+                                                path={item.updatePath}
+                                                element={configOption.updateComponent}
                                             />
                                             <Route
-                                                path={`${store?.getState().paths.listing}`}
-                                                element={<StructureListListing listName={item.structureName} />}
+                                                path={item.listPath}
+                                                element={<StructureListListing listName={item.name} />}
                                             />
 
                                             <Route
-                                                path={'list/show/:listName/:listId'}
+                                                path={item.showPath}
                                                 element={<ListItemShowItem />}
                                             />
                                         </>
@@ -62,31 +66,31 @@ export default function Shell({ options }: Props) {
                                     {item.structureType === 'map' && (
                                         <>
                                             <Route
-                                                path={`${store?.getState().paths.update}/:structureId/:itemId`}
-                                                element={item.updateComponent}
+                                                path={item.createPath}
+                                                element={configOption.updateComponent}
                                             />
                                             <Route
-                                                path={`${store?.getState().paths.listing}`}
-                                                element={<StructuredMapsListing mapName={item.structureName} />}
+                                                path={item.listPath}
+                                                element={<StructuredMapsListing mapName={item.name} />}
                                             />
 
-                                            <Route path={'map/show/:mapName/:mapId'} element={<MapItemShowItem />} />
+                                            <Route path={item.showPath} element={<MapItemShowItem />} />
                                         </>
                                     )}
 
                                     {item.structureType === 'variable' && (
                                         <>
                                             <Route
-                                                path={`${store?.getState().paths.update}/:structureId/:variableLocale`}
-                                                element={item.updateComponent}
+                                                path={item.updatePath}
+                                                element={configOption.updateComponent}
                                             />
                                             <Route
-                                                path={`${store?.getState().paths.listing}`}
-                                                element={<VariableListListing name={item.structureName} />}
+                                                path={item.listPath}
+                                                element={<VariableListListing name={item.name} />}
                                             />
 
                                             <Route
-                                                path={'variable/show/:variableName/:locale'}
+                                                path={item.updatePath}
                                                 element={<VariableShowItem />}
                                             />
                                         </>

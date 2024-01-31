@@ -4,6 +4,7 @@ import { handleError } from '@lib/http/handleError';
 import { Api } from './api';
 import type { FetchInstance } from '@lib/http/fetchInstance';
 import type { TryResult } from '@root/types/types';
+import { Runtime } from '@app/runtime/Runtime';
 export async function tryHttp<ReturnType, Body = unknown>(
     instance: FetchInstance,
     method: 'get' | 'post' | 'put' | 'delete',
@@ -53,6 +54,6 @@ export function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
 }
 
 export const authHeaders = () => ({
-    'X-CREATIF-API-KEY': Credentials.ApiKey(),
-    'X-CREATIF-PROJECT-ID': Credentials.ProjectID(),
+    'X-CREATIF-API-KEY': Runtime.instance.credentials.apiKey,
+    'X-CREATIF-PROJECT-ID': Runtime.instance.credentials.projectId,
 });

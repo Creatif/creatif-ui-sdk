@@ -13,6 +13,7 @@ import createList from '@lib/api/declarations/lists/createList';
 import UIError from '@app/components/UIError';
 import createMap from '@lib/api/declarations/maps/createMap';
 import InitialSetup from '@lib/storage/initialSetup';
+import { Runtime } from '@app/runtime/Runtime';
 async function createLists(lists: { [key: string]: boolean }) {
     const keys = Object.keys(lists);
     for (const key of keys) {
@@ -40,7 +41,7 @@ async function createMaps(maps: { [key: string]: boolean }) {
 
         const { result, error } = await createMap({
             name: key,
-            projectId: Credentials.ProjectID(),
+            projectId: Runtime.instance.credentials.projectId,
         });
 
         if (error) {

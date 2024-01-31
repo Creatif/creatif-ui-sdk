@@ -6,14 +6,14 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
-import LocalesCache from '@lib/storage/localesCache';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     open: boolean;
     onClose: () => void;
 }
 export default function SupportedLocalesModal({ open, onClose }: Props) {
     const [value, setValue] = useState<string>('');
-    const locales = LocalesCache.instance.getLocales() || [];
+    const locales = Runtime.instance.localesCache.getLocales() || [];
     const [searchedLocales, setSearchedLocales] = useState<Locale[]>([]);
     const [debounced] = useDebouncedValue(value, 500);
 

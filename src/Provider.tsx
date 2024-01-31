@@ -137,8 +137,7 @@ async function loadLocalesAndMetadata(apiKey: string, projectId: string, config:
         ),
     );
 
-    createProjectMetadataStore(projectMetadata);
-    StructureStorage.init(projectMetadata);
+    createProjectMetadataStore(projectMetadata, config.items);
 
     return true;
 }

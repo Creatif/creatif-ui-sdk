@@ -11,12 +11,14 @@ import { IconLogout } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getOptions } from '@app/systems/stores/options';
+import { Runtime } from '@app/runtime/Runtime';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];
 }
 export default function Navigation({ navItems, logo }: Props) {
-    const projectName = StructureStorage.instance.projectName();
+    const projectName = getProjectMetadataStore().getState().getProjectName();
 
     return (
         <div className={styles.navigationGrid}>
@@ -24,7 +26,7 @@ export default function Navigation({ navItems, logo }: Props) {
 
             <div className={styles.project}>
                 <Link to="/" className={styles.projectLogo}>
-                    {StructureStorage.instance.projectName().substring(0, 2).toUpperCase()}
+                    {projectName.substring(0, 2).toUpperCase()}
                 </Link>
 
                 <div className={styles.projectEnvWithName}>
