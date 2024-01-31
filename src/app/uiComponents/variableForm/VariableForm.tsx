@@ -31,7 +31,7 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
 import Form from '@app/uiComponents/shared/Form';
@@ -137,7 +137,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 );
 
                 updateVariable({
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                     name: structureId,
                     fields: ['value', 'metadata', 'groups', 'behaviour', 'locale', 'name'],
                     values: {
@@ -148,7 +148,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                         value: result.value,
                         locale: chosenLocale,
                     },
-                    locale: variableLocale || Initialize.Locale(),
+                    locale: variableLocale || Credentials.Locale(),
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
 
@@ -188,7 +188,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     name: variableName,
                     behaviour: chosenBehaviour,
                     groups: chosenGroups,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                     locale: chosenLocale,
                     metadata: result.metadata,
                     value: result.value,

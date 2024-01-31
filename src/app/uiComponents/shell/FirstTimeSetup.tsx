@@ -8,7 +8,7 @@ import styles from './css/FirstTimeSetup.module.css';
 // @ts-ignore
 import animations from '@app/css/animations.module.css';
 import classNames from 'classnames';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import createList from '@lib/api/declarations/lists/createList';
 import UIError from '@app/components/UIError';
 import createMap from '@lib/api/declarations/maps/createMap';
@@ -20,7 +20,7 @@ async function createLists(lists: { [key: string]: boolean }) {
 
         const { result, error } = await createList({
             name: key,
-            projectId: Initialize.ProjectID(),
+            projectId: Credentials.ProjectID(),
         });
 
         if (error) {
@@ -40,7 +40,7 @@ async function createMaps(maps: { [key: string]: boolean }) {
 
         const { result, error } = await createMap({
             name: key,
-            projectId: Initialize.ProjectID(),
+            projectId: Credentials.ProjectID(),
         });
 
         if (error) {

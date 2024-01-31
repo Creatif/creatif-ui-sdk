@@ -25,7 +25,7 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import UIError from '@app/components/UIError';
 import Form from '@app/uiComponents/shared/Form';
 import type { ReferenceInputProps } from '@app/uiComponents/shared/Form';
@@ -142,7 +142,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
 
                     addToMap({
                         name: mapName,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                         variable: {
                             name: name,
                             behaviour: chosenBehaviour,
@@ -196,7 +196,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     updateMapVariable({
                         fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
                         name: structureId,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                         itemId: itemId,
                         values: {
                             name: name,

@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { ApiError } from '@lib/http/apiError';
 import { handleError } from '@lib/http/handleError';
 import { Api } from './api';
@@ -53,6 +53,6 @@ export function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
 }
 
 export const authHeaders = () => ({
-    'X-CREATIF-API-KEY': Initialize.ApiKey(),
-    'X-CREATIF-PROJECT-ID': Initialize.ProjectID(),
+    'X-CREATIF-API-KEY': Credentials.ApiKey(),
+    'X-CREATIF-PROJECT-ID': Credentials.ProjectID(),
 });

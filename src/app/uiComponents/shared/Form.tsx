@@ -20,7 +20,7 @@ import type { BaseSyntheticEvent } from 'react';
 import React from 'react';
 import { createSpecialFields } from '@app/systems/stores/specialFields';
 import type { GetVariableResponse } from '@root/types/api/variable';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
 import InputBehaviour from '@app/uiComponents/inputs/InputBehaviour';
@@ -107,7 +107,7 @@ export default function Form<T extends FieldValues>({
         // @ts-ignore
         formProps.defaultValues = currentData.value;
     } else {
-        setLocale(Initialize.Locale());
+        setLocale(Credentials.Locale());
         setGroups(['default']);
     }
     const methods = useForm(formProps);

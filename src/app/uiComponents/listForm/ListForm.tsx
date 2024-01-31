@@ -25,7 +25,7 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import UIError from '@app/components/UIError';
 import Form from '@app/uiComponents/shared/Form';
 import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
@@ -138,7 +138,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
 
                 addToList({
                     name: listName,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                     variable: {
                         name: name,
                         behaviour: chosenBehaviour,
@@ -183,7 +183,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                 updateListItem({
                     fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
                     name: structureId,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                     itemId: itemId,
                     values: {
                         name: name,

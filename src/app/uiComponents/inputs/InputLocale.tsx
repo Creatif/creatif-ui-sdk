@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import LocalesCache from '@lib/storage/localesCache';
 export interface InputLocaleProps extends SelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
@@ -20,7 +20,7 @@ function createOptions(locales: Locale[]) {
 }
 export default function InputLocale({ store, validation, ...rest }: InputLocaleProps) {
     const { control, setValue: setFormValue } = useFormContext();
-    const [value, setValue] = useState(store.getState().locale || Initialize.Locale());
+    const [value, setValue] = useState(store.getState().locale || Credentials.Locale());
     const locales: Locale[] = LocalesCache.instance.getLocales() || [];
 
     useEffect(() => {

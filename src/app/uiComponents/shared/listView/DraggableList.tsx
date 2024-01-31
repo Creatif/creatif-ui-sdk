@@ -2,7 +2,7 @@ import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type rearrange from '@lib/api/declarations/lists/rearrange';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 
 type OnDrop = (source: DragItem, destination: DragItem) => void;
@@ -55,7 +55,7 @@ export default function DraggableList<Value, Metadata>({
 
             onRearrange(
                 {
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                     name: structureName,
                     source: source.id,
                     destination: destination.id,

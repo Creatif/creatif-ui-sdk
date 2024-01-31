@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { declarations } from '@lib/http/fetchInstance';
 import { authHeaders, tryHttp } from '@lib/http/tryHttp';
 import { exists } from '@lib/validation/exists';
@@ -7,7 +7,7 @@ export async function createVariable<Value, Metadata>(blueprint: CreateVariableB
     return tryHttp<CreatedVariable<Value, Metadata>>(
         declarations(),
         'put',
-        `/variable/${Initialize.ProjectID()}/${blueprint.locale ? blueprint.locale : Initialize.Locale()}`,
+        `/variable/${Credentials.ProjectID()}/${blueprint.locale ? blueprint.locale : Credentials.Locale()}`,
         {
             name: blueprint.name,
             behaviour: blueprint.behaviour,

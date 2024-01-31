@@ -22,7 +22,7 @@ import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
@@ -165,7 +165,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                     const { error, status } = await deleteVariable({
                         name: name,
                         locale: item.locale,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                     });
 
                     if (error) {
@@ -196,7 +196,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                     }
 
                     mutate({
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                         name: item.id,
                         fields: ['locale', 'name'],
                         values: {
@@ -217,7 +217,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                 onClose={() => setIsEditGroupsOpen(false)}
                 onEdit={(groups) => {
                     mutate({
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                         name: item.id,
                         fields: ['groups'],
                         values: {

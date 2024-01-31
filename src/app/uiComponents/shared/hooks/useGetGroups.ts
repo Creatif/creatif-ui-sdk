@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
@@ -15,7 +15,7 @@ export default function useGetGroups(structureType: string, structureId: string,
                     getGroups({
                         structureType: structureType,
                         structureId: structureId,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                     }),
                 );
 

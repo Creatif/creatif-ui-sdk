@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectMetadata';
-import { Initialize } from '@app/initialize';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface OptionsStore {
     metadata: ProjectMetadata;
@@ -14,7 +14,7 @@ let store: UseBoundStore<StoreApi<OptionsStore>> | undefined = undefined;
 export function createProjectMetadataStore(metadata: ProjectMetadata) {
     if (store) return store;
 
-    const key = `creatif-${Initialize.ProjectID()}`;
+    const key = `creatif-${Runtime.instance.credentials.projectId}`;
     if (!Object.keys(localStorage).includes(key)) {
         localStorage.setItem(key, JSON.stringify(metadata));
     }

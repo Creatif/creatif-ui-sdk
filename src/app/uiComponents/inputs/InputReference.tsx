@@ -3,7 +3,7 @@ import paginateList from '@lib/api/declarations/lists/paginateList';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import type { StructureType } from '@root/types/shell/shell';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { AsyncAutocompleteSelectOption } from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
@@ -36,7 +36,7 @@ async function searchAndCreateOptions(
             limit: 1000,
             page: 1,
             orderBy: 'created_at',
-            projectId: Initialize.ProjectID(),
+            projectId: Credentials.ProjectID(),
         });
 
         if (result) {
@@ -59,7 +59,7 @@ async function searchAndCreateOptions(
             name: structureName,
             limit: 100,
             page: 1,
-            projectId: Initialize.ProjectID(),
+            projectId: Credentials.ProjectID(),
         });
 
         if (result) {
@@ -81,7 +81,7 @@ async function searchAndCreateOptions(
         name: structureName,
         limit: 100,
         page: 1,
-        projectId: Initialize.ProjectID(),
+        projectId: Credentials.ProjectID(),
     });
 
     if (result) {

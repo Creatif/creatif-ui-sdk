@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
@@ -21,7 +21,7 @@ export default function useEditLocale(name: string) {
                     updateVariable({
                         name: body.id,
                         locale: body.currentLocale,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                         values: {
                             locale: body.nextLocale,
                         },

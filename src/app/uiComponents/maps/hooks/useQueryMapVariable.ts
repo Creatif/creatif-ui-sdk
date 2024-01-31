@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import { ApiError } from '@lib/http/apiError';
@@ -29,7 +29,7 @@ export default function useQueryMapVariable<Value, Metadata>(
                 return queryMapVariable<Value, Metadata>({
                     structureId: mapName,
                     itemId: itemId,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                 });
             }),
             {

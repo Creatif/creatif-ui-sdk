@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import getVariable from '@lib/api/declarations/variables/getVariable';
@@ -22,7 +22,7 @@ export function useGetVariable<Value = unknown, Metadata = unknown>(
                 getVariable<Value, Metadata>({
                     name: variableName,
                     locale: locale,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                 }),
             ),
             {

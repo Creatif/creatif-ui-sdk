@@ -2,7 +2,7 @@ import useNotification from '@app/systems/notifications/useNotification';
 import type { Behaviour } from '@root/types/api/shared';
 import type { Bindings } from '@root/types/forms/forms';
 import type { FieldValues } from 'react-hook-form';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 function resolveBindings<T extends FieldValues>(values: T, bindings: Bindings<T>, t: keyof Bindings<T>) {
     if (!bindings[t]) return false;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -92,7 +92,7 @@ export default function useResolveBindings() {
 export function chooseLocale(fieldLocale: string, bindingLocale: string | undefined): string {
     if (bindingLocale) return bindingLocale;
     if (fieldLocale) return fieldLocale;
-    return Initialize.Locale();
+    return Credentials.Locale();
 }
 
 export function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {

@@ -1,7 +1,7 @@
 import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
 import { useParams } from 'react-router-dom';
 import type { Behaviour } from '@root/types/api/shared';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 
 export default function useUpdateListItem(isUpdate: boolean) {
     if (!isUpdate) return;
@@ -16,12 +16,12 @@ export default function useUpdateListItem(isUpdate: boolean) {
     return async (name: string, value: unknown, metadata: unknown, groups: string[], behaviour: Behaviour) => {
         const { result, error } = await updateListItem({
             itemId: itemId,
-            projectId: Initialize.ProjectID(),
+            projectId: Credentials.ProjectID(),
             name: structureId,
             values: {
                 name,
                 value,
-                locale: Initialize.Locale(),
+                locale: Credentials.Locale(),
                 metadata,
                 groups,
                 behaviour,

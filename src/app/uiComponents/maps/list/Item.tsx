@@ -30,7 +30,7 @@ import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import useUpdateMapVariable from '@app/uiComponents/maps/hooks/useUpdateMapVariable';
 import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     mapName: string;
@@ -270,7 +270,7 @@ export default function Item<Value, Metadata>({
                     const { error, status } = await deleteMapItem({
                         name: mapName,
                         itemId: item.id,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                     });
 
                     if (error) {

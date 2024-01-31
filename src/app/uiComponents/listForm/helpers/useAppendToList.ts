@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 import { appendToList } from '@lib/api/declarations/lists/appendToList';
 import type { Behaviour } from '@root/types/api/shared';
@@ -14,7 +14,7 @@ export default function useAppendToList(structureName: string) {
                     name: name,
                     behaviour: behaviour,
                     groups: groups,
-                    locale: Initialize.Locale(),
+                    locale: Credentials.Locale(),
                     value: beforeSaveResult.value,
                     metadata: beforeSaveResult.metadata,
                 },

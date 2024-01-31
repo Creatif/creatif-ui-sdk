@@ -1,5 +1,5 @@
 import Authentication from '@app/components/authentication/Authentication';
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import authCheck from '@lib/api/auth/authCheck';
 import { getProjectMetadata } from '@lib/api/project/getProjectMetadata';
 import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
@@ -21,7 +21,7 @@ import '@app/css/global.module.css';
 // @ts-ignore
 import animations from '@app/css/animations.module.css';
 import Shell from '@app/uiComponents/shell/Shell';
-import LocalesCache from '@lib/storage/localesCache';
+import LocalesCache, { createLocalesCache } from '@lib/storage/localesCache';
 import FirstTimeSetup from '@app/uiComponents/shell/FirstTimeSetup';
 import AuthPage from '@app/uiComponents/shell/AuthPage';
 import Banner from '@app/uiComponents/shell/Banner';
@@ -30,6 +30,7 @@ import DevBar from '@app/devBar/DevBar';
 import { createAppConfigStore } from '@app/systems/stores/appConfigStore';
 import { createProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 import { createAppConfig } from '@app/systems/stores/options';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface Props {
     apiKey: string;
@@ -77,10 +78,15 @@ function removePreviousStorageIfExists(currentKey: string, projectId: string) {
 }
 
 async function loadLocalesAndMetadata(apiKey: string, projectId: string, config: CreatifApp): Promise<boolean> {
+    removePreviousStorageIfExists(`creatif-${projectId}`, projectId);
+
     const { result: projectMetadata, error } = await getProjectMetadata({ apiKey: apiKey, projectId: projectId });
     if (error) return false;
+    if (!projectMetadata) return false;
 
-    removePreviousStorageIfExists(`creatif-${projectId}`, projectId);
+    const {createdCache, error: localesError} = await createLocalesCache();
+    if (localesError) return false;
+    if (!createdCache) return false;
 
     InitialSetup.init({
         lists: (function () {
@@ -123,21 +129,16 @@ async function loadLocalesAndMetadata(apiKey: string, projectId: string, config:
         })(),
     });
 
-    Initialize.init(apiKey, projectId);
-    LocalesCache.init();
-    if (!LocalesCache.instance.hasLocales()) {
-        const { result: locales } = await getSupportedLocales();
-        if (locales) {
-            LocalesCache.init(locales);
-        }
-    }
+    Runtime.init(
+        new Runtime(
+            new Credentials(apiKey, projectId),
+            new CurrentLocaleStorage('eng'),
+            createdCache,
+        ),
+    );
 
-    CurrentLocaleStorage.init('eng');
-
-    if (projectMetadata) {
-        createProjectMetadataStore(projectMetadata);
-        StructureStorage.init(projectMetadata);
-    }
+    createProjectMetadataStore(projectMetadata);
+    StructureStorage.init(projectMetadata);
 
     return true;
 }

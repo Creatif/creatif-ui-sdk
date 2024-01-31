@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
@@ -12,7 +12,7 @@ export default function useDeleteRange(onSuccess: () => void, onError: () => voi
                     deleteRange({
                         name: body.name,
                         items: body.items,
-                        projectId: Initialize.ProjectID(),
+                        projectId: Credentials.ProjectID(),
                     }),
                 );
 

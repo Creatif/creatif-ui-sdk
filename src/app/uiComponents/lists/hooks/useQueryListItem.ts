@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
@@ -29,7 +29,7 @@ export default function useQueryListItem<Value, Metadata>(
                 return queryListItemByID<Value, Metadata>({
                     structureId: listName,
                     itemId: itemId,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                 });
             }),
             {

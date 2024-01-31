@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectMetadata';
 export default class StructureStorage {
     public static instance: StructureStorage;
@@ -8,7 +8,7 @@ export default class StructureStorage {
         this.storage = storage;
     }
     static init(projectMetadata: ProjectMetadata) {
-        StructureStorage.key = `creatif-${Initialize.ProjectID()}`;
+        StructureStorage.key = `creatif-${Credentials.ProjectID()}`;
 
         localStorage.setItem(StructureStorage.key, JSON.stringify(projectMetadata));
         StructureStorage.instance = new StructureStorage(projectMetadata);
@@ -30,7 +30,7 @@ export default class StructureStorage {
     }
 
     removeVariable(name: string) {
-        const locale = Initialize.Locale();
+        const locale = Credentials.Locale();
         if (this.storage.variables && this.storage.variables[locale]) {
             const idx = this.storage.variables[locale].findIndex((item) => item.name === name);
             if (idx !== -1) {

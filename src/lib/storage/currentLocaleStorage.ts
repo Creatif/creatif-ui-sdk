@@ -1,29 +1,24 @@
 export default class CurrentLocaleStorage {
-    public static instance: CurrentLocaleStorage;
-    private storage: string;
-    private static key = 'creatif-current-locale';
-    private constructor(storage: string) {
-        this.storage = storage;
-    }
-    static init(locale: string) {
-        if (!localStorage.getItem(CurrentLocaleStorage.key)) {
-            localStorage.setItem(CurrentLocaleStorage.key, locale);
-            CurrentLocaleStorage.instance = new CurrentLocaleStorage(locale);
-            return;
-        }
+    private currentLocale: string;
+    private key = 'creatif-current-locale';
+    constructor(locale: string) {
+        this.currentLocale = locale;
 
-        CurrentLocaleStorage.instance = new CurrentLocaleStorage(
-            localStorage.getItem(CurrentLocaleStorage.key) as string,
-        );
+        if (!localStorage.getItem(this.key)) {
+            localStorage.setItem(this.key, locale);
+        }
     }
+
     getLocale() {
-        return this.storage;
+        return this.currentLocale;
     }
+
     setLocale(locale: string) {
-        this.storage = locale;
+        this.currentLocale = locale;
         this.persist();
     }
+
     private persist() {
-        localStorage.setItem(CurrentLocaleStorage.key, this.storage);
+        localStorage.setItem(this.key, this.currentLocale);
     }
 }

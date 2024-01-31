@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/shell/SupportedLocalesModal';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
@@ -21,7 +21,7 @@ function localesToSelectOptions(data: Locale[] | undefined) {
 export default function Header() {
     const { info } = useNotification();
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
-    const [currentLocale, setCurrentLocale] = useState<string>(Initialize.Locale());
+    const [currentLocale, setCurrentLocale] = useState<string>(Credentials.Locale());
     const [isLocalesModalOpen, setIsLocalesModalOpen] = useState(false);
 
     useEffect(() => {
@@ -39,8 +39,8 @@ export default function Header() {
                                 if (val) {
                                     setCurrentLocale(val);
                                     CurrentLocaleStorage.instance.setLocale(val);
-                                    Initialize.changeLocale(val);
-                                    info('Locale changed', `Locale changed to '${Initialize.Locale()}'`);
+                                    Credentials.changeLocale(val);
+                                    info('Locale changed', `Locale changed to '${Credentials.Locale()}'`);
                                 }
                             }}
                             filter={({ options, search }) => {

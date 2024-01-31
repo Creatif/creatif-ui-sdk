@@ -1,4 +1,4 @@
-import { Initialize } from '@app/initialize';
+import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
@@ -38,7 +38,7 @@ export default function useHttpPaginationQuery<Response>({
             throwIfHttpFails(() =>
                 paginateList({
                     name: listName,
-                    projectId: Initialize.ProjectID(),
+                    projectId: Credentials.ProjectID(),
                     page,
                     limit,
                     groups,
