@@ -5,13 +5,10 @@ import classNames from 'classnames';
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import type { AppShellItem } from '@root/types/shell/shell';
-import StructureStorage from '@lib/storage/structureStorage';
 import { Tooltip } from '@mantine/core';
 import { IconLogout } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
-import { getOptions } from '@app/systems/stores/options';
-import { Runtime } from '@app/runtime/Runtime';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 interface Props {
     logo?: React.ReactNode;
@@ -42,18 +39,19 @@ export default function Navigation({ navItems, logo }: Props) {
 
             <nav className={styles.root}>
                 {navItems.map((item, index) => {
-                    const { store } = getOptions(item.structureName, item.structureType);
+                    const structures = getProjectMetadataStore().getState().structureItems;
+                    const structureItem = structures.find(t => t.name === item.structureName);
 
                     return (
                         <React.Fragment key={index}>
-                            {store && (
+                            {structureItem && (
                                 <NavLink
                                     className={({ isActive }) => {
                                         if (isActive) return classNames(styles.navItem, styles.active);
 
                                         return styles.navItem;
                                     }}
-                                    to={store.getState().paths.listing}>
+                                    to={structureItem.listPath}>
                                     {!item.menuIcon && <NavigationIcon type={item.structureType} />}
                                     {item.menuIcon && <span className={styles.navItemIcon}>{item.menuIcon}</span>}
                                     <span className={styles.navItemText}>
