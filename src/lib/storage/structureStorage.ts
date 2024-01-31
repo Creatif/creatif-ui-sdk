@@ -1,39 +1,24 @@
 import { Initialize } from '@app/initialize';
-import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
-interface InternalStorage {
-    variables: Record<string, string[]> | null;
-    maps: Record<string, string[]> | null;
-    lists: string[] | null;
-    projectName: string;
-}
+import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectMetadata';
 export default class StructureStorage {
     public static instance: StructureStorage;
-    private storage: InternalStorage;
+    private storage: ProjectMetadata;
     private static key = '';
-    private constructor(storage: InternalStorage) {
+    private constructor(storage: ProjectMetadata) {
         this.storage = storage;
     }
     static init(projectMetadata: ProjectMetadata) {
         StructureStorage.key = `creatif-${Initialize.ProjectID()}`;
 
-        const locale = Initialize.Locale();
-        const internalStorage: InternalStorage = {
-            variables: projectMetadata.variables || { [locale]: [] },
-            maps: projectMetadata.maps ? projectMetadata.maps : { [locale]: [] },
-            lists: projectMetadata.lists,
-            projectName: projectMetadata.name,
-        };
-
-        localStorage.setItem(StructureStorage.key, JSON.stringify(internalStorage));
-        StructureStorage.instance = new StructureStorage(internalStorage);
+        localStorage.setItem(StructureStorage.key, JSON.stringify(projectMetadata));
+        StructureStorage.instance = new StructureStorage(projectMetadata);
     }
-    addList(name: string) {
+    addList(name: string, structure: Structure) {
         if (this.storage.lists) {
-            if (!this.storage.lists.includes(name)) {
-                this.storage.lists = [];
+            const existingIdx = this.storage.lists.findIndex((item) => item.name === name);
+            if (existingIdx !== -1) {
+                this.storage.lists.push(structure);
             }
-
-            this.storage.lists.push(name);
 
             this.persist();
         }
@@ -41,31 +26,30 @@ export default class StructureStorage {
     hasList(name: string): boolean {
         if (!this.storage.lists) return false;
 
-        if (!this.storage.lists.includes(name)) return false;
-        return Boolean(this.storage.lists.find((item) => item === name));
+        return this.storage.lists.findIndex((item) => item.name === name) !== -1;
     }
 
     removeVariable(name: string) {
         const locale = Initialize.Locale();
         if (this.storage.variables && this.storage.variables[locale]) {
-            const idx = this.storage.variables[locale].findIndex((item) => item === name);
+            const idx = this.storage.variables[locale].findIndex((item) => item.name === name);
             if (idx !== -1) {
                 this.storage.variables[locale].splice(idx, 1);
             }
         }
     }
-    addVariable(name: string, locale: string) {
+    addVariable(name: string, locale: string, structure: Structure) {
         if (this.storage.variables) {
             if (!this.storage.variables[locale]) {
                 this.storage.variables[locale] = [];
             }
 
-            this.storage.variables[locale].push(name);
+            this.storage.variables[locale].push(structure);
         }
     }
 
     projectName(): string {
-        return this.storage.projectName;
+        return this.storage.name;
     }
 
     hasVariable(name: string, locale: string) {
@@ -73,8 +57,9 @@ export default class StructureStorage {
 
         if (!this.storage.variables[locale]) return false;
 
-        return this.storage.variables[locale].includes(name);
+        return this.storage.variables[locale].findIndex((item) => item.name === name) !== -1;
     }
+
     private persist() {
         localStorage.setItem(StructureStorage.key, JSON.stringify(this.storage));
     }

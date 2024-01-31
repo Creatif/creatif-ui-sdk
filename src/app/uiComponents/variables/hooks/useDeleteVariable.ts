@@ -23,7 +23,6 @@ export default function useDeleteVariable(variableName: string) {
                         `Variable '${variableName}' has been successfully deleted.`,
                     );
 
-                    StructureStorage.instance.removeVariable(variableName);
                     queryClient.invalidateQueries(`get_${variableName}`);
                 },
                 onError() {

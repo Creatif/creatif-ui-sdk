@@ -213,7 +213,6 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                             `Variable with name '${variableName}' and locale '${chosenLocale}' has been created.`,
                         );
 
-                        StructureStorage.instance.addVariable(variableName, response.locale);
                         queryClient.invalidateQueries(variableName);
                         queryClient.invalidateQueries(['get_groups']);
                         afterSave?.(response, e);
@@ -235,7 +234,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}

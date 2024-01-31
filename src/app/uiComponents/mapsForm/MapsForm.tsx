@@ -7,7 +7,7 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
@@ -102,6 +102,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     const [isVariableExistsError, setIsVariableExistsError] = useState(false);
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
     const [isVariableReadonly, setIsVariableReadonly] = useState(false);
+    const [isNotFoundError, setIsNotFoundError] = useState(false);
 
     const onInternalSubmit = useCallback(
         (value: T, e: BaseSyntheticEvent | undefined) => {
@@ -275,6 +276,17 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     <UIError title="Something went wrong">
                         We cannot update this item at this moment. We are working to solve this issue. Please, try again
                         later.
+                    </UIError>
+                </div>
+            )}
+
+            {isNotFoundError && (
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                    }}>
+                    <UIError title="Structure not found">
+                        Structure with {mapName} not found. Are you sure that you haven&apos;t misspelled the name?
                     </UIError>
                 </div>
             )}

@@ -1,11 +1,11 @@
-import { createAppConfig, getOptions } from '@app/systems/stores/options';
+import { getOptions } from '@app/systems/stores/options';
 import { ListList as StructureListListing } from '@app/uiComponents/lists/ListList';
 import { ListList as StructuredMapsListing } from '@app/uiComponents/maps/ListList';
 import { ListList as VariableListListing } from '@app/uiComponents/variables/ListList';
 import Header from '@app/uiComponents/shell/Header';
 import Navigation from '@app/uiComponents/shell/Navigation';
 import { Container } from '@mantine/core';
-import React, { useRef } from 'react';
+import React from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -18,26 +18,6 @@ interface Props {
     options: CreatifApp;
 }
 export default function Shell({ options }: Props) {
-    const storeCreatedRef = useRef(false);
-    if (!storeCreatedRef.current) {
-        for (const option of options.items) {
-            const { structureName, structureType, routePath } = option;
-
-            let path = routePath;
-            if (!path) {
-                path = structureName.toLowerCase().replace(/\s+/, '-');
-            }
-
-            createAppConfig({
-                structureName: structureName,
-                path: path,
-                type: structureType,
-            });
-        }
-
-        storeCreatedRef.current = true;
-    }
-
     return (
         <Container fluid m={0} p={0}>
             <BrowserRouter>

@@ -28,6 +28,8 @@ import Banner from '@app/uiComponents/shell/Banner';
 import InitialSetup from '@lib/storage/initialSetup';
 import DevBar from '@app/devBar/DevBar';
 import { createAppConfigStore } from '@app/systems/stores/appConfigStore';
+import { createProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { createAppConfig } from '@app/systems/stores/options';
 
 interface Props {
     apiKey: string;
@@ -91,7 +93,7 @@ async function loadLocalesAndMetadata(apiKey: string, projectId: string, config:
             const t: { [item: string]: boolean } = {};
             for (const item of appLists) {
                 const metadataLists = projectMetadata?.lists || [];
-                if (item && metadataLists.includes(item)) {
+                if (item && metadataLists.findIndex((item) => item.name) !== -1) {
                     t[item] = true;
                 } else if (item) {
                     t[item] = false;
@@ -110,7 +112,7 @@ async function loadLocalesAndMetadata(apiKey: string, projectId: string, config:
             const t: { [item: string]: boolean } = {};
             for (const item of appLists) {
                 const metadataLists = projectMetadata?.maps || [];
-                if (item && metadataLists.includes(item)) {
+                if (item && metadataLists.findIndex((item) => item.name) !== -1) {
                     t[item] = true;
                 } else if (item) {
                     t[item] = false;
@@ -133,29 +135,12 @@ async function loadLocalesAndMetadata(apiKey: string, projectId: string, config:
     CurrentLocaleStorage.init('eng');
 
     if (projectMetadata) {
+        createProjectMetadataStore(projectMetadata);
         StructureStorage.init(projectMetadata);
     }
 
     return true;
 }
-
-function prepareConfigForFirstTimeSetup(config: CreatifApp) {
-    const items = config.items;
-    const setup: Record<'lists' | 'maps', string[]> = { lists: [], maps: [] };
-
-    for (const item of items) {
-        if (item.structureType === 'list') {
-            setup.lists.push(item.structureName);
-        }
-
-        if (item.structureType === 'map') {
-            setup.maps.push(item.structureName);
-        }
-    }
-
-    return setup;
-}
-
 function validateConfig(app: CreatifApp) {
     const messages = [];
     if (!app) {
@@ -240,6 +225,21 @@ export default function Provider({ apiKey, projectId, app }: Props & PropsWithCh
             })),
         });
 
+        for (const option of app.items) {
+            const { structureName, structureType, routePath } = option;
+
+            let path = routePath;
+            if (!path) {
+                path = structureName.toLowerCase().replace(/\s+/, '-');
+            }
+
+            createAppConfig({
+                structureName: structureName,
+                path: path,
+                type: structureType,
+            });
+        }
+
         setIsLoggedIn(true);
     }, []);
 
@@ -264,9 +264,9 @@ export default function Provider({ apiKey, projectId, app }: Props & PropsWithCh
 
     return (
         <MantineProvider theme={theme}>
-            {isLoggedIn && <Notifications limit={5} />}
             {isLoggedIn && (
                 <>
+                    <Notifications limit={5} />
                     <QueryClientProvider client={queryClient}>
                         <FirstTimeSetup>
                             <div className={animations.initialAnimation}>

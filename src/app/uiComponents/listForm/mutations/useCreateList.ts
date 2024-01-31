@@ -22,8 +22,6 @@ export default function useCreateList(listName: string) {
                         `List with name ${listName} created.`,
                         `List '${listName}' has been successfully created. This message will only appear once.`,
                     );
-
-                    StructureStorage.instance.addList(listName);
                 },
                 onError() {
                     errorNotification(

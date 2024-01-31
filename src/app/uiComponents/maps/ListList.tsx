@@ -27,6 +27,7 @@ import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import Item from '@app/uiComponents/maps/list/Item';
 import { getOptions } from '@app/systems/stores/options';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 interface Props {
     mapName: string;
 }
@@ -53,7 +54,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
     const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
-        listName: mapName,
+        listName: getProjectMetadataStore().getState().getMap(mapName)?.id || '',
         page: page,
         locales: locales,
         groups: groups,
