@@ -11,11 +11,11 @@ import Loading from '@app/components/Loading';
 import type { Column } from '@lib/helpers/useValueFields';
 import useValueFields from '@lib/helpers/useValueFields';
 import classNames from 'classnames';
-import { getOptions } from '@app/systems/stores/options';
 import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
 import useTabs from '@app/uiComponents/show/shared/useTabs';
 import StructureItem from '@app/uiComponents/show/map/StructureItem';
 import Reference from '@app/uiComponents/show/map/Reference';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -58,23 +58,17 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
 }
 
 export function Item() {
-    const { mapName, mapId } = useParams();
-    const { isFetching, data } = useQueryMapVariable(mapName, mapId, true);
-
-    const { store: useOptions } = getOptions(mapName as string, 'map');
+    const { structureId, itemId } = useParams();
+    const { isFetching, data } = useQueryMapVariable(structureId, itemId, Boolean(structureId && itemId));
+    const store = getProjectMetadataStore();
+    const structureItem = store.getState().getStructureItemByID(structureId || '');
 
     const values = useValueFields(data?.result?.value);
     const [selectedTab, tabs, onChange] = useTabs((data && data.result && data.result.references) || []);
 
     return (
         <>
-            {!mapName ||
-                (!mapId && (
-                    <UIError title="Invalid route">
-                        We tried to show a variable but the route is invalid. A variable route needs to have a variable
-                        name and locale in the URL
-                    </UIError>
-                ))}
+            {!structureItem && <UIError title="Route not found">This route does not exist</UIError>}
 
             {!data?.result && (
                 <div className={classNames(styles.root, styles.loadingRoot)}>
@@ -82,26 +76,24 @@ export function Item() {
                 </div>
             )}
 
-            {data?.result && (
+            {data?.result && structureItem && (
                 <div className={styles.root}>
                     <h2 className={styles.variableName}>
                         {data.result.name}
-                        {useOptions && (
-                            <div className={styles.actionCollection}>
-                                <Button
-                                    component={Link}
-                                    to={`${useOptions.getState().paths.update}/${mapName}/${data.result.id}`}>
-                                    Update
-                                </Button>
+                        <div className={styles.actionCollection}>
+                            <Button
+                                component={Link}
+                                to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${data.result.id}`}>
+                                Update
+                            </Button>
 
-                                <Button
-                                    color="red"
-                                    component={Link}
-                                    to={`${useOptions.getState().paths.update}/${mapName}/${data.result.id}`}>
-                                    Delete
-                                </Button>
-                            </div>
-                        )}
+                            <Button
+                                color="red"
+                                component={Link}
+                                to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${data.result.id}`}>
+                                Delete
+                            </Button>
+                        </div>
                     </h2>
                     <p className={styles.createdAt}>
                         <IconClock size={14} color="var(--mantine-color-gray-6)" />

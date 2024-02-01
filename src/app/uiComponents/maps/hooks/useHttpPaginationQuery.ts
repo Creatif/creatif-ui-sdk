@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import type { ApiError } from '@lib/http/apiError';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     listName: string;
     locales?: string[];
@@ -15,6 +16,7 @@ interface Props {
     search?: string;
     direction?: 'desc' | 'asc';
     fields?: string[];
+    enabled?: boolean;
 }
 export default function useHttpPaginationQuery<Response>({
     listName,
@@ -27,6 +29,7 @@ export default function useHttpPaginationQuery<Response>({
     behaviour = undefined,
     locales = [],
     fields = [],
+    enabled = true,
 }: Props) {
     const queryClient = useQueryClient();
     const key = [listName, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
@@ -37,7 +40,7 @@ export default function useHttpPaginationQuery<Response>({
             throwIfHttpFails(() =>
                 paginateMapVariables({
                     name: listName,
-                    projectId: Credentials.ProjectID(),
+                    projectId: Runtime.instance.credentials.projectId,
                     page,
                     limit,
                     groups,
@@ -50,6 +53,7 @@ export default function useHttpPaginationQuery<Response>({
                 }),
             ),
             {
+                enabled,
                 retry: 1,
                 staleTime: Infinity,
                 keepPreviousData: true,

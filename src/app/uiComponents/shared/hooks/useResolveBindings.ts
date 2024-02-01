@@ -2,7 +2,7 @@ import useNotification from '@app/systems/notifications/useNotification';
 import type { Behaviour } from '@root/types/api/shared';
 import type { Bindings } from '@root/types/forms/forms';
 import type { FieldValues } from 'react-hook-form';
-import { Credentials } from '@app/credentials';
+import { Runtime } from '@app/runtime/Runtime';
 function resolveBindings<T extends FieldValues>(values: T, bindings: Bindings<T>, t: keyof Bindings<T>) {
     if (!bindings[t]) return false;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -50,7 +50,7 @@ export default function useResolveBindings() {
         if (!name) {
             notificationError(
                 'Cannot determine name binding',
-                'You haven\'t provided any binding for the name of the variable. Add the \'binding\' property to your form.',
+                "You haven't provided any binding for the name of the variable. Add the 'binding' property to your form.",
             );
             return;
         }
@@ -92,7 +92,7 @@ export default function useResolveBindings() {
 export function chooseLocale(fieldLocale: string, bindingLocale: string | undefined): string {
     if (bindingLocale) return bindingLocale;
     if (fieldLocale) return fieldLocale;
-    return Credentials.Locale();
+    return Runtime.instance.currentLocaleStorage.getLocale();
 }
 
 export function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {

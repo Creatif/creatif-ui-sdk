@@ -12,6 +12,7 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface Props {
     name: string;
@@ -36,7 +37,7 @@ async function searchAndCreateOptions(
             limit: 1000,
             page: 1,
             orderBy: 'created_at',
-            projectId: Credentials.ProjectID(),
+            projectId: Runtime.instance.credentials.projectId,
         });
 
         if (result) {
@@ -59,7 +60,7 @@ async function searchAndCreateOptions(
             name: structureName,
             limit: 100,
             page: 1,
-            projectId: Credentials.ProjectID(),
+            projectId: Runtime.instance.credentials.projectId,
         });
 
         if (result) {
@@ -81,7 +82,7 @@ async function searchAndCreateOptions(
         name: structureName,
         limit: 100,
         page: 1,
-        projectId: Credentials.ProjectID(),
+        projectId: Runtime.instance.credentials.projectId,
     });
 
     if (result) {

@@ -20,7 +20,6 @@ import type { BaseSyntheticEvent } from 'react';
 import React from 'react';
 import { createSpecialFields } from '@app/systems/stores/specialFields';
 import type { GetVariableResponse } from '@root/types/api/variable';
-import { Credentials } from '@app/credentials';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
 import InputBehaviour from '@app/uiComponents/inputs/InputBehaviour';
@@ -31,6 +30,7 @@ import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { QueriedMapItem } from '@root/types/api/map';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import type { StoreApi, UseBoundStore } from 'zustand';
+import { Runtime } from '@app/runtime/Runtime';
 
 export interface ReferenceInputProps {
     name: string;
@@ -107,7 +107,7 @@ export default function Form<T extends FieldValues>({
         // @ts-ignore
         formProps.defaultValues = currentData.value;
     } else {
-        setLocale(Credentials.Locale());
+        setLocale(Runtime.instance.currentLocaleStorage.getLocale());
         setGroups(['default']);
     }
     const methods = useForm(formProps);

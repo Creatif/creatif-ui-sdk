@@ -10,12 +10,13 @@ import styles from './css/Sort.module.css';
 import type { ComboboxItem } from '@mantine/core';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
-import LocalesCache from '@lib/storage/localesCache';
 import AppPill from '@app/uiComponents/shared/AppPill';
+import type { StructureItem } from '@app/systems/stores/projectMetadata';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     currentSort: CurrentSortType;
     currentGroups: string[];
-    structureName: string;
+    structureItem: StructureItem;
     structureType: string;
     currentDirection: 'desc' | 'asc' | undefined;
     currentBehaviour: Behaviour | undefined;
@@ -32,7 +33,7 @@ export default function Sort({
     currentSort = 'index',
     currentGroups = [],
     includeSortBy = ['created_at', 'index', 'updated_at'],
-    structureName,
+    structureItem,
     structureType,
     currentLocales,
     onSelectedGroups,
@@ -47,9 +48,9 @@ export default function Sort({
     const [groups, setGroups] = useState<string[]>(currentGroups);
     const [locales, setLocales] = useState<string[]>(currentLocales);
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(currentBehaviour);
-    const cachedLocales = LocalesCache.instance.getLocales() || [];
+    const cachedLocales = Runtime.instance.localesCache.getLocales() || [];
     const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(currentDirection);
-    const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups(structureType, structureName);
+    const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups(structureType, structureItem.id);
 
     const [debouncedGroups] = useDebouncedValue(groups, 500);
 

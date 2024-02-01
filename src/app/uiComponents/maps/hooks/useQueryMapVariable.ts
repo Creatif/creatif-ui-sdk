@@ -3,6 +3,7 @@ import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import { ApiError } from '@lib/http/apiError';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
+import { Runtime } from '@app/runtime/Runtime';
 export default function useQueryMapVariable<Value, Metadata>(
     mapName: string | undefined,
     itemId: string | undefined,
@@ -29,7 +30,7 @@ export default function useQueryMapVariable<Value, Metadata>(
                 return queryMapVariable<Value, Metadata>({
                     structureId: mapName,
                     itemId: itemId,
-                    projectId: Credentials.ProjectID(),
+                    projectId: Runtime.instance.credentials.projectId,
                 });
             }),
             {

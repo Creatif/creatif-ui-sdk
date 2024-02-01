@@ -4,7 +4,7 @@ import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectM
 import { Runtime } from '@app/runtime/Runtime';
 import type { AppShellItem, StructureType } from '@root/types/shell/shell';
 
-interface StructureItem {
+export interface StructureItem {
     id: string;
     name: string;
     shortId: string;
@@ -13,12 +13,19 @@ interface StructureItem {
     updatePath: string;
     listPath: string;
     showPath: string;
+
+    navigationListPath: string;
+    navigationUpdatePath: string;
+    navigationCreatePath: string;
+    navigationShowPath: string;
 }
 
 interface OptionsStore {
     metadata: ProjectMetadata;
     getProjectName: () => string;
     getMap: (name: string) => Structure | undefined;
+    getStructureItemByID: (id: string) => StructureItem | undefined;
+    getStructureItemByName: (name: string) => StructureItem | undefined;
     structureItems: StructureItem[];
 }
 
@@ -30,7 +37,7 @@ function createStructureItems(metadata: ProjectMetadata, configItems: AppShellIt
         const structureType = configItem.structureType;
         const structureName = configItem.structureName;
 
-        const metadataItem = metadata.maps.find(item => item.name === structureName);
+        const metadataItem = metadata.maps.find((item) => item.name === structureName);
 
         if (metadataItem) {
             structureItems.push({
@@ -38,10 +45,15 @@ function createStructureItems(metadata: ProjectMetadata, configItems: AppShellIt
                 name: metadataItem.name,
                 shortId: metadataItem.shortId,
                 structureType: structureType,
-                createPath: `${structureType}/create/:id`,
-                updatePath: `${structureType}/update/:structureId/:id`,
-                listPath: `${structureType}/list`,
-                showPath: `${structureType}/show/:structureId/:id`,
+                createPath: `/${structureType}/${structureName}/create/:structureId`,
+                updatePath: `/${structureType}/${structureName}/update/:structureId/:itemId`,
+                listPath: `/${structureType}/${structureName}/list/:structureId`,
+                showPath: `/${structureType}/${structureName}/show/:structureId/:itemId`,
+
+                navigationUpdatePath: `/${structureType}/${structureName}/update`,
+                navigationListPath: `/${structureType}/${structureName}/list`,
+                navigationCreatePath: `/${structureType}/${structureName}/create`,
+                navigationShowPath: `/${structureType}/${structureName}/show`,
             });
         }
     }
@@ -62,6 +74,8 @@ export function createProjectMetadataStore(metadata: ProjectMetadata, configItem
         structureItems: createStructureItems(metadata, configItems),
         getProjectName: () => get().metadata.name,
         getMap: (name: string) => get().metadata.maps.find((item) => item.name === name),
+        getStructureItemByID: (id: string) => get().structureItems.find((t) => t.id === id),
+        getStructureItemByName: (name: string) => get().structureItems.find((t) => t.name === name),
     }));
 
     return store;

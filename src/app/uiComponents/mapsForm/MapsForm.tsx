@@ -1,13 +1,12 @@
 import Loading from '@app/components/Loading';
 import useNotification from '@app/systems/notifications/useNotification';
-import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
 import type { HTMLAttributes, BaseSyntheticEvent } from 'react';
@@ -25,7 +24,6 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import { Credentials } from '@app/credentials';
 import UIError from '@app/components/UIError';
 import Form from '@app/uiComponents/shared/Form';
 import type { ReferenceInputProps } from '@app/uiComponents/shared/Form';
@@ -34,7 +32,6 @@ import type { CreatedVariable } from '@root/types/api/variable';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { useQueryClient } from 'react-query';
-import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
 import addToMap from '@lib/api/declarations/maps/addToMap';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
@@ -42,6 +39,8 @@ import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/
 import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
 import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
+import { Runtime } from '@app/runtime/Runtime';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     mapName: string;
@@ -81,16 +80,12 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     afterSave,
     mode,
 }: Props<T, Value, Metadata>) {
-    const { store: useStructureOptionsStore, error: runtimeError } = getOptions(mapName, 'map');
-    const referenceStore = useMemo(() => createInputReferenceStore(), []);
-
+    const store = getProjectMetadataStore();
     const { structureId, itemId } = useParams();
+    const structureItem = store.getState().getStructureItemByID(structureId || '');
 
-    const {
-        isFetching,
-        data,
-        error: getError,
-    } = useQueryMapVariable(structureId, itemId, Boolean(mode && structureId && useStructureOptionsStore));
+    const isCreateRoute = location.pathname.includes('/create/');
+    const isUpdateRoute = location.pathname.includes('/update/');
 
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
@@ -103,6 +98,24 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
     const [isVariableReadonly, setIsVariableReadonly] = useState(false);
     const [isNotFoundError, setIsNotFoundError] = useState(false);
+
+    const referenceStore = useMemo(() => createInputReferenceStore(), []);
+
+    const {
+        isFetching,
+        data,
+        error: getError,
+    } = useQueryMapVariable(structureId, itemId, Boolean(mode && structureItem && itemId));
+
+    useEffect(() => {
+        if (isCreateRoute && !structureItem) {
+            setIsNotFoundError(true);
+        }
+
+        if (isUpdateRoute && !structureItem && !itemId) {
+            setIsNotFoundError(true);
+        }
+    }, [structureItem, itemId]);
 
     const onInternalSubmit = useCallback(
         (value: T, e: BaseSyntheticEvent | undefined) => {
@@ -130,7 +143,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                 setIsVariableReadonly(false);
 
                 setIsSaving(true);
-                if (!mode && result) {
+                if (!mode && result && structureId) {
                     const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
                         result.value as IncomingValues,
                         locale,
@@ -141,8 +154,8 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
                     addToMap({
-                        name: mapName,
-                        projectId: Credentials.ProjectID(),
+                        name: structureId,
+                        projectId: Runtime.instance.credentials.projectId,
                         variable: {
                             name: name,
                             behaviour: chosenBehaviour,
@@ -169,16 +182,18 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                             return;
                         }
 
-                        if (useStructureOptionsStore) {
+                        if (structureItem) {
                             successNotification(
                                 'Map item created',
                                 `Map item with name '${name}' and locale '${chosenLocale}' has been created.`,
                             );
 
-                            queryClient.invalidateQueries(mapName);
+                            queryClient.invalidateQueries(structureId);
                             afterSave?.(response, e);
                             setIsSaving(false);
-                            navigate(useStructureOptionsStore.getState().paths.listing);
+                            if (structureItem) {
+                                navigate(`${structureItem.navigationListPath}/${structureId}`);
+                            }
                         }
                     });
                 }
@@ -196,7 +211,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     updateMapVariable({
                         fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
                         name: structureId,
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                         itemId: itemId,
                         values: {
                             name: name,
@@ -226,15 +241,17 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                             return;
                         }
 
-                        if (response && useStructureOptionsStore) {
+                        if (response) {
                             successNotification(
                                 'Map item updated',
                                 `Map item with item name '${name}' has been updated.`,
                             );
 
-                            queryClient.invalidateQueries(mapName);
+                            queryClient.invalidateQueries(structureId);
                             afterSave?.(result, e);
-                            navigate(useStructureOptionsStore.getState().paths.listing);
+                            if (structureItem) {
+                                navigate(`${structureItem.navigationListPath}/${structureId}`);
+                            }
                         }
                     });
                 }
@@ -285,9 +302,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     style={{
                         marginBottom: '1rem',
                     }}>
-                    <UIError title="Structure not found">
-                        Structure with {mapName} not found. Are you sure that you haven&apos;t misspelled the name?
-                    </UIError>
+                    <UIError title="Route not found">This route does not seem to exist.</UIError>
                 </div>
             )}
 
@@ -304,10 +319,10 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
 
             <Loading isLoading={isFetching} />
 
-            {!isFetching && !getError && (
+            {!isFetching && !getError && structureItem && (
                 <Form
                     structureType={'map'}
-                    structureId={mapName}
+                    structureId={structureItem.id}
                     formProps={formProps}
                     inputs={inputs}
                     referenceStore={referenceStore}
@@ -317,8 +332,6 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                     currentData={data?.result}
                 />
             )}
-
-            <RuntimeErrorModal open={Boolean(runtimeError)} error={runtimeError} />
         </div>
     );
 }

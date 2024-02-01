@@ -4,6 +4,7 @@ import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, type ComboboxItem, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
 import LocalesCache from '@lib/storage/localesCache';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface Props {
     open: boolean;
@@ -14,7 +15,7 @@ interface Props {
 
 export default function EditLocaleModal({ open, onClose, onEdit, currentLocale }: Props) {
     const [value, setValue] = useState<string>(currentLocale);
-    const data = LocalesCache.instance.getLocales() || [];
+    const data = Runtime.instance.localesCache.getLocales() || [];
 
     return (
         <>

@@ -18,7 +18,7 @@ import styles from './css/ActionSection.module.css';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { StructureType } from '@root/types/shell/shell';
-import { getOptions } from '@app/systems/stores/options';
+import type { StructureItem } from '@app/systems/stores/projectMetadata';
 interface Props {
     onSearch: (text: string) => void;
     onSelectedGroups: (groups: string[]) => void;
@@ -31,7 +31,7 @@ interface Props {
 
     direction: 'desc' | 'asc' | undefined;
     sortBy: CurrentSortType;
-    structureName: string;
+    structureItem: StructureItem;
     behaviour: Behaviour | undefined;
     groups: string[];
     isLoading: boolean;
@@ -42,7 +42,7 @@ interface Props {
 }
 export default function ActionSection({
     onSearch,
-    structureName,
+    structureItem,
     structureType,
     includeSortBy = ['created_at', 'index', 'updated_at'],
     isLoading,
@@ -62,7 +62,6 @@ export default function ActionSection({
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);
     const [value, setValue] = useState(search);
     const [debounced] = useDebouncedValue(value, 500);
-    const { store: optionsStore } = getOptions(structureName, structureType);
 
     useEffect(() => {
         onSearch(debounced);
@@ -166,7 +165,7 @@ export default function ActionSection({
                     <div className={styles.buttonWidthLoadingWrapper}>
                         {isLoading && <Loader size={20} />}
                         {includeCreateButton && (
-                            <CreateNew path={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                            <CreateNew path={`${structureItem.navigationCreatePath}/${structureItem.id}`} />
                         )}
                     </div>
                 </div>
@@ -181,7 +180,7 @@ export default function ActionSection({
                     onBehaviourChange={onBehaviourChange}
                     onSortChange={onSortChange}
                     onSelectedGroups={onSelectedGroups}
-                    structureName={structureName}
+                    structureItem={structureItem}
                     currentDirection={direction}
                     currentBehaviour={behaviour}
                     currentLocales={locales}

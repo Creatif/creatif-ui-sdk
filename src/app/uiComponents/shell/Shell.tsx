@@ -39,7 +39,7 @@ export default function Shell({ options }: Props) {
                             </div>
                         }>
                         {structures.map((item, i) => {
-                            const configOption = options.items.find(option => option.structureName === item.name);
+                            const configOption = options.items.find((option) => option.structureName === item.name);
                             if (!configOption) return null;
 
                             return (
@@ -47,28 +47,19 @@ export default function Shell({ options }: Props) {
                                     <Route path={item.createPath} element={configOption.createComponent} />
                                     {item.structureType === 'list' && (
                                         <>
-                                            <Route
-                                                path={item.updatePath}
-                                                element={configOption.updateComponent}
-                                            />
+                                            <Route path={item.updatePath} element={configOption.updateComponent} />
                                             <Route
                                                 path={item.listPath}
                                                 element={<StructureListListing listName={item.name} />}
                                             />
 
-                                            <Route
-                                                path={item.showPath}
-                                                element={<ListItemShowItem />}
-                                            />
+                                            <Route path={item.showPath} element={<ListItemShowItem />} />
                                         </>
                                     )}
 
                                     {item.structureType === 'map' && (
                                         <>
-                                            <Route
-                                                path={item.createPath}
-                                                element={configOption.updateComponent}
-                                            />
+                                            <Route path={item.updatePath} element={configOption.updateComponent} />
                                             <Route
                                                 path={item.listPath}
                                                 element={<StructuredMapsListing mapName={item.name} />}
@@ -80,19 +71,13 @@ export default function Shell({ options }: Props) {
 
                                     {item.structureType === 'variable' && (
                                         <>
-                                            <Route
-                                                path={item.updatePath}
-                                                element={configOption.updateComponent}
-                                            />
+                                            <Route path={item.updatePath} element={configOption.updateComponent} />
                                             <Route
                                                 path={item.listPath}
                                                 element={<VariableListListing name={item.name} />}
                                             />
 
-                                            <Route
-                                                path={item.updatePath}
-                                                element={<VariableShowItem />}
-                                            />
+                                            <Route path={item.updatePath} element={<VariableShowItem />} />
                                         </>
                                     )}
                                 </React.Fragment>

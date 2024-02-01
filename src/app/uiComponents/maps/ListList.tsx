@@ -16,7 +16,7 @@ import MainTableView from '@app/uiComponents/maps/table/MainTableView';
 import { Button, Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
@@ -26,15 +26,18 @@ import { DndProvider } from 'react-dnd';
 import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import Item from '@app/uiComponents/maps/list/Item';
-import { getOptions } from '@app/systems/stores/options';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { useParams } from 'react-router-dom';
+import UIError from '@app/components/UIError';
 interface Props {
     mapName: string;
 }
 export function ListList<Value, Metadata>({ mapName }: Props) {
     const { queryParams, setParam } = useSearchQuery();
+    const { structureId } = useParams();
+    const structureItem = getProjectMetadataStore().getState().getStructureItemByID(structureId);
+
     const { error: errorNotification, success: successNotification } = useNotification();
-    const { store: optionsStore } = getOptions(mapName, 'map');
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -51,10 +54,18 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
     const [isListView, setIsListView] = useState(true);
 
+    const [isNotFoundError, setIsNotFoundError] = useState(false);
+
+    useEffect(() => {
+        if (!structureItem) {
+            setIsNotFoundError(true);
+        }
+    }, [structureItem]);
+
     const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
-        listName: getProjectMetadataStore().getState().getMap(mapName)?.id || '',
+        listName: structureItem?.id || '',
         page: page,
         locales: locales,
         groups: groups,
@@ -64,13 +75,16 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
         orderBy: orderBy,
         search: search as string,
         fields: fields,
+        enabled: Boolean(structureItem),
     });
 
     const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
         () => {
             setAreItemsDeleting(false);
             setCheckedItems([]);
-            invalidateQueries(mapName);
+            if (structureItem) {
+                invalidateQueries(structureItem.id);
+            }
             successNotification('Action is a success', 'All selected items were deleted.');
         },
         () => {
@@ -81,42 +95,44 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
 
     return (
         <>
-            <ActionSection
-                includeSortBy={['created_at', 'updated_at']}
-                structureType={'map'}
-                isLoading={isFetching}
-                sortBy={orderBy}
-                search={search || ''}
-                locales={locales}
-                direction={direction}
-                behaviour={behaviour}
-                groups={groups}
-                onDirectionChange={(direction) => {
-                    setDirection(direction);
-                    setParam('direction', direction as string);
-                }}
-                onSelectedLocales={(locales) => {
-                    setLocales(locales);
-                    setParam('locales', locales.join(','));
-                }}
-                onBehaviourChange={(behaviour) => {
-                    setBehaviour(behaviour);
-                    setParam('behaviour', behaviour as string);
-                }}
-                onSortChange={(sortType) => {
-                    setOrderBy(sortType);
-                    setParam('orderBy', sortType);
-                }}
-                onSelectedGroups={(groups) => {
-                    setGroups(groups);
-                    setParam('groups', groups.join(','));
-                }}
-                structureName={mapName}
-                onSearch={(text) => {
-                    setSearch(text);
-                    setParam('search', text);
-                }}
-            />
+            {structureItem && (
+                <ActionSection
+                    includeSortBy={['created_at', 'updated_at']}
+                    structureType={'map'}
+                    isLoading={isFetching}
+                    structureItem={structureItem}
+                    sortBy={orderBy}
+                    search={search || ''}
+                    locales={locales}
+                    direction={direction}
+                    behaviour={behaviour}
+                    groups={groups}
+                    onDirectionChange={(direction) => {
+                        setDirection(direction);
+                        setParam('direction', direction as string);
+                    }}
+                    onSelectedLocales={(locales) => {
+                        setLocales(locales);
+                        setParam('locales', locales.join(','));
+                    }}
+                    onBehaviourChange={(behaviour) => {
+                        setBehaviour(behaviour);
+                        setParam('behaviour', behaviour as string);
+                    }}
+                    onSortChange={(sortType) => {
+                        setOrderBy(sortType);
+                        setParam('orderBy', sortType);
+                    }}
+                    onSelectedGroups={(groups) => {
+                        setGroups(groups);
+                        setParam('groups', groups.join(','));
+                    }}
+                    onSearch={(text) => {
+                        setSearch(text);
+                        setParam('search', text);
+                    }}
+                />
+            )}
 
             <div className={contentContainerStyles.root}>
                 {data?.result && data.result.total > 0 && (
@@ -179,17 +195,27 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                     </div>
                 )}
 
-                {data?.result && data.result.total === 0 && (
-                    <NothingFound createNewPath={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                {isNotFoundError && (
+                    <div className={styles.skeleton}>
+                        <UIError title="Route not found">This route does not seem to exist</UIError>
+                    </div>
                 )}
 
-                {!isFetching && data?.result && data.result.total !== 0 && (
+                {data?.result && data.result.total === 0 && (
+                    <NothingFound
+                        createNewPath={
+                            (structureItem && `${structureItem.navigationCreatePath}/${structureItem.id}`) || ''
+                        }
+                    />
+                )}
+
+                {!isFetching && data?.result && data.result.total !== 0 && structureItem && (
                     <div className={styles.container}>
                         {isListView && (
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
                                     data={data.result}
-                                    structureName={mapName}
+                                    structureItem={structureItem}
                                     structureType="map"
                                     onRearrange={rearrange}
                                     renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
@@ -220,7 +246,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                                                     key={item.id}
                                                     index={i}
                                                     item={item}
-                                                    mapName={mapName}
+                                                    structureItem={structureItem}
                                                 />
                                             ))}
                                         </>
@@ -269,19 +295,21 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                 )}
             </div>
 
-            <DeleteModal
-                open={isDeleteAllModalOpen}
-                message="Are you sure? This action cannot be undone and these items will be deleted permanently!"
-                onClose={() => setIsDeleteAllModalOpen(false)}
-                onDelete={() => {
-                    setAreItemsDeleting(true);
-                    setIsDeleteAllModalOpen(false);
-                    deleteItemsByRange({
-                        items: checkedItems,
-                        name: mapName,
-                    });
-                }}
-            />
+            {structureItem && (
+                <DeleteModal
+                    open={isDeleteAllModalOpen}
+                    message="Are you sure? This action cannot be undone and these items will be deleted permanently!"
+                    onClose={() => setIsDeleteAllModalOpen(false)}
+                    onDelete={() => {
+                        setAreItemsDeleting(true);
+                        setIsDeleteAllModalOpen(false);
+                        deleteItemsByRange({
+                            items: checkedItems,
+                            name: structureItem.id,
+                        });
+                    }}
+                />
+            )}
         </>
     );
 }

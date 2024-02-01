@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import type rearrange from '@lib/api/declarations/lists/rearrange';
 import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
+import type { StructureItem } from '@app/systems/stores/projectMetadata';
+import { Runtime } from '@app/runtime/Runtime';
 
 type OnDrop = (source: DragItem, destination: DragItem) => void;
 type OnMove = (dragIndex: number, hoverIdx: number) => void;
@@ -14,7 +16,7 @@ export interface DragItem {
 }
 interface Props<Value, Metadata> {
     data: PaginationResult<Value, Metadata>;
-    structureName: string;
+    structureItem: StructureItem;
     structureType: 'list' | 'map';
     onRearrange: typeof rearrange;
     renderItems: (
@@ -28,7 +30,7 @@ interface Props<Value, Metadata> {
 }
 export default function DraggableList<Value, Metadata>({
     data,
-    structureName,
+    structureItem,
     structureType,
     renderItems,
     onRearrange,
@@ -55,8 +57,8 @@ export default function DraggableList<Value, Metadata>({
 
             onRearrange(
                 {
-                    projectId: Credentials.ProjectID(),
-                    name: structureName,
+                    projectId: Runtime.instance.credentials.projectId,
+                    name: structureItem.id,
                     source: source.id,
                     destination: destination.id,
                 },

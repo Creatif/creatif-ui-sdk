@@ -8,13 +8,12 @@ import { CreatifProvider } from '@root/CreatifProvider';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$YvzNhpf4eepsQDkB5QaGkO9K5xrErEFxfczFK.8oJaIIEIpkL95iW"
-            projectId="01HNFFP2YE5MXSD9E82VZF42EQ"
+            apiKey="$2a$10$eR8JJjBArFfnf3dDdMbfSeZFDQ8sWp.h/8DkwHa/k/i.eOaY23nG6"
+            projectId="01HNG7K09RJP4HNA453Q9YFHS8"
             app={{
                 logo: 'Break free',
                 items: [
                     {
-                        routePath: 'shitter',
                         structureType: 'map',
                         structureName: 'Organizations',
 

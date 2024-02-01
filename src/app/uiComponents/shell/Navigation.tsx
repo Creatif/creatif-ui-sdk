@@ -40,7 +40,7 @@ export default function Navigation({ navItems, logo }: Props) {
             <nav className={styles.root}>
                 {navItems.map((item, index) => {
                     const structures = getProjectMetadataStore().getState().structureItems;
-                    const structureItem = structures.find(t => t.name === item.structureName);
+                    const structureItem = structures.find((t) => t.name === item.structureName);
 
                     return (
                         <React.Fragment key={index}>
@@ -51,7 +51,7 @@ export default function Navigation({ navItems, logo }: Props) {
 
                                         return styles.navItem;
                                     }}
-                                    to={structureItem.listPath}>
+                                    to={`${structureItem.navigationListPath}/${structureItem.id}`}>
                                     {!item.menuIcon && <NavigationIcon type={item.structureType} />}
                                     {item.menuIcon && <span className={styles.navItemIcon}>{item.menuIcon}</span>}
                                     <span className={styles.navItemText}>

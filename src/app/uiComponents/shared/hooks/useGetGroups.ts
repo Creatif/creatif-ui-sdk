@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
 import getGroups from '@lib/api/declarations/shared/getGroups';
+import { Runtime } from '@app/runtime/Runtime';
 export default function useGetGroups(structureType: string, structureId: string, enabled?: boolean) {
     const queryClient = useQueryClient();
     const key = ['get_groups', structureType, structureId];
@@ -15,7 +16,7 @@ export default function useGetGroups(structureType: string, structureId: string,
                     getGroups({
                         structureType: structureType,
                         structureId: structureId,
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                     }),
                 );
 

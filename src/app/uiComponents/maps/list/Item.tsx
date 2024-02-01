@@ -19,7 +19,7 @@ import {
 } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { type MouseEvent, useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import type { DragSourceMonitor } from 'react-dnd';
 import { useDrag, useDrop } from 'react-dnd';
@@ -31,9 +31,12 @@ import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import useUpdateMapVariable from '@app/uiComponents/maps/hooks/useUpdateMapVariable';
 import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
 import { Credentials } from '@app/credentials';
+import type { StructureItem } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
-    mapName: string;
+    structureItem: StructureItem;
     onDeleted: () => void;
     disabled?: boolean;
     onChecked: (itemId: string, checked: boolean) => void;
@@ -44,7 +47,7 @@ interface Props<Value, Metadata> {
 }
 export default function Item<Value, Metadata>({
     item,
-    mapName,
+    structureItem,
     onDeleted,
     onChecked,
     disabled,
@@ -55,13 +58,13 @@ export default function Item<Value, Metadata>({
 }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const { store: useOptions } = getOptions(mapName, 'map');
+    const store = getProjectMetadataStore();
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
-    const { mutate, data } = useUpdateMapVariable(mapName, item.id, item.name);
+    const { mutate, data } = useUpdateMapVariable(structureItem.id || '', item.id, item.name);
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
     item.groups = data?.result && data.result.groups ? data.result.groups : item.groups;
@@ -139,7 +142,7 @@ export default function Item<Value, Metadata>({
 
     return (
         <Link
-            to={`/map/show/${mapName}/${item.id}`}
+            to={`${structureItem?.navigationShowPath}/${structureItem.id}/${item.id}`}
             ref={ref}
             data-handler-id={handlerId}
             onClick={preventClickEventOnModal}
@@ -206,10 +209,10 @@ export default function Item<Value, Metadata>({
                                 </Menu.Target>
 
                                 <Menu.Dropdown>
-                                    {useOptions && (
+                                    {structureItem && (
                                         <Menu.Item
                                             component={Link}
-                                            to={`${useOptions.getState().paths.update}/${mapName}/${item.id}`}
+                                            to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${item.id}`}
                                             leftSection={<IconEdit size={16} />}>
                                             Edit
                                         </Menu.Item>
@@ -261,39 +264,41 @@ export default function Item<Value, Metadata>({
                 <div className={styles.menu} />
             </div>
 
-            <DeleteModal
-                message="Are you sure? This action cannot be undone and this item will be permanently deleted."
-                open={Boolean(deleteItemId)}
-                onClose={() => setDeleteItemId(undefined)}
-                onDelete={async () => {
-                    setIsDeleting(true);
-                    const { error, status } = await deleteMapItem({
-                        name: mapName,
-                        itemId: item.id,
-                        projectId: Credentials.ProjectID(),
-                    });
+            {structureItem && (
+                <DeleteModal
+                    message="Are you sure? This action cannot be undone and this item will be permanently deleted."
+                    open={Boolean(deleteItemId)}
+                    onClose={() => setDeleteItemId(undefined)}
+                    onDelete={async () => {
+                        setIsDeleting(true);
+                        const { error, status } = await deleteMapItem({
+                            name: structureItem.id,
+                            itemId: item.id,
+                            projectId: Runtime.instance.credentials.projectId,
+                        });
 
-                    if (error) {
-                        errorNotification(
-                            'Cannot delete list item',
-                            'An error occurred when trying to delete list item. Please, try again later.',
-                        );
+                        if (error) {
+                            errorNotification(
+                                'Cannot delete list item',
+                                'An error occurred when trying to delete list item. Please, try again later.',
+                            );
+
+                            setIsDeleting(false);
+                            setDeleteItemId(undefined);
+
+                            return;
+                        }
+
+                        if (status === 200) {
+                            success('List item deleted.', 'List item was deleted successfully');
+                        }
 
                         setIsDeleting(false);
+                        onDeleted();
                         setDeleteItemId(undefined);
-
-                        return;
-                    }
-
-                    if (status === 200) {
-                        success('List item deleted.', 'List item was deleted successfully');
-                    }
-
-                    setIsDeleting(false);
-                    onDeleted();
-                    setDeleteItemId(undefined);
-                }}
-            />
+                    }}
+                />
+            )}
 
             <EditLocaleModal
                 currentLocale={item.locale}
@@ -315,23 +320,25 @@ export default function Item<Value, Metadata>({
                 }}
             />
 
-            <EditGroups
-                structureType="map"
-                structureName={mapName}
-                open={isEditGroupsOpen}
-                currentGroups={item.groups || []}
-                onClose={() => setIsEditGroupsOpen(false)}
-                onEdit={(groups) => {
-                    mutate({
-                        values: {
-                            groups: groups,
-                        },
-                        fields: ['groups'],
-                    });
+            {structureItem && (
+                <EditGroups
+                    structureType="map"
+                    structureName={structureItem.id}
+                    open={isEditGroupsOpen}
+                    currentGroups={item.groups || []}
+                    onClose={() => setIsEditGroupsOpen(false)}
+                    onEdit={(groups) => {
+                        mutate({
+                            values: {
+                                groups: groups,
+                            },
+                            fields: ['groups'],
+                        });
 
-                    setIsEditGroupsOpen(false);
-                }}
-            />
+                        setIsEditGroupsOpen(false);
+                    }}
+                />
+            )}
         </Link>
     );
 }
