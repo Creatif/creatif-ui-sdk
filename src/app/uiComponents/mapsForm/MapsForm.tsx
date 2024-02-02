@@ -24,7 +24,6 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import UIError from '@app/components/UIError';
 import Form from '@app/uiComponents/shared/Form';
 import type { ReferenceInputProps } from '@app/uiComponents/shared/Form';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
@@ -41,9 +40,9 @@ import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import { Runtime } from '@app/runtime/Runtime';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { Error } from '@app/uiComponents/shared/Error';
 
 interface Props<T extends FieldValues, Value, Metadata> {
-    mapName: string;
     bindings?: Bindings<T>;
     formProps: UseFormProps<T>;
     mode?: 'update';
@@ -72,7 +71,6 @@ interface Props<T extends FieldValues, Value, Metadata> {
     form?: HTMLAttributes<HTMLFormElement>;
 }
 export default function MapsForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
-    mapName,
     formProps,
     bindings,
     inputs,
@@ -275,62 +273,29 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                 </Alert>
             )}
 
-            {Boolean(getError) && <UIError title="Not found">{'This item could not be found.'}</UIError>}
-            {isVariableExistsError && (
-                <div
-                    style={{
-                        marginBottom: '1rem',
-                    }}>
-                    <UIError title="Item exists">Item with this name already exists</UIError>
-                </div>
-            )}
-
-            {isGenericUpdateError && (
-                <div
-                    style={{
-                        marginBottom: '1rem',
-                    }}>
-                    <UIError title="Something went wrong">
-                        We cannot update this item at this moment. We are working to solve this issue. Please, try again
-                        later.
-                    </UIError>
-                </div>
-            )}
-
-            {isNotFoundError && (
-                <div
-                    style={{
-                        marginBottom: '1rem',
-                    }}>
-                    <UIError title="Route not found">This route does not seem to exist.</UIError>
-                </div>
-            )}
-
-            {isVariableReadonly && (
-                <div
-                    style={{
-                        marginBottom: '1rem',
-                    }}>
-                    <UIError title="Item is readonly">
-                        This is a readonly item and can be updated only by the administrator.
-                    </UIError>
-                </div>
-            )}
+            <Error title="Not found" message="This item could not be found" show={Boolean(getError)} />
+            <Error title="Item exists" message="Item with this name already exists" show={isVariableExistsError} />
+            <Error title="Something went wrong" message="We cannot update this item at this moment. We are working to solve this issue. Please, try again later." show={isGenericUpdateError} />
+            <Error title="Route not found" message="This route does not seem to exist." show={isNotFoundError} />
+            <Error title="Item is readonly" message="This is a readonly item and can be updated only by the administrator." show={isVariableReadonly} />
 
             <Loading isLoading={isFetching} />
 
             {!isFetching && !getError && structureItem && (
-                <Form
-                    structureType={'map'}
-                    structureId={structureItem.id}
-                    formProps={formProps}
-                    inputs={inputs}
-                    referenceStore={referenceStore}
-                    onSubmit={onInternalSubmit}
-                    isSaving={isSaving}
-                    mode={mode}
-                    currentData={data?.result}
-                />
+                <>
+                    <h1 className={contentContainerStyles.heading}>{mode ? 'Update' : 'Create new '} <span>{structureItem.name}</span></h1>
+                    <Form
+                        structureType={'map'}
+                        structureItem={structureItem}
+                        formProps={formProps}
+                        inputs={inputs}
+                        referenceStore={referenceStore}
+                        onSubmit={onInternalSubmit}
+                        isSaving={isSaving}
+                        mode={mode}
+                        currentData={data?.result}
+                    />
+                </>
             )}
         </div>
     );

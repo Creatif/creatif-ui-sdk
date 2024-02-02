@@ -6,7 +6,6 @@ interface Props {
     itemId: string;
 }
 export default function Reference({ reference, itemId }: Props) {
-    console.log(reference, itemId);
     const relationshipType = reference.parentId !== itemId ? 'child' : 'parent';
     const structureType = relationshipType === 'parent' ? reference.parentType : reference.childType;
     return <List reference={reference} relationshipType={relationshipType} structureType={structureType} />;

@@ -39,6 +39,7 @@ interface Props {
     search: string;
 
     includeCreateButton?: boolean;
+    includeHeading?: boolean;
 }
 export default function ActionSection({
     onSearch,
@@ -58,6 +59,7 @@ export default function ActionSection({
     sortBy,
     locales,
     includeCreateButton = true,
+    includeHeading = true,
 }: Props) {
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);
     const [value, setValue] = useState(search);
@@ -70,6 +72,7 @@ export default function ActionSection({
     return (
         <>
             <div className={styles.root}>
+                {includeHeading && <h1 className={styles.heading}>{structureItem.name}</h1>}
                 <div className={styles.paddingSection}>
                     <div className={styles.leftMenu}>
                         <TextInput

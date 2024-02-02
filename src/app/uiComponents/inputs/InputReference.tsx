@@ -3,7 +3,6 @@ import paginateList from '@lib/api/declarations/lists/paginateList';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import type { StructureType } from '@root/types/shell/shell';
-import { Credentials } from '@app/credentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { AsyncAutocompleteSelectOption } from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
@@ -13,11 +12,13 @@ import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { Runtime } from '@app/runtime/Runtime';
+import type { StructureItem } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 
 interface Props {
     name: string;
-    internalStructureName: string;
     structureName: string;
+    parentStructureItem: StructureItem;
     structureType: StructureType;
     placeholder: string;
     label?: string;
@@ -26,14 +27,14 @@ interface Props {
 }
 
 async function searchAndCreateOptions(
-    structureName: string,
+    structureId: string,
     structureType: StructureType,
     search: string,
 ): Promise<AsyncAutocompleteSelectOption[]> {
     if (structureType === 'list') {
         const { result, error } = await paginateList({
             search: search,
-            name: structureName,
+            name: structureId,
             limit: 1000,
             page: 1,
             orderBy: 'created_at',
@@ -57,7 +58,7 @@ async function searchAndCreateOptions(
     if (structureType === 'map') {
         const { result, error } = await paginateMapVariables({
             search: search,
-            name: structureName,
+            name: structureId,
             limit: 100,
             page: 1,
             projectId: Runtime.instance.credentials.projectId,
@@ -79,7 +80,7 @@ async function searchAndCreateOptions(
 
     const { result, error } = await paginateVariables({
         search: search,
-        name: structureName,
+        name: structureId,
         limit: 100,
         page: 1,
         projectId: Runtime.instance.credentials.projectId,
@@ -100,8 +101,8 @@ async function searchAndCreateOptions(
 }
 
 export default function InputReference({
+    parentStructureItem,
     structureName,
-    internalStructureName,
     structureType,
     placeholder,
     label,
@@ -111,6 +112,7 @@ export default function InputReference({
 }: Props) {
     const { control, setValue: setFormValue } = useFormContext();
     const [selected, setSelected] = useState<AsyncAutocompleteSelectOption | undefined>();
+    const internalStructureItem = getProjectMetadataStore().getState().getStructureItemByName(structureName);
 
     const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
 
@@ -119,17 +121,17 @@ export default function InputReference({
     const addReference = store((state) => state.add);
 
     useEffect(() => {
-        if (internalStructureName === structureName) {
+        if (parentStructureItem.name === structureName) {
             setIsEqualStructureNameError(true);
         }
-    }, [internalStructureName, structureName]);
+    }, [parentStructureItem, structureName]);
 
     useEffect(() => {
         if (selected) {
             const ref = {
                 name: name,
                 structureType: structureType,
-                structureName: structureName,
+                structureName: parentStructureItem.name,
                 variableId: selected.value,
             };
 
@@ -146,7 +148,9 @@ export default function InputReference({
 
     const searchFn = useCallback(
         async (searchValue: string) => {
-            const result = await searchAndCreateOptions(structureName, structureType, searchValue);
+            if (!internalStructureItem) return [];
+
+            const result = await searchAndCreateOptions(internalStructureItem.id, structureType, searchValue);
             const existingReferences = store.getState().references;
 
             if (existingReferences.length) {
@@ -162,7 +166,7 @@ export default function InputReference({
 
             return result;
         },
-        [selected],
+        [selected, internalStructureItem],
     );
 
     return (
@@ -172,6 +176,15 @@ export default function InputReference({
                     open={isEqualStructureNameError}
                     error={{
                         message: `You are trying to create a reference to itself which is not allowed. Structure '${structureName}' cannot reference itself in a form.`,
+                    }}
+                />
+            )}
+
+            {!internalStructureItem && (
+                <RuntimeErrorModal
+                    open={true}
+                    error={{
+                        message: `You are trying to create a reference on a structure ${structureName} but that structure does not exist.`,
                     }}
                 />
             )}

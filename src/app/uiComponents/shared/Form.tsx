@@ -31,6 +31,7 @@ import type { QueriedMapItem } from '@root/types/api/map';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import { Runtime } from '@app/runtime/Runtime';
+import { StructureItem } from '@app/systems/stores/projectMetadata';
 
 export interface ReferenceInputProps {
     name: string;
@@ -42,7 +43,7 @@ export interface ReferenceInputProps {
 }
 
 interface Props<T extends FieldValues> {
-    structureId: string;
+    structureItem: StructureItem;
     structureType: string;
     formProps: UseFormProps<T>;
     referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
@@ -73,7 +74,7 @@ interface Props<T extends FieldValues> {
 }
 export default function Form<T extends FieldValues>({
     structureType,
-    structureId,
+    structureItem,
     formProps,
     referenceStore,
     inputs,
@@ -155,14 +156,14 @@ export default function Form<T extends FieldValues>({
                             inputGroups: (props?: InputGroupsProps) => (
                                 <InputGroups
                                     structureType={structureType}
-                                    structureId={structureId}
+                                    structureId={structureItem.id}
                                     store={useSpecialFields}
                                     {...props}
                                 />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputReference: (props: ReferenceInputProps) => (
-                                <InputReference {...props} store={referenceStore} internalStructureName={structureId} />
+                                <InputReference {...props} store={referenceStore} parentStructureItem={structureItem} />
                             ),
                         },
                     )}

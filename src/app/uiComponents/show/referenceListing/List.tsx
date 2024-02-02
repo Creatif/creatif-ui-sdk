@@ -16,6 +16,7 @@ import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/uiComponents/show/referenceListing/Item';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
 
 interface Props {
     reference: QueryReference;
@@ -25,6 +26,7 @@ interface Props {
 
 export function List<Value, Metadata>({ reference, structureType, relationshipType }: Props) {
     const { queryParams, setParam } = useSearchQuery();
+    const referenceStructureItem = getProjectMetadataStore().getState().getStructureItemByName(reference.structureName);
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -56,10 +58,12 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
 
     return (
         <>
-            <ActionSection
+            {referenceStructureItem && <ActionSection
                 includeCreateButton={false}
+                includeHeading={false}
                 includeSortBy={['created_at', 'updated_at']}
                 structureType={'map'}
+                structureItem={referenceStructureItem}
                 isLoading={isFetching}
                 sortBy={orderBy}
                 search={search || ''}
@@ -87,12 +91,11 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                     setGroups(groups);
                     setParam('groups', groups.join(','));
                 }}
-                structureName={reference.structureName}
                 onSearch={(text) => {
                     setSearch(text);
                     setParam('search', text);
                 }}
-            />
+            />}
 
             <div className={contentContainerStyles.root}>
                 {data?.result && data.result.data && (

@@ -3,10 +3,9 @@ import { Grid } from '@mantine/core';
 import { InputSelectControlled } from '@app/uiComponents/inputs/InputSelectControlled';
 import MapsForm from '@app/uiComponents/mapsForm/MapsForm';
 interface Props {
-    structureName: string;
     mode?: 'update';
 }
-export default function AttributesForm({ structureName, mode }: Props) {
+export default function AttributesForm({ mode }: Props) {
     return (
         <MapsForm<{
             name: string;
@@ -15,7 +14,6 @@ export default function AttributesForm({ structureName, mode }: Props) {
             bindings={{
                 name: (values) => values.name,
             }}
-            mapName={structureName}
             formProps={{
                 defaultValues: {
                     name: '',

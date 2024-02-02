@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import type { ApiError } from '@lib/http/apiError';
 import paginateReferences from '@lib/api/declarations/references/paginateMapVariables';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     parentId: string;
     childId: string;
@@ -66,7 +67,7 @@ export default function usePaginateReferences<Response>({
                     relationshipType,
                     parentStructureId,
                     childStructureId,
-                    projectId: Credentials.ProjectID(),
+                    projectId: Runtime.instance.credentials.projectId,
                     page,
                     limit,
                     groups,

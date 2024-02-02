@@ -2,10 +2,9 @@ import InputText from '@app/uiComponents/inputs/InputText';
 import { Grid } from '@mantine/core';
 import MapsForm from '@app/uiComponents/mapsForm/MapsForm';
 interface Props {
-    structureName: string;
     mode?: 'update';
 }
-export default function ColorForm({ structureName, mode }: Props) {
+export default function ColorForm({ mode }: Props) {
     return (
         <MapsForm<{
             name: string;
@@ -14,7 +13,6 @@ export default function ColorForm({ structureName, mode }: Props) {
             bindings={{
                 name: (values) => values.name,
             }}
-            mapName={structureName}
             formProps={{
                 defaultValues: {
                     name: '',

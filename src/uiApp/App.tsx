@@ -8,8 +8,8 @@ import { CreatifProvider } from '@root/CreatifProvider';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$eR8JJjBArFfnf3dDdMbfSeZFDQ8sWp.h/8DkwHa/k/i.eOaY23nG6"
-            projectId="01HNG7K09RJP4HNA453Q9YFHS8"
+            apiKey="$2a$10$YvzNhpf4eepsQDkB5QaGkO9K5xrErEFxfczFK.8oJaIIEIpkL95iW"
+            projectId="01HNFFP2YE5MXSD9E82VZF42EQ"
             app={{
                 logo: 'Break free',
                 items: [
@@ -17,29 +17,29 @@ export default function App() {
                         structureType: 'map',
                         structureName: 'Organizations',
 
-                        createComponent: <OrganizationForm structureName="Organizations" />,
-                        updateComponent: <OrganizationForm structureName="Organizations" mode="update" />,
+                        createComponent: <OrganizationForm />,
+                        updateComponent: <OrganizationForm mode="update" />,
                     },
                     {
                         structureType: 'map',
                         structureName: 'Attributes',
 
-                        createComponent: <AttributesForm structureName="Attributes" />,
-                        updateComponent: <AttributesForm structureName="Attributes" mode="update" />,
+                        createComponent: <AttributesForm />,
+                        updateComponent: <AttributesForm mode="update" />,
                     },
                     {
                         structureType: 'map',
                         structureName: 'Colors',
 
-                        createComponent: <ColorForm structureName="Colors" />,
-                        updateComponent: <ColorForm structureName="Colors" mode="update" />,
+                        createComponent: <ColorForm />,
+                        updateComponent: <ColorForm mode="update" />,
                     },
                     {
                         structureType: 'map',
                         structureName: 'Projects',
 
-                        createComponent: <ProjectsForm structureName="Projects" />,
-                        updateComponent: <ProjectsForm structureName="Projects" mode="update" />,
+                        createComponent: <ProjectsForm />,
+                        updateComponent: <ProjectsForm mode="update" />,
                     },
                 ],
             }}
