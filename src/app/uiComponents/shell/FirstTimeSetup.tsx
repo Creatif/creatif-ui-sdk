@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -8,92 +8,69 @@ import styles from './css/FirstTimeSetup.module.css';
 // @ts-ignore
 import animations from '@app/css/animations.module.css';
 import classNames from 'classnames';
-import { Credentials } from '@app/credentials';
-import createList from '@lib/api/declarations/lists/createList';
 import UIError from '@app/components/UIError';
-import createMap from '@lib/api/declarations/maps/createMap';
-import InitialSetup from '@lib/storage/initialSetup';
-import { Runtime } from '@app/runtime/Runtime';
-async function createLists(lists: { [key: string]: boolean }) {
-    const keys = Object.keys(lists);
-    for (const key of keys) {
-        if (lists[key]) continue;
-
-        const { result, error } = await createList({
-            name: key,
-            projectId: Credentials.ProjectID(),
-        });
-
-        if (error) {
-            return error;
-        }
-
-        if (result) {
-            InitialSetup.instance.markListDone(key);
-        }
-    }
-}
-
-async function createMaps(maps: { [key: string]: boolean }) {
-    const keys = Object.keys(maps);
-    for (const key of keys) {
-        if (maps[key]) continue;
-
-        const { result, error } = await createMap({
-            name: key,
-            projectId: Runtime.instance.credentials.projectId,
-        });
-
-        if (error) {
-            return error;
-        }
-
-        if (result) {
-            InitialSetup.instance.markMapDone(key);
-        }
-    }
-}
+import { getFirstTimeSetupStore } from '@app/systems/stores/firstTimeSetupStore';
+import type { IncomingStructureItem } from '@app/systems/stores/projectMetadataStore';
+import { createProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import type { StructureType } from '@root/types/shell/shell';
 
 export default function FirstTimeSetup({ children }: PropsWithChildren) {
-    const [status, setStatus] = useState<'preparation' | 'checking' | 'ready' | 'error'>('preparation');
+    const useFirstTimeSetupStore = getFirstTimeSetupStore();
+    const { startSetup, run, currentStage, close, projectMetadata, createdStructures } = useFirstTimeSetupStore();
+    const [isSetupFinished, setIsSetupFinished] = useState(false);
 
     useEffect(() => {
-        const currentLists = InitialSetup.instance.lists();
-        const currentMaps = InitialSetup.instance.maps();
-
-        const ready = [...Object.values(currentLists), ...Object.values(currentMaps)].every((item) => item);
-        if (ready) {
-            setStatus('ready');
-            return;
-        }
-
-        createLists(currentLists).then((error) => {
-            if (error) {
-                setStatus('error');
-                return;
-            }
-        });
-
-        createMaps(currentMaps).then((error) => {
-            if (error) {
-                setStatus('error');
-                return;
-            }
-
-            setStatus('ready');
-        });
+        startSetup();
+        run();
     }, []);
+
+    useEffect(() => {
+        if (currentStage === 'finished' && createdStructures && !isSetupFinished) {
+            const validResults: IncomingStructureItem[] = [];
+            for (const item of createdStructures) {
+                if (item.result) {
+                    validResults.push({
+                        id: item.result.id,
+                        shortId: item.result.shortId,
+                        name: item.result.name,
+                        structureType: item.key,
+                    });
+                }
+            }
+
+            createProjectMetadataStore(projectMetadata, [
+                ...projectMetadata.lists.map((item) => ({
+                    id: item.id,
+                    shortId: item.shortId,
+                    structureType: 'list' as StructureType,
+                    name: item.name,
+                })),
+                ...projectMetadata.maps.map((item) => ({
+                    id: item.id,
+                    shortId: item.shortId,
+                    structureType: 'map' as StructureType,
+                    name: item.name,
+                })),
+                ...validResults,
+            ]);
+
+            setIsSetupFinished(true);
+            setTimeout(() => {
+                close();
+            }, 1000);
+        }
+    }, [currentStage, createdStructures, isSetupFinished]);
 
     return (
         <>
-            {status === 'checking' && (
+            {currentStage !== 'finished' && (
                 <div className={classNames(styles.root, animations.initialAnimation)}>
                     <Loader type="dots" size={64} />
                     <p>Preparing your application. This won&apos;t take long...</p>
                 </div>
             )}
 
-            {status === 'error' && (
+            {currentStage === 'error' && (
                 <div className={classNames(styles.root, animations.initialAnimation)}>
                     <UIError title="Something wrong happened">
                         Preparation could not be completed successfully. We apologize for this error. A report has been
@@ -102,7 +79,7 @@ export default function FirstTimeSetup({ children }: PropsWithChildren) {
                 </div>
             )}
 
-            {status === 'ready' && children}
+            {isSetupFinished && children}
         </>
     );
 }

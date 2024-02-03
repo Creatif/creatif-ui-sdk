@@ -15,7 +15,7 @@ import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariabl
 import useTabs from '@app/uiComponents/show/shared/useTabs';
 import StructureItem from '@app/uiComponents/show/map/StructureItem';
 import Reference from '@app/uiComponents/show/map/Reference';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);

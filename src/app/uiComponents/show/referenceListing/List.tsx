@@ -16,7 +16,7 @@ import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/uiComponents/show/referenceListing/Item';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 
 interface Props {
     reference: QueryReference;
@@ -58,44 +58,46 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
 
     return (
         <>
-            {referenceStructureItem && <ActionSection
-                includeCreateButton={false}
-                includeHeading={false}
-                includeSortBy={['created_at', 'updated_at']}
-                structureType={'map'}
-                structureItem={referenceStructureItem}
-                isLoading={isFetching}
-                sortBy={orderBy}
-                search={search || ''}
-                locales={locales}
-                direction={direction}
-                behaviour={behaviour}
-                groups={groups}
-                onDirectionChange={(direction) => {
-                    setDirection(direction);
-                    setParam('direction', direction as string);
-                }}
-                onSelectedLocales={(locales) => {
-                    setLocales(locales);
-                    setParam('locales', locales.join(','));
-                }}
-                onBehaviourChange={(behaviour) => {
-                    setBehaviour(behaviour);
-                    setParam('behaviour', behaviour as string);
-                }}
-                onSortChange={(sortType) => {
-                    setOrderBy(sortType);
-                    setParam('orderBy', sortType);
-                }}
-                onSelectedGroups={(groups) => {
-                    setGroups(groups);
-                    setParam('groups', groups.join(','));
-                }}
-                onSearch={(text) => {
-                    setSearch(text);
-                    setParam('search', text);
-                }}
-            />}
+            {referenceStructureItem && (
+                <ActionSection
+                    includeCreateButton={false}
+                    includeHeading={false}
+                    includeSortBy={['created_at', 'updated_at']}
+                    structureType={'map'}
+                    structureItem={referenceStructureItem}
+                    isLoading={isFetching}
+                    sortBy={orderBy}
+                    search={search || ''}
+                    locales={locales}
+                    direction={direction}
+                    behaviour={behaviour}
+                    groups={groups}
+                    onDirectionChange={(direction) => {
+                        setDirection(direction);
+                        setParam('direction', direction as string);
+                    }}
+                    onSelectedLocales={(locales) => {
+                        setLocales(locales);
+                        setParam('locales', locales.join(','));
+                    }}
+                    onBehaviourChange={(behaviour) => {
+                        setBehaviour(behaviour);
+                        setParam('behaviour', behaviour as string);
+                    }}
+                    onSortChange={(sortType) => {
+                        setOrderBy(sortType);
+                        setParam('orderBy', sortType);
+                    }}
+                    onSelectedGroups={(groups) => {
+                        setGroups(groups);
+                        setParam('groups', groups.join(','));
+                    }}
+                    onSearch={(text) => {
+                        setSearch(text);
+                        setParam('search', text);
+                    }}
+                />
+            )}
 
             <div className={contentContainerStyles.root}>
                 {data?.result && data.result.data && (

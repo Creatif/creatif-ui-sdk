@@ -1,4 +1,3 @@
-import type { StructureType } from '@root/types/shell/shell';
 import type { Behaviour } from '@root/types/api/shared';
 
 interface Reference {

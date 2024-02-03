@@ -31,8 +31,8 @@ import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import useUpdateMapVariable from '@app/uiComponents/maps/hooks/useUpdateMapVariable';
 import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
 import { Credentials } from '@app/credentials';
-import type { StructureItem } from '@app/systems/stores/projectMetadata';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { Runtime } from '@app/runtime/Runtime';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;

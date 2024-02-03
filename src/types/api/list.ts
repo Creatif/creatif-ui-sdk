@@ -1,5 +1,6 @@
 import type { Behaviour } from '@root/types/api/shared';
 import type { QueryReference } from '@root/types/api/reference';
+import type { StructureType } from '@root/types/shell/shell';
 export interface CreateListBlueprint {
     name: string;
     projectId: string;
@@ -80,10 +81,18 @@ export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
     projectId: string;
 }
 
+export interface Reference {
+    name: string;
+    structureName: string;
+    structureType: StructureType;
+    variableId: string;
+}
+
 export interface AddToListBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
     variable: AppendingVariableBlueprint<Value, Metadata>;
     projectId: string;
+    references: Reference[];
 }
 export interface UpdateListItemBlueprint {
     name: string;
@@ -91,6 +100,14 @@ export interface UpdateListItemBlueprint {
     projectId: string;
     fields?: string[];
     values: UpdateListItemVariableBlueprint;
+    references: UpdateMapVariableReferenceBlueprint[];
+}
+
+export interface UpdateMapVariableReferenceBlueprint {
+    name: string;
+    structureName: string;
+    structureType: string;
+    variableId: string;
 }
 
 export interface UpdateListItemVariableBlueprint {

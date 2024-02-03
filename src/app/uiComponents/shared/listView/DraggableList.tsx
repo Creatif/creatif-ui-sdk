@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type rearrange from '@lib/api/declarations/lists/rearrange';
 import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
-import type { StructureItem } from '@app/systems/stores/projectMetadata';
+import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { Runtime } from '@app/runtime/Runtime';
 
 type OnDrop = (source: DragItem, destination: DragItem) => void;

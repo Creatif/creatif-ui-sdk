@@ -9,7 +9,7 @@ import { Tooltip } from '@mantine/core';
 import { IconLogout } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];

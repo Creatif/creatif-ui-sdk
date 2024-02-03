@@ -12,8 +12,8 @@ import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { Runtime } from '@app/runtime/Runtime';
-import type { StructureItem } from '@app/systems/stores/projectMetadata';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 
 interface Props {
     name: string;

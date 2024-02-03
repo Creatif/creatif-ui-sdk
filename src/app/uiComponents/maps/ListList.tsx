@@ -26,7 +26,7 @@ import { DndProvider } from 'react-dnd';
 import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
 import rearrange from '@lib/api/declarations/lists/rearrange';
 import Item from '@app/uiComponents/maps/list/Item';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { useParams } from 'react-router-dom';
 import UIError from '@app/components/UIError';
 interface Props {

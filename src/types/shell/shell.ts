@@ -13,7 +13,6 @@ export interface Shell {
 
 export interface AppShellItem {
     menuText?: string;
-    routePath?: string;
     menuIcon?: React.ReactNode;
 
     structureName: string;

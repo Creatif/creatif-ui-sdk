@@ -2,7 +2,6 @@
 // @ts-ignore
 import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, Modal, ScrollArea, Table, TextInput } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
@@ -15,23 +14,22 @@ export default function SupportedLocalesModal({ open, onClose }: Props) {
     const [value, setValue] = useState<string>('');
     const locales = Runtime.instance.localesCache.getLocales() || [];
     const [searchedLocales, setSearchedLocales] = useState<Locale[]>([]);
-    const [debounced] = useDebouncedValue(value, 500);
 
     useEffect(() => {
-        if (!debounced) {
+        if (!value) {
             setSearchedLocales(locales);
             return;
         }
 
         const found: Locale[] = [];
         for (const locale of locales) {
-            if (new RegExp(debounced).test(locale.alpha) || new RegExp(debounced).test(locale.name)) {
+            if (new RegExp(value).test(locale.alpha) || new RegExp(value).test(locale.name)) {
                 found.push(locale);
             }
         }
 
         setSearchedLocales(found);
-    }, [debounced]);
+    }, [value]);
 
     const rows = searchedLocales.map((element) => (
         <Table.Tr key={element.alpha}>

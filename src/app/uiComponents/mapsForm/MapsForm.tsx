@@ -39,7 +39,7 @@ import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeRefer
 import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import { Runtime } from '@app/runtime/Runtime';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { Error } from '@app/uiComponents/shared/Error';
 
 interface Props<T extends FieldValues, Value, Metadata> {
@@ -85,6 +85,8 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     const isCreateRoute = location.pathname.includes('/create/');
     const isUpdateRoute = location.pathname.includes('/update/');
 
+    const referenceStore = useMemo(() => createInputReferenceStore(), []);
+
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
     const [beforeSaveError, setBeforeSaveError] = useState(false);
@@ -96,8 +98,6 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
     const [isVariableReadonly, setIsVariableReadonly] = useState(false);
     const [isNotFoundError, setIsNotFoundError] = useState(false);
-
-    const referenceStore = useMemo(() => createInputReferenceStore(), []);
 
     const {
         isFetching,
@@ -139,6 +139,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                 setIsVariableExistsError(false);
                 setIsGenericUpdateError(false);
                 setIsVariableReadonly(false);
+                setIsNotFoundError(false);
 
                 setIsSaving(true);
                 if (!mode && result && structureId) {
@@ -180,7 +181,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                             return;
                         }
 
-                        if (structureItem) {
+                        if (response && structureItem) {
                             successNotification(
                                 'Map item created',
                                 `Map item with name '${name}' and locale '${chosenLocale}' has been created.`,
@@ -239,7 +240,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                             return;
                         }
 
-                        if (response) {
+                        if (response && structureItem) {
                             successNotification(
                                 'Map item updated',
                                 `Map item with item name '${name}' has been updated.`,
@@ -275,15 +276,25 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
 
             <Error title="Not found" message="This item could not be found" show={Boolean(getError)} />
             <Error title="Item exists" message="Item with this name already exists" show={isVariableExistsError} />
-            <Error title="Something went wrong" message="We cannot update this item at this moment. We are working to solve this issue. Please, try again later." show={isGenericUpdateError} />
+            <Error
+                title="Something went wrong"
+                message="We cannot update this item at this moment. We are working to solve this issue. Please, try again later."
+                show={isGenericUpdateError}
+            />
             <Error title="Route not found" message="This route does not seem to exist." show={isNotFoundError} />
-            <Error title="Item is readonly" message="This is a readonly item and can be updated only by the administrator." show={isVariableReadonly} />
+            <Error
+                title="Item is readonly"
+                message="This is a readonly item and can be updated only by the administrator."
+                show={isVariableReadonly}
+            />
 
             <Loading isLoading={isFetching} />
 
             {!isFetching && !getError && structureItem && (
                 <>
-                    <h1 className={contentContainerStyles.heading}>{mode ? 'Update' : 'Create new '} <span>{structureItem.name}</span></h1>
+                    <h1 className={contentContainerStyles.heading}>
+                        {mode ? 'Update' : 'Create new '} <span>{structureItem.name}</span>
+                    </h1>
                     <Form
                         structureType={'map'}
                         structureItem={structureItem}

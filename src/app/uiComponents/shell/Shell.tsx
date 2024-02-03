@@ -13,7 +13,7 @@ import type { Shell, CreatifApp } from '@root/types/shell/shell';
 import { Item as VariableShowItem } from '@app/uiComponents/show/variable/Item';
 import { Item as ListItemShowItem } from '@app/uiComponents/show/list/Item';
 import { Item as MapItemShowItem } from '@app/uiComponents/show/map/Item';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadata';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 interface Props {
     options: CreatifApp;
 }
