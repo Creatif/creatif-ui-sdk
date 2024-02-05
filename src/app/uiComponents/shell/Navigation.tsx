@@ -6,7 +6,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import type { AppShellItem } from '@root/types/shell/shell';
 import { Tooltip } from '@mantine/core';
-import { IconLogout } from '@tabler/icons-react';
+import { IconLogout, IconRoute2 } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -64,7 +64,26 @@ export default function Navigation({ navItems, logo }: Props) {
                 })}
             </nav>
 
+            <div className={styles.divider} />
+
             <nav className={styles.appMenu}>
+                <NavLink
+                    to="/groups"
+                    className={({ isActive }) => {
+                        if (isActive) return classNames(styles.appMenuButton, styles.active);
+
+                        return styles.appMenuButton;
+                    }}>
+                    <IconRoute2
+                        className="navItemIcon"
+                        style={{
+                            alignSelf: 'center',
+                        }}
+                        size={20}
+                    />
+                    Groups
+                </NavLink>
+
                 <button
                     onClick={async () => {
                         await logout();

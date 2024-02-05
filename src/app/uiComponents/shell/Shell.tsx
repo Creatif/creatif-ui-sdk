@@ -14,6 +14,7 @@ import { Item as VariableShowItem } from '@app/uiComponents/show/variable/Item';
 import { Item as ListItemShowItem } from '@app/uiComponents/show/list/Item';
 import { Item as MapItemShowItem } from '@app/uiComponents/show/map/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import { AddGroup } from '@app/uiComponents/groups/AddGroup';
 interface Props {
     options: CreatifApp;
 }
@@ -38,6 +39,9 @@ export default function Shell({ options }: Props) {
                                 </div>
                             </div>
                         }>
+
+                        <Route path="/groups" element={<AddGroup />} />
+
                         {structures.map((item, i) => {
                             const configOption = options.items.find((option) => option.structureName === item.name);
                             if (!configOption) return null;

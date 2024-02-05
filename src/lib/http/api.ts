@@ -24,6 +24,7 @@ class api {
         });
     }
     async get<Body>(instance: FetchInstance, path: string, body: Body, headers: Record<string, string> = {}) {
+        console.log(headers);
         return fetch(`${instance.baseURL}${path}`, {
             method: 'get',
             headers: {

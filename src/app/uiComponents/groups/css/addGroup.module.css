@@ -1,0 +1,24 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.info {
+    width: 40%;
+    line-height: 1.4rem;
+    color: var(--mantine-color-gray-9);
+}
+
+.formWrapper {
+    width: 60%;
+}
+
+.form {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 2rem;
+}
+

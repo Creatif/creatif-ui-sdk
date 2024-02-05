@@ -7,6 +7,7 @@ export async function getGroups(blueprint: GetGroupsBlueprint) {
         app(),
         'get',
         `/groups/${blueprint.projectId}`,
+        null,
         authHeaders(),
     );
 }

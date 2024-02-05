@@ -119,7 +119,7 @@ export default function MultiSelectWithAdd({
 
                 <Combobox.Dropdown>
                     <Combobox.Options>
-                        {options}
+                        {options.length === 0 && <Combobox.Empty>Type to create new groups</Combobox.Empty>}
 
                         {!exactOptionMatch && search.trim().length > 0 && (
                             <Combobox.Option value="$create">

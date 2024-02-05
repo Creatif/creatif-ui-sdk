@@ -8,7 +8,7 @@ export default function Loading({ isLoading }: Props) {
 
     return (
         <Loader
-            size="md"
+            size="sm"
             style={{
                 position: 'absolute',
                 top: '50%',

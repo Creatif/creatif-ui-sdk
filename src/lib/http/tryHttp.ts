@@ -1,4 +1,3 @@
-import { Credentials } from '@app/credentials';
 import { ApiError } from '@lib/http/apiError';
 import { handleError } from '@lib/http/handleError';
 import { Api } from './api';
