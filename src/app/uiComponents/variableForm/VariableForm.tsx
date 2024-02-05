@@ -41,6 +41,7 @@ import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import chooseAndDeleteBindings from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
 import type { IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     variableName: string;
@@ -137,7 +138,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
                 );
 
                 updateVariable({
-                    projectId: Credentials.ProjectID(),
+                    projectId: Runtime.instance.credentials.projectId,
                     name: structureId,
                     fields: ['value', 'metadata', 'groups', 'behaviour', 'locale', 'name'],
                     values: {

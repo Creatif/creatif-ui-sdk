@@ -29,9 +29,22 @@ export async function tryHttp<ReturnType, Body = unknown>(
             };
         }
 
-        if (res.status === 400 || res.status === 404 || res.status === 422) {
+        if (res.status === 404 || res.status === 422) {
             return {
                 error: new ApiError('Forbidden', await res.json(), 403),
+                status: res.status,
+            };
+        }
+
+        if (res.status === 400) {
+            const data = await res.json();
+            const errorData: { data: Record<string, string> } = { data: {} };
+            if ('message' in data) {
+                errorData.data = data;
+            }
+
+            return {
+                error: new ApiError('Application error', errorData, 400),
                 status: res.status,
             };
         }

@@ -5,6 +5,7 @@ interface Props {
     reference: QueryReference;
     itemId: string;
 }
+
 export default function Reference({ reference, itemId }: Props) {
     let relationshipType = '';
     if (reference.parentId === itemId) {

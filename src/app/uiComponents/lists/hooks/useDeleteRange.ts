@@ -3,6 +3,7 @@ import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import deleteRange from '@lib/api/declarations/lists/deleteRange';
+import { Runtime } from '@app/runtime/Runtime';
 export default function useDeleteRange(onSuccess: () => void, onError: () => void) {
     const queryClient = useQueryClient();
     return {
@@ -12,7 +13,7 @@ export default function useDeleteRange(onSuccess: () => void, onError: () => voi
                     deleteRange({
                         name: body.name,
                         items: body.items,
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                     }),
                 );
 

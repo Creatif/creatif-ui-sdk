@@ -1,5 +1,4 @@
 import CenteredError from '@app/components/CenteredError';
-import useNotification from '@app/systems/notifications/useNotification';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
@@ -26,14 +25,21 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Item from '@app/uiComponents/lists/list/Item';
 import rearrange from '@lib/api/declarations/lists/rearrange';
-import { getOptions } from '@app/systems/stores/options';
+import { useParams } from 'react-router-dom';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import useNotification from '@app/systems/notifications/useNotification';
+import UIError from '@app/components/UIError';
 interface Props {
     listName: string;
 }
 export function ListList<Value, Metadata>({ listName }: Props) {
-    const { queryParams, setParam } = useSearchQuery('index');
+    const { queryParams, setParam } = useSearchQuery();
+    const { structureId } = useParams();
+    const structureItem = getProjectMetadataStore()
+        .getState()
+        .getStructureItemByID(structureId || '');
+
     const { error: errorNotification, success: successNotification } = useNotification();
-    const { store: optionsStore } = getOptions(listName, 'list');
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -48,11 +54,14 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
+    const [isListView, setIsListView] = useState(true);
+
+    const [isNotFoundError, setIsNotFoundError] = useState(false);
 
     const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
-        listName: listName,
+        listName: structureItem?.id || '',
         page: page,
         locales: locales,
         groups: groups,
@@ -62,13 +71,16 @@ export function ListList<Value, Metadata>({ listName }: Props) {
         orderBy: orderBy,
         search: search as string,
         fields: fields,
+        enabled: Boolean(structureItem),
     });
 
     const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
         () => {
             setAreItemsDeleting(false);
             setCheckedItems([]);
-            invalidateQueries(listName);
+            if (structureItem) {
+                invalidateQueries(structureItem.id);
+            }
             successNotification('Action is a success', 'All selected items were deleted.');
         },
         () => {
@@ -79,42 +91,44 @@ export function ListList<Value, Metadata>({ listName }: Props) {
 
     return (
         <>
-            <ActionSection
-                includeSortBy={['created_at', 'updated_at', 'index']}
-                structureType={'list'}
-                isLoading={isFetching}
-                sortBy={orderBy}
-                locales={locales}
-                search={search || ''}
-                direction={direction}
-                behaviour={behaviour}
-                groups={groups}
-                onDirectionChange={(direction) => {
-                    setDirection(direction);
-                    setParam('direction', direction as string);
-                }}
-                onSelectedLocales={(locales) => {
-                    setLocales(locales);
-                    setParam('locales', locales.join(','));
-                }}
-                onBehaviourChange={(behaviour) => {
-                    setBehaviour(behaviour);
-                    setParam('behaviour', behaviour as string);
-                }}
-                onSortChange={(sortType) => {
-                    setOrderBy(sortType);
-                    setParam('orderBy', sortType);
-                }}
-                onSelectedGroups={(groups) => {
-                    setGroups(groups);
-                    setParam('groups', groups.join(','));
-                }}
-                structureName={listName}
-                onSearch={(text) => {
-                    setSearch(text);
-                    setParam('search', text);
-                }}
-            />
+            {structureItem && (
+                <ActionSection
+                    includeSortBy={['created_at', 'updated_at', 'index']}
+                    structureType={'list'}
+                    isLoading={isFetching}
+                    sortBy={orderBy}
+                    locales={locales}
+                    search={search || ''}
+                    direction={direction}
+                    behaviour={behaviour}
+                    groups={groups}
+                    onDirectionChange={(direction) => {
+                        setDirection(direction);
+                        setParam('direction', direction as string);
+                    }}
+                    onSelectedLocales={(locales) => {
+                        setLocales(locales);
+                        setParam('locales', locales.join(','));
+                    }}
+                    onBehaviourChange={(behaviour) => {
+                        setBehaviour(behaviour);
+                        setParam('behaviour', behaviour as string);
+                    }}
+                    onSortChange={(sortType) => {
+                        setOrderBy(sortType);
+                        setParam('orderBy', sortType);
+                    }}
+                    onSelectedGroups={(groups) => {
+                        setGroups(groups);
+                        setParam('groups', groups.join(','));
+                    }}
+                    structureItem={structureItem}
+                    onSearch={(text) => {
+                        setSearch(text);
+                        setParam('search', text);
+                    }}
+                />
+            )}
 
             <div className={contentContainerStyles.root}>
                 {data?.result && data.result.total > 0 && (
@@ -141,13 +155,11 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                                 <IconTable
                                     onClick={() => {
                                         setFields([...fields, 'value', 'metadata']);
-                                        setParam('listingType', 'table');
+                                        setIsListView(false);
                                     }}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        queryParams.listingType === 'table'
-                                            ? styles.listChoiceListType_Icon_Highlighted
-                                            : undefined,
+                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
                                     )}
                                     size={24}
                                 />
@@ -174,23 +186,33 @@ export function ListList<Value, Metadata>({ listName }: Props) {
 
                 {error && (
                     <div className={styles.skeleton}>
-                        <CenteredError title="An error occurred">
+                        <UIError title="An error occurred">
                             Something went wrong when trying to fetch list {listName}. Please, try again later.
-                        </CenteredError>
+                        </UIError>
+                    </div>
+                )}
+
+                {isNotFoundError && (
+                    <div className={styles.skeleton}>
+                        <UIError title="Route not found">This route does not seem to exist</UIError>
                     </div>
                 )}
 
                 {data?.result && data.result.total === 0 && (
-                    <NothingFound createNewPath={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                    <NothingFound
+                        createNewPath={
+                            (structureItem && `${structureItem.navigationCreatePath}/${structureItem.id}`) || ''
+                        }
+                    />
                 )}
 
-                {!isFetching && data?.result && data.result.total !== 0 && (
+                {!isFetching && data?.result && data.result.total !== 0 && structureItem && (
                     <div className={styles.container}>
                         {queryParams.listingType === 'list' && (
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
                                     data={data.result}
-                                    structureName={listName}
+                                    structureItem={structureItem}
                                     structureType="list"
                                     onRearrange={rearrange}
                                     renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
@@ -221,7 +243,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                                                     key={item.id}
                                                     index={i}
                                                     item={item}
-                                                    listName={listName}
+                                                    structureItem={structureItem}
                                                 />
                                             ))}
                                         </>
@@ -272,19 +294,21 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                 )}
             </div>
 
-            <DeleteModal
-                open={isDeleteAllModalOpen}
-                message="Are you sure? This action cannot be undone and these items will be deleted permanently!"
-                onClose={() => setIsDeleteAllModalOpen(false)}
-                onDelete={() => {
-                    setAreItemsDeleting(true);
-                    setIsDeleteAllModalOpen(false);
-                    deleteItemsByRange({
-                        items: checkedItems,
-                        name: listName,
-                    });
-                }}
-            />
+            {structureItem && (
+                <DeleteModal
+                    open={isDeleteAllModalOpen}
+                    message="Are you sure? This action cannot be undone and these items will be deleted permanently!"
+                    onClose={() => setIsDeleteAllModalOpen(false)}
+                    onDelete={() => {
+                        setAreItemsDeleting(true);
+                        setIsDeleteAllModalOpen(false);
+                        deleteItemsByRange({
+                            items: checkedItems,
+                            name: structureItem.id,
+                        });
+                    }}
+                />
+            )}
         </>
     );
 }

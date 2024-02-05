@@ -2,6 +2,7 @@ import { Credentials } from '@app/credentials';
 import { declarations } from '@lib/http/fetchInstance';
 import { authHeaders, tryHttp } from '@lib/http/tryHttp';
 import type { DeleteListItemBlueprint } from '@root/types/api/list';
+import { Runtime } from '@app/runtime/Runtime';
 
 export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
     if (!blueprint.id && !blueprint.name && !blueprint.shortId) {
@@ -12,11 +13,11 @@ export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
         throw new Error('To identify a list item, you must provide either itemId or itemShortId. None was provided.');
     }
 
-    const locale = blueprint.locale ? blueprint.locale : Credentials.Locale();
+    const locale = blueprint.locale ? blueprint.locale : Runtime.instance.currentLocaleStorage.getLocale();
     return tryHttp(
         declarations(),
         'post',
-        `/list/item-id/${Credentials.ProjectID()}`,
+        `/list/item-id/${blueprint.projectId}`,
         {
             name: blueprint.name,
             id: blueprint.id,

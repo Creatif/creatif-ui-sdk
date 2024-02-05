@@ -1,6 +1,5 @@
 import Loading from '@app/components/Loading';
 import useNotification from '@app/systems/notifications/useNotification';
-import { getOptions } from '@app/systems/stores/options';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
@@ -25,7 +24,6 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import { Credentials } from '@app/credentials';
 import Form, { type ReferenceInputProps } from '@app/uiComponents/shared/Form';
 import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
@@ -145,7 +143,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
             setIsNotFoundError(false);
 
             setIsSaving(true);
-            if (!mode && result) {
+            if (!mode && result && structureItem) {
                 const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
                     result.value as IncomingValues,
                     locale,
@@ -156,8 +154,8 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
                 addToList({
-                    name: listName,
-                    projectId: Credentials.ProjectID(),
+                    name: structureItem.id,
+                    projectId: Runtime.instance.credentials.projectId,
                     variable: {
                         name: name,
                         behaviour: chosenBehaviour,
@@ -190,7 +188,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                             `List item with name '${name}' and locale '${chosenLocale}' has been created.`,
                         );
 
-                        queryClient.invalidateQueries(listName);
+                        queryClient.invalidateQueries(structureItem.id);
                         afterSave?.(response, e);
                         setIsSaving(false);
                         if (structureItem) {
@@ -200,7 +198,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                 });
             }
 
-            if (mode && result && structureId && itemId) {
+            if (mode && result && structureItem && itemId) {
                 const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
                     result.value as IncomingValues,
                     locale,
@@ -212,7 +210,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
 
                 updateListItem({
                     fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
-                    name: structureId,
+                    name: structureItem.id,
                     projectId: Runtime.instance.credentials.projectId,
                     itemId: itemId,
                     values: {
@@ -250,7 +248,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                         );
 
                         invalidateQuery();
-                        queryClient.invalidateQueries(structureId);
+                        queryClient.invalidateQueries(structureItem.id);
                         afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
                         if (structureItem) {
                             navigate(`${structureItem.navigationListPath}/${structureId}`);
@@ -298,7 +296,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                         {mode ? 'Update' : 'Create new '} <span>{structureItem.name}</span>
                     </h1>
                     <Form
-                        structureType={'map'}
+                        structureType={structureItem.structureType}
                         structureItem={structureItem}
                         formProps={formProps}
                         inputs={inputs}

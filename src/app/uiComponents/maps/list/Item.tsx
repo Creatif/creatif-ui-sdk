@@ -19,7 +19,7 @@ import {
 } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { type MouseEvent, useCallback, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import type { DragSourceMonitor } from 'react-dnd';
 import { useDrag, useDrop } from 'react-dnd';
@@ -30,9 +30,7 @@ import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import useUpdateMapVariable from '@app/uiComponents/maps/hooks/useUpdateMapVariable';
 import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
-import { Credentials } from '@app/credentials';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
-import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { Runtime } from '@app/runtime/Runtime';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
@@ -58,7 +56,6 @@ export default function Item<Value, Metadata>({
 }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const store = getProjectMetadataStore();
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);

@@ -1,9 +1,9 @@
-import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import type { ApiError } from '@lib/http/apiError';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     listName: string;
     locales?: string[];
@@ -15,6 +15,7 @@ interface Props {
     search?: string;
     direction?: 'desc' | 'asc';
     fields?: string[];
+    enabled?: boolean;
 }
 export default function useHttpPaginationQuery<Response>({
     listName,
@@ -27,6 +28,7 @@ export default function useHttpPaginationQuery<Response>({
     behaviour = undefined,
     locales = [],
     fields = [],
+    enabled = true,
 }: Props) {
     const queryClient = useQueryClient();
 
@@ -38,7 +40,7 @@ export default function useHttpPaginationQuery<Response>({
             throwIfHttpFails(() =>
                 paginateList({
                     name: listName,
-                    projectId: Credentials.ProjectID(),
+                    projectId: Runtime.instance.credentials.projectId,
                     page,
                     limit,
                     groups,
@@ -52,6 +54,7 @@ export default function useHttpPaginationQuery<Response>({
             ),
             {
                 retry: 1,
+                enabled,
                 staleTime: Infinity,
                 keepPreviousData: true,
                 refetchOnWindowFocus: false,

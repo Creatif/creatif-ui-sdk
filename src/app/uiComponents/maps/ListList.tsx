@@ -35,7 +35,9 @@ interface Props {
 export function ListList<Value, Metadata>({ mapName }: Props) {
     const { queryParams, setParam } = useSearchQuery();
     const { structureId } = useParams();
-    const structureItem = getProjectMetadataStore().getState().getStructureItemByID(structureId);
+    const structureItem = getProjectMetadataStore()
+        .getState()
+        .getStructureItemByID(structureId || '');
 
     const { error: errorNotification, success: successNotification } = useNotification();
 

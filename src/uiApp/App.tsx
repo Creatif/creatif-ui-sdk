@@ -5,16 +5,32 @@ import React from 'react';
 import ColorForm from '@root/uiApp/forms/ColorForm';
 import ListOrganizationForm from '@root/uiApp/forms/ListOrganizationForm';
 import { CreatifProvider } from '@root/CreatifProvider';
+import LanguageForm from '@root/uiApp/forms/LanguageForm';
+import DeckForm from '@root/uiApp/forms/DeckForm';
 
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$/AbHoD5XmpDMYnavm3i46u2yBzGhdL/BhsVOW58eDvcVtYjst4NDm"
-            projectId="01HNQG9MS7FA7SB434Y0H3XBF0"
+            apiKey="$2a$10$6.LFAtIXWEJdcrrP.QglFOy9jaZ8jItzennbOjbW11sq19hOUseHa"
+            projectId="01HNTK9B2MWFFJ44NXXT27BKM8"
             app={{
                 logo: 'Break free',
                 items: [
                     {
+                        structureType: 'map',
+                        structureName: 'Languages',
+
+                        createComponent: <LanguageForm />,
+                        updateComponent: <LanguageForm mode="update" />,
+                    },
+                    {
+                        structureType: 'map',
+                        structureName: 'Decks',
+
+                        createComponent: <DeckForm />,
+                        updateComponent: <DeckForm mode="update" />,
+                    },
+                    /*                    {
                         structureType: 'map',
                         structureName: 'Organizations',
 
@@ -49,7 +65,7 @@ export default function App() {
 
                         createComponent: <ProjectsForm />,
                         updateComponent: <ProjectsForm mode="update" />,
-                    },
+                    },*/
                 ],
             }}
         />

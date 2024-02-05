@@ -1,5 +1,4 @@
 import useNotification from '@app/systems/notifications/useNotification';
-import { getOptions } from '@app/systems/stores/options';
 import useUpdateListVariable from '@app/uiComponents/lists/hooks/useUpdateListVariable';
 import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
@@ -30,9 +29,11 @@ import type { DragItem } from '@app/uiComponents/shared/listView/DraggableList';
 import Groups from '@app/components/Groups';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
+import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
-    listName: string;
+    structureItem: StructureItem;
     onDeleted: () => void;
     disabled?: boolean;
     onChecked: (itemId: string, checked: boolean) => void;
@@ -43,7 +44,7 @@ interface Props<Value, Metadata> {
 }
 export default function Item<Value, Metadata>({
     item,
-    listName,
+    structureItem,
     onDeleted,
     onChecked,
     disabled,
@@ -54,13 +55,12 @@ export default function Item<Value, Metadata>({
 }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
-    const { store: useOptions } = getOptions(listName, 'list');
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
-    const { mutate, data } = useUpdateListVariable(listName, item.id, item.name);
+    const { mutate, data } = useUpdateListVariable(structureItem.id || '', item.id, item.name);
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
     item.groups = data?.result && data.result.groups ? data.result.groups : item.groups;
@@ -138,7 +138,7 @@ export default function Item<Value, Metadata>({
 
     return (
         <Link
-            to={`/list/show/${listName}/${item.id}`}
+            to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}`}
             ref={ref}
             data-handler-id={handlerId}
             onClick={preventClickEventOnModal}
@@ -199,10 +199,10 @@ export default function Item<Value, Metadata>({
                                 </Menu.Target>
 
                                 <Menu.Dropdown>
-                                    {useOptions && (
+                                    {structureItem && (
                                         <Menu.Item
                                             component={Link}
-                                            to={`${useOptions.getState().paths.update}/${listName}/${item.id}`}
+                                            to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${item.id}`}
                                             leftSection={<IconEdit size={16} />}>
                                             Edit
                                         </Menu.Item>
@@ -254,33 +254,36 @@ export default function Item<Value, Metadata>({
                 <div className={styles.menu} />
             </div>
 
-            <DeleteModal
-                message="Are you sure? This action cannot be undone and this item will be permanently deleted."
-                open={Boolean(deleteItemId)}
-                onClose={() => setDeleteItemId(undefined)}
-                onDelete={async () => {
-                    setIsDeleting(true);
-                    const { error, status } = await deleteListItemByID({
-                        name: listName,
-                        itemId: item.id,
-                    });
+            {structureItem && (
+                <DeleteModal
+                    message="Are you sure? This action cannot be undone and this item will be permanently deleted."
+                    open={Boolean(deleteItemId)}
+                    onClose={() => setDeleteItemId(undefined)}
+                    onDelete={async () => {
+                        setIsDeleting(true);
+                        const { error, status } = await deleteListItemByID({
+                            name: structureItem.id,
+                            itemId: item.id,
+                            projectId: Runtime.instance.credentials.projectId,
+                        });
 
-                    if (error) {
-                        errorNotification(
-                            'Cannot delete list item',
-                            'An error occurred when trying to delete list item. Please, try again later.',
-                        );
-                    }
+                        if (error) {
+                            errorNotification(
+                                'Cannot delete list item',
+                                'An error occurred when trying to delete list item. Please, try again later.',
+                            );
+                        }
 
-                    if (status === 200) {
-                        success('List item deleted.', 'List item was deleted successfully');
-                    }
+                        if (status === 200) {
+                            success('List item deleted.', 'List item was deleted successfully');
+                        }
 
-                    setIsDeleting(false);
-                    onDeleted();
-                    setDeleteItemId(undefined);
-                }}
-            />
+                        setIsDeleting(false);
+                        onDeleted();
+                        setDeleteItemId(undefined);
+                    }}
+                />
+            )}
 
             <EditLocaleModal
                 currentLocale={item.locale}
@@ -302,23 +305,25 @@ export default function Item<Value, Metadata>({
                 }}
             />
 
-            <EditGroups
-                structureType="list"
-                structureName={listName}
-                open={isEditGroupsOpen}
-                currentGroups={item.groups || []}
-                onClose={() => setIsEditGroupsOpen(false)}
-                onEdit={(groups) => {
-                    mutate({
-                        values: {
-                            groups: groups,
-                        },
-                        fields: ['groups'],
-                    });
+            {structureItem && (
+                <EditGroups
+                    structureType="map"
+                    structureName={structureItem.id}
+                    open={isEditGroupsOpen}
+                    currentGroups={item.groups || []}
+                    onClose={() => setIsEditGroupsOpen(false)}
+                    onEdit={(groups) => {
+                        mutate({
+                            values: {
+                                groups: groups,
+                            },
+                            fields: ['groups'],
+                        });
 
-                    setIsEditGroupsOpen(false);
-                }}
-            />
+                        setIsEditGroupsOpen(false);
+                    }}
+                />
+            )}
         </Link>
     );
 }

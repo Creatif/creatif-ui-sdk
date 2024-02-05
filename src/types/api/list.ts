@@ -145,6 +145,7 @@ export interface DeleteListItemBlueprint {
     itemId?: string;
     itemShortId?: string;
     locale?: string;
+    projectId: string;
 }
 export interface DeleteRangeBlueprint {
     name: string;

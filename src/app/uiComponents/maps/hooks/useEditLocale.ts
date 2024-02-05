@@ -6,6 +6,7 @@ import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
 import type { UpdateMapItemResult, UpdateMapItemVariableBlueprint } from '@root/types/api/map';
+import { Runtime } from '@app/runtime/Runtime';
 export default function useEditLocale(mapName: string, itemId: string, itemName: string) {
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ export default function useEditLocale(mapName: string, itemId: string, itemName:
                     updateMapVariable({
                         name: mapName,
                         itemId: itemId,
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                         values: body.values,
                         fields: ['locale'],
                     }),
