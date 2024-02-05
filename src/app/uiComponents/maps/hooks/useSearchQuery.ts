@@ -31,6 +31,8 @@ class QueryParams {
             if (!p) {
                 this.page = 1;
             }
+
+            this.page = p;
         }
 
         if (!hiddenGroups) {

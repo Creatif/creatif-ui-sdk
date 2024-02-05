@@ -259,11 +259,14 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
 
                         {!isListView && <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />}
 
-                        {data.result.data.length >= parseInt(limit) && (
+                        {Boolean(data.result.data.length) && (
                             <div className={styles.stickyPagination}>
                                 <Pagination
                                     value={page}
-                                    onChange={setPage}
+                                    onChange={(page) => {
+                                        setPage(page);
+                                        setParam('page', page+'');
+                                    }}
                                     radius={20}
                                     boundaries={2}
                                     total={Math.ceil(data.result.total / parseInt(limit))}
