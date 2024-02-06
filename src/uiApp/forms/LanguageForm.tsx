@@ -1,12 +1,12 @@
 import InputText from '@app/uiComponents/inputs/InputText';
 import { Grid } from '@mantine/core';
-import MapsForm from '@app/uiComponents/mapsForm/MapsForm';
+import ListForm from '@app/uiComponents/listForm/ListForm';
 interface Props {
     mode?: 'update';
 }
 export default function LanguageForm({ mode }: Props) {
     return (
-        <MapsForm<{
+        <ListForm<{
             name: string;
         }>
             mode={mode}
@@ -18,7 +18,7 @@ export default function LanguageForm({ mode }: Props) {
                     name: '',
                 },
             }}
-            inputs={(submitButton, {inputReference}) => (
+            inputs={(submitButton, { inputReference }) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>

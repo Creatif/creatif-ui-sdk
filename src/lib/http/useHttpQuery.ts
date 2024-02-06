@@ -23,8 +23,6 @@ export default function useHttpQuery<Response>(
         retries = options.retry;
     }
 
-    console.log(key);
-
     return useQuery<unknown, ApiError, Response>(key, async () => await fn(), {
         onError: options?.onError,
         onSuccess: options?.onSuccess,

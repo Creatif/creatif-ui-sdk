@@ -27,7 +27,6 @@ interface Props {
     onDirectionChange: (direction: 'desc' | 'asc' | undefined) => void;
     onSelectedLocales: (locales: string[]) => void;
     includeSortBy: string[];
-    structureType: StructureType;
 
     direction: 'desc' | 'asc' | undefined;
     sortBy: CurrentSortType;
@@ -44,7 +43,6 @@ interface Props {
 export default function ActionSection({
     onSearch,
     structureItem,
-    structureType,
     includeSortBy = ['created_at', 'index', 'updated_at'],
     isLoading,
     search,
@@ -176,14 +174,12 @@ export default function ActionSection({
 
             <Drawer opened={isDrawerOpened} onClose={() => setIsDrawerOpened(false)} position="right">
                 <Sort
-                    structureType={structureType}
                     includeSortBy={includeSortBy}
                     onSelectedLocales={onSelectedLocales}
                     onDirectionChange={onDirectionChange}
                     onBehaviourChange={onBehaviourChange}
                     onSortChange={onSortChange}
                     onSelectedGroups={onSelectedGroups}
-                    structureItem={structureItem}
                     currentDirection={direction}
                     currentBehaviour={behaviour}
                     currentLocales={locales}

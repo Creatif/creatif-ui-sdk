@@ -11,13 +11,13 @@ import DeckForm from '@root/uiApp/forms/DeckForm';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$0ljmwhFGQjDSMDW46C47Re9FtubTSucw.QxccOY7z371ZspFL0C72"
-            projectId="01HNX5NNPZXPPG7T8R920DF781"
+            apiKey="$2a$10$s3kuHNg4cBEdtIt8S09z9.786BTQowpCBg.PZlZYLVzW1Yr5i98za"
+            projectId="01HP000KWQWMW0HW6WTN12WZ3Z"
             app={{
                 logo: 'Break free',
                 items: [
                     {
-                        structureType: 'map',
+                        structureType: 'list',
                         structureName: 'Languages',
 
                         createComponent: <LanguageForm />,

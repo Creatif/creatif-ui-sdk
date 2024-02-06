@@ -307,7 +307,8 @@ export default function Item<Value, Metadata>({
 
             {structureItem && (
                 <EditGroups
-                    structureType="map"
+                    itemId={item.id}
+                    structureType="list"
                     structureName={structureItem.id}
                     open={isEditGroupsOpen}
                     currentGroups={item.groups || []}

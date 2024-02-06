@@ -14,11 +14,8 @@ export default function Reference({ reference, itemId }: Props) {
         relationshipType = 'parent';
     }
 
-    console.log(itemId);
-    console.log(reference);
     const structureType = relationshipType === 'parent' ? reference.parentType : reference.childType;
 
-    console.log(relationshipType, structureType);
     return (
         <>
             {relationshipType && structureType && (

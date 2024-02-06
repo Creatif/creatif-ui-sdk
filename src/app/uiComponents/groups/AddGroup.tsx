@@ -16,7 +16,7 @@ import { addGroups } from '@lib/api/groups/addGroups';
 import { Runtime } from '@app/runtime/Runtime';
 import type { ApiError } from '@lib/http/apiError';
 import type { CreateListBlueprint } from '@root/types/api/list';
-import { AddGroupsBlueprint } from '@root/types/api/groups';
+import type { AddGroupsBlueprint } from '@root/types/api/groups';
 import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
 import { Simulate } from 'react-dom/test-utils';
@@ -24,19 +24,22 @@ import load = Simulate.load;
 import { MultiSelectNoDropdown } from '@app/uiComponents/groups/components/MultiSelectNoDropdown';
 
 export function AddGroup() {
-    const methods = useForm<{groups: string[]}>({
+    const methods = useForm<{ groups: string[] }>({
         defaultValues: {
             groups: [],
-        }
+        },
     });
 
-    const {success} = useNotification();
+    const { success } = useNotification();
 
     const [isFormDirty, setIsFormDirty] = useState(false);
-    const {isFetching, data, error} = useGetGroups<TryResult<string[]>>();
-    const {isLoading, error: addGroupsError, isSuccess, mutate} = useMutation<unknown, ApiError, AddGroupsBlueprint>((data) => {
-        return addGroups(data);
-    });
+    const { isFetching, data, error } = useGetGroups<TryResult<string[]>>();
+    const {
+        isLoading,
+        error: addGroupsError,
+        isSuccess,
+        mutate,
+    } = useMutation<unknown, ApiError, AddGroupsBlueprint>((data) => addGroups(data));
 
     useEffect(() => {
         if (!isLoading && isSuccess) {
@@ -46,49 +49,51 @@ export function AddGroup() {
     }, [isLoading, isSuccess]);
 
     const loadError = error ? 'Groups failed to load. Please, try again later.' : undefined;
-    const saveError = addGroupsError ? 'Groups failed to save. Please, try again later.' : undefined
+    const saveError = addGroupsError ? 'Groups failed to save. Please, try again later.' : undefined;
 
+    return (
+        <div className={classNames(contentContainerStyles.root, styles.root)}>
+            <p className={styles.info}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque suscipit odio non iaculis
+                vehicula. Duis vel pharetra neque. Donec ullamcorper nisi id nulla sollicitudin cursus. Sed commodo
+                maximus sagittis. Mauris eu diam arcu. Duis maximus aliquam venenatis. Orci varius natoque penatibus et
+                magnis dis parturient montes, nascetur ridiculus mus.
+            </p>
 
-    return <div className={classNames(contentContainerStyles.root, styles.root)}>
-        <p className={styles.info}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque suscipit odio non iaculis vehicula. Duis vel
-            pharetra neque. Donec ullamcorper nisi id nulla sollicitudin
-            cursus. Sed commodo maximus sagittis. Mauris eu diam arcu.
-            Duis maximus aliquam venenatis. Orci varius natoque penatibus
-            et magnis dis parturient montes, nascetur ridiculus mus.
-        </p>
+            <div className={styles.formWrapper}>
+                {!isFetching && data?.result && (
+                    <FormProvider {...methods}>
+                        <form
+                            onSubmit={methods.handleSubmit((data) => {
+                                mutate({
+                                    groups: data.groups,
+                                    projectId: Runtime.instance.credentials.projectId,
+                                });
+                            })}
+                            className={styles.form}>
+                            <MultiSelectNoDropdown
+                                onDirty={() => {
+                                    setIsFormDirty(true);
+                                }}
+                                name="groups"
+                                isLoading={false}
+                                error={loadError || saveError ? (loadError ? loadError : saveError) : undefined}
+                                currentValues={data.result}
+                                label="Groups"
+                            />
 
-        <div className={styles.formWrapper}>
-            {!isFetching && data?.result && <FormProvider {...methods}>
-                <form onSubmit={methods.handleSubmit((data) => {
-                    mutate({
-                        groups: data.groups,
-                        projectId: Runtime.instance.credentials.projectId,
-                    });
-                })} className={styles.form}>
-                    <MultiSelectNoDropdown
-                        onDirty={() => {
-                            console.log('sdčlkfjasdf');
-                            setIsFormDirty(true);
-                        }}
-                        name="groups"
-                        isLoading={false}
-                        error={loadError || saveError ? loadError ? loadError : saveError : undefined}
-                        currentValues={data.result}
-                        label="Groups"
-                    />
-
-                    <div style={{
-                        alignSelf: 'flex-end',
-                    }}>
-                        <Button disabled={isLoading || isFetching || !isFormDirty} type="submit">
-                            Add
-                        </Button>
-                    </div>
-                </form>
-            </FormProvider>}
+                            <div
+                                style={{
+                                    alignSelf: 'flex-end',
+                                }}>
+                                <Button disabled={isLoading || isFetching || !isFormDirty} type="submit">
+                                    Add
+                                </Button>
+                            </div>
+                        </form>
+                    </FormProvider>
+                )}
+            </div>
         </div>
-
-    </div>;
+    );
 }

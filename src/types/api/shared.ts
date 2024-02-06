@@ -12,4 +12,5 @@ export interface GetGroupsBlueprint {
     structureType: string;
     structureId: string;
     projectId: string;
+    itemId: string;
 }

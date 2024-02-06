@@ -6,6 +6,7 @@ import type { ApiError } from '@lib/http/apiError';
 import type { UpdateListItemResult, UpdateListItemVariableBlueprint } from '@root/types/api/list';
 import type { TryResult } from '@root/types/shared';
 import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
+import { Runtime } from '@app/runtime/Runtime';
 
 type Body = {
     fields: string[];
@@ -22,9 +23,10 @@ export default function useUpdateListVariable(listName: string, itemId: string, 
                     updateListItem({
                         name: listName,
                         itemId: itemId,
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                         values: body.values,
                         fields: body.fields,
+                        references: [],
                     }),
                 );
 

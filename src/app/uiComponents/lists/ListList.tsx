@@ -94,7 +94,6 @@ export function ListList<Value, Metadata>({ listName }: Props) {
             {structureItem && (
                 <ActionSection
                     includeSortBy={['created_at', 'updated_at', 'index']}
-                    structureType={'list'}
                     isLoading={isFetching}
                     sortBy={orderBy}
                     locales={locales}
@@ -262,7 +261,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                                     value={page}
                                     onChange={(page) => {
                                         setPage(page);
-                                        setParam('page', page+'');
+                                        setParam('page', page + '');
                                     }}
                                     radius={20}
                                     boundaries={2}

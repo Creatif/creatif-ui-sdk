@@ -16,8 +16,6 @@ import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     currentSort: CurrentSortType;
     currentGroups: string[];
-    structureItem: StructureItem;
-    structureType: string;
     currentDirection: 'desc' | 'asc' | undefined;
     currentBehaviour: Behaviour | undefined;
     currentLocales: string[];
@@ -33,8 +31,6 @@ export default function Sort({
     currentSort = 'index',
     currentGroups = [],
     includeSortBy = ['created_at', 'index', 'updated_at'],
-    structureItem,
-    structureType,
     currentLocales,
     onSelectedGroups,
     onSelectedLocales,
@@ -50,7 +46,7 @@ export default function Sort({
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(currentBehaviour);
     const cachedLocales = Runtime.instance.localesCache.getLocales() || [];
     const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(currentDirection);
-    const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups(structureType, structureItem.id);
+    const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups();
 
     const [debouncedGroups] = useDebouncedValue(groups, 500);
 
@@ -221,7 +217,6 @@ export default function Sort({
                     <AppPill
                         onChange={(item) => {
                             setBehaviour(() => {
-                                console.log(item);
                                 if (item === 'readonly') {
                                     onBehaviourChange(undefined);
                                     return undefined;

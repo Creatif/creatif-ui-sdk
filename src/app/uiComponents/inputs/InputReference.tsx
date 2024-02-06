@@ -206,8 +206,6 @@ export default function InputReference({
                                         variableId: item.value,
                                     };
 
-                                    console.log(ref);
-
                                     onChange(ref);
 
                                     if (hasReference(name)) {

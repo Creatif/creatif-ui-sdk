@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/shared/css/modal.module.css';
-import { Button, Modal, MultiSelect, Select } from '@mantine/core';
-import { useState } from 'react';
+import { Button, Modal, MultiSelect } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import useGetGroups from '@app/uiComponents/shared/hooks/useGetGroups';
-import MultiSelectWithAdd from '@app/uiComponents/inputs/fields/MultiSelectWithAdd';
+import useGetVariableGroups from '@app/uiComponents/shared/hooks/useGetVariableGroups';
 
 interface Props {
     open: boolean;
@@ -12,12 +12,34 @@ interface Props {
     onEdit: (groups: string[]) => void;
     currentGroups: string[];
     structureType: string;
+    itemId: string;
     structureName: string;
 }
 
-export default function EditGroups({ open, onClose, onEdit, currentGroups, structureName, structureType }: Props) {
+export default function EditGroups({
+    open,
+    onClose,
+    onEdit,
+    currentGroups,
+    structureName,
+    structureType,
+    itemId,
+}: Props) {
     const [groups, setGroups] = useState<string[]>(currentGroups);
-    const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups(structureType, structureName, open);
+    const { isFetching: areGroupsLoading, data: allGroups, error: groupError } = useGetGroups(open);
+    const {
+        isFetching: areVariableGroupsLoading,
+        data: variableGroups,
+        error: variableGroupsError,
+    } = useGetVariableGroups(structureType, structureName, itemId, open);
+
+    useEffect(() => {
+        if (variableGroups) {
+            setGroups((variableGroups && variableGroups.result) || []);
+        }
+    }, [variableGroups]);
+
+    const isError = Boolean(groupError) || areGroupsLoading || areVariableGroupsLoading || Boolean(variableGroupsError);
 
     return (
         <>
@@ -28,11 +50,13 @@ export default function EditGroups({ open, onClose, onEdit, currentGroups, struc
                 </p>
 
                 <MultiSelect
-                    disabled={areGroupsLoading}
+                    disabled={areGroupsLoading || areVariableGroupsLoading}
                     placeholder="Choose your groups"
-                    data={(data && data.result) || []}
+                    clearable={true}
+                    value={groups}
+                    data={(allGroups && allGroups.result) || []}
                     onChange={(groups) => {
-                        setGroups((current) => Array.from(new Set([...current, ...groups])));
+                        setGroups(groups);
                     }}
                 />
 
@@ -41,7 +65,7 @@ export default function EditGroups({ open, onClose, onEdit, currentGroups, struc
                         Cancel
                     </Button>
 
-                    <Button disabled={Boolean(groupError) || areGroupsLoading} onClick={() => onEdit(groups)}>
+                    <Button disabled={isError} onClick={() => onEdit(groups)}>
                         Edit
                     </Button>
                 </div>

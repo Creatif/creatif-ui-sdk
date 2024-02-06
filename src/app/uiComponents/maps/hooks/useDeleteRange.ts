@@ -1,4 +1,3 @@
-import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
