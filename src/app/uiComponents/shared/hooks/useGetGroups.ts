@@ -1,10 +1,9 @@
-import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
-import getGroups from '@lib/api/declarations/shared/getGroups';
 import { Runtime } from '@app/runtime/Runtime';
+import { getGroups } from '@lib/api/groups/getGroups';
 export default function useGetGroups(structureType: string, structureId: string, enabled?: boolean) {
     const queryClient = useQueryClient();
     const key = ['get_groups', structureType, structureId];
@@ -14,8 +13,6 @@ export default function useGetGroups(structureType: string, structureId: string,
             async () => {
                 const fn = throwIfHttpFails<string[]>(() =>
                     getGroups({
-                        structureType: structureType,
-                        structureId: structureId,
                         projectId: Runtime.instance.credentials.projectId,
                     }),
                 );
