@@ -102,7 +102,7 @@ export interface DeleteMapItemBlueprint {
 export interface UpdateMapItemVariableBlueprint {
     name?: string;
     behaviour?: Behaviour;
-    groups?: string[];
+    groups?: string[] | null;
     locale?: string;
     metadata?: unknown;
     value?: unknown;

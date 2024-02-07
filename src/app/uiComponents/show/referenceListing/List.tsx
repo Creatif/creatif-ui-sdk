@@ -17,16 +17,17 @@ import classNames from 'classnames';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/uiComponents/show/referenceListing/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import { StructureType } from '@root/types/shell/shell';
 
 interface Props {
     reference: QueryReference;
-    structureType: string;
+    structureType: StructureType;
     relationshipType: string;
 }
 
 export function List<Value, Metadata>({ reference, structureType, relationshipType }: Props) {
     const { queryParams, setParam } = useSearchQuery();
-    const referenceStructureItem = getProjectMetadataStore().getState().getStructureItemByName(reference.structureName);
+    const referenceStructureItem = getProjectMetadataStore().getState().getStructureItemByName(reference.structureName, structureType);
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);

@@ -112,8 +112,9 @@ export default function InputReference({
 }: Props) {
     const { control, setValue: setFormValue } = useFormContext();
     const [selected, setSelected] = useState<AsyncAutocompleteSelectOption | undefined>();
-    const internalStructureItem = getProjectMetadataStore().getState().getStructureItemByName(structureName);
+    const internalStructureItem = getProjectMetadataStore().getState().getStructureItemByName(structureName, structureType);
 
+    console.log(internalStructureItem);
     const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
 
     const hasReference = store((state) => state.has);
@@ -127,11 +128,11 @@ export default function InputReference({
     }, [parentStructureItem, structureName]);
 
     useEffect(() => {
-        if (selected) {
+        if (selected && internalStructureItem) {
             const ref = {
                 name: name,
                 structureType: structureType,
-                structureName: parentStructureItem.name,
+                structureName: structureName,
                 variableId: selected.value,
             };
 
@@ -144,7 +145,7 @@ export default function InputReference({
 
             addReference(ref);
         }
-    }, [selected]);
+    }, [selected, internalStructureItem]);
 
     const searchFn = useCallback(
         async (searchValue: string) => {
@@ -184,7 +185,7 @@ export default function InputReference({
                 <RuntimeErrorModal
                     open={true}
                     error={{
-                        message: `You are trying to create a reference on a structure ${structureName} but that structure does not exist.`,
+                        message: `You are trying to create a reference on a structure ${structureName} but that structure does not exist or the structure type is invalid.`,
                     }}
                 />
             )}

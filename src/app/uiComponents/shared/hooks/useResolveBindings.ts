@@ -95,10 +95,10 @@ export function chooseLocale(fieldLocale: string, bindingLocale: string | undefi
     return Runtime.instance.currentLocaleStorage.getLocale();
 }
 
-export function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] {
+export function chooseGroups(fieldGroups: string[], bindingGroups: string[]): string[] | null {
     if (bindingGroups.length !== 0) return bindingGroups;
     if (fieldGroups.length !== 0) return fieldGroups;
-    return ['default'];
+    return null;
 }
 
 export function chooseBehaviour(field: Behaviour | undefined, binding: Behaviour | undefined): Behaviour {

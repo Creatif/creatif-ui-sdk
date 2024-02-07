@@ -92,7 +92,7 @@ export default function Form<T extends FieldValues>({
 
     if (mode === 'update' && currentData) {
         setLocale(currentData.locale);
-        setGroups(currentData.groups || ['default']);
+        setGroups(currentData.groups || []);
         setBehaviour(currentData.behaviour);
 
         assignReferences(
@@ -109,7 +109,7 @@ export default function Form<T extends FieldValues>({
         formProps.defaultValues = currentData.value;
     } else {
         setLocale(Runtime.instance.currentLocaleStorage.getLocale());
-        setGroups(['default']);
+        setGroups([]);
     }
     const methods = useForm(formProps);
 

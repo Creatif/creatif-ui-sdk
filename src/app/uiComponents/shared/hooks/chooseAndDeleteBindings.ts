@@ -19,7 +19,7 @@ export default function chooseAndDeleteBindings(
         delete value.locale;
     }
 
-    const chosenGroups = chooseGroups(value.groups || ['default'], incomingGroups || ['default']);
+    const chosenGroups = chooseGroups(value.groups || [], incomingGroups || ['default']);
     if (Object.hasOwn(value as object, 'groups')) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
