@@ -205,6 +205,8 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                         groups,
                     );
 
+                    console.log(referenceStore.getState().references);
+
                     removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
                     updateMapVariable({
@@ -223,7 +225,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                         references: referenceStore.getState().references.map((item) => ({
                             structureName: item.structureName,
                             name: item.name,
-                            structureType: 'map',
+                            structureType: item.structureType,
                             variableId: item.variableId,
                         })) as UpdateMapVariableReferenceBlueprint[],
                     }).then(({ result: response, error }) => {

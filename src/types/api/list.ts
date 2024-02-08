@@ -17,7 +17,7 @@ export interface CreatedList {
 export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
     behaviour: Behaviour;
-    groups?: string[];
+    groups?: string[] | null;
     locale?: string;
     value?: Value;
     metadata?: Metadata;
@@ -113,7 +113,7 @@ export interface UpdateMapVariableReferenceBlueprint {
 export interface UpdateListItemVariableBlueprint {
     name?: string;
     behaviour?: Behaviour;
-    groups?: string[];
+    groups?: string[] | null;
     locale?: string;
     metadata?: unknown;
     value?: unknown;

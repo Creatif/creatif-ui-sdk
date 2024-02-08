@@ -166,7 +166,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     },
                     references: referenceStore.getState().references.map((item) => ({
                         structureName: item.structureName,
-                        structureType: 'map',
+                        structureType: item.structureType,
                         name: item.name,
                         variableId: item.variableId,
                     })) as Reference[],
@@ -224,7 +224,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
                     references: referenceStore.getState().references.map((item) => ({
                         structureName: item.structureName,
                         name: item.name,
-                        structureType: 'map',
+                        structureType: item.structureType,
                         variableId: item.variableId,
                     })) as UpdateMapVariableReferenceBlueprint[],
                 }).then(({ result: response, error }) => {

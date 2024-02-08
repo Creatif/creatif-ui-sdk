@@ -44,7 +44,10 @@ async function searchAndCreateOptions(
         if (result) {
             return result.data.map((item) => ({
                 label: item.name,
-                value: item.id,
+                value: JSON.stringify({
+                    id: item.id,
+                    structureType: 'list',
+                }),
             }));
         }
 
@@ -67,7 +70,10 @@ async function searchAndCreateOptions(
         if (result) {
             return result.data.map((item) => ({
                 label: item.name,
-                value: item.id,
+                value: JSON.stringify({
+                    id: item.id,
+                    structureType: 'map',
+                }),
             }));
         }
 
@@ -89,7 +95,10 @@ async function searchAndCreateOptions(
     if (result) {
         return result.data.map((item) => ({
             label: item.name,
-            value: item.id,
+            value: JSON.stringify({
+                id: item.id,
+                structureType: 'list',
+            }),
         }));
     }
 
@@ -112,9 +121,10 @@ export default function InputReference({
 }: Props) {
     const { control, setValue: setFormValue } = useFormContext();
     const [selected, setSelected] = useState<AsyncAutocompleteSelectOption | undefined>();
-    const internalStructureItem = getProjectMetadataStore().getState().getStructureItemByName(structureName, structureType);
+    const internalStructureItem = getProjectMetadataStore()
+        .getState()
+        .getStructureItemByName(structureName, structureType);
 
-    console.log(internalStructureItem);
     const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
 
     const hasReference = store((state) => state.has);
@@ -129,11 +139,12 @@ export default function InputReference({
 
     useEffect(() => {
         if (selected && internalStructureItem) {
+            const value = JSON.parse(selected.value);
             const ref = {
                 name: name,
-                structureType: structureType,
+                structureType: value.structureType,
                 structureName: structureName,
-                variableId: selected.value,
+                variableId: value.id,
             };
 
             setFormValue(name, ref);
@@ -156,11 +167,16 @@ export default function InputReference({
 
             if (existingReferences.length) {
                 for (const ref of existingReferences) {
-                    const existingRef = result.find((item) => item.value === ref.structureName);
+                    const existingRef = result.find((item) => {
+                        const value = JSON.parse(item.value);
+                        return value.id === ref.structureName;
+                    });
 
                     if (existingRef && !selected) {
                         setSelected(existingRef);
                         break;
+                    } else {
+                        console.log('not found');
                     }
                 }
             }
@@ -200,11 +216,12 @@ export default function InputReference({
                             error={useFirstError(name)}
                             onOptionSelected={(item) => {
                                 if (item) {
+                                    const value = JSON.parse(item.value);
                                     const ref = {
                                         name: name,
-                                        structureType: structureType,
+                                        structureType: value.structureType,
                                         structureName: structureName,
-                                        variableId: item.value,
+                                        variableId: value.id,
                                     };
 
                                     onChange(ref);

@@ -162,7 +162,11 @@ export default function AsyncAutocompleteSelect({
 
                 {options && (
                     <Combobox.Dropdown>
-                        {options.length > 0 && <Combobox.Options mah={200} style={{ overflowY: 'auto' }}>{options}</Combobox.Options>}
+                        {options.length > 0 && (
+                            <Combobox.Options mah={200} style={{ overflowY: 'auto' }}>
+                                {options}
+                            </Combobox.Options>
+                        )}
 
                         {!options.length && (
                             <Combobox.Options>
