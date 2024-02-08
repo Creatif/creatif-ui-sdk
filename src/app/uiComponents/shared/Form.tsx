@@ -98,6 +98,10 @@ export default function Form<T extends FieldValues>({
         assignReferences(
             currentData.references.map((item) => ({
                 name: item.name,
+                parentId: item.parentId,
+                childId: item.childId,
+                parentStructureId: item.parentStructureId,
+                childStructureId: item.childStructureId,
                 structureType: structureType,
                 structureName: item.parentId,
                 variableId: item.parentId,

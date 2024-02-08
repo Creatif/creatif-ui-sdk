@@ -30,18 +30,6 @@ export default function LanguageForm({ mode }: Props) {
                                 }}
                             />
                         </Grid.Col>
-
-                        <Grid.Col span={6}>
-                            {inputReference({
-                                name: 'deck',
-                                structureName: 'Decks',
-                                structureType: 'map',
-                                placeholder: 'Search for decks',
-                                validation: {
-                                    required: 'Decks is required',
-                                },
-                            })}
-                        </Grid.Col>
                     </Grid>
 
                     {submitButton}

@@ -2,6 +2,10 @@ import { create } from 'zustand';
 
 export interface ReferenceStoreItem {
     name: string;
+    parentId: string;
+    childId: string;
+    parentStructureId: string;
+    childStructureId: string;
     structureName: string;
     structureType: string;
     variableId: string;

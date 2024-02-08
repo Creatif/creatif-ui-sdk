@@ -6,14 +6,13 @@ import type { StructureType } from '@root/types/shell/shell';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { AsyncAutocompleteSelectOption } from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
-import AsyncAutocompleteSelect from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
-import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { Runtime } from '@app/runtime/Runtime';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import ReferenceSearchInput, { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
 
 interface Props {
     name: string;
@@ -25,90 +24,6 @@ interface Props {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     store: UseBoundStore<StoreApi<ReferencesStore>>;
 }
-
-async function searchAndCreateOptions(
-    structureId: string,
-    structureType: StructureType,
-    search: string,
-): Promise<AsyncAutocompleteSelectOption[]> {
-    if (structureType === 'list') {
-        const { result, error } = await paginateList({
-            search: search,
-            name: structureId,
-            limit: 1000,
-            page: 1,
-            orderBy: 'created_at',
-            projectId: Runtime.instance.credentials.projectId,
-        });
-
-        if (result) {
-            return result.data.map((item) => ({
-                label: item.name,
-                value: JSON.stringify({
-                    id: item.id,
-                    structureType: 'list',
-                }),
-            }));
-        }
-
-        if (error) {
-            throw error;
-        }
-
-        return [];
-    }
-
-    if (structureType === 'map') {
-        const { result, error } = await paginateMapVariables({
-            search: search,
-            name: structureId,
-            limit: 100,
-            page: 1,
-            projectId: Runtime.instance.credentials.projectId,
-        });
-
-        if (result) {
-            return result.data.map((item) => ({
-                label: item.name,
-                value: JSON.stringify({
-                    id: item.id,
-                    structureType: 'map',
-                }),
-            }));
-        }
-
-        if (error) {
-            throw error;
-        }
-
-        return [];
-    }
-
-    const { result, error } = await paginateVariables({
-        search: search,
-        name: structureId,
-        limit: 100,
-        page: 1,
-        projectId: Runtime.instance.credentials.projectId,
-    });
-
-    if (result) {
-        return result.data.map((item) => ({
-            label: item.name,
-            value: JSON.stringify({
-                id: item.id,
-                structureType: 'list',
-            }),
-        }));
-    }
-
-    if (error) {
-        throw error;
-    }
-
-    return [];
-}
-
 export default function InputReference({
     parentStructureItem,
     structureName,
@@ -120,10 +35,13 @@ export default function InputReference({
     store,
 }: Props) {
     const { control, setValue: setFormValue } = useFormContext();
-    const [selected, setSelected] = useState<AsyncAutocompleteSelectOption | undefined>();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
+    console.log(store.getState().references, name);
+    const reference = store.getState().get(name);
+
+    console.log(reference);
 
     const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
 
@@ -136,55 +54,6 @@ export default function InputReference({
             setIsEqualStructureNameError(true);
         }
     }, [parentStructureItem, structureName]);
-
-    useEffect(() => {
-        if (selected && internalStructureItem) {
-            const value = JSON.parse(selected.value);
-            const ref = {
-                name: name,
-                structureType: value.structureType,
-                structureName: structureName,
-                variableId: value.id,
-            };
-
-            setFormValue(name, ref);
-
-            if (hasReference(name)) {
-                updateReference(ref);
-                return;
-            }
-
-            addReference(ref);
-        }
-    }, [selected, internalStructureItem]);
-
-    const searchFn = useCallback(
-        async (searchValue: string) => {
-            if (!internalStructureItem) return [];
-
-            const result = await searchAndCreateOptions(internalStructureItem.id, structureType, searchValue);
-            const existingReferences = store.getState().references;
-
-            if (existingReferences.length) {
-                for (const ref of existingReferences) {
-                    const existingRef = result.find((item) => {
-                        const value = JSON.parse(item.value);
-                        return value.id === ref.structureName;
-                    });
-
-                    if (existingRef && !selected) {
-                        setSelected(existingRef);
-                        break;
-                    } else {
-                        console.log('not found');
-                    }
-                }
-            }
-
-            return result;
-        },
-        [selected, internalStructureItem],
-    );
 
     return (
         <>
@@ -211,9 +80,25 @@ export default function InputReference({
                     control={control}
                     rules={validation}
                     render={({ field: { onChange } }) => (
-                        <AsyncAutocompleteSelect
-                            selected={selected}
-                            error={useFirstError(name)}
+                        <ReferenceSearchInput
+                            onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
+                                const value = JSON.parse(selected.value);
+                                const ref = {
+                                    name: name,
+                                    structureType: value.structureType,
+                                    structureName: structureName,
+                                    variableId: value.id,
+                                };
+
+                                setFormValue(name, ref);
+
+                                if (hasReference(name)) {
+                                    updateReference(ref);
+                                    return;
+                                }
+
+                                addReference(ref);
+                            }}
                             onOptionSelected={(item) => {
                                 if (item) {
                                     const value = JSON.parse(item.value);
@@ -234,9 +119,7 @@ export default function InputReference({
                                     addReference(ref);
                                 }
                             }}
-                            searchFn={searchFn}
                             label={label}
-                            placeholder={placeholder}
                         />
                     )}
                     name={name}
