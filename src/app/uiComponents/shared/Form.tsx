@@ -38,7 +38,6 @@ export interface ReferenceInputProps {
     structureName: string;
     structureType: StructureType;
     label?: string;
-    placeholder: string;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
@@ -98,6 +97,8 @@ export default function Form<T extends FieldValues>({
         assignReferences(
             currentData.references.map((item) => ({
                 name: item.name,
+                parentType: item.parentType,
+                childType: item.childType,
                 parentId: item.parentId,
                 childId: item.childId,
                 parentStructureId: item.parentStructureId,
@@ -167,7 +168,12 @@ export default function Form<T extends FieldValues>({
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputReference: (props: ReferenceInputProps) => (
-                                <InputReference {...props} store={referenceStore} parentStructureItem={structureItem} />
+                                <InputReference
+                                    isUpdate={mode === 'update'}
+                                    {...props}
+                                    store={referenceStore}
+                                    parentStructureItem={structureItem}
+                                />
                             ),
                         },
                     )}

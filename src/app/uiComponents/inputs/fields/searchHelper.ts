@@ -1,17 +1,21 @@
 import type { StructureType } from '@root/types/shell/shell';
-import type { AsyncAutocompleteSelectOption } from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import { Runtime } from '@app/runtime/Runtime';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
+import type { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
+import { ApiError } from '@lib/http/apiError';
 
 export async function searchAndCreateOptions(
     structureId: string,
     structureType: StructureType,
     search: string,
-): Promise<AsyncAutocompleteSelectOption[]> {
+): Promise<{
+    options: ReferenceSearchInputOption[] | undefined;
+    error: ApiError | undefined;
+}> {
     if (structureType === 'list') {
         const { result, error } = await paginateList({
             search: search,
@@ -23,20 +27,37 @@ export async function searchAndCreateOptions(
         });
 
         if (result) {
-            return result.data.map((item) => ({
-                label: item.name,
-                value: JSON.stringify({
-                    id: item.id,
-                    structureType: 'list',
-                }),
-            }));
+            return {
+                options: result.data.map((item) => ({
+                    label: item.name,
+                    value: JSON.stringify({
+                        id: item.id,
+                        structureType: 'list',
+                    }),
+                })),
+                error: undefined,
+            };
         }
 
         if (error) {
-            throw error;
+            return {
+                options: undefined,
+                error: error,
+            };
         }
 
-        return [];
+        return {
+            options: undefined,
+            error: new ApiError(
+                'Could not determine type',
+                {
+                    data: {
+                        invalidType: 'Could not determine type',
+                    },
+                },
+                400,
+            ),
+        };
     }
 
     if (structureType === 'map') {
@@ -49,20 +70,37 @@ export async function searchAndCreateOptions(
         });
 
         if (result) {
-            return result.data.map((item) => ({
-                label: item.name,
-                value: JSON.stringify({
-                    id: item.id,
-                    structureType: 'map',
-                }),
-            }));
+            return {
+                options: result.data.map((item) => ({
+                    label: item.name,
+                    value: JSON.stringify({
+                        id: item.id,
+                        structureType: 'map',
+                    }),
+                })),
+                error: undefined,
+            };
         }
 
         if (error) {
-            throw error;
+            return {
+                options: undefined,
+                error: error,
+            };
         }
 
-        return [];
+        return {
+            options: undefined,
+            error: new ApiError(
+                'Could not determine type',
+                {
+                    data: {
+                        invalidType: 'Could not determine type',
+                    },
+                },
+                400,
+            ),
+        };
     }
 
     const { result, error } = await paginateVariables({
@@ -74,20 +112,37 @@ export async function searchAndCreateOptions(
     });
 
     if (result) {
-        return result.data.map((item) => ({
-            label: item.name,
-            value: JSON.stringify({
-                id: item.id,
-                structureType: 'list',
-            }),
-        }));
+        return {
+            options: result.data.map((item) => ({
+                label: item.name,
+                value: JSON.stringify({
+                    id: item.id,
+                    structureType: 'variable',
+                }),
+            })),
+            error: undefined,
+        };
     }
 
     if (error) {
-        throw error;
+        return {
+            options: undefined,
+            error: error,
+        };
     }
 
-    return [];
+    return {
+        options: undefined,
+        error: new ApiError(
+            'Could not determine type',
+            {
+                data: {
+                    invalidType: 'Could not determine type',
+                },
+            },
+            400,
+        ),
+    };
 }
 
 export async function queryItemById(structureId: string, id: string, structureType: StructureType) {

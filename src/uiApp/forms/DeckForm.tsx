@@ -36,7 +36,7 @@ export default function DeckForm({ mode }: Props) {
                                 name: 'language',
                                 structureName: 'Languages',
                                 structureType: 'list',
-                                placeholder: 'Languages',
+                                label: 'Language',
                                 validation: {
                                     required: 'Language is required',
                                 },

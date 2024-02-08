@@ -1,48 +1,45 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import paginateList from '@lib/api/declarations/lists/paginateList';
-import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
-import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
+import React, { useEffect, useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
-import type { AsyncAutocompleteSelectOption } from '@app/uiComponents/inputs/fields/AsyncAutocompleteSelect';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
-import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
+import type { ReferencesStore, ReferenceStoreItem } from '@app/systems/stores/inputReferencesStore';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
-import { Runtime } from '@app/runtime/Runtime';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import ReferenceSearchInput, { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
+import type { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
+import ReferenceSearchInput from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 
 interface Props {
     name: string;
+    isUpdate: boolean;
     structureName: string;
     parentStructureItem: StructureItem;
     structureType: StructureType;
-    placeholder: string;
     label?: string;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     store: UseBoundStore<StoreApi<ReferencesStore>>;
 }
 export default function InputReference({
     parentStructureItem,
+    isUpdate,
     structureName,
     structureType,
-    placeholder,
     label,
     validation,
     name,
     store,
 }: Props) {
-    const { control, setValue: setFormValue } = useFormContext();
+    const {
+        control,
+        setValue: setFormValue,
+        formState: { errors },
+    } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
-    console.log(store.getState().references, name);
     const reference = store.getState().get(name);
-
-    console.log(reference);
-
     const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
 
     const hasReference = store((state) => state.has);
@@ -75,12 +72,15 @@ export default function InputReference({
                 />
             )}
 
-            {!isEqualStructureNameError && (
+            {!isEqualStructureNameError && internalStructureItem && (
                 <Controller
                     control={control}
                     rules={validation}
                     render={({ field: { onChange } }) => (
                         <ReferenceSearchInput
+                            inputError={useFirstError(name)}
+                            reference={reference}
+                            referenceStructureItem={internalStructureItem}
                             onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
                                 const value = JSON.parse(selected.value);
                                 const ref = {
@@ -93,11 +93,11 @@ export default function InputReference({
                                 setFormValue(name, ref);
 
                                 if (hasReference(name)) {
-                                    updateReference(ref);
+                                    updateReference(ref as ReferenceStoreItem);
                                     return;
                                 }
 
-                                addReference(ref);
+                                addReference(ref as ReferenceStoreItem);
                             }}
                             onOptionSelected={(item) => {
                                 if (item) {
@@ -112,14 +112,14 @@ export default function InputReference({
                                     onChange(ref);
 
                                     if (hasReference(name)) {
-                                        updateReference(ref);
+                                        updateReference(ref as ReferenceStoreItem);
                                         return;
                                     }
 
-                                    addReference(ref);
+                                    addReference(ref as ReferenceStoreItem);
                                 }
                             }}
-                            label={label}
+                            label={label ? label : structureName}
                         />
                     )}
                     name={name}

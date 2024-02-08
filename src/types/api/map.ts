@@ -38,7 +38,7 @@ export interface CreatedMap {
 export interface AddToMapVariable {
     name: string;
     behaviour: Behaviour;
-    groups: string[];
+    groups: string[] | null;
     value: unknown;
     locale: string;
     metadata: unknown;

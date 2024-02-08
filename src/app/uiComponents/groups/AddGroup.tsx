@@ -8,19 +8,14 @@ import styles from '@app/uiComponents/groups/css/addGroup.module.css';
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import classNames from 'classnames';
 import { useGetGroups } from '@app/uiComponents/groups/hooks/useGetGroups';
-import Loading from '@app/components/Loading';
-import MultiSelectWithAdd from '@app/uiComponents/inputs/fields/MultiSelectWithAdd';
 import type { TryResult } from '@root/types/shared';
 import { useMutation } from 'react-query';
 import { addGroups } from '@lib/api/groups/addGroups';
 import { Runtime } from '@app/runtime/Runtime';
 import type { ApiError } from '@lib/http/apiError';
-import type { CreateListBlueprint } from '@root/types/api/list';
 import type { AddGroupsBlueprint } from '@root/types/api/groups';
 import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
-import { Simulate } from 'react-dom/test-utils';
-import load = Simulate.load;
 import { MultiSelectNoDropdown } from '@app/uiComponents/groups/components/MultiSelectNoDropdown';
 
 export function AddGroup() {

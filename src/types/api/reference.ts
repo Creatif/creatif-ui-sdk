@@ -1,4 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
+import type { StructureType } from '@root/types/shell/shell';
 
 interface Reference {
     id: string;
@@ -19,8 +20,8 @@ export interface QueryReference {
     id: string;
     name: string;
     structureName: string;
-    parentType: string;
-    childType: string;
+    parentType: StructureType;
+    childType: StructureType;
     childStructureId: string;
     parentStructureId: string;
     parentId: string;

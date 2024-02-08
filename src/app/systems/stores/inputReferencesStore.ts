@@ -1,7 +1,10 @@
 import { create } from 'zustand';
+import type { StructureType } from '@root/types/shell/shell';
 
 export interface ReferenceStoreItem {
     name: string;
+    parentType: StructureType;
+    childType: StructureType;
     parentId: string;
     childId: string;
     parentStructureId: string;

@@ -165,7 +165,7 @@ export default function MapsForm<T extends FieldValues, Value = unknown, Metadat
                         },
                         references: referenceStore.getState().references.map((item) => ({
                             structureName: item.structureName,
-                            structureType: 'map',
+                            structureType: item.structureType,
                             name: item.name,
                             variableId: item.variableId,
                         })) as Reference[],
