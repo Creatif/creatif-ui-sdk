@@ -49,7 +49,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
     const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
-    const [fields, setFields] = useState<string[]>(['groups']);
+    const [fields] = useState<string[]>(['groups']);
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
@@ -145,10 +145,12 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                         <div className={styles.listChoiceListType}>
                             <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
                                 <IconListDetails
-                                    onClick={() => setIsListView(true)}
+                                    onClick={() => setParam('listingType', 'list')}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'list'
+                                            ? styles.listChoiceListType_Icon_Highlighted
+                                            : undefined,
                                     )}
                                     size={24}
                                 />
@@ -157,12 +159,13 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
                             <Tooltip label="Table view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
                                 <IconTable
                                     onClick={() => {
-                                        setFields([...fields, 'value', 'metadata']);
-                                        setIsListView(false);
+                                        setParam('listingType', 'table');
                                     }}
                                     className={classNames(
                                         styles.listChoiceListType_Icon,
-                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
+                                        queryParams.listingType === 'table'
+                                            ? styles.listChoiceListType_Icon_Highlighted
+                                            : undefined,
                                     )}
                                     size={24}
                                 />

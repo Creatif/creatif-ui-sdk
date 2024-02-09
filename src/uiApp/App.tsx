@@ -7,12 +7,14 @@ import ListOrganizationForm from '@root/uiApp/forms/ListOrganizationForm';
 import { CreatifProvider } from '@root/CreatifProvider';
 import LanguageForm from '@root/uiApp/forms/LanguageForm';
 import DeckForm from '@root/uiApp/forms/DeckForm';
+import HomePageForm from '@root/uiApp/forms/HomePageForm';
+import AboutPageForm from '@root/uiApp/forms/AboutPageForm';
 
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$rKTBZr0UMaK1JQw08efMAe2MV9G5t4J92Rhl8I.5Yp3lRLLWsNen6"
-            projectId="01HP4MXRJMDHP1CGNRW43073NH"
+            apiKey="$2a$10$P1FzSAxBT0iH2yujjyUXfuyBRXrDsCfJW1TAzEebRhdBGx0/hkTIq"
+            projectId="01HP6PRWFB5BGHT95Q500D4KC1"
             app={{
                 logo: 'Break free',
                 items: [

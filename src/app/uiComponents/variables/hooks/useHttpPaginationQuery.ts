@@ -1,10 +1,10 @@
-import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { ApiError } from '@lib/http/apiError';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     name: string;
     locales?: string[];
@@ -16,6 +16,7 @@ interface Props {
     search?: string;
     direction?: 'desc' | 'asc';
     fields?: string[];
+    enabled?: boolean;
 }
 export default function useHttpPaginationQuery<Response>({
     name,
@@ -27,9 +28,11 @@ export default function useHttpPaginationQuery<Response>({
     direction = 'desc',
     behaviour = undefined,
     locales = [],
+    fields = [],
+    enabled = true,
 }: Props) {
     const queryClient = useQueryClient();
-    const key = [name, page, limit, groups, behaviour, orderBy, direction, search, locales];
+    const key = [name, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
 
     return {
         ...useQuery<unknown, ApiError, Response>(
@@ -37,7 +40,7 @@ export default function useHttpPaginationQuery<Response>({
             throwIfHttpFails(() =>
                 paginateVariables({
                     name: name,
-                    projectId: Credentials.ProjectID(),
+                    projectId: Runtime.instance.credentials.projectId,
                     page,
                     limit,
                     groups,
@@ -46,10 +49,12 @@ export default function useHttpPaginationQuery<Response>({
                     search,
                     behaviour,
                     locales,
+                    fields,
                 }),
             ),
             {
                 retry: 1,
+                enabled,
                 keepPreviousData: true,
                 refetchOnWindowFocus: false,
             },

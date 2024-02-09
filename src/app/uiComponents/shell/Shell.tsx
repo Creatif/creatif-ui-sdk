@@ -39,7 +39,6 @@ export default function Shell({ options }: Props) {
                                 </div>
                             </div>
                         }>
-
                         <Route path="/groups" element={<AddGroup />} />
 
                         {structures.map((item, i) => {

@@ -1,5 +1,4 @@
 import useNotification from '@app/systems/notifications/useNotification';
-import { getOptions } from '@app/systems/stores/options';
 import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -9,7 +9,7 @@ export interface ProjectMetadata {
     name: string;
     state: string;
     userId: string;
-    variables: Record<string, Structure[]>;
+    variables: Structure[];
     maps: Structure[];
     lists: Structure[];
 }

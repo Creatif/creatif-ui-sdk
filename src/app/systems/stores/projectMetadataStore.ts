@@ -80,7 +80,8 @@ export function createProjectMetadataStore(metadata: ProjectMetadata, incomingSt
         getMap: (name: string) => get().metadata.maps.find((item) => item.name === name),
         getList: (name: string) => get().metadata.lists.find((item) => item.name === name),
         getStructureItemByID: (id: string) => get().structureItems.find((t) => t.id === id),
-        getStructureItemByName: (name: string, type: StructureType) => get().structureItems.find((t) => t.name === name && t.structureType === type),
+        getStructureItemByName: (name: string, type: StructureType) =>
+            get().structureItems.find((t) => t.name === name && t.structureType === type),
     }));
 
     return store;

@@ -14,19 +14,23 @@ import MainTableView from '@app/uiComponents/lists/table/MainTableView';
 import { Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { PaginationResult } from '@root/types/api/list';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
-import { getOptions } from '@app/systems/stores/options';
-import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import { useParams } from 'react-router-dom';
+import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import UIError from '@app/components/UIError';
 interface Props {
     name: string;
 }
 export function ListList<Value, Metadata>({ name }: Props) {
-    const { queryParams, setParam } = useSearchQuery('created_at');
-    const { store: optionsStore, error: runtimeError } = getOptions(name, 'variable');
+    const { queryParams, setParam } = useSearchQuery();
+    const { structureId } = useParams();
+    const structureItem = getProjectMetadataStore()
+        .getState()
+        .getStructureItemByID(structureId || '');
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -36,6 +40,13 @@ export function ListList<Value, Metadata>({ name }: Props) {
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
     const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
+    const [fields, setFields] = useState<string[]>(['groups']);
+
+    const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
+    const [areItemsDeleting, setAreItemsDeleting] = useState(false);
+    const [isListView, setIsListView] = useState(true);
+
+    const [isNotFoundError, setIsNotFoundError] = useState(false);
 
     const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
@@ -49,46 +60,49 @@ export function ListList<Value, Metadata>({ name }: Props) {
         orderBy: orderBy,
         search: search as string,
         locales: locales,
+        fields: fields,
+        enabled: Boolean(structureItem),
     });
 
     return (
         <>
-            <ActionSection
-                structureType="variable"
-                includeSortBy={['created_at', 'updated_at']}
-                isLoading={isFetching}
-                sortBy={orderBy}
-                search={search || ''}
-                locales={locales}
-                direction={direction}
-                behaviour={behaviour}
-                groups={groups}
-                onDirectionChange={(direction) => {
-                    setDirection(direction);
-                    setParam('direction', direction as string);
-                }}
-                onSelectedLocales={(locales) => {
-                    setLocales(locales);
-                    setParam('locales', locales.join(','));
-                }}
-                onBehaviourChange={(behaviour) => {
-                    setBehaviour(behaviour);
-                    setParam('behaviour', behaviour as string);
-                }}
-                onSortChange={(sortType) => {
-                    setOrderBy(sortType);
-                    setParam('orderBy', sortType);
-                }}
-                onSelectedGroups={(groups) => {
-                    setGroups(groups);
-                    setParam('groups', groups.join(','));
-                }}
-                structureName={name}
-                onSearch={(text) => {
-                    setSearch(text);
-                    setParam('search', text);
-                }}
-            />
+            {structureItem && (
+                <ActionSection
+                    structureItem={structureItem}
+                    includeSortBy={['created_at', 'updated_at']}
+                    isLoading={isFetching}
+                    sortBy={orderBy}
+                    search={search || ''}
+                    locales={locales}
+                    direction={direction}
+                    behaviour={behaviour}
+                    groups={groups}
+                    onDirectionChange={(direction) => {
+                        setDirection(direction);
+                        setParam('direction', direction as string);
+                    }}
+                    onSelectedLocales={(locales) => {
+                        setLocales(locales);
+                        setParam('locales', locales.join(','));
+                    }}
+                    onBehaviourChange={(behaviour) => {
+                        setBehaviour(behaviour);
+                        setParam('behaviour', behaviour as string);
+                    }}
+                    onSortChange={(sortType) => {
+                        setOrderBy(sortType);
+                        setParam('orderBy', sortType);
+                    }}
+                    onSelectedGroups={(groups) => {
+                        setGroups(groups);
+                        setParam('groups', groups.join(','));
+                    }}
+                    onSearch={(text) => {
+                        setSearch(text);
+                        setParam('search', text);
+                    }}
+                />
+            )}
 
             <div className={contentContainerStyles.root}>
                 {data?.result && data.result.total > 0 && (
@@ -132,28 +146,37 @@ export function ListList<Value, Metadata>({ name }: Props) {
                 {error && (
                     <div className={styles.skeleton}>
                         <CenteredError title="An error occurred">
-                            Something went wrong when trying to fetch list {name}. Please, try again later.
+                            Something went wrong when trying to fetch items for{' '}
+                            <span className={styles.bold}>{name}</span>. Please, try again later.
                         </CenteredError>
                     </div>
                 )}
 
-                {data?.result && data.result.total === 0 && (
-                    <NothingFound createNewPath={(optionsStore && optionsStore.getState().paths.create) || ''} />
+                {isNotFoundError && (
+                    <div className={styles.skeleton}>
+                        <UIError title="Route not found">This route does not seem to exist</UIError>
+                    </div>
                 )}
 
-                {!isFetching && data?.result && data.result.total !== 0 && !runtimeError && (
+                {data?.result && data.result.total === 0 && (
+                    <NothingFound
+                        createNewPath={
+                            (structureItem && `${structureItem.navigationCreatePath}/${structureItem.id}`) || ''
+                        }
+                    />
+                )}
+
+                {!isFetching && data?.result && data.result.total !== 0 && structureItem && (
                     <div className={styles.container}>
-                        {queryParams.listingType === 'list' && (
+                        {isListView && (
                             <MainListView<Value, Metadata>
                                 data={data.result}
-                                name={name}
+                                structureItem={structureItem}
                                 onDeleted={() => invalidateQuery()}
                             />
                         )}
 
-                        {queryParams.listingType === 'table' && (
-                            <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />
-                        )}
+                        {!isListView && <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />}
 
                         {Boolean(data.result.data.length) && (
                             <div className={styles.stickyPagination}>
@@ -161,7 +184,7 @@ export function ListList<Value, Metadata>({ name }: Props) {
                                     value={page}
                                     onChange={(page) => {
                                         setPage(page);
-                                        setParam('page', page+'');
+                                        setParam('page', page + '');
                                     }}
                                     radius={20}
                                     boundaries={2}
@@ -196,8 +219,6 @@ export function ListList<Value, Metadata>({ name }: Props) {
                     </div>
                 )}
             </div>
-
-            <RuntimeErrorModal open={Boolean(runtimeError)} error={runtimeError} />
         </>
     );
 }

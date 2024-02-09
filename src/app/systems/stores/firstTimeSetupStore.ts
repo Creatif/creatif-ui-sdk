@@ -7,6 +7,8 @@ import createMap from '@lib/api/declarations/maps/createMap';
 import type { CreatedList } from '@root/types/api/list';
 import type { CreatedMap } from '@root/types/api/map';
 import type { ApiError } from '@lib/http/apiError';
+import { createVariable } from '@lib/api/declarations/variables/createVariable';
+import type { CreatedVariable } from '@root/types/api/variable';
 
 type RunBlueprint = {
     name: string;
@@ -15,7 +17,7 @@ type RunBlueprint = {
 
 type RunResult = {
     key: 'list' | 'map';
-    result: CreatedList | CreatedMap | undefined;
+    result: CreatedList | CreatedMap | CreatedVariable | undefined;
     error: ApiError | undefined;
 };
 
@@ -39,6 +41,20 @@ async function createListFn(name: string): Promise<RunResult> {
     const { result, error } = await createList({
         name: name,
         projectId: Runtime.instance.credentials.projectId,
+    });
+
+    return {
+        key: 'list',
+        result: result,
+        error: error,
+    };
+}
+
+async function createVariableFn(name: string): Promise<RunResult> {
+    const { result, error } = await createVariable({
+        name: name,
+        projectId: Runtime.instance.credentials.projectId,
+        locale: 'eng',
     });
 
     return {
@@ -80,6 +96,7 @@ export function createFirstTimeSetupStore({ projectMetadata, configItems }: Prop
             for (const configItem of currentStore.configItems) {
                 const maps = currentStore.projectMetadata.maps;
                 const lists = currentStore.projectMetadata.lists;
+                const variables = currentStore.projectMetadata.variables;
 
                 if (configItem.structureType === 'list') {
                     const foundItem = lists.find(
@@ -117,6 +134,23 @@ export function createFirstTimeSetupStore({ projectMetadata, configItems }: Prop
                     }
                 }
 
+                if (configItem.structureType === 'variable') {
+                    const foundItem = variables.find((t) => t.name === configItem.structureName);
+
+                    if (!foundItem) {
+                        set((current) => ({
+                            ...current,
+                            runBlueprints: [
+                                ...current.runBlueprints,
+                                {
+                                    name: configItem.structureName,
+                                    fn: createVariableFn,
+                                },
+                            ],
+                        }));
+                    }
+                }
+
                 set((current) => ({ ...current, currentStage: 'creatingStructures' }));
             }
         },
@@ -127,6 +161,12 @@ export function createFirstTimeSetupStore({ projectMetadata, configItems }: Prop
                 const promises = Promise.all(runBlueprints.map((item) => item.fn(item.name)));
 
                 promises.then((results) => {
+                    const isError = results.find((res) => res.error);
+                    if (isError) {
+                        set((current) => ({ ...current, currentStage: 'error' }));
+                        return;
+                    }
+
                     set((current) => ({ ...current, currentStage: 'finished', createdStructures: results }));
                 });
 
@@ -134,7 +174,6 @@ export function createFirstTimeSetupStore({ projectMetadata, configItems }: Prop
             }
 
             set((current) => ({ ...current, currentStage: 'finished' }));
-            // nothing to do, mark finished
         },
         close() {
             set(() => ({

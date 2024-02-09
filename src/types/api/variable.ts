@@ -2,19 +2,19 @@ import type { Behaviour } from '@root/types/api/shared';
 import type { QueryReference } from '@root/types/api/reference';
 export interface CreateVariableBlueprint {
     name: string;
-    behaviour: Behaviour;
+    behaviour?: Behaviour;
     groups?: string[] | null;
     metadata?: unknown;
     projectId: string;
     value?: unknown;
-    locale: string;
+    locale?: string;
 }
 
 export interface CreatedVariable<Value = unknown, Metadata = unknown> {
     id: string;
-    projectID: string;
+    projectId: string;
     locale: string;
-    shortID: string;
+    shortId: string;
     name: string;
     groups: string[];
     behaviour: Behaviour;

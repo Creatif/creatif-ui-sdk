@@ -51,6 +51,12 @@ export default function FirstTimeSetup({ children }: PropsWithChildren) {
                     structureType: 'map' as StructureType,
                     name: item.name,
                 })),
+                ...projectMetadata.variables.map((item) => ({
+                    id: item.id,
+                    shortId: item.shortId,
+                    structureType: 'variable' as StructureType,
+                    name: item.name,
+                })),
                 ...validResults,
             ]);
 
@@ -63,7 +69,7 @@ export default function FirstTimeSetup({ children }: PropsWithChildren) {
 
     return (
         <>
-            {currentStage !== 'finished' && (
+            {currentStage === 'creatingStructures' && (
                 <div className={classNames(styles.root, animations.initialAnimation)}>
                     <Loader type="dots" size={64} />
                     <p>Preparing your application. This won&apos;t take long...</p>

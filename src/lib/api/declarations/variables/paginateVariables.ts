@@ -6,7 +6,7 @@ export default function paginateVariables<Value = unknown, Metadata = unknown>(b
     return tryHttp<PaginationResult<Value, Metadata>>(
         declarations(),
         'get',
-        `/variables/${blueprint.projectId}${queryConstructor(
+        `/variables/${blueprint.name}/${blueprint.projectId}${queryConstructor(
             blueprint.page,
             blueprint.limit as string,
             blueprint.groups,

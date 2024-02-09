@@ -27,12 +27,14 @@ import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVar
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import Groups from '@app/components/Groups';
+import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
-    name: string;
+    structureItem: StructureItem;
     onDeleted: () => void;
 }
-export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<Value, Metadata>) {
+export default function Item<Value, Metadata>({ item, structureItem, onDeleted }: Props<Value, Metadata>) {
     const [isDeleting, setIsDeleting] = useState(false);
     const { error: errorNotification, success } = useNotification();
     const { store: useOptions } = getOptions(name, 'variable');
@@ -41,7 +43,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
-    const { mutate, data } = useUpdateVariable(name);
+    const { mutate, data } = useUpdateVariable(structureItem.name);
 
     item.locale = data?.result && data?.result.locale ? data?.result.locale : item.locale;
     item.groups = data?.result && data?.result.groups ? data?.result.groups : item.groups;
@@ -58,7 +60,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
 
     return (
         <Link
-            to={`/variable/show/${item.name}/${item.locale}`}
+            to={`${structureItem?.navigationShowPath}/${structureItem.id}/${item.id}`}
             onClick={preventClickEventOnModal}
             className={classNames(styles.item, isDeleting ? styles.itemDisabled : undefined)}>
             {isDeleting && <div className={styles.disabled} />}
@@ -163,9 +165,9 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                 onDelete={async () => {
                     setIsDeleting(true);
                     const { error, status } = await deleteVariable({
-                        name: name,
+                        name: structureItem.name,
                         locale: item.locale,
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                     });
 
                     if (error) {
@@ -196,7 +198,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                     }
 
                     mutate({
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                         name: item.id,
                         fields: ['locale', 'name'],
                         values: {
@@ -217,7 +219,7 @@ export default function Item<Value, Metadata>({ item, name, onDeleted }: Props<V
                 onClose={() => setIsEditGroupsOpen(false)}
                 onEdit={(groups) => {
                     mutate({
-                        projectId: Credentials.ProjectID(),
+                        projectId: Runtime.instance.credentials.projectId,
                         name: item.id,
                         fields: ['groups'],
                         values: {
