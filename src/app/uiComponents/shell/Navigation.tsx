@@ -6,7 +6,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import type { AppShellItem } from '@root/types/shell/shell';
 import { Tooltip } from '@mantine/core';
-import { IconLogout, IconRoute2 } from '@tabler/icons-react';
+import { IconLogout, IconRoute2, IconStack3 } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -74,7 +74,7 @@ export default function Navigation({ navItems, logo }: Props) {
 
                         return styles.appMenuButton;
                     }}>
-                    <IconRoute2
+                    <IconStack3
                         className="navItemIcon"
                         style={{
                             alignSelf: 'center',
@@ -82,6 +82,23 @@ export default function Navigation({ navItems, logo }: Props) {
                         size={20}
                     />
                     Groups
+                </NavLink>
+
+                <NavLink
+                    to="/references"
+                    className={({ isActive }) => {
+                        if (isActive) return classNames(styles.appMenuButton, styles.active);
+
+                        return styles.appMenuButton;
+                    }}>
+                    <IconRoute2
+                        className="navItemIcon"
+                        style={{
+                            alignSelf: 'center',
+                        }}
+                        size={20}
+                    />
+                    References
                 </NavLink>
 
                 <button

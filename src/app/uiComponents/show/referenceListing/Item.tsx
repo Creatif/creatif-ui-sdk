@@ -8,15 +8,16 @@ import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import Groups from '@app/components/Groups';
 import appDate from '@lib/helpers/appDate';
+import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
-    mapName: string;
+    structureItem: StructureItem;
     isHovered: boolean;
 }
-export default function Item<Value, Metadata>({ item, mapName, isHovered }: Props<Value, Metadata>) {
+export default function Item<Value, Metadata>({ item, structureItem, isHovered }: Props<Value, Metadata>) {
     return (
         <Link
-            to={`/map/show/${mapName}/${item.id}`}
+            to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}`}
             className={classNames(styles.item, isHovered ? styles.hovered : undefined)}>
             <div className={styles.visibleSectionWrapper}>
                 <div className={styles.infoColumn}>

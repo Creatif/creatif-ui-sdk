@@ -13,8 +13,8 @@ import useValueFields from '@lib/helpers/useValueFields';
 import classNames from 'classnames';
 import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
 import useTabs from '@app/uiComponents/show/shared/useTabs';
-import StructureItem from '@app/uiComponents/show/map/StructureItem';
-import Reference from '@app/uiComponents/show/map/Reference';
+import StructureItem from '@app/uiComponents/show/shared/StructureItem';
+import Reference from '@app/uiComponents/show/shared/Reference';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {

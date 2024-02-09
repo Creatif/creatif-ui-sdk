@@ -16,7 +16,7 @@ export default function RuntimeErrorModal({ open, error }: Props) {
             <Modal
                 styles={{
                     header: {
-                        backgroundColor: 'var(--mantine-color-red-7)',
+                        backgroundColor: 'var(--mantine-color-red-9)',
                         padding: '1.3rem',
                         color: 'white',
                         fontWeight: 500,
@@ -25,7 +25,7 @@ export default function RuntimeErrorModal({ open, error }: Props) {
                         display: 'none',
                     },
                     content: {
-                        backgroundColor: 'var(--mantine-color-red-5)',
+                        backgroundColor: 'var(--mantine-color-red-8)',
                         color: 'white',
                     },
                     body: {
@@ -52,7 +52,7 @@ export default function RuntimeErrorModal({ open, error }: Props) {
                     style={{
                         border: '1px solid red',
                         padding: '1rem',
-                        backgroundColor: 'var(--mantine-color-red-7)',
+                        backgroundColor: 'var(--mantine-color-red-9)',
                     }}>
                     The app cannot be usable until you resolve this runtime error.
                 </p>

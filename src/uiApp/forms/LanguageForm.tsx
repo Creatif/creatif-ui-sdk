@@ -31,14 +31,6 @@ export default function LanguageForm({ mode }: Props) {
                             />
                         </Grid.Col>
 
-                        <Grid.Col span={6}>
-                            {inputReference({
-                                name: 'deck',
-                                structureType: 'map',
-                                structureName: 'Decks',
-                            })}
-                        </Grid.Col>
-
                         <Grid.Col span={6}>{inputGroups()}</Grid.Col>
                     </Grid>
 

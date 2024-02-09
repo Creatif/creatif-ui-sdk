@@ -56,8 +56,6 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
     const [isListView, setIsListView] = useState(true);
 
-    const [isNotFoundError, setIsNotFoundError] = useState(false);
-
     const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
         TryResult<PaginationResult<Value, Metadata>>
     >({
@@ -191,7 +189,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                     </div>
                 )}
 
-                {isNotFoundError && (
+                {!structureItem && (
                     <div className={styles.skeleton}>
                         <UIError title="Route not found">This route does not seem to exist</UIError>
                     </div>

@@ -38,6 +38,7 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
             rules={validation}
             render={({ field: { onChange } }) => (
                 <MultiSelect
+                    label="Groups"
                     error={useFirstError('groups')}
                     disabled={isFetching}
                     placeholder="Choose your groups"

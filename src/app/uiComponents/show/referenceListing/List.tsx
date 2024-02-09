@@ -17,7 +17,9 @@ import classNames from 'classnames';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/uiComponents/show/referenceListing/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
+import type { TryResult } from '@root/types/shared';
+import type { PaginationResult } from '@root/types/api/list';
 
 interface Props {
     reference: QueryReference;
@@ -27,7 +29,11 @@ interface Props {
 
 export function List<Value, Metadata>({ reference, structureType, relationshipType }: Props) {
     const { queryParams, setParam } = useSearchQuery();
-    const referenceStructureItem = getProjectMetadataStore().getState().getStructureItemByName(reference.structureName, structureType);
+    const referenceStructureItem = getProjectMetadataStore()
+        .getState()
+        .getStructureItemByName(reference.structureName, structureType);
+
+    console.log(referenceStructureItem);
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);
@@ -39,7 +45,9 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
     const [limit, setLimit] = useState(queryParams.limit);
     const [fields, setFields] = useState<string[]>(['groups']);
 
-    const { data, error, invalidateQuery, isFetching } = usePaginateReferences({
+    const { data, error, invalidateQuery, isFetching } = usePaginateReferences<
+        TryResult<PaginationResult<Value, Metadata>>
+    >({
         parentId: reference.parentId,
         childId: reference.childId,
         childStructureId: reference.childStructureId,
@@ -64,7 +72,6 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                     includeCreateButton={false}
                     includeHeading={false}
                     includeSortBy={['created_at', 'updated_at']}
-                    structureType={'map'}
                     structureItem={referenceStructureItem}
                     isLoading={isFetching}
                     sortBy={orderBy}
@@ -134,10 +141,10 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                     </div>
                 )}
 
-                {!isFetching && data?.result && data.result.data && (
+                {!isFetching && data?.result && data.result.data && referenceStructureItem && (
                     <div className={styles.container}>
-                        {data.result.data.map((item, i) => (
-                            <Item mapName={reference.structureName} isHovered={false} key={item.id} item={item} />
+                        {data.result.data.map((item) => (
+                            <Item structureItem={referenceStructureItem} isHovered={false} key={item.id} item={item} />
                         ))}
 
                         {data.result.data.length >= parseInt(limit) && (
