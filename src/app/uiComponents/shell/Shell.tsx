@@ -43,10 +43,10 @@ export default function Shell({ options }: Props) {
 
                             return (
                                 <React.Fragment key={i}>
-                                    <Route path={item.createPath} element={configOption.createComponent} />
+                                    <Route path={item.createPath} element={configOption.form} />
                                     {item.structureType === 'list' && (
                                         <>
-                                            <Route path={item.updatePath} element={configOption.updateComponent} />
+                                            <Route path={item.updatePath} element={configOption.form} />
                                             <Route path={item.listPath} element={<Listing />} />
 
                                             <Route path={item.showPath} element={<ShowItem />} />
@@ -55,7 +55,7 @@ export default function Shell({ options }: Props) {
 
                                     {item.structureType === 'map' && (
                                         <>
-                                            <Route path={item.updatePath} element={configOption.updateComponent} />
+                                            <Route path={item.updatePath} element={configOption.form} />
                                             <Route path={item.listPath} element={<Listing />} />
 
                                             <Route path={item.showPath} element={<ShowItem />} />

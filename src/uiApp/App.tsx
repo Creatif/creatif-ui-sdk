@@ -14,16 +14,12 @@ export default function App() {
                     {
                         structureType: 'list',
                         structureName: 'Languages',
-
-                        createComponent: <LanguageForm />,
-                        updateComponent: <LanguageForm mode="update" />,
+                        form: <LanguageForm />,
                     },
                     {
                         structureType: 'map',
                         structureName: 'Decks',
-
-                        createComponent: <DeckForm />,
-                        updateComponent: <DeckForm mode="update" />,
+                        form: <DeckForm />,
                     },
                 ],
             }}

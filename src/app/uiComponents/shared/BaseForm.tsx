@@ -45,6 +45,7 @@ interface Props<T extends FieldValues> {
     structureItem: StructureItem;
     structureType: string;
     formProps: UseFormProps<T>;
+    isUpdate: boolean;
     referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
     inputs: (
         submitButton: React.ReactNode,
@@ -68,7 +69,6 @@ interface Props<T extends FieldValues> {
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
     isSaving: boolean;
-    mode: 'update' | undefined;
     currentData: GetVariableResponse | QueriedListItem | QueriedMapItem | undefined;
 }
 export default function BaseForm<T extends FieldValues>({
@@ -77,10 +77,10 @@ export default function BaseForm<T extends FieldValues>({
     formProps,
     referenceStore,
     inputs,
+    isUpdate,
     onSubmit,
     isSaving,
     currentData,
-    mode,
 }: Props<T>) {
     const useSpecialFields = createSpecialFields();
     const setLocale = useSpecialFields((state) => state.setLocale);
@@ -89,7 +89,7 @@ export default function BaseForm<T extends FieldValues>({
 
     const assignReferences = referenceStore((state) => state.assign);
 
-    if (mode === 'update' && currentData) {
+    if (isUpdate && currentData) {
         setLocale(currentData.locale);
         setGroups(currentData.groups || []);
         setBehaviour(currentData.behaviour);
@@ -139,8 +139,8 @@ export default function BaseForm<T extends FieldValues>({
                     inputs(
                         <Group justify="end">
                             <Button loaderProps={{ size: 14 }} loading={isSaving} type="submit">
-                                {mode && 'Update'}
-                                {!mode && 'Create'}
+                                {isUpdate && 'Update'}
+                                {!isUpdate && 'Create'}
                             </Button>
                         </Group>,
                         {
@@ -159,21 +159,11 @@ export default function BaseForm<T extends FieldValues>({
                                 <InputLocale {...props} store={useSpecialFields} />
                             ),
                             inputGroups: (props?: InputGroupsProps) => (
-                                <InputGroups
-                                    structureType={structureType}
-                                    structureId={structureItem.id}
-                                    store={useSpecialFields}
-                                    {...props}
-                                />
+                                <InputGroups store={useSpecialFields} {...props} />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputReference: (props: ReferenceInputProps) => (
-                                <InputReference
-                                    isUpdate={mode === 'update'}
-                                    {...props}
-                                    store={referenceStore}
-                                    parentStructureItem={structureItem}
-                                />
+                                <InputReference {...props} store={referenceStore} parentStructureItem={structureItem} />
                             ),
                         },
                     )}

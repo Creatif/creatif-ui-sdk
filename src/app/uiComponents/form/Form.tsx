@@ -45,7 +45,6 @@ import type { StructureType } from '@root/types/shell/shell';
 interface Props<T extends FieldValues, Value, Metadata> {
     bindings?: Bindings<T>;
     formProps: UseFormProps<T>;
-    mode?: 'update';
     inputs: (
         submitButton: React.ReactNode,
         actions: {
@@ -77,12 +76,12 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
     inputs,
     beforeSave,
     afterSave,
-    mode,
 }: Props<T, Value, Metadata>) {
     const store = getProjectMetadataStore();
     const { structureId, itemId, structureType } = useParams();
     const structureItem = store.getState().getStructureItemByID(structureId || '');
     const { add, update } = useHttpActions(structureType as StructureType);
+    const isUpdate = new RegExp('/update/').test(location.pathname);
 
     const isCreateRoute = location.pathname.includes('/create/');
     const isUpdateRoute = location.pathname.includes('/update/');
@@ -106,7 +105,12 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
         data,
         error: getError,
         invalidateQuery,
-    } = useQueryVariable(structureId, itemId, structureType as StructureType, Boolean(mode && structureItem && itemId));
+    } = useQueryVariable(
+        structureId,
+        itemId,
+        structureType as StructureType,
+        Boolean(isUpdate && structureItem && itemId),
+    );
 
     useEffect(() => {
         if (isCreateRoute && !structureItem) {
@@ -144,7 +148,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
             setIsNotFoundError(false);
 
             setIsSaving(true);
-            if (!mode && result && structureItem) {
+            if (!isUpdate && result && structureItem) {
                 const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
                     result.value as IncomingValues,
                     locale,
@@ -199,7 +203,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                 });
             }
 
-            if (mode && result && structureItem && itemId) {
+            if (isUpdate && result && structureItem && itemId) {
                 const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
                     result.value as IncomingValues,
                     locale,
@@ -294,17 +298,17 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
             {!isFetching && !getError && structureItem && structureType && (
                 <>
                     <h1 className={contentContainerStyles.heading}>
-                        {mode ? 'Update' : 'Create new '} <span>{structureItem.name}</span>
+                        {isUpdate ? 'Update' : 'Create new '} <span>{structureItem.name}</span>
                     </h1>
                     <BaseForm
                         structureType={structureItem.structureType}
                         structureItem={structureItem}
                         formProps={formProps}
+                        isUpdate={isUpdate}
                         inputs={inputs}
                         referenceStore={referenceStore}
                         onSubmit={onInternalSubmit}
                         isSaving={isSaving}
-                        mode={mode}
                         currentData={data?.result}
                     />
                 </>

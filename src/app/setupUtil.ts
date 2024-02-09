@@ -31,12 +31,8 @@ export function validateConfig(app: CreatifApp) {
             type: item.structureType,
         });
 
-        if (!item.createComponent) {
-            ("Config item 'config.item.createComponent' is invalid. It must be a valid React component.");
-        }
-
-        if (!item.updateComponent) {
-            ("Config item 'config.item.updateComponent' is invalid. It must be a valid React component.");
+        if (!item.form) {
+            ("Config item 'config.item.form' is invalid. It must be a valid React component.");
         }
     }
 

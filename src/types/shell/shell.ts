@@ -18,8 +18,7 @@ export interface AppShellItem {
     structureName: string;
     structureType: StructureType;
 
-    createComponent: React.ReactNode;
-    updateComponent: React.ReactNode;
+    form: React.ReactNode;
 }
 
 export type StructureType = 'map' | 'list';
