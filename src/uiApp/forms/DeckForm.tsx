@@ -1,12 +1,12 @@
 import InputText from '@app/uiComponents/inputs/InputText';
 import { Grid } from '@mantine/core';
-import MapsForm from '@app/uiComponents/mapsForm/MapsForm';
+import Form from '@app/uiComponents/form/Form';
 interface Props {
     mode?: 'update';
 }
 export default function DeckForm({ mode }: Props) {
     return (
-        <MapsForm<{
+        <Form<{
             name: string;
         }>
             mode={mode}

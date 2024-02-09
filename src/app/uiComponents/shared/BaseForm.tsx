@@ -71,7 +71,7 @@ interface Props<T extends FieldValues> {
     mode: 'update' | undefined;
     currentData: GetVariableResponse | QueriedListItem | QueriedMapItem | undefined;
 }
-export default function Form<T extends FieldValues>({
+export default function BaseForm<T extends FieldValues>({
     structureType,
     structureItem,
     formProps,

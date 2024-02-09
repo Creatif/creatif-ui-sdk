@@ -54,7 +54,7 @@ export function ListList<Value, Metadata>({ mapName }: Props) {
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
-    const [isListView, setIsListView] = useState(true);
+    const [isListView] = useState(true);
 
     const [isNotFoundError, setIsNotFoundError] = useState(false);
 

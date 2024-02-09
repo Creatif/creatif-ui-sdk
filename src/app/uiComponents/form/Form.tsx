@@ -4,7 +4,7 @@ import useNotification from '@app/systems/notifications/useNotification';
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
-import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
+import valueMetadataValidator from '@app/uiComponents/form/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,16 +24,14 @@ import type {
     UseFormUnregister,
     UseFormWatch,
 } from 'react-hook-form';
-import Form, { type ReferenceInputProps } from '@app/uiComponents/shared/Form';
+import BaseForm, { type ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
 import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
-import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
 import { useQueryClient } from 'react-query';
 import type { UpdateListItemResult } from '@root/types/api/list';
 import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
-import { addToList } from '@lib/api/declarations/lists/addToList';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import type { CreatedVariable } from '@root/types/api/variable';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -41,6 +39,8 @@ import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeRefer
 import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
 import { Runtime } from '@app/runtime/Runtime';
 import { Error } from '@app/uiComponents/shared/Error';
+import { useHttpActions } from '@app/uiComponents/form/hooks/useHttpActions';
+import type { StructureType } from '@root/types/shell/shell';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     bindings?: Bindings<T>;
@@ -71,7 +71,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
     form?: HTMLAttributes<HTMLFormElement>;
 }
 
-export default function ListForm<T extends FieldValues, Value = unknown, Metadata = unknown>({
+export default function Form<T extends FieldValues, Value = unknown, Metadata = unknown>({
     formProps,
     bindings,
     inputs,
@@ -80,8 +80,9 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
     mode,
 }: Props<T, Value, Metadata>) {
     const store = getProjectMetadataStore();
-    const { structureId, itemId } = useParams();
+    const { structureId, itemId, structureType } = useParams();
     const structureItem = store.getState().getStructureItemByID(structureId || '');
+    const { add, update } = useHttpActions(structureType as StructureType);
 
     const isCreateRoute = location.pathname.includes('/create/');
     const isUpdateRoute = location.pathname.includes('/update/');
@@ -98,7 +99,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
     const [isVariableExistsError, setIsVariableExistsError] = useState(false);
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
     const [isVariableReadonly, setIsVariableReadonly] = useState(false);
-    const [isNotFoundError, setIsNotFoundError] = useState(false);
+    const [isNotFoundError, setIsNotFoundError] = useState(!(add && update));
 
     const {
         isFetching,
@@ -153,7 +154,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
 
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
-                addToList({
+                add?.()({
                     name: structureItem.id,
                     projectId: Runtime.instance.credentials.projectId,
                     variable: {
@@ -208,7 +209,7 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
 
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
-                updateListItem({
+                update?.()({
                     fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
                     name: structureItem.id,
                     projectId: Runtime.instance.credentials.projectId,
@@ -290,12 +291,12 @@ export default function ListForm<T extends FieldValues, Value = unknown, Metadat
 
             <Loading isLoading={isFetching} />
 
-            {!isFetching && !getError && structureItem && (
+            {!isFetching && !getError && structureItem && structureType && (
                 <>
                     <h1 className={contentContainerStyles.heading}>
                         {mode ? 'Update' : 'Create new '} <span>{structureItem.name}</span>
                     </h1>
-                    <Form
+                    <BaseForm
                         structureType={structureItem.structureType}
                         structureItem={structureItem}
                         formProps={formProps}

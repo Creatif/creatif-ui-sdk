@@ -5,7 +5,7 @@ import { getOptions } from '@app/systems/stores/options';
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useResolveBindings from '@app/uiComponents/variableForm/useResolveBindings';
-import valueMetadataValidator from '@app/uiComponents/listForm/helpers/valueMetadataValidator';
+import valueMetadataValidator from '@app/uiComponents/form/helpers/valueMetadataValidator';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { createVariable } from '@lib/api/declarations/variables/createVariable';
 import StructureStorage from '@lib/storage/structureStorage';
@@ -34,7 +34,7 @@ import type {
 import { Credentials } from '@app/credentials';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import { useGetVariable } from '@app/uiComponents/variables/hooks/useGetVariable';
-import Form from '@app/uiComponents/shared/Form';
+import BaseForm from '@app/uiComponents/shared/BaseForm';
 import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import UIError from '@app/components/UIError';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
@@ -275,7 +275,7 @@ export default function VariableForm<T extends FieldValues, Value = unknown, Met
             <Loading isLoading={isFetching} />
 
             {!isFetching && !getError && (
-                <Form
+                <BaseForm
                     structureType={'variable'}
                     structureId={variableName}
                     formProps={formProps}
