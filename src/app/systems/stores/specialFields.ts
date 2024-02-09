@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { Behaviour } from '@root/types/api/shared';
-import type { QueryReference } from '@root/types/api/reference';
+
 export interface SpecialFieldsStore {
     locale: string;
     groups: string[];

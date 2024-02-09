@@ -3,7 +3,6 @@
 import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, type ComboboxItem, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
-import LocalesCache from '@lib/storage/localesCache';
 import { Runtime } from '@app/runtime/Runtime';
 
 interface Props {

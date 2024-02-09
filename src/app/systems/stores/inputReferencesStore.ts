@@ -27,7 +27,8 @@ export interface ReferencesStore {
 export function createInputReferenceStore() {
     return create<ReferencesStore>((set, get) => ({
         references: [],
-        add: (item: ReferenceStoreItem) => set(({ references }) => ({ references: [...references, item] })),
+        add: (item: ReferenceStoreItem) =>
+            set((current) => ({ ...current, references: [...current.references, item] })),
         keys: () => get().references.map((item) => item.name),
         all: () => get().references,
         get: (name: string) => {
@@ -35,20 +36,21 @@ export function createInputReferenceStore() {
             const references = store.references;
             return references.find((item) => item.name === name);
         },
-        assign: (refs: ReferenceStoreItem[]) => set(() => ({ references: refs })),
+        assign: (refs: ReferenceStoreItem[]) => set((current) => ({ ...current, references: refs })),
         has: (name: string) => {
             const store = get();
             return Boolean(store.references.find((item) => item.name === name));
         },
         update: (ref: ReferenceStoreItem) =>
-            set(() => {
+            set((current) => {
                 const store = get();
                 const idx = store.references.findIndex((item) => item.name === ref.name);
                 if (idx !== -1) {
                     const refs = [...store.references];
                     refs.splice(idx, 1);
                     refs.push(ref);
-                    return { references: [...refs] };
+
+                    return { ...current, references: [...refs] };
                 }
 
                 return store;

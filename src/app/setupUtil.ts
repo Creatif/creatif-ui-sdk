@@ -1,5 +1,4 @@
 import type { CreatifApp } from '@root/types/shell/shell';
-import { createTheme } from '@mantine/core';
 
 export function validateConfig(app: CreatifApp) {
     const messages = [];

@@ -1,6 +1,4 @@
-import { ListList as StructureListListing } from '@app/uiComponents/lists/ListList';
-import { ListList as StructuredMapsListing } from '@app/uiComponents/maps/ListList';
-import { ListList as VariableListListing } from '@app/uiComponents/variables/ListList';
+import { Listing } from '@app/uiComponents/lists/Listing';
 import Header from '@app/uiComponents/shell/Header';
 import Navigation from '@app/uiComponents/shell/Navigation';
 import { Container } from '@mantine/core';
@@ -9,10 +7,8 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './css/root.module.css';
-import type { Shell, CreatifApp } from '@root/types/shell/shell';
-import { Item as VariableShowItem } from '@app/uiComponents/show/variable/Item';
-import { Item as ListItemShowItem } from '@app/uiComponents/show/list/Item';
-import { Item as MapItemShowItem } from '@app/uiComponents/show/map/Item';
+import type { CreatifApp } from '@root/types/shell/shell';
+import { Item as ShowItem } from '@app/uiComponents/show/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { AddGroup } from '@app/uiComponents/groups/AddGroup';
 interface Props {
@@ -51,36 +47,18 @@ export default function Shell({ options }: Props) {
                                     {item.structureType === 'list' && (
                                         <>
                                             <Route path={item.updatePath} element={configOption.updateComponent} />
-                                            <Route
-                                                path={item.listPath}
-                                                element={<StructureListListing listName={item.name} />}
-                                            />
+                                            <Route path={item.listPath} element={<Listing />} />
 
-                                            <Route path={item.showPath} element={<ListItemShowItem />} />
+                                            <Route path={item.showPath} element={<ShowItem />} />
                                         </>
                                     )}
 
                                     {item.structureType === 'map' && (
                                         <>
                                             <Route path={item.updatePath} element={configOption.updateComponent} />
-                                            <Route
-                                                path={item.listPath}
-                                                element={<StructuredMapsListing mapName={item.name} />}
-                                            />
+                                            <Route path={item.listPath} element={<Listing />} />
 
-                                            <Route path={item.showPath} element={<MapItemShowItem />} />
-                                        </>
-                                    )}
-
-                                    {item.structureType === 'variable' && (
-                                        <>
-                                            <Route path={item.updatePath} element={configOption.updateComponent} />
-                                            <Route
-                                                path={item.listPath}
-                                                element={<VariableListListing name={item.name} />}
-                                            />
-
-                                            <Route path={item.updatePath} element={<VariableShowItem />} />
+                                            <Route path={item.showPath} element={<ShowItem />} />
                                         </>
                                     )}
                                 </React.Fragment>

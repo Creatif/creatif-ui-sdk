@@ -1,27 +1,31 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
-import deleteRange from '@lib/api/declarations/lists/deleteRange';
 import { Runtime } from '@app/runtime/Runtime';
-import deleteMapRange from '@lib/api/declarations/maps/deleteMapRange';
 import type { StructureType } from '@root/types/shell/shell';
-export default function useDeleteRange(structureType: StructureType, onSuccess: () => void, onError: () => void) {
+import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
+import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
+export default function useDeleteVariable(
+    structureType: StructureType,
+    onSuccess: () => void,
+    onError: (error: ApiError) => void,
+) {
     const queryClient = useQueryClient();
     return {
-        ...useMutation<unknown, ApiError, { items: string[]; name: string }>(
-            async (body: { items: string[]; name: string }) => {
+        ...useMutation<unknown, ApiError, { name: string; itemId: string }>(
+            async (body: { name: string; itemId: string }) => {
                 const fn = throwIfHttpFails<unknown>(() => {
                     if (structureType === 'list') {
-                        return deleteRange({
+                        return deleteListItemByID({
                             name: body.name,
-                            items: body.items,
+                            itemId: body.itemId,
                             projectId: Runtime.instance.credentials.projectId,
                         });
                     }
 
-                    return deleteMapRange({
+                    return deleteMapItem({
                         name: body.name,
-                        items: body.items,
+                        itemId: body.itemId,
                         projectId: Runtime.instance.credentials.projectId,
                     });
                 });

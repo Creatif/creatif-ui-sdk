@@ -1,11 +1,9 @@
 import useNotification from '@app/systems/notifications/useNotification';
-import useUpdateListVariable from '@app/uiComponents/lists/hooks/useUpdateListVariable';
 import DeleteModal from '@app/uiComponents/shared/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/shared/css/Item.module.css';
-import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import { ActionIcon, Checkbox, Menu } from '@mantine/core';
 import {
     IconCalendarTime,
@@ -30,11 +28,13 @@ import Groups from '@app/components/Groups';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
-import { Runtime } from '@app/runtime/Runtime';
+import useUpdateVariable from '@app/uiComponents/lists/hooks/useUpdateVariable';
+import useDeleteVariable from '@app/uiComponents/lists/hooks/useDeleteVariable';
+import type { ApiError } from '@lib/http/apiError';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     structureItem: StructureItem;
-    onDeleted: () => void;
+    onDeleted: (error?: ApiError) => void;
     disabled?: boolean;
     onChecked: (itemId: string, checked: boolean) => void;
     onMove: (fromIdx: number, toIdx: number) => void;
@@ -53,14 +53,25 @@ export default function Item<Value, Metadata>({
     onDrop,
     isHovered,
 }: Props<Value, Metadata>) {
-    const [isDeleting, setIsDeleting] = useState(false);
-    const { error: errorNotification, success } = useNotification();
+    const { success } = useNotification();
 
     const [deleteItemId, setDeleteItemId] = useState<string>();
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
-    const { mutate, data } = useUpdateListVariable(structureItem.id || '', item.id, item.name);
+    const { mutate, data } = useUpdateVariable(structureItem.structureType, structureItem.id || '', item.id, item.name);
+    const { mutate: deleteVariable, isLoading: isDeleting } = useDeleteVariable(
+        structureItem.structureType,
+        () => {
+            success('List item deleted.', 'List item was deleted successfully');
+            onDeleted();
+            setDeleteItemId(undefined);
+        },
+        (error) => {
+            onDeleted(error);
+            setDeleteItemId(undefined);
+        },
+    );
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
     item.groups = data?.result && data.result.groups ? data.result.groups : item.groups;
@@ -259,28 +270,11 @@ export default function Item<Value, Metadata>({
                     message="Are you sure? This action cannot be undone and this item will be permanently deleted."
                     open={Boolean(deleteItemId)}
                     onClose={() => setDeleteItemId(undefined)}
-                    onDelete={async () => {
-                        setIsDeleting(true);
-                        const { error, status } = await deleteListItemByID({
+                    onDelete={() => {
+                        deleteVariable({
                             name: structureItem.id,
                             itemId: item.id,
-                            projectId: Runtime.instance.credentials.projectId,
                         });
-
-                        if (error) {
-                            errorNotification(
-                                'Cannot delete list item',
-                                'An error occurred when trying to delete list item. Please, try again later.',
-                            );
-                        }
-
-                        if (status === 200) {
-                            success('List item deleted.', 'List item was deleted successfully');
-                        }
-
-                        setIsDeleting(false);
-                        onDeleted();
-                        setDeleteItemId(undefined);
                     }}
                 />
             )}

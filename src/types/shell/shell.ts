@@ -22,4 +22,4 @@ export interface AppShellItem {
     updateComponent: React.ReactNode;
 }
 
-export type StructureType = 'map' | 'list' | 'variable';
+export type StructureType = 'map' | 'list';

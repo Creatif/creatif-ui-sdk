@@ -9,7 +9,7 @@
     -webkit-tap-highlight-color: transparent;
     cursor: default;
     display: inline-block;
-    font-size: var(--input-label-size, var(--mantine-font-size-sm));
+    font-size: var(--mantine-input-label-size, var(--mantine-font-size-sm));
     font-weight: 500;
     word-break: break-word;
 }

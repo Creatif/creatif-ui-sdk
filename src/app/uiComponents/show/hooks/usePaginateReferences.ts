@@ -1,4 +1,3 @@
-import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';

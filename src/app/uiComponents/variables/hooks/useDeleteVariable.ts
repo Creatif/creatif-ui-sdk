@@ -1,6 +1,5 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import StructureStorage from '@lib/storage/structureStorage';
 import { useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { DeleteVariableBlueprint } from '@root/types/api/variable';

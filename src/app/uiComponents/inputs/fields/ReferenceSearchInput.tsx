@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
 import { useDebouncedValue } from '@mantine/hooks';
-import classNames from 'classnames';
 import type { ApiError } from '@lib/http/apiError';
 import type { ReferenceStoreItem } from '@app/systems/stores/inputReferencesStore';
 import { queryItemById, searchAndCreateOptions } from '@app/uiComponents/inputs/fields/searchHelper';
@@ -21,7 +20,7 @@ interface Props {
     label: string;
     referenceStructureItem: StructureItem;
     disabled?: boolean;
-    inputError: string;
+    inputError: string | undefined;
     reference: ReferenceStoreItem | undefined;
 }
 

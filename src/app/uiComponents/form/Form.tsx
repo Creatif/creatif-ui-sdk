@@ -25,7 +25,7 @@ import type {
     UseFormWatch,
 } from 'react-hook-form';
 import BaseForm, { type ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
-import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
+import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
@@ -106,7 +106,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
         data,
         error: getError,
         invalidateQuery,
-    } = useQueryListItem(structureId, itemId, Boolean(mode && structureItem && itemId));
+    } = useQueryVariable(structureId, itemId, structureType as StructureType, Boolean(mode && structureItem && itemId));
 
     useEffect(() => {
         if (isCreateRoute && !structureItem) {

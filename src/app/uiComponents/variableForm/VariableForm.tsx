@@ -8,7 +8,6 @@ import useResolveBindings from '@app/uiComponents/variableForm/useResolveBinding
 import valueMetadataValidator from '@app/uiComponents/form/helpers/valueMetadataValidator';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { createVariable } from '@lib/api/declarations/variables/createVariable';
-import StructureStorage from '@lib/storage/structureStorage';
 import { Alert } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';

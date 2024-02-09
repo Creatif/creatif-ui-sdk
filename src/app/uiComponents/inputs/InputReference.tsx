@@ -13,7 +13,6 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 
 interface Props {
     name: string;
-    isUpdate: boolean;
     structureName: string;
     parentStructureItem: StructureItem;
     structureType: StructureType;
@@ -23,7 +22,6 @@ interface Props {
 }
 export default function InputReference({
     parentStructureItem,
-    isUpdate,
     structureName,
     structureType,
     label,
@@ -31,11 +29,7 @@ export default function InputReference({
     name,
     store,
 }: Props) {
-    const {
-        control,
-        setValue: setFormValue,
-        formState: { errors },
-    } = useFormContext();
+    const { control, setValue: setFormValue } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
@@ -83,6 +77,7 @@ export default function InputReference({
                             referenceStructureItem={internalStructureItem}
                             onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
                                 const value = JSON.parse(selected.value);
+                                console.log(selected);
                                 const ref = {
                                     name: name,
                                     structureType: value.structureType,
@@ -94,6 +89,7 @@ export default function InputReference({
 
                                 if (hasReference(name)) {
                                     updateReference(ref as ReferenceStoreItem);
+
                                     return;
                                 }
 

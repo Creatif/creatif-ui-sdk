@@ -1,4 +1,3 @@
-import { Credentials } from '@app/credentials';
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/shell/SupportedLocalesModal';
 import { Button, type ComboboxItem, Select } from '@mantine/core';
@@ -38,7 +37,10 @@ export default function Header() {
                                 if (val) {
                                     setCurrentLocale(val);
                                     Runtime.instance.currentLocaleStorage.setLocale(val);
-                                    info('Locale changed', `Locale changed to '${Runtime.instance.currentLocaleStorage.getLocale()}'`);
+                                    info(
+                                        'Locale changed',
+                                        `Locale changed to '${Runtime.instance.currentLocaleStorage.getLocale()}'`,
+                                    );
                                 }
                             }}
                             filter={({ options, search }) => {

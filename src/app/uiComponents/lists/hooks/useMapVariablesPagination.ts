@@ -1,11 +1,11 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
-import paginateList from '@lib/api/declarations/lists/paginateList';
+import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import type { ApiError } from '@lib/http/apiError';
 import { Runtime } from '@app/runtime/Runtime';
 interface Props {
-    listName: string;
+    name: string;
     locales?: string[];
     limit?: string;
     page?: number;
@@ -17,8 +17,8 @@ interface Props {
     fields?: string[];
     enabled?: boolean;
 }
-export default function useHttpPaginationQuery<Response>({
-    listName,
+export default function useMapVariablesPagination<Response>({
+    name,
     search = '',
     limit = '15',
     page = 1,
@@ -31,15 +31,14 @@ export default function useHttpPaginationQuery<Response>({
     enabled = true,
 }: Props) {
     const queryClient = useQueryClient();
-
-    const key = [listName, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
+    const key = [name, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
 
     return {
         ...useQuery<unknown, ApiError, Response>(
             key,
             throwIfHttpFails(() =>
-                paginateList({
-                    name: listName,
+                paginateMapVariables({
+                    name: name,
                     projectId: Runtime.instance.credentials.projectId,
                     page,
                     limit,
@@ -53,8 +52,8 @@ export default function useHttpPaginationQuery<Response>({
                 }),
             ),
             {
-                retry: 1,
                 enabled,
+                retry: 1,
                 staleTime: Infinity,
                 keepPreviousData: true,
                 refetchOnWindowFocus: false,

@@ -11,12 +11,12 @@ import Loading from '@app/components/Loading';
 import type { Column } from '@lib/helpers/useValueFields';
 import useValueFields from '@lib/helpers/useValueFields';
 import classNames from 'classnames';
-import useQueryMapVariable from '@app/uiComponents/maps/hooks/useQueryMapVariable';
 import useTabs from '@app/uiComponents/show/shared/useTabs';
 import StructureItem from '@app/uiComponents/show/shared/StructureItem';
 import Reference from '@app/uiComponents/show/shared/Reference';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import useQueryListItem from '@app/uiComponents/lists/hooks/useQueryListItem';
+import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
+import type { StructureType } from '@root/types/shell/shell';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -59,13 +59,18 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
 }
 
 export function Item() {
-    const { structureId, itemId } = useParams();
-    const { isFetching, data } = useQueryListItem(structureId, itemId, Boolean(structureId && itemId));
+    const { structureId, itemId, structureType } = useParams();
+    const { isFetching, data } = useQueryVariable(
+        structureId,
+        itemId,
+        structureType as StructureType,
+        Boolean(structureId && itemId),
+    );
     const store = getProjectMetadataStore();
     const structureItem = store.getState().getStructureItemByID(structureId || '');
 
     const values = useValueFields(data?.result?.value);
-    const [selectedTab, tabs, onChange] = useTabs((data && data.result && data.result.references) || []);
+    const { tabs } = useTabs((data && data.result && data.result.references) || []);
 
     return (
         <>

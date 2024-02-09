@@ -1,40 +1,51 @@
-import { Credentials } from '@app/credentials';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
+import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
 import { ApiError } from '@lib/http/apiError';
-import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
 import { Runtime } from '@app/runtime/Runtime';
-export default function useQueryMapVariable<Value, Metadata>(
-    mapName: string | undefined,
+import type { StructureType } from '@root/types/shell/shell';
+import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
+export default function useQueryVariable<Value, Metadata>(
+    name: string | undefined,
     itemId: string | undefined,
+    structureType: StructureType,
     enabled: boolean,
 ) {
     const queryClient = useQueryClient();
-    const key = ['getMap', mapName, itemId];
+    const key = ['get_list_or_map', name, itemId];
 
     return {
         ...useQuery(
             key,
             throwIfHttpFails(() => {
-                if (!mapName || !itemId) {
+                if (!name || !itemId) {
                     return Promise.reject({
                         error: new ApiError(
-                            'Map name and item ID not provided. They should be provided in the URL',
-                            { data: { message: 'Map name and item ID not provided' } },
+                            'List name and item ID not provided. They should be provided in the URL',
+                            { data: { message: 'List name and item ID not provided' } },
                             500,
                         ),
                         status: 500,
                     });
                 }
 
+                if (structureType === 'list') {
+                    return queryListItemByID<Value, Metadata>({
+                        structureId: name,
+                        itemId: itemId,
+                        projectId: Runtime.instance.credentials.projectId,
+                    });
+                }
+
                 return queryMapVariable<Value, Metadata>({
-                    structureId: mapName,
+                    structureId: name,
                     itemId: itemId,
                     projectId: Runtime.instance.credentials.projectId,
                 });
             }),
             {
                 retry: 0,
+                staleTime: Infinity,
                 enabled: enabled,
                 keepPreviousData: true,
                 refetchOnWindowFocus: false,

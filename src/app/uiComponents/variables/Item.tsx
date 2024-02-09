@@ -22,7 +22,6 @@ import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
-import { Credentials } from '@app/credentials';
 import useUpdateVariable from '@app/uiComponents/variableForm/hooks/useUpdateVariable';
 import appDate from '@lib/helpers/appDate';
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';

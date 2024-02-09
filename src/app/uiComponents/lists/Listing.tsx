@@ -1,9 +1,8 @@
-import CenteredError from '@app/components/CenteredError';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useDeleteRange from '@app/uiComponents/lists/hooks/useDeleteRange';
-import useHttpPaginationQuery from '@app/uiComponents/lists/hooks/useHttpPaginationQuery';
+import useListVariablesPagination from '@app/uiComponents/lists/hooks/useListVariablesPagination';
 import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import DeleteModal from '@app/uiComponents/shared/DeleteModal';
@@ -29,12 +28,11 @@ import { useParams } from 'react-router-dom';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import useNotification from '@app/systems/notifications/useNotification';
 import UIError from '@app/components/UIError';
-interface Props {
-    listName: string;
-}
-export function ListList<Value, Metadata>({ listName }: Props) {
+import useMapVariablesPagination from '@app/uiComponents/lists/hooks/useMapVariablesPagination';
+import type { StructureType } from '@root/types/shell/shell';
+export function Listing<Value, Metadata>() {
     const { queryParams, setParam } = useSearchQuery();
-    const { structureId } = useParams();
+    const { structureId, structureType } = useParams();
     const structureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByID(structureId || '');
@@ -56,10 +54,13 @@ export function ListList<Value, Metadata>({ listName }: Props) {
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
     const [isListView, setIsListView] = useState(true);
 
-    const { data, error, invalidateQuery, isFetching } = useHttpPaginationQuery<
-        TryResult<PaginationResult<Value, Metadata>>
-    >({
-        listName: structureItem?.id || '',
+    const {
+        data: listData,
+        error: listError,
+        invalidateQuery: listInvalidate,
+        isFetching: listIsFetching,
+    } = useListVariablesPagination<TryResult<PaginationResult<Value, Metadata>>>({
+        name: structureItem?.id || '',
         page: page,
         locales: locales,
         groups: groups,
@@ -69,10 +70,37 @@ export function ListList<Value, Metadata>({ listName }: Props) {
         orderBy: orderBy,
         search: search as string,
         fields: fields,
-        enabled: Boolean(structureItem),
+        enabled: Boolean(structureItem) && structureType === 'list',
     });
 
+    const {
+        data: mapData,
+        error: mapError,
+        invalidateQuery: mapInvalidate,
+        isFetching: mapIsFetching,
+    } = useMapVariablesPagination<TryResult<PaginationResult<Value, Metadata>>>({
+        name: structureItem?.id || '',
+        page: page,
+        locales: locales,
+        groups: groups,
+        direction: direction,
+        behaviour: behaviour,
+        limit: limit as string,
+        orderBy: orderBy,
+        search: search as string,
+        fields: fields,
+        enabled: Boolean(structureItem) && structureType === 'map',
+    });
+
+    const { data, error, invalidateQuery, isFetching } = {
+        data: structureType === 'list' ? listData : mapData,
+        error: structureType === 'list' ? listError : mapError,
+        invalidateQuery: structureType === 'list' ? listInvalidate : mapInvalidate,
+        isFetching: structureType === 'list' ? listIsFetching : mapIsFetching,
+    };
+
     const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
+        structureType as StructureType,
         () => {
             setAreItemsDeleting(false);
             setCheckedItems([]);
@@ -89,7 +117,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
 
     return (
         <>
-            {structureItem && (
+            {structureItem && structureType && (
                 <ActionSection
                     includeSortBy={['created_at', 'updated_at', 'index']}
                     isLoading={isFetching}
@@ -184,7 +212,8 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                 {error && (
                     <div className={styles.skeleton}>
                         <UIError title="An error occurred">
-                            Something went wrong when trying to fetch list {listName}. Please, try again later.
+                            Something went wrong when trying to fetch list {structureItem?.name}. Please, try again
+                            later.
                         </UIError>
                     </div>
                 )}
@@ -203,14 +232,14 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                     />
                 )}
 
-                {!isFetching && data?.result && data.result.total !== 0 && structureItem && (
+                {!isFetching && data?.result && data.result.total !== 0 && structureItem && structureType && (
                     <div className={styles.container}>
                         {queryParams.listingType === 'list' && (
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
                                     data={data.result}
                                     structureItem={structureItem}
-                                    structureType="list"
+                                    structureType={structureType as StructureType}
                                     onRearrange={rearrange}
                                     renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
                                         <>
@@ -231,7 +260,20 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                                                             setCheckedItems([...checkedItems, itemId]);
                                                         }
                                                     }}
-                                                    onDeleted={() => invalidateQuery()}
+                                                    onDeleted={(error) => {
+                                                        if (!error) {
+                                                            invalidateQuery();
+                                                            return;
+                                                        }
+
+                                                        if (error && error.error && error.error.data['isParent']) {
+                                                            errorNotification(
+                                                                'Item is a parent reference',
+                                                                'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
+                                                                15000,
+                                                            );
+                                                        }
+                                                    }}
                                                     disabled={Boolean(
                                                         (areItemsDeleting && checkedItems.includes(item.id)) ||
                                                             (movingSource && movingSource === item.id) ||
@@ -294,7 +336,7 @@ export function ListList<Value, Metadata>({ listName }: Props) {
                 )}
             </div>
 
-            {structureItem && (
+            {structureItem && structureType && (
                 <DeleteModal
                     open={isDeleteAllModalOpen}
                     message="Are you sure? This action cannot be undone and these items will be deleted permanently!"

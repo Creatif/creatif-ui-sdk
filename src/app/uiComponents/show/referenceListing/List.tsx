@@ -3,14 +3,13 @@ import type { QueryReference } from '@root/types/api/reference';
 import React, { useState } from 'react';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
-import useSearchQuery from '@app/uiComponents/maps/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/maps/list/css/ListTable.module.css';
+import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import { Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
@@ -20,6 +19,7 @@ import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStor
 import type { StructureType } from '@root/types/shell/shell';
 import type { TryResult } from '@root/types/shared';
 import type { PaginationResult } from '@root/types/api/list';
+import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 
 interface Props {
     reference: QueryReference;
@@ -32,8 +32,6 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
     const referenceStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(reference.structureName, structureType);
-
-    console.log(referenceStructureItem);
 
     const [page, setPage] = useState(queryParams.page);
     const [locales, setLocales] = useState<string[]>(queryParams.locales);

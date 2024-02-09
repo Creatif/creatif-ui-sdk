@@ -17,7 +17,6 @@ import { useEffect, useState } from 'react';
 import styles from './css/ActionSection.module.css';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
-import type { StructureType } from '@root/types/shell/shell';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 interface Props {
     onSearch: (text: string) => void;

@@ -1,4 +1,3 @@
-import { Credentials } from '@app/credentials';
 import { declarations } from '@lib/http/fetchInstance';
 import { authHeaders, tryHttp } from '@lib/http/tryHttp';
 import { exists } from '@lib/validation/exists';

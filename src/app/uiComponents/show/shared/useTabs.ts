@@ -12,7 +12,11 @@ function createTabsFromReferences(references: QueryReference[]): Tab[] {
     }));
 }
 
-export default function useTabs(references: QueryReference[]): [Tab, Tab[], (value: string) => void] {
+export default function useTabs(references: QueryReference[]): {
+    selected: Tab;
+    tabs: Tab[];
+    onChange: (value: string) => void;
+} {
     const tabs = useMemo<Tab[]>(
         () => [
             {
@@ -32,12 +36,12 @@ export default function useTabs(references: QueryReference[]): [Tab, Tab[], (val
 
     const [selectedTab, setSelectedTab] = useState<Tab>(tabs[0]);
 
-    return [
-        selectedTab,
-        tabs,
-        (value: string) => {
+    return {
+        selectedTab: selectedTab,
+        tabs: tabs,
+        onChange: (value: string) => {
             const item = tabs.find((item) => item.value === value);
             if (item) setSelectedTab(item);
         },
-    ];
+    };
 }
