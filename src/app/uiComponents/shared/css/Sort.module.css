@@ -12,6 +12,14 @@
     color: var(--mantine-color-gray-9);
 }
 
+.disabledTitle {
+    color: var(--mantine-color-gray-5);
+}
+
+.disabledTitle {
+    color: var(--mantine-color-gray-5);
+}
+
 .column {
     display: flex;
     flex-direction: column;

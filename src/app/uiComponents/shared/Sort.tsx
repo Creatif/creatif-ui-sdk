@@ -49,6 +49,8 @@ export default function Sort({
 
     const [debouncedGroups] = useDebouncedValue(groups, 500);
 
+    const groupsAreDisabled = areGroupsLoading || Boolean(groupError);
+
     useEffect(() => {
         onSelectedGroups(debouncedGroups);
     }, [debouncedGroups]);
@@ -163,11 +165,13 @@ export default function Sort({
             </div>
 
             <div className={styles.sortRoot}>
-                <h2 className={styles.sortTitle}>GROUPS</h2>
+                <h2 className={classNames(styles.sortTitle, groupsAreDisabled ? styles.disabledTitle : undefined)}>
+                    GROUPS
+                </h2>
 
                 <div className={styles.column}>
                     <MultiSelect
-                        disabled={areGroupsLoading || Boolean(groupError)}
+                        disabled={groupsAreDisabled}
                         error={
                             groupError &&
                             'Group filter could not be loaded and is not usable but the rest of the filters are usable. Please, try again later.'

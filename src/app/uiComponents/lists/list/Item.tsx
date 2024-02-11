@@ -1,5 +1,5 @@
 import useNotification from '@app/systems/notifications/useNotification';
-import DeleteModal from '@app/uiComponents/shared/DeleteModal';
+import DeleteModal from '@app/uiComponents/shared/modals/DeleteModal';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -302,7 +302,7 @@ export default function Item<Value, Metadata>({
             {structureItem && (
                 <EditGroups
                     itemId={item.id}
-                    structureType="list"
+                    structureType={structureItem.structureType}
                     structureName={structureItem.id}
                     open={isEditGroupsOpen}
                     currentGroups={item.groups || []}

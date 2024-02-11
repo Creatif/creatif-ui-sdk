@@ -18,7 +18,7 @@ export default function LanguageForm({ mode }: Props) {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputReference, inputGroups }) => (
+            inputs={(submitButton, { inputLocale, inputGroups }) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>
@@ -32,6 +32,7 @@ export default function LanguageForm({ mode }: Props) {
                         </Grid.Col>
 
                         <Grid.Col span={6}>{inputGroups()}</Grid.Col>
+                        <Grid.Col span={6}>{inputLocale()}</Grid.Col>
                     </Grid>
 
                     {submitButton}

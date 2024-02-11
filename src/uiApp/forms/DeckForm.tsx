@@ -9,7 +9,6 @@ export default function DeckForm({ mode }: Props) {
         <Form<{
             name: string;
         }>
-            mode={mode}
             bindings={{
                 name: (values) => values.name,
             }}
@@ -37,9 +36,6 @@ export default function DeckForm({ mode }: Props) {
                                 structureName: 'Languages',
                                 structureType: 'list',
                                 label: 'Language',
-                                validation: {
-                                    required: 'Language is required',
-                                },
                             })}
                         </Grid.Col>
                     </Grid>

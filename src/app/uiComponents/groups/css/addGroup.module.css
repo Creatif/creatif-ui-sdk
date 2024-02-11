@@ -6,9 +6,24 @@
 }
 
 .info {
-    width: 40%;
-    line-height: 1.4rem;
+    width: 50%;
+    line-height: 1.5rem;
     color: var(--mantine-color-gray-9);
+}
+
+.info .important {
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+
+}
+
+.info .danger {
+    margin: 2rem 0 0.5rem 0;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: var(--mantine-color-yellow-0);
 }
 
 .formWrapper {

@@ -69,7 +69,6 @@
         "clsx": "^2.0.0",
         "date-fns": "^2.30.0",
         "dayjs": "^1.11.10",
-        "mantine-datatable": "^7.3.0",
         "normalize.css": "^8.0.1",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",

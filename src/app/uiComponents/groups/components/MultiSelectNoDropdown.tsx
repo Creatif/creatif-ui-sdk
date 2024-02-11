@@ -2,7 +2,7 @@
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
 import { Combobox, Loader, Pill, PillsInput, useCombobox } from '@mantine/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 interface Props {
@@ -26,6 +26,7 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
 
     const [value, setValue] = useState<string[]>(currentValues);
     const [search, setSearch] = useState('');
+    const createdTickRef = useRef(false);
 
     useEffect(() => {
         if (Array.isArray(value)) {
@@ -60,6 +61,13 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
             {item}
         </Pill>
     ));
+
+    const onClickCreate = useCallback(() => {
+        if (!createdTickRef.current) {
+            combobox.closeDropdown();
+            createdTickRef.current = true;
+        }
+    }, []);
 
     return (
         <div className={styles.root}>
@@ -108,7 +116,7 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
 
                         <Combobox.Dropdown>
                             <Combobox.Options>
-                                <Combobox.Option onClick={() => combobox.closeDropdown()} value="$create">
+                                <Combobox.Option onClick={onClickCreate} value="$create">
                                     + Create
                                     {search && <Pill>{search}</Pill>}
                                 </Combobox.Option>

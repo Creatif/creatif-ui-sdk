@@ -51,12 +51,6 @@ export default function FirstTimeSetup({ children }: PropsWithChildren) {
                     structureType: 'map' as StructureType,
                     name: item.name,
                 })),
-                ...projectMetadata.variables.map((item) => ({
-                    id: item.id,
-                    shortId: item.shortId,
-                    structureType: 'variable' as StructureType,
-                    name: item.name,
-                })),
                 ...validResults,
             ]);
 

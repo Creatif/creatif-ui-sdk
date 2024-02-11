@@ -41,6 +41,9 @@ export function AddGroup() {
             success('Groups saved', 'Your groups save been successfully saved.');
             setIsFormDirty(false);
         }
+
+        if (!isLoading && !isSuccess) {
+        }
     }, [isLoading, isSuccess]);
 
     const loadError = error ? 'Groups failed to load. Please, try again later.' : undefined;
@@ -48,12 +51,18 @@ export function AddGroup() {
 
     return (
         <div className={classNames(contentContainerStyles.root, styles.root)}>
-            <p className={styles.info}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque suscipit odio non iaculis
-                vehicula. Duis vel pharetra neque. Donec ullamcorper nisi id nulla sollicitudin cursus. Sed commodo
-                maximus sagittis. Mauris eu diam arcu. Duis maximus aliquam venenatis. Orci varius natoque penatibus et
-                magnis dis parturient montes, nascetur ridiculus mus.
-            </p>
+            <div className={styles.info}>
+                Groups are a way to group and filter your items. When you create groups, you can assign them to your
+                items and filter them by those groups. For example, if you create Hotel items, you might give them
+                groups like 1 star, 2 star etc...
+                <div className={styles.danger}>
+                    <span className={styles.important}>Important</span>
+                    <p>
+                        If you add some of your groups to your items but delete those groups here, they will also be
+                        deleted in your items.
+                    </p>
+                </div>
+            </div>
 
             <div className={styles.formWrapper}>
                 {!isFetching && data?.result && (

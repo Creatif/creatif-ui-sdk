@@ -5,20 +5,17 @@ import useDeleteRange from '@app/uiComponents/lists/hooks/useDeleteRange';
 import useListVariablesPagination from '@app/uiComponents/lists/hooks/useListVariablesPagination';
 import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
-import DeleteModal from '@app/uiComponents/shared/DeleteModal';
+import DeleteModal from '@app/uiComponents/shared/modals/DeleteModal';
 import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
 import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
-import MainTableView from '@app/uiComponents/lists/table/MainTableView';
 import { Button, Pagination, Select, Tooltip } from '@mantine/core';
 import { IconListDetails, IconTable } from '@tabler/icons-react';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import type { PaginationResult } from '@root/types/api/list';
-import type { Behaviour } from '@root/types/api/shared';
-import type { CurrentSortType } from '@root/types/components/components';
 import type { TryResult } from '@root/types/shared';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -39,14 +36,6 @@ export function Listing<Value, Metadata>() {
 
     const { error: errorNotification, success: successNotification } = useNotification();
 
-    const [page, setPage] = useState(queryParams.page);
-    const [locales, setLocales] = useState<string[]>(queryParams.locales);
-    const [search, setSearch] = useState(queryParams.search);
-    const [groups, setGroups] = useState<string[]>(queryParams.groups);
-    const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(queryParams.direction);
-    const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
-    const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
-    const [limit, setLimit] = useState(queryParams.limit);
     const [fields, setFields] = useState<string[]>(['groups']);
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
@@ -61,14 +50,14 @@ export function Listing<Value, Metadata>() {
         isFetching: listIsFetching,
     } = useListVariablesPagination<TryResult<PaginationResult<Value, Metadata>>>({
         name: structureItem?.id || '',
-        page: page,
-        locales: locales,
-        groups: groups,
-        direction: direction,
-        behaviour: behaviour,
-        limit: limit as string,
-        orderBy: orderBy,
-        search: search as string,
+        page: queryParams.page,
+        locales: queryParams.locales,
+        groups: queryParams.groups,
+        direction: queryParams.direction,
+        behaviour: queryParams.behaviour,
+        limit: queryParams.limit,
+        orderBy: queryParams.orderBy,
+        search: queryParams.search,
         fields: fields,
         enabled: Boolean(structureItem) && structureType === 'list',
     });
@@ -80,14 +69,14 @@ export function Listing<Value, Metadata>() {
         isFetching: mapIsFetching,
     } = useMapVariablesPagination<TryResult<PaginationResult<Value, Metadata>>>({
         name: structureItem?.id || '',
-        page: page,
-        locales: locales,
-        groups: groups,
-        direction: direction,
-        behaviour: behaviour,
-        limit: limit as string,
-        orderBy: orderBy,
-        search: search as string,
+        page: queryParams.page,
+        locales: queryParams.locales,
+        groups: queryParams.groups,
+        direction: queryParams.direction,
+        behaviour: queryParams.behaviour,
+        limit: queryParams.limit,
+        orderBy: queryParams.orderBy,
+        search: queryParams.search,
         fields: fields,
         enabled: Boolean(structureItem) && structureType === 'map',
     });
@@ -121,35 +110,29 @@ export function Listing<Value, Metadata>() {
                 <ActionSection
                     includeSortBy={['created_at', 'updated_at', 'index']}
                     isLoading={isFetching}
-                    sortBy={orderBy}
-                    locales={locales}
-                    search={search || ''}
-                    direction={direction}
-                    behaviour={behaviour}
-                    groups={groups}
+                    sortBy={queryParams.orderBy || 'index'}
+                    locales={queryParams.locales}
+                    search={queryParams.search || ''}
+                    direction={queryParams.direction}
+                    behaviour={queryParams.behaviour}
+                    groups={queryParams.groups}
                     onDirectionChange={(direction) => {
-                        setDirection(direction);
                         setParam('direction', direction as string);
                     }}
                     onSelectedLocales={(locales) => {
-                        setLocales(locales);
                         setParam('locales', locales.join(','));
                     }}
                     onBehaviourChange={(behaviour) => {
-                        setBehaviour(behaviour);
                         setParam('behaviour', behaviour as string);
                     }}
                     onSortChange={(sortType) => {
-                        setOrderBy(sortType);
                         setParam('orderBy', sortType);
                     }}
                     onSelectedGroups={(groups) => {
-                        setGroups(groups);
                         setParam('groups', groups.join(','));
                     }}
                     structureItem={structureItem}
                     onSearch={(text) => {
-                        setSearch(text);
                         setParam('search', text);
                     }}
                 />
@@ -159,7 +142,7 @@ export function Listing<Value, Metadata>() {
                 {data?.result && data.result.total > 0 && (
                     <div className={styles.listChoiceHeading}>
                         <p className={styles.totalInfo}>
-                            Showing <span>{limit}</span> of <span>{data.result.total}</span> total items
+                            Showing <span>{queryParams.limit}</span> of <span>{data.result.total}</span> total items
                         </p>
 
                         <div className={styles.listChoiceListType}>
@@ -291,35 +274,30 @@ export function Listing<Value, Metadata>() {
                             </DndProvider>
                         )}
 
-                        {queryParams.listingType === 'table' && (
-                            <MainTableView<Value, Metadata> data={data.result} isFetching={isFetching} />
-                        )}
-
                         {Boolean(data.result.data.length) && (
                             <div className={styles.stickyPagination}>
                                 <Pagination
-                                    value={page}
+                                    value={queryParams.page}
                                     onChange={(page) => {
-                                        setPage(page);
                                         setParam('page', page + '');
                                     }}
                                     radius={20}
                                     boundaries={2}
-                                    total={Math.ceil(data.result.total / parseInt(limit))}
+                                    total={Math.ceil(data.result.total / parseInt(queryParams.limit))}
                                 />
                                 <Select
                                     label="TOTAL"
                                     onChange={(l) => {
                                         if (!l) {
-                                            setLimit('15');
+                                            setParam('limit', '15');
                                             return;
                                         }
 
-                                        setLimit(l);
+                                        setParam('limit', l);
                                     }}
-                                    value={limit}
+                                    value={queryParams.limit}
                                     placeholder="Limit"
-                                    data={['15', '50', '100', '500', '1000']}
+                                    data={['15', '50', '100']}
                                     styles={{
                                         root: {
                                             width: '100px',
