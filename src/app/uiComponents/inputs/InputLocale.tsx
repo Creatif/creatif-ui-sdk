@@ -25,7 +25,7 @@ export default function InputLocale({ store, validation, ...rest }: InputLocaleP
 
     useEffect(() => {
         store.getState().addField(name);
-        setFormValue('locale', value);
+        setFormValue(name, value);
 
         return () => store.getState().removeField(name);
     }, []);
@@ -46,7 +46,7 @@ export default function InputLocale({ store, validation, ...rest }: InputLocaleP
                     label="Locale"
                     searchable
                     clearable
-                    error={useFirstError('locale')}
+                    error={useFirstError(name)}
                     data={createOptions(locales)}
                     value={value}
                     filter={({ options, search }) => {
@@ -63,7 +63,7 @@ export default function InputLocale({ store, validation, ...rest }: InputLocaleP
                             setValue(value);
                         }
                     }}
-                    name="locale"
+                    name={name}
                     {...rest}
                 />
             )}

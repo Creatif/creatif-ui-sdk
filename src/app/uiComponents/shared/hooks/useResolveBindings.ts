@@ -37,11 +37,12 @@ export default function useResolveBindings() {
             };
         }
 
-        const locale = resolveBindings(value, bindings, 'locale');
-        if (bindings.locale && !locale) {
+        console.log(value, bindings);
+        const locale = resolveBindings(value, bindings, 'creatif_locale');
+        if (!bindings.locale && !locale) {
             notificationError(
-                'Cannot determine groups binding',
-                'Locale binding cannot be determined. If a field name is provided, be sure that it exists as a field in your form. If a function is provided, be sure to return either a string or Array<string>',
+                'Error choosing a locale',
+                'Locale binding cannot be determined. If a form field is not provided, <string>',
             );
             return;
         }
@@ -50,13 +51,13 @@ export default function useResolveBindings() {
         if (!name) {
             notificationError(
                 'Cannot determine name binding',
-                "You haven't provided any binding for the name of the variable. Add the 'binding' property to your form.",
+                'You haven\'t provided any binding for the name of the variable. Add the \'binding\' property to your form.',
             );
             return;
         }
 
-        const g = resolveBindings(value, bindings, 'groups');
-        if (bindings.groups && !g) {
+        const g = resolveBindings(value, bindings, 'creatif_groups');
+        if (!bindings.groups && !g) {
             notificationError(
                 'Cannot determine groups binding',
                 'Groups binding cannot be determined. If a field name is provided, be sure that it exists as a field in your form. If a function is provided, be sure to return either a string or Array<string>',
@@ -71,8 +72,8 @@ export default function useResolveBindings() {
             groups = [...groups, ...g];
         }
 
-        const b = resolveBindings(value, bindings, 'behaviour');
-        if (bindings.behaviour && !b) {
+        const b = resolveBindings(value, bindings, 'creatif_behaviour');
+        if (!bindings.behaviour && !b) {
             notificationError(
                 'Cannot determine behaviour binding',
                 'Behaviour binding cannot be determined. If a field name is provided, be sure that it exists as a field in your form. If a function is provided, be sure to return either a string',

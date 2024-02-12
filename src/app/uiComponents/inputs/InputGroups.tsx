@@ -14,7 +14,7 @@ export interface InputGroupsProps extends MultiSelectProps {
 // selection must be clearable
 // must be loadable
 export function InputGroups({ validation, store }: InputGroupsProps) {
-    const { control, setValue: setFormValue, setError } = useFormContext();
+    const { control, setValue: setFormValue, setError, formState: {errors} } = useFormContext();
     const [value, setValue] = useState<string[]>(store.getState().groups || []);
     const { isFetching, data: groups, error: groupsError } = useGetGroups();
     const name = 'creatif_groups';
@@ -42,6 +42,7 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
             rules={validation}
             render={({ field: { onChange } }) => (
                 <MultiSelect
+                    description="If no groups are given, current groups will be removed."
                     label="Groups"
                     error={useFirstError('groups')}
                     disabled={isFetching}
