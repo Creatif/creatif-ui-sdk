@@ -13,14 +13,19 @@ export default function InputBehaviour({ store }: InputBehaviourProps) {
     const { control, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState<Behaviour>(store.getState().behaviour || 'modifiable');
 
+    const name = 'creatif_behaviour';
+
     useEffect(() => {
+        store.getState().addField(name);
         setFormValue('behaviour', value);
+
+        return () => store.getState().removeField(name);
     }, []);
 
     return (
         <Controller
             control={control}
-            name="behaviour"
+            name={name}
             render={({ field: { onChange } }) => (
                 <Fieldset
                     legend="Behaviour"
@@ -44,7 +49,7 @@ export default function InputBehaviour({ store }: InputBehaviourProps) {
                     <AppPill
                         selected={value === 'readonly'}
                         onChange={(value) => {
-                            setFormValue('behaviour', value);
+                            setFormValue(name, value);
                             onChange(value);
                             setValue(value as Behaviour);
                         }}

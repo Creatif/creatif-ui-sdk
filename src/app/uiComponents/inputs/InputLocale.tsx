@@ -21,15 +21,19 @@ export default function InputLocale({ store, validation, ...rest }: InputLocaleP
     const { control, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState(store.getState().locale || Runtime.instance.currentLocaleStorage.getLocale());
     const locales: Locale[] = Runtime.instance.localesCache.getLocales() || [];
+    const name = 'creatif_locale';
 
     useEffect(() => {
+        store.getState().addField(name);
         setFormValue('locale', value);
+
+        return () => store.getState().removeField(name);
     }, []);
 
     return (
         <Controller
             control={control}
-            name="locale"
+            name={name}
             rules={
                 !validation
                     ? {

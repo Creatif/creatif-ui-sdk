@@ -18,7 +18,7 @@ import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import InputLocale from '@app/uiComponents/inputs/InputLocale';
 import type { BaseSyntheticEvent } from 'react';
 import React from 'react';
-import { createSpecialFields } from '@app/systems/stores/specialFields';
+import { createSpecialFields, SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import type { GetVariableResponse } from '@root/types/api/variable';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
@@ -43,6 +43,7 @@ export interface ReferenceInputProps {
 
 interface Props<T extends FieldValues> {
     structureItem: StructureItem;
+    useSpecialFields: UseBoundStore<StoreApi<SpecialFieldsStore>>;
     structureType: string;
     formProps: UseFormProps<T>;
     isUpdate: boolean;
@@ -76,13 +77,13 @@ export default function BaseForm<T extends FieldValues>({
     structureItem,
     formProps,
     referenceStore,
+    useSpecialFields,
     inputs,
     isUpdate,
     onSubmit,
     isSaving,
     currentData,
 }: Props<T>) {
-    const useSpecialFields = createSpecialFields();
     const setLocale = useSpecialFields((state) => state.setLocale);
     const setGroups = useSpecialFields((state) => state.setGroups);
     const setBehaviour = useSpecialFields((state) => state.setBehaviour);

@@ -17,16 +17,20 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
     const { control, setValue: setFormValue, setError } = useFormContext();
     const [value, setValue] = useState<string[]>(store.getState().groups || []);
     const { isFetching, data: groups, error: groupsError } = useGetGroups();
+    const name = 'creatif_groups';
 
     useEffect(() => {
+        store.getState().addField(name);
         setFormValue('groups', value);
+
+        return () => store.getState().removeField(name);
     }, [value]);
 
     useEffect(() => {
         if (groupsError) {
-            setError('groups', {
+            setError(name, {
                 type: 'required',
-                message: "'External groups could not be loaded. Please, try again later.'",
+                message: 'External groups could not be loaded. Please, try again later.',
             });
         }
     }, [groupsError]);
@@ -34,7 +38,7 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
     return (
         <Controller
             control={control}
-            name="groups"
+            name={name}
             rules={validation}
             render={({ field: { onChange } }) => (
                 <MultiSelect
@@ -46,6 +50,7 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
                     value={value}
                     data={(groups && groups.result) || []}
                     onChange={(groups) => {
+                        setFormValue(name, groups);
                         setValue(groups);
                         onChange(groups);
                     }}

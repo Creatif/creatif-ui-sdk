@@ -41,6 +41,8 @@ import { Runtime } from '@app/runtime/Runtime';
 import { Error } from '@app/uiComponents/shared/Error';
 import { useHttpActions } from '@app/uiComponents/form/hooks/useHttpActions';
 import type { StructureType } from '@root/types/shell/shell';
+import { createSpecialFields } from '@app/systems/stores/specialFields';
+import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     bindings?: Bindings<T>;
@@ -77,6 +79,9 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
     beforeSave,
     afterSave,
 }: Props<T, Value, Metadata>) {
+    const useSpecialFields = createSpecialFields();
+    const duplicateFields = useSpecialFields.getState().getDuplicateFields();
+
     const store = getProjectMetadataStore();
     const { structureId, itemId, structureType } = useParams();
     const structureItem = store.getState().getStructureItemByID(structureId || '');
@@ -210,13 +215,18 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     behaviour,
                     groups,
                 );
-
+                
+                const specialFields = useSpecialFields.getState().fieldsUsed;
                 const isReferenceStoreLocked = referenceStore.getState().locked;
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
-                const fields = ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'];
+                let fields = ['name', 'value', 'metadata'];
                 if (!isReferenceStoreLocked) {
                     fields.push('references');
+                }
+                
+                if (specialFields.length > 0) {
+                    fields = [...fields, ...specialFields.map((item) => item.replace('creatif_', ''))];
                 }
 
                 update?.()({
@@ -280,7 +290,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}
@@ -299,6 +309,10 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                 show={isVariableReadonly}
             />
 
+            {Boolean(duplicateFields.length) && <RuntimeErrorModal open={Boolean(duplicateFields.length)} error={{
+                message: 'Some fields are duplicated.'
+            }} />}
+
             <Loading isLoading={isFetching} />
 
             {!isFetching && !getError && structureItem && structureType && (
@@ -307,6 +321,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                         {isUpdate ? 'Update' : 'Create new '} <span>{structureItem.name}</span>
                     </h1>
                     <BaseForm
+                        useSpecialFields={useSpecialFields}
                         structureType={structureItem.structureType}
                         structureItem={structureItem}
                         formProps={formProps}
