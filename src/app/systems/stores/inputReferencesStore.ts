@@ -14,12 +14,14 @@ export interface ReferenceStoreItem {
     variableId: string;
 }
 export interface ReferencesStore {
+    locked: boolean;
     references: ReferenceStoreItem[];
     add: (item: ReferenceStoreItem) => void;
     get: (name: string) => ReferenceStoreItem | undefined;
     assign: (references: ReferenceStoreItem[]) => void;
     has: (name: string) => boolean;
     keys: () => string[];
+    unlock: () => void;
     all: () => ReferenceStoreItem[];
     update: (ref: ReferenceStoreItem) => void;
 }
@@ -27,6 +29,10 @@ export interface ReferencesStore {
 export function createInputReferenceStore() {
     return create<ReferencesStore>((set, get) => ({
         references: [],
+        locked: true,
+        unlock: () => {
+            set((current) => ({...current, locked: false}));
+        },
         add: (item: ReferenceStoreItem) =>
             set((current) => ({ ...current, references: [...current.references, item] })),
         keys: () => get().references.map((item) => item.name),

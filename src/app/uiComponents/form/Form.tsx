@@ -211,10 +211,16 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     groups,
                 );
 
+                const isReferenceStoreLocked = referenceStore.getState().locked;
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
+                const fields = ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'];
+                if (!isReferenceStoreLocked) {
+                    fields.push('references');
+                }
+
                 update?.()({
-                    fields: ['name', 'behaviour', 'value', 'metadata', 'groups', 'locale'],
+                    fields: fields,
                     name: structureItem.id,
                     projectId: Runtime.instance.credentials.projectId,
                     itemId: itemId,
@@ -226,12 +232,12 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                         behaviour: chosenBehaviour,
                         locale: chosenLocale,
                     },
-                    references: referenceStore.getState().references.map((item) => ({
+                    references: !isReferenceStoreLocked ? referenceStore.getState().references.map((item) => ({
                         structureName: item.structureName,
                         name: item.name,
                         structureType: item.structureType,
                         variableId: item.variableId,
-                    })) as UpdateMapVariableReferenceBlueprint[],
+                    })) as UpdateMapVariableReferenceBlueprint[] : [],
                 }).then(({ result: response, error }) => {
                     setIsSaving(false);
 

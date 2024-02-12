@@ -10,9 +10,7 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
-import { Pagination, Select, Tooltip } from '@mantine/core';
-import { IconListDetails, IconTable } from '@tabler/icons-react';
-import classNames from 'classnames';
+import { Pagination, Select } from '@mantine/core';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/uiComponents/show/referenceListing/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -41,7 +39,6 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
     const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
     const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
     const [limit, setLimit] = useState(queryParams.limit);
-    const [fields, setFields] = useState<string[]>(['groups']);
 
     const { data, error, invalidateQuery, isFetching } = usePaginateReferences<
         TryResult<PaginationResult<Value, Metadata>>
@@ -60,7 +57,7 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
         limit: limit as string,
         orderBy: orderBy,
         search: search as string,
-        fields: fields,
+        fields: ['groups'],
     });
 
     return (
@@ -111,22 +108,6 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                         <p className={styles.totalInfo}>
                             Showing <span>{limit}</span> of <span>{data.result.total}</span> total items
                         </p>
-
-                        <div className={styles.listChoiceListType}>
-                            <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
-                                <IconListDetails className={classNames(styles.listChoiceListType_Icon)} size={24} />
-                            </Tooltip>
-
-                            <Tooltip label="Table view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
-                                <IconTable
-                                    onClick={() => {
-                                        setFields([...fields, 'value', 'metadata']);
-                                    }}
-                                    className={classNames(styles.listChoiceListType_Icon)}
-                                    size={24}
-                                />
-                            </Tooltip>
-                        </div>
                     </div>
                 )}
 

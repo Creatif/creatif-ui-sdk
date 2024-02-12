@@ -6,8 +6,8 @@ import DeckForm from '@root/uiApp/forms/DeckForm';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$KbdvpUmqEQG3ovv9rOVaIudukmI4lxmRtkuDVTY1JhuJioyNJQudC"
-            projectId="01HPC81ZE13AD6WZ0FWMBD1K5G"
+            apiKey="$2a$10$BKZPctQq4trsaU9LFlDRrO1Ic8ONh.7IhucXUK1XJ43.2SeRIKhla"
+            projectId="01HPE4GGAKTXD22ZMRVVCHQJE4"
             app={{
                 logo: 'Break free',
                 items: [

@@ -39,6 +39,8 @@ export default function InputReference({
     const hasReference = store((state) => state.has);
     const updateReference = store((state) => state.update);
     const addReference = store((state) => state.add);
+    const unlock = store((state) => state.unlock);
+    unlock();
 
     useEffect(() => {
         if (parentStructureItem.name === structureName) {

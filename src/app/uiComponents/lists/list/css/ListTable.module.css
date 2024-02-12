@@ -11,35 +11,6 @@
     position: relative;
 }
 
-.listChoiceHeading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    align-content: center;
-    margin-bottom: 1rem;
-}
-
-.listChoiceListType {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.listChoiceListType_Icon {
-    color: var(--mantine-color-gray-5);
-    cursor: pointer;
-}
-
-.listChoiceListType_Icon_Highlighted {
-    color: var(--mantine-primary-color-filled);
-    border-radius: 4px;
-}
-
-.listChoiceListType_Icon:hover {
-    color: var(--mantine-primary-color-filled);
-}
-
 .totalInfo {
     color: var(--mantine-color-gray-7);
     font-size: 0.9rem;

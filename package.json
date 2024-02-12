@@ -54,7 +54,7 @@
         "terser": "^5.27.0",
         "ts-node": "^10.9.1",
         "typescript": "5.1.6",
-        "vite": "^5.0.10",
+        "vite": "^5.1.1",
         "vite-plugin-dts": "^3.6.4"
     },
     "dependencies": {

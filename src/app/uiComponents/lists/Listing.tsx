@@ -11,9 +11,7 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
-import { Button, Pagination, Select, Tooltip } from '@mantine/core';
-import { IconListDetails, IconTable } from '@tabler/icons-react';
-import classNames from 'classnames';
+import { Button, Pagination, Select } from '@mantine/core';
 import React, { useState } from 'react';
 import type { PaginationResult } from '@root/types/api/list';
 import type { TryResult } from '@root/types/shared';
@@ -36,12 +34,9 @@ export function Listing<Value, Metadata>() {
 
     const { error: errorNotification, success: successNotification } = useNotification();
 
-    const [fields, setFields] = useState<string[]>(['groups']);
-
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
-    const [isListView, setIsListView] = useState(true);
 
     const {
         data: listData,
@@ -58,7 +53,7 @@ export function Listing<Value, Metadata>() {
         limit: queryParams.limit,
         orderBy: queryParams.orderBy,
         search: queryParams.search,
-        fields: fields,
+        fields: ['groups'],
         enabled: Boolean(structureItem) && structureType === 'list',
     });
 
@@ -77,7 +72,7 @@ export function Listing<Value, Metadata>() {
         limit: queryParams.limit,
         orderBy: queryParams.orderBy,
         search: queryParams.search,
-        fields: fields,
+        fields: ['groups'],
         enabled: Boolean(structureItem) && structureType === 'map',
     });
 
@@ -144,35 +139,6 @@ export function Listing<Value, Metadata>() {
                         <p className={styles.totalInfo}>
                             Showing <span>{queryParams.limit}</span> of <span>{data.result.total}</span> total items
                         </p>
-
-                        <div className={styles.listChoiceListType}>
-                            <Tooltip label="List view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
-                                <IconListDetails
-                                    onClick={() => setParam('listingType', 'list')}
-                                    className={classNames(
-                                        styles.listChoiceListType_Icon,
-                                        queryParams.listingType === 'list'
-                                            ? styles.listChoiceListType_Icon_Highlighted
-                                            : undefined,
-                                    )}
-                                    size={24}
-                                />
-                            </Tooltip>
-
-                            <Tooltip label="Table view" position="top-end" arrowOffset={10} arrowSize={4} withArrow>
-                                <IconTable
-                                    onClick={() => {
-                                        setFields([...fields, 'value', 'metadata']);
-                                        setIsListView(false);
-                                    }}
-                                    className={classNames(
-                                        styles.listChoiceListType_Icon,
-                                        !isListView ? styles.listChoiceListType_Icon_Highlighted : undefined,
-                                    )}
-                                    size={24}
-                                />
-                            </Tooltip>
-                        </div>
                     </div>
                 )}
 
