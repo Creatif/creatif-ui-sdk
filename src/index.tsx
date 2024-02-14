@@ -1,5 +1,4 @@
-export { CreatifProvider } from './CreatifProvider';
-export { Credentials } from '@app/credentials';
+export { CreatifProvider } from '@app/CreatifProvider';
 
 /*
 const rootElement = document.getElementById('root');
