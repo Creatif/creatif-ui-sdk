@@ -1,4 +1,4 @@
-export { CreatifProvider } from '@app/CreatifProvider';
+export { CreatifProvider } from '@root/CreatifProvider';
 
 /*
 const rootElement = document.getElementById('root');

@@ -1,7 +1,7 @@
 import React from 'react';
 import LanguageForm from '@root/uiApp/forms/LanguageForm';
 import DeckForm from '@root/uiApp/forms/DeckForm';
-import { CreatifProvider } from '@app/CreatifProvider';
+import { CreatifProvider } from '@root/CreatifProvider';
 
 export default function App() {
     return (

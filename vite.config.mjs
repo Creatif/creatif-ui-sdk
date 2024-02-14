@@ -19,7 +19,7 @@ export default defineConfig({
         alias: {
             '@app': join(__dirname, 'src/app'),
             '@lib': join(__dirname, 'src/lib'),
-            '@root': join(__dirname, 'src/'),
+            '@root': join(__dirname, 'src'),
         },
     },
     build: {
