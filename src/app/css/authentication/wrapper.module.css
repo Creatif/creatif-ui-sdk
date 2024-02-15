@@ -14,11 +14,22 @@
 .buttonWrapper {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+}
+
+.actionWrapper {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    padding: 1rem;
 }
 
 .button {
@@ -26,6 +37,9 @@
     border-radius: 4px;
     padding: 1rem;
     cursor: pointer;
+    width: 240px;
+    align-self: center;
+    margin-top: 2rem;
 
     background-color: var(--mantine-primary-color-filled);
     box-shadow: rgba(0, 0, 0, 0.08) 0 2px 6px;
@@ -45,7 +59,7 @@
 }
 
 .button:disabled {
-    color: var(--mantine-color-gray-4);
     border: 1px solid var(--mantine-color-indigo-0);
     cursor: not-allowed;
+    background-color: var(--mantine-color-indigo-2);
 }
