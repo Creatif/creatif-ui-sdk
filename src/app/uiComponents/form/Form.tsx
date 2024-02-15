@@ -3,7 +3,6 @@ import useNotification from '@app/systems/notifications/useNotification';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import useResolveBindings from '@app/uiComponents/shared/hooks/useResolveBindings';
 import valueMetadataValidator from '@app/uiComponents/form/helpers/valueMetadataValidator';
 import { Alert } from '@mantine/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -31,7 +30,7 @@ import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { useQueryClient } from 'react-query';
 import type { UpdateListItemResult } from '@root/types/api/list';
-import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/form/bindings/deleteBindings';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import type { CreatedVariable } from '@root/types/api/variable';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -43,9 +42,11 @@ import { useHttpActions } from '@app/uiComponents/form/hooks/useHttpActions';
 import type { StructureType } from '@root/types/shell/shell';
 import { createSpecialFields } from '@app/systems/stores/specialFields';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import { resolveBindings } from '@app/uiComponents/form/bindings/bindingResolver';
+import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
 
 interface Props<T extends FieldValues, Value, Metadata> {
-    bindings?: Bindings<T>;
+    bindings: Bindings<T>;
     formProps: UseFormProps<T>;
     inputs: (
         submitButton: React.ReactNode,
@@ -97,7 +98,6 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
     const queryClient = useQueryClient();
     const [beforeSaveError, setBeforeSaveError] = useState(false);
     const navigate = useNavigate();
-    const resolveBindings = useResolveBindings();
     const [isSaving, setIsSaving] = useState(false);
 
     const [isVariableExistsError, setIsVariableExistsError] = useState(false);
@@ -137,16 +137,11 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
             return;
         }
 
-        const binding = resolveBindings(value, bindings);
-        if (!binding) return;
-        const { name, groups, behaviour, locale } = binding;
-
-        wrappedBeforeSave(value, e, beforeSave).then((result) => {
+        wrappedBeforeSave<T>(value, e, beforeSave).then(async (result) => {
             if (!valueMetadataValidator(result)) {
                 setBeforeSaveError(true);
                 return;
             }
-
 
             setIsVariableExistsError(false);
             setIsGenericUpdateError(false);
@@ -154,26 +149,29 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
             setIsNotFoundError(false);
 
             setIsSaving(true);
-            if (!isUpdate && result && structureItem) {
-                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
-                    result.value as IncomingValues,
-                    locale,
-                    behaviour,
-                    groups,
-                );
 
+            if (!isUpdate && result && structureItem) {
+                const {name, locale, behaviour, groups} = resolveBindings(result.value as T, bindings);
+                if (!name) {
+                    errorNotification('\'name\' could not be determined', '\'name\' is required and you have to create a binding for it that returns a string.');
+                    return;
+                }
+                deleteBindings(result.value);
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
-                add?.()({
+                const addFn = add?.();
+                if (!addFn) return undefined;
+
+                const {result: response, error} = await addFn({
                     name: structureItem.id,
                     projectId: Runtime.instance.credentials.projectId,
                     variable: {
                         name: name,
-                        behaviour: chosenBehaviour,
+                        behaviour: behaviour,
                         value: result.value,
                         metadata: result.metadata,
-                        groups: chosenGroups,
-                        locale: chosenLocale,
+                        groups: groups,
+                        locale: locale,
                     },
                     references: referenceStore.getState().references.map((item) => ({
                         structureName: item.structureName,
@@ -181,42 +179,42 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                         name: item.name,
                         variableId: item.variableId,
                     })) as Reference[],
-                }).then(({ result: response, error }) => {
-                    setIsSaving(false);
-
-                    if (error && error.error.data['exists']) {
-                        setIsVariableExistsError(true);
-                        errorNotification('Map item exists', 'Map item with this name and locale already exists');
-                        return;
-                    } else if (error) {
-                        setIsGenericUpdateError(true);
-                        return;
-                    }
-
-                    if (response && structureItem) {
-                        successNotification(
-                            'List item created',
-                            `List item with name '${name}' and locale '${chosenLocale}' has been created.`,
-                        );
-
-                        queryClient.invalidateQueries(structureItem.id);
-                        afterSave?.(response, e);
-                        setIsSaving(false);
-                        if (structureItem) {
-                            navigate(`${structureItem.navigationListPath}/${structureId}`);
-                        }
-                    }
                 });
+
+                setIsSaving(false);
+
+                if (error && error.error.data['exists']) {
+                    setIsVariableExistsError(true);
+                    errorNotification('Map item exists', 'Map item with this name and locale already exists');
+                    return;
+                } else if (error) {
+                    setIsGenericUpdateError(true);
+                    return;
+                }
+
+                if (response && structureItem) {
+                    successNotification(
+                        'List item created',
+                        `List item with name '${name}' and locale '${locale}' has been created.`,
+                    );
+
+                    queryClient.invalidateQueries(structureItem.id);
+                    afterSave?.(response, e);
+                    setIsSaving(false);
+                    if (structureItem) {
+                        navigate(`${structureItem.navigationListPath}/${structureId}`);
+                    }
+                }
             }
 
             if (isUpdate && result && structureItem && itemId) {
-                const { chosenLocale, chosenBehaviour, chosenGroups } = chooseAndDeleteBindings(
-                    result.value as IncomingValues,
-                    locale,
-                    behaviour,
-                    groups,
-                );
-                
+                const {name, locale, behaviour, groups} = resolveBindings(result.value as T, bindings);
+                if (!name) {
+                    errorNotification('\'name\' could not be determined', '\'name\' is required and you have to create a binding for it that returns a string.');
+                    return;
+                }
+                deleteBindings(result.value);
+
                 const specialFields = useSpecialFields.getState().fieldsUsed;
                 const isReferenceStoreLocked = referenceStore.getState().locked;
                 removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
@@ -230,7 +228,10 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     fields = [...fields, ...specialFields.map((item) => item.replace('creatif_', ''))];
                 }
 
-                update?.()({
+                const updateFn = update?.();
+                if (!updateFn) return undefined;
+
+                const {result: response, error} = await updateFn({
                     fields: fields,
                     name: structureItem.id,
                     projectId: Runtime.instance.credentials.projectId,
@@ -239,9 +240,9 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                         name: name,
                         value: result.value,
                         metadata: result.metadata,
-                        groups: chosenGroups,
-                        behaviour: chosenBehaviour,
-                        locale: chosenLocale,
+                        groups: groups,
+                        behaviour: behaviour,
+                        locale: locale,
                     },
                     references: !isReferenceStoreLocked ? referenceStore.getState().references.map((item) => ({
                         structureName: item.structureName,
@@ -249,34 +250,34 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                         structureType: item.structureType,
                         variableId: item.variableId,
                     })) as UpdateMapVariableReferenceBlueprint[] : [],
-                }).then(({ result: response, error }) => {
-                    setIsSaving(false);
-
-                    if (error && error.error && error.error.data['exists']) {
-                        setIsVariableExistsError(true);
-                        return;
-                    } else if (error && error.error && error.error.data['behaviourReadonly']) {
-                        setIsVariableReadonly(true);
-                        return;
-                    } else if (error) {
-                        setIsGenericUpdateError(true);
-                        return;
-                    }
-
-                    if (response && structureItem) {
-                        successNotification(
-                            'List item updated',
-                            `List item with item name '${name}' has been updated.`,
-                        );
-
-                        invalidateQuery();
-                        queryClient.invalidateQueries(structureItem.id);
-                        afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
-                        if (structureItem) {
-                            navigate(`${structureItem.navigationListPath}/${structureId}`);
-                        }
-                    }
                 });
+
+                setIsSaving(false);
+
+                if (error && error.error && error.error.data['exists']) {
+                    setIsVariableExistsError(true);
+                    return;
+                } else if (error && error.error && error.error.data['behaviourReadonly']) {
+                    setIsVariableReadonly(true);
+                    return;
+                } else if (error) {
+                    setIsGenericUpdateError(true);
+                    return;
+                }
+
+                if (response && structureItem) {
+                    successNotification(
+                        'List item updated',
+                        `List item with item name '${name}' has been updated.`,
+                    );
+
+                    invalidateQuery();
+                    queryClient.invalidateQueries(structureItem.id);
+                    afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
+                    if (structureItem) {
+                        navigate(`${structureItem.navigationListPath}/${structureId}`);
+                    }
+                }
             }
         });
     }, []);
@@ -312,6 +313,10 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
 
             {Boolean(duplicateFields.length) && <RuntimeErrorModal open={Boolean(duplicateFields.length)} error={{
                 message: 'Some fields are duplicated.'
+            }} />}
+
+            {(!bindings?.name || typeof bindings.name !== 'function') && <RuntimeErrorModal open={true} error={{
+                message: 'Name binding is not provided. You must provide the name as a function that accepts the submitted form values.'
             }} />}
 
             <Loading isLoading={isFetching} />

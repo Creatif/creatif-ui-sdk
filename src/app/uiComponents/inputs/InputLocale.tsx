@@ -7,6 +7,7 @@ import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import { Runtime } from '@app/runtime/Runtime';
+import { localeField } from '@app/uiComponents/form/bindings/bindingResolver';
 export interface InputLocaleProps extends SelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
@@ -21,7 +22,7 @@ export default function InputLocale({ store, validation, ...rest }: InputLocaleP
     const { control, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState(store.getState().locale || Runtime.instance.currentLocaleStorage.getLocale());
     const locales: Locale[] = Runtime.instance.localesCache.getLocales() || [];
-    const name = 'creatif_locale';
+    const name = localeField;
 
     useEffect(() => {
         store.getState().addField(name);

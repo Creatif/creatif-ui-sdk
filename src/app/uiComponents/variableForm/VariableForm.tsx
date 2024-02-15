@@ -38,8 +38,8 @@ import updateVariable from '@lib/api/declarations/variables/updateVariable';
 import UIError from '@app/components/UIError';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
-import chooseAndDeleteBindings from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
-import type { IncomingValues } from '@app/uiComponents/shared/hooks/chooseAndDeleteBindings';
+import chooseAndDeleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
+import type { IncomingValues } from '@app/uiComponents/form/bindings/deleteBindings';
 import { Runtime } from '@app/runtime/Runtime';
 
 interface Props<T extends FieldValues, Value, Metadata> {

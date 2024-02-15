@@ -6,6 +6,7 @@ import { Controller, type RegisterOptions, useFormContext } from 'react-hook-for
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
+import { groupsField } from '@app/uiComponents/form/bindings/bindingResolver';
 export interface InputGroupsProps extends MultiSelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
@@ -17,11 +18,12 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
     const { control, setValue: setFormValue, setError, formState: {errors} } = useFormContext();
     const [value, setValue] = useState<string[]>(store.getState().groups || []);
     const { isFetching, data: groups, error: groupsError } = useGetGroups();
-    const name = 'creatif_groups';
+
+    const name = groupsField;
 
     useEffect(() => {
         store.getState().addField(name);
-        setFormValue('groups', value);
+        setFormValue(name, value);
 
         return () => store.getState().removeField(name);
     }, [value]);
