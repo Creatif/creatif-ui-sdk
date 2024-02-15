@@ -84,23 +84,6 @@ export default function Navigation({ navItems, logo }: Props) {
                     Groups
                 </NavLink>
 
-                <NavLink
-                    to="/references"
-                    className={({ isActive }) => {
-                        if (isActive) return classNames(styles.appMenuButton, styles.active);
-
-                        return styles.appMenuButton;
-                    }}>
-                    <IconRoute2
-                        className="navItemIcon"
-                        style={{
-                            alignSelf: 'center',
-                        }}
-                        size={20}
-                    />
-                    References
-                </NavLink>
-
                 <button
                     onClick={async () => {
                         await logout();
