@@ -1,5 +1,6 @@
 import type { LocaleBinding } from '@root/types/forms/forms';
 import { localeField } from '@app/uiComponents/form/bindings/bindingResolver';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface CastType {
     [key: string]: unknown;
@@ -7,7 +8,10 @@ interface CastType {
 
 export class LocaleBindingResolver<Value> {
     private key = localeField;
-    constructor(private values: Value, private bindFn: LocaleBinding<Value> | undefined) {}
+    constructor(
+        private values: Value,
+        private bindFn: LocaleBinding<Value> | undefined,
+    ) {}
 
     resolve(): string {
         if (this.bindFn) {
@@ -15,11 +19,16 @@ export class LocaleBindingResolver<Value> {
         }
 
         if (!this.bindFn) {
-            if (this.values && typeof this.values === 'object' && this.key in this.values && typeof (this.values as CastType)[this.key] === 'string') {
+            if (
+                this.values &&
+                typeof this.values === 'object' &&
+                this.key in this.values &&
+                typeof (this.values as CastType)[this.key] === 'string'
+            ) {
                 return (this.values as CastType)[this.key] as string;
             }
         }
 
-        return 'eng';
+        return Runtime.instance.currentLocaleStorage.getLocale();
     }
 }
