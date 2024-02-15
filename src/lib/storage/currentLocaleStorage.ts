@@ -1,11 +1,12 @@
 export default class CurrentLocaleStorage {
-    private currentLocale: string;
     private key = 'creatif-current-locale';
-    constructor(locale: string) {
-        this.currentLocale = locale;
+    constructor(private currentLocale: string) {
+        if (localStorage.getItem(this.key)) {
+            this.currentLocale = localStorage.getItem(this.key) as string;
+        }
 
         if (!localStorage.getItem(this.key)) {
-            localStorage.setItem(this.key, locale);
+            localStorage.setItem(this.key, currentLocale);
         }
     }
 
