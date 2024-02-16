@@ -3,7 +3,6 @@ import type { CurrentSortType } from '@root/types/components/components';
 import type { Behaviour } from '@root/types/api/shared';
 
 class QueryParams {
-    public readonly page: number = 1;
     public readonly groups: string[] = [];
     public readonly direction: 'desc' | 'asc' | undefined = 'desc';
     public readonly behaviour: Behaviour | undefined = undefined;
@@ -11,7 +10,6 @@ class QueryParams {
     public readonly locales: string[] = [];
     public readonly limit: string = '15';
     constructor(
-        private readonly hiddenPage: string | undefined,
         private readonly hiddenLimit: string | undefined,
         private readonly hiddenLocales: string | undefined,
         private readonly hiddenDirection: string | undefined,
@@ -21,19 +19,6 @@ class QueryParams {
         readonly search: string | undefined,
         readonly listingType: string,
     ) {
-        if (!hiddenPage) {
-            this.page = 1;
-        } else {
-            const p = parseInt(hiddenPage);
-            if (isNaN(p)) {
-                this.page = 1;
-            }
-
-            if (!p) {
-                this.page = 1;
-            }
-        }
-
         if (!hiddenGroups) {
             this.groups = [];
         } else if (hiddenGroups) {
@@ -75,7 +60,6 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
     const [params, setParams] = useSearchParams();
 
     const q = new QueryParams(
-        params.get('page') || '',
         params.get('limit') || '',
         params.get('locales') || '',
         params.get('direction') || 'desc',
@@ -90,7 +74,6 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
         queryParams: q,
         setParam: (key: string, value: string) => {
             setParams({
-                page: q.page + '',
                 limit: q.limit + '',
                 locales: Array.isArray(q.locales) ? q.locales.join(',') : '',
                 groups: Array.isArray(q.groups) ? q.groups.join(',') : '',

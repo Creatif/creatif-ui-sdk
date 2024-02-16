@@ -1,10 +1,10 @@
-import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type rearrange from '@lib/api/declarations/lists/rearrange';
 import useNotification from '@app/systems/notifications/useNotification';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { Runtime } from '@app/runtime/Runtime';
+import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/shared';
 
 type OnDrop = (source: DragItem, destination: DragItem) => void;
 type OnMove = (dragIndex: number, hoverIdx: number) => void;
