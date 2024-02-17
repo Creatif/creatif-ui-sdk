@@ -11,10 +11,9 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
-import { Button, Pagination, Select } from '@mantine/core';
-import React, { useState } from 'react';
-import type { PaginationResult } from '@root/types/api/list';
-import type { TryResult } from '@root/types/shared';
+import { Button, Loader } from '@mantine/core';
+import React, { useRef, useState } from 'react';
+import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Item from '@app/uiComponents/lists/list/Item';
@@ -23,8 +22,40 @@ import { useParams } from 'react-router-dom';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import useNotification from '@app/systems/notifications/useNotification';
 import UIError from '@app/components/UIError';
-import useMapVariablesPagination from '@app/uiComponents/lists/hooks/useMapVariablesPagination';
 import type { StructureType } from '@root/types/shell/shell';
+import useMapVariablesPagination from '@app/uiComponents/lists/hooks/useMapVariablesPagination';
+import { IconMistOff } from '@tabler/icons-react';
+
+export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
+    page: number;
+}
+
+function resolveListing<Value, Metadata>(
+    mapPages: PaginationResult<Value, Metadata>[] | undefined,
+    listPages: PaginationResult<Value, Metadata>[] | undefined,
+    currentPage: number,
+): PaginationDataWithPage<Value, Metadata>[] {
+    if (mapPages && mapPages.length > 0) {
+        let data: PaginationDataWithPage<Value, Metadata>[] = [];
+        for (const page of mapPages) {
+            data = [...data, ...page.data.map((item) => ({ ...item, page: currentPage }))];
+        }
+
+        return data;
+    }
+
+    if (listPages && listPages.length > 0) {
+        let data: PaginationDataWithPage<Value, Metadata>[] = [];
+        for (const page of listPages) {
+            data = [...data, ...page.data.map((item) => ({ ...item, page: currentPage }))];
+        }
+
+        return data;
+    }
+
+    return [];
+}
+
 export function Listing<Value, Metadata>() {
     const { queryParams, setParam } = useSearchQuery();
     const { structureId, structureType } = useParams();
@@ -32,6 +63,7 @@ export function Listing<Value, Metadata>() {
         .getState()
         .getStructureItemByID(structureId || '');
 
+    const pageRef = useRef(1);
     const { error: errorNotification, success: successNotification } = useNotification();
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
@@ -39,48 +71,53 @@ export function Listing<Value, Metadata>() {
     const [areItemsDeleting, setAreItemsDeleting] = useState(false);
 
     const {
-        data: listData,
-        error: listError,
-        invalidateQuery: listInvalidate,
-        isFetching: listIsFetching,
-    } = useListVariablesPagination<TryResult<PaginationResult<Value, Metadata>>>({
-        name: structureItem?.id || '',
-        page: queryParams.page,
-        locales: queryParams.locales,
-        groups: queryParams.groups,
-        direction: queryParams.direction,
-        behaviour: queryParams.behaviour,
-        limit: queryParams.limit,
-        orderBy: queryParams.orderBy,
-        search: queryParams.search,
-        fields: ['groups'],
-        enabled: Boolean(structureItem) && structureType === 'list',
-    });
-
-    const {
         data: mapData,
         error: mapError,
         invalidateQuery: mapInvalidate,
-        isFetching: mapIsFetching,
-    } = useMapVariablesPagination<TryResult<PaginationResult<Value, Metadata>>>({
+        fetchNextPage: fetchNextMapPage,
+        refetch: refetchMap,
+        hasNextPage: hasNextMapPage,
+        isFetchingNextPage: isFetchingNextMapPage,
+    } = useMapVariablesPagination<PaginationResult<Value, Metadata>>({
         name: structureItem?.id || '',
-        page: queryParams.page,
         locales: queryParams.locales,
         groups: queryParams.groups,
         direction: queryParams.direction,
         behaviour: queryParams.behaviour,
-        limit: queryParams.limit,
         orderBy: queryParams.orderBy,
         search: queryParams.search,
         fields: ['groups'],
         enabled: Boolean(structureItem) && structureType === 'map',
     });
 
-    const { data, error, invalidateQuery, isFetching } = {
-        data: structureType === 'list' ? listData : mapData,
+    const {
+        data: listData,
+        error: listError,
+        invalidateQuery: listInvalidate,
+        fetchNextPage: fetchNextListPage,
+        refetch: refetchList,
+        hasNextPage: hasNextListPage,
+        isFetchingNextPage: isFetchingNextListPage,
+    } = useListVariablesPagination<PaginationResult<Value, Metadata>>({
+        name: structureItem?.id || '',
+        locales: queryParams.locales,
+        groups: queryParams.groups,
+        direction: queryParams.direction,
+        behaviour: queryParams.behaviour,
+        orderBy: queryParams.orderBy,
+        search: queryParams.search,
+        fields: ['groups'],
+        enabled: Boolean(structureItem) && structureType === 'list',
+    });
+
+    const { data, hasNextPage, fetchNextPage, refetch, error, invalidateQuery, isFetching } = {
+        data: resolveListing<Value, Metadata>(mapData?.pages, listData?.pages, pageRef.current),
         error: structureType === 'list' ? listError : mapError,
         invalidateQuery: structureType === 'list' ? listInvalidate : mapInvalidate,
-        isFetching: structureType === 'list' ? listIsFetching : mapIsFetching,
+        isFetching: structureType === 'list' ? isFetchingNextListPage : isFetchingNextMapPage,
+        fetchNextPage: structureType === 'list' ? fetchNextListPage : fetchNextMapPage,
+        refetch: structureType === 'list' ? refetchList : refetchMap,
+        hasNextPage: structureType === 'list' ? hasNextListPage : hasNextMapPage,
     };
 
     const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
@@ -134,14 +171,6 @@ export function Listing<Value, Metadata>() {
             )}
 
             <div className={contentContainerStyles.root}>
-                {data?.result && data.result.total > 0 && (
-                    <div className={styles.listChoiceHeading}>
-                        <p className={styles.totalInfo}>
-                            Showing <span>{queryParams.limit}</span> of <span>{data.result.total}</span> total items
-                        </p>
-                    </div>
-                )}
-
                 {checkedItems.length > 0 && (
                     <div className={styles.selectedItemsContainer}>
                         <p>
@@ -173,7 +202,7 @@ export function Listing<Value, Metadata>() {
                     </div>
                 )}
 
-                {data?.result && data.result.total === 0 && (
+                {!isFetching && data && data.length === 0 && (
                     <NothingFound
                         createNewPath={
                             (structureItem && `${structureItem.navigationCreatePath}/${structureItem.id}`) || ''
@@ -181,99 +210,103 @@ export function Listing<Value, Metadata>() {
                     />
                 )}
 
-                {!isFetching && data?.result && data.result.total !== 0 && structureItem && structureType && (
+                {data && data.length !== 0 && structureItem && structureType && (
                     <div className={styles.container}>
-                        {queryParams.listingType === 'list' && (
-                            <DndProvider backend={HTML5Backend}>
-                                <DraggableList<Value, Metadata>
-                                    data={data.result}
-                                    structureItem={structureItem}
-                                    structureType={structureType as StructureType}
-                                    onRearrange={rearrange}
-                                    renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
-                                        <>
-                                            {list.map((item, i) => (
-                                                <Item
-                                                    onMove={onMove}
-                                                    onDrop={onDrop}
-                                                    isHovered={item.id === hoveredId}
-                                                    onChecked={(itemId, checked) => {
-                                                        const idx = checkedItems.findIndex((item) => item === itemId);
-                                                        if (idx !== -1 && !checked) {
-                                                            checkedItems.splice(idx, 1);
-                                                            setCheckedItems([...checkedItems]);
-                                                            return;
-                                                        }
+                        <DndProvider backend={HTML5Backend}>
+                            <DraggableList<Value, Metadata>
+                                data={data}
+                                structureItem={structureItem}
+                                structureType={structureType as StructureType}
+                                onRearrange={rearrange}
+                                renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
+                                    <>
+                                        {list.map((item, i) => (
+                                            <Item
+                                                onMove={onMove}
+                                                onDrop={onDrop}
+                                                isHovered={item.id === hoveredId}
+                                                onChecked={(itemId, checked) => {
+                                                    const idx = checkedItems.findIndex((item) => item === itemId);
+                                                    if (idx !== -1 && !checked) {
+                                                        checkedItems.splice(idx, 1);
+                                                        setCheckedItems([...checkedItems]);
+                                                        return;
+                                                    }
 
-                                                        if (checked) {
-                                                            setCheckedItems([...checkedItems, itemId]);
-                                                        }
-                                                    }}
-                                                    onDeleted={(error) => {
-                                                        if (!error) {
-                                                            invalidateQuery();
-                                                            return;
-                                                        }
+                                                    if (checked) {
+                                                        setCheckedItems([...checkedItems, itemId]);
+                                                    }
+                                                }}
+                                                onDeleted={(error) => {
+                                                    if (!error) {
+                                                        invalidateQuery();
+                                                        return;
+                                                    }
 
-                                                        if (error && error.error && error.error.data['isParent']) {
-                                                            errorNotification(
-                                                                'Item is a parent reference',
-                                                                'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
-                                                                15000,
-                                                            );
-                                                        }
-                                                    }}
-                                                    disabled={Boolean(
-                                                        (areItemsDeleting && checkedItems.includes(item.id)) ||
-                                                            (movingSource && movingSource === item.id) ||
-                                                            (movingDestination && movingDestination === item.id),
-                                                    )}
-                                                    key={item.id}
-                                                    index={i}
-                                                    item={item}
-                                                    structureItem={structureItem}
-                                                />
-                                            ))}
-                                        </>
-                                    )}
-                                />
-                            </DndProvider>
+                                                    if (error && error.error && error.error.data['isParent']) {
+                                                        errorNotification(
+                                                            'Item is a parent reference',
+                                                            'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
+                                                            15000,
+                                                        );
+
+                                                        return;
+                                                    }
+                                                }}
+                                                disabled={Boolean(
+                                                    (areItemsDeleting && checkedItems.includes(item.id)) ||
+                                                        (movingSource && movingSource === item.id) ||
+                                                        (movingDestination && movingDestination === item.id),
+                                                )}
+                                                key={item.id}
+                                                index={i}
+                                                item={item}
+                                                structureItem={structureItem}
+                                            />
+                                        ))}
+                                    </>
+                                )}
+                            />
+                        </DndProvider>
+
+                        {Boolean(data.length) && (
+                            <div className={styles.pagination}>
+                                {hasNextPage && (
+                                    <Button
+                                        variant="outline"
+                                        disabled={isFetching}
+                                        rightSection={isFetching ? <Loader size={12} /> : undefined}
+                                        onClick={() => {
+                                            pageRef.current = pageRef.current + 1;
+                                            fetchNextPage();
+                                        }}>
+                                        LOAD MORE
+                                    </Button>
+                                )}
+
+                                {!hasNextPage && (
+                                    <p className={styles.paginationEmpty}>
+                                        <IconMistOff size={16} /> No more items
+                                    </p>
+                                )}
+                            </div>
                         )}
 
-                        {Boolean(data.result.data.length) && (
-                            <div className={styles.stickyPagination}>
-                                <Pagination
-                                    value={queryParams.page}
-                                    onChange={(page) => {
-                                        setParam('page', page + '');
-                                    }}
-                                    radius={20}
-                                    boundaries={2}
-                                    total={Math.ceil(data.result.total / parseInt(queryParams.limit))}
-                                />
-                                <Select
-                                    label="TOTAL"
-                                    onChange={(l) => {
-                                        if (!l) {
-                                            setParam('limit', '15');
-                                            return;
-                                        }
-
-                                        setParam('limit', l);
-                                    }}
-                                    value={queryParams.limit}
-                                    placeholder="Limit"
-                                    data={['15', '50', '100']}
-                                    styles={{
-                                        root: {
-                                            width: '100px',
-                                        },
-                                        label: {
-                                            fontSize: '0.7rem',
-                                            color: 'var(--mantine-color-gray-6)',
-                                        },
-                                    }}
-                                />
+                        {checkedItems.length > 0 && (
+                            <div className={styles.stickyFooter}>
+                                <div className={styles.selectedItemsContainer}>
+                                    <p>
+                                        <span>{checkedItems.length}</span> selected
+                                    </p>
+                                    <Button
+                                        loading={areItemsDeleting}
+                                        onClick={() => setIsDeleteAllModalOpen(true)}
+                                        color="red"
+                                        variant="outline"
+                                        size="xs">
+                                        Delete selected
+                                    </Button>
+                                </div>
                             </div>
                         )}
                     </div>
