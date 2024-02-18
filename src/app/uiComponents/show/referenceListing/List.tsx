@@ -16,6 +16,7 @@ import type { StructureType } from '@root/types/shell/shell';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import { IconMistOff } from '@tabler/icons-react';
+import NothingFound from '@app/uiComponents/shared/NothingFound';
 
 interface Props {
     reference: QueryReference;
@@ -109,6 +110,8 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                         </CenteredError>
                     </div>
                 )}
+
+                {!isFetching && data && listing.length === 0 && <NothingFound />}
 
                 {data && listing.length !== 0 && referenceStructureItem && (
                     <div className={styles.container}>

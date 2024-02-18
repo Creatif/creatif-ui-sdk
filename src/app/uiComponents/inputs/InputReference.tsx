@@ -79,7 +79,6 @@ export default function InputReference({
                             referenceStructureItem={internalStructureItem}
                             onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
                                 const value = JSON.parse(selected.value);
-                                console.log(selected);
                                 const ref = {
                                     name: name,
                                     structureType: value.structureType,

@@ -73,7 +73,6 @@ export async function tryHttp<ReturnType, Body = unknown>(
 }
 export function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
     return async () => {
-        console.log('sdčlkfjsačljfčsaf');
         const response = await fn();
         if (response.error) throw response.error;
 

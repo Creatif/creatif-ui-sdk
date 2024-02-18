@@ -56,7 +56,7 @@ export default function usePaginateReferences<Response>({
         fields,
     ];
 
-    async function fetchPage() {
+    async function fetchPage({ pageParam = 1 }) {
         const fn = throwIfHttpFails(() =>
             paginateReferences({
                 parentId,
@@ -66,7 +66,7 @@ export default function usePaginateReferences<Response>({
                 parentStructureId,
                 childStructureId,
                 projectId: Runtime.instance.credentials.projectId,
-                page,
+                page: pageParam,
                 limit,
                 groups,
                 orderBy,
@@ -99,6 +99,7 @@ export default function usePaginateReferences<Response>({
                         return undefined;
                     }
                 }
+
                 return lastPage.page + 1;
             },
             retry: 1,
