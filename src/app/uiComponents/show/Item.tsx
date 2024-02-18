@@ -26,6 +26,7 @@ import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStor
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import type { StructureType } from '@root/types/shell/shell';
 import { EditLocaleWrapperModal } from '@app/uiComponents/show/modals/EditLocaleWrapperModal';
+import { EditGroupsWrapperModal } from '@app/uiComponents/show/modals/EditGroupsWrapperModal';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -81,8 +82,10 @@ export function Item() {
     const [internalResult, setInternalResult] = useState(data?.result);
 
     const { tabs, onChange, selected } = useTabs((internalResult && internalResult.references) || []);
-    const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const values = useValueFields(internalResult?.value);
+
+    const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
+    const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
 
     useEffect(() => {
         if (data?.result) {
@@ -108,7 +111,7 @@ export function Item() {
                                     <IconEdit size={16} />
                                 </ActionIcon>
 
-                                <ActionIcon variant="default">
+                                <ActionIcon onClick={() => setIsEditGroupsOpen(true)} variant="default">
                                     <IconStack3 size={16} />
                                 </ActionIcon>
 
@@ -183,6 +186,40 @@ export function Item() {
                     name={internalResult.name}
                     currentLocale={internalResult.locale}
                     onClose={() => setIsEditLocaleOpen(false)}
+                />
+            )}
+
+            {structureItem && internalResult && (
+                <EditLocaleWrapperModal
+                    onUpdated={(locale) => {
+                        if (internalResult?.locale) {
+                            internalResult.locale = locale;
+                            setInternalResult({ ...internalResult });
+                        }
+                    }}
+                    isOpen={isEditLocaleOpen}
+                    structureItem={structureItem}
+                    id={internalResult.id}
+                    name={internalResult.name}
+                    currentLocale={internalResult.locale}
+                    onClose={() => setIsEditLocaleOpen(false)}
+                />
+            )}
+
+            {structureItem && internalResult && (
+                <EditGroupsWrapperModal
+                    onUpdated={(groups) => {
+                        if (internalResult) {
+                            internalResult.groups = groups.map((item) => item.name);
+                            setInternalResult({ ...internalResult });
+                        }
+                    }}
+                    isOpen={isEditGroupsOpen}
+                    structureItem={structureItem}
+                    id={internalResult.id}
+                    name={internalResult.name}
+                    currentLocale={internalResult.locale}
+                    onClose={() => setIsEditGroupsOpen(false)}
                 />
             )}
         </>
