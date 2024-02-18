@@ -28,9 +28,24 @@ export async function tryHttp<ReturnType, Body = unknown>(
             };
         }
 
-        if (res.status === 404 || res.status === 422) {
+        if (res.status === 422) {
             return {
                 error: new ApiError('Forbidden', await res.json(), 403),
+                status: res.status,
+            };
+        }
+
+        if (res.status === 404) {
+            return {
+                error: new ApiError(
+                    'Not found',
+                    {
+                        data: {
+                            message: 'This resource does not exist',
+                        },
+                    },
+                    404,
+                ),
                 status: res.status,
             };
         }
@@ -58,6 +73,7 @@ export async function tryHttp<ReturnType, Body = unknown>(
 }
 export function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
     return async () => {
+        console.log('sdčlkfjsačljfčsaf');
         const response = await fn();
         if (response.error) throw response.error;
 

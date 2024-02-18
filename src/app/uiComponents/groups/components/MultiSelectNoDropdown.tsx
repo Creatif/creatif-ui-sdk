@@ -4,14 +4,21 @@ import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
 import { Combobox, Loader, Pill, PillsInput, useCombobox } from '@mantine/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import type { Group, SingleGroupBlueprint } from '@root/types/api/groups';
 
 interface Props {
     isLoading: boolean;
     error?: string | undefined;
-    currentValues: string[];
+    currentValues: Group[];
     name: string;
     label: string;
     onDirty?: () => void;
+}
+
+export interface InternalGroup {
+    type: 'new' | 'current';
+    name: string;
+    id?: string;
 }
 
 export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, label, onDirty }: Props) {
@@ -24,13 +31,46 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
         },
     });
 
-    const [value, setValue] = useState<string[]>(currentValues);
+    const removedRef = useRef<InternalGroup[]>([]);
+    const [value, setValue] = useState<InternalGroup[]>(
+        currentValues.map((item) => ({ type: 'current', name: item.name, id: item.id })),
+    );
     const [search, setSearch] = useState('');
     const createdTickRef = useRef(false);
 
     useEffect(() => {
         if (Array.isArray(value)) {
-            setFormValue(name, value);
+            const finalProduct: SingleGroupBlueprint[] = [
+                ...removedRef.current.map(
+                    (item) =>
+                        ({
+                            name: item.name,
+                            id: item.id,
+                            action: 'remove',
+                            type: 'current',
+                        }) as SingleGroupBlueprint,
+                ),
+                ...value.map((item) => {
+                    if (item.type === 'new') {
+                        return {
+                            type: 'new',
+                            action: 'create',
+                            name: item.name,
+                            id: '',
+                        } as SingleGroupBlueprint;
+                    }
+
+                    return {
+                        type: 'current',
+                        action: 'void',
+                        name: item.name,
+                        id: item.id,
+                    } as SingleGroupBlueprint;
+                }),
+            ];
+
+            setFormValue(name, finalProduct);
+
             onDirty?.();
         }
     }, [value]);
@@ -38,15 +78,13 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
     const handleValueSelect = useCallback(
         (val: string) => {
             if (val === '$create' && search) {
-                setValue((current) => Array.from(new Set([...current, search])));
-            } else if (search) {
-                setValue((current) => {
-                    if (current.includes(search)) {
-                        return current.filter((v) => v !== val);
+                for (const current of value) {
+                    if (current.name === search) {
+                        return;
                     }
+                }
 
-                    return [...current, search];
-                });
+                setValue([...value, { name: search, type: 'new' }]);
             }
 
             setSearch('');
@@ -54,11 +92,25 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
         [search],
     );
 
-    const handleValueRemove = (val: string) => setValue((current) => current.filter((v) => v !== val));
+    const handleValueRemove = (val: InternalGroup) => {
+        const resolved: InternalGroup[] = [];
+        for (const current of value) {
+            if (current.type === 'current' && current.name === val.name) {
+                removedRef.current.push(val);
+                continue;
+            } else if (current.type === 'new' && current.name === val.name) {
+                continue;
+            }
+
+            resolved.push(current);
+        }
+
+        setValue(resolved);
+    };
 
     const renderedValues = value.map((item) => (
-        <Pill key={item} withRemoveButton onRemove={() => handleValueRemove(item)}>
-            {item}
+        <Pill key={item.name} withRemoveButton onRemove={() => handleValueRemove(item)}>
+            {item.name}
         </Pill>
     ));
 
@@ -90,8 +142,7 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
                                 error={error}
                                 onClick={() => combobox.openDropdown()}>
                                 <Pill.Group>
-                                    {renderedValues}
-
+                                    {renderedValues}`
                                     <Combobox.EventsTarget>
                                         <PillsInput.Field
                                             onFocus={() => combobox.openDropdown()}

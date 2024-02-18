@@ -4,14 +4,15 @@ import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
 import { Runtime } from '@app/runtime/Runtime';
 import { getGroups } from '@lib/api/groups/getGroups';
+import type { Group } from '@root/types/api/groups';
 export default function useGetGroups(enabled?: boolean) {
     const queryClient = useQueryClient();
     const key = ['get_all_groups'];
     return {
-        ...useQuery<TryResult<string[]>, ApiError>(
+        ...useQuery<TryResult<Group[]>, ApiError>(
             key,
             async () => {
-                const fn = throwIfHttpFails<string[]>(() =>
+                const fn = throwIfHttpFails<Group[]>(() =>
                     getGroups({
                         projectId: Runtime.instance.credentials.projectId,
                     }),

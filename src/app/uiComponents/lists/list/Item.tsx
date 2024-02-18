@@ -74,7 +74,7 @@ export default function Item<Value, Metadata>({
     );
 
     item.locale = data?.result && data.result.locale ? data.result.locale : item.locale;
-    item.groups = data?.result && data.result.groups ? data.result.groups : item.groups;
+    item.groups = data?.result && data.result.groups ? data.result.groups.map((item) => item.name) : item.groups;
 
     const ref = useRef<HTMLAnchorElement>(null);
     const [{ handlerId }, drop] = useDrop<DragItem, DragItem, { handlerId: Identifier | null }>({
@@ -305,7 +305,6 @@ export default function Item<Value, Metadata>({
                     structureType={structureItem.structureType}
                     structureName={structureItem.id}
                     open={isEditGroupsOpen}
-                    currentGroups={item.groups || []}
                     onClose={() => setIsEditGroupsOpen(false)}
                     onEdit={(groups) => {
                         mutate({

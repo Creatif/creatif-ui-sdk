@@ -20,7 +20,7 @@ interface Props {
 export default function useMapVariablesPagination<Response>({
     name,
     search = '',
-    limit = '100',
+    limit = '25',
     groups = [],
     orderBy = 'created_at',
     direction = 'desc',

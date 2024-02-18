@@ -7,15 +7,21 @@ import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { groupsField } from '@app/uiComponents/form/bindings/bindingResolver';
+import type { Group } from '@root/types/api/groups';
 export interface InputGroupsProps extends MultiSelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-// groups must be sorted
-// selection must be clearable
-// must be loadable
+
+function createOptions(groups: Group[]) {
+    return groups.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
+}
+
 export function InputGroups({ validation, store }: InputGroupsProps) {
-    const { control, setValue: setFormValue, setError, formState: {errors} } = useFormContext();
+    const { control, setValue: setFormValue, setError } = useFormContext();
     const [value, setValue] = useState<string[]>(store.getState().groups || []);
     const { isFetching, data: groups, error: groupsError } = useGetGroups();
 
@@ -51,7 +57,7 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
                     placeholder="Choose your groups"
                     clearable={true}
                     value={value}
-                    data={(groups && groups.result) || []}
+                    data={createOptions(groups?.result || [])}
                     onChange={(groups) => {
                         setFormValue(name, groups);
                         setValue(groups);

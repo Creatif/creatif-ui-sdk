@@ -190,7 +190,7 @@ export default function Sort({
                             return filtered;
                         }}
                         placeholder="Select groups"
-                        data={data?.result || []}
+                        data={data?.result?.map((item) => ({ value: item.id, label: item.name })) || []}
                     />
                 </div>
             </div>

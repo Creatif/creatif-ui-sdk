@@ -1,7 +1,7 @@
 import { app } from '@lib/http/fetchInstance';
 import { authHeaders, tryHttp } from '@lib/http/tryHttp';
-import type { GetGroupsBlueprint } from '@root/types/api/groups';
+import type { GetGroupsBlueprint, Group } from '@root/types/api/groups';
 
 export async function getGroups(blueprint: GetGroupsBlueprint) {
-    return tryHttp<string[]>(app(), 'get', `/groups/${blueprint.projectId}`, null, authHeaders());
+    return tryHttp<Group[]>(app(), 'get', `/groups/${blueprint.projectId}`, null, authHeaders());
 }

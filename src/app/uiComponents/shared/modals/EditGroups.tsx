@@ -5,27 +5,27 @@ import { Button, Modal, MultiSelect } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import useGetGroups from '@app/uiComponents/shared/hooks/useGetGroups';
 import useGetVariableGroups from '@app/uiComponents/shared/hooks/useGetVariableGroups';
+import type { Group } from '@root/types/api/groups';
+import { NativeSelectOption } from '@mantine/core/lib/components/NativeSelect/NativeSelectOption';
 
 interface Props {
     open: boolean;
     onClose: () => void;
     onEdit: (groups: string[]) => void;
-    currentGroups: string[];
     structureType: string;
     itemId: string;
     structureName: string;
 }
 
-export default function EditGroups({
-    open,
-    onClose,
-    onEdit,
-    currentGroups,
-    structureName,
-    structureType,
-    itemId,
-}: Props) {
-    const [groups, setGroups] = useState<string[]>(currentGroups);
+function createOptions(groups: Group[]) {
+    return groups.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
+}
+
+export default function EditGroups({ open, onClose, onEdit, structureName, structureType, itemId }: Props) {
+    const [groups, setGroups] = useState<string[]>([]);
     const { isFetching: areGroupsLoading, data: allGroups, error: groupError } = useGetGroups(open);
     const {
         isFetching: areVariableGroupsLoading,
@@ -34,8 +34,23 @@ export default function EditGroups({
     } = useGetVariableGroups(structureType, structureName, itemId, open);
 
     useEffect(() => {
-        if (variableGroups) {
-            setGroups((variableGroups && variableGroups.result) || []);
+        if (variableGroups?.result && allGroups?.result) {
+            const vGroups = variableGroups.result;
+            const gs = allGroups.result;
+
+            setGroups(() =>
+                vGroups
+                    .filter((item) => {
+                        const foundGroup = gs.find((t) => item.id === t.id);
+                        if (foundGroup) {
+                            return {
+                                value: foundGroup.id,
+                                name: foundGroup.name,
+                            };
+                        }
+                    })
+                    .map((item) => item.id),
+            );
         }
     }, [variableGroups]);
 
@@ -54,7 +69,7 @@ export default function EditGroups({
                     placeholder="Choose your groups"
                     clearable={true}
                     value={groups}
-                    data={(allGroups && allGroups.result) || []}
+                    data={createOptions(allGroups?.result || [])}
                     onChange={(groups) => {
                         setGroups(groups);
                     }}

@@ -75,7 +75,7 @@ export function Listing<Value, Metadata>() {
         error: mapError,
         invalidateQuery: mapInvalidate,
         fetchNextPage: fetchNextMapPage,
-        refetch: refetchMap,
+        isFetching: isMapFetching,
         hasNextPage: hasNextMapPage,
         isFetchingNextPage: isFetchingNextMapPage,
     } = useMapVariablesPagination<PaginationResult<Value, Metadata>>({
@@ -95,7 +95,7 @@ export function Listing<Value, Metadata>() {
         error: listError,
         invalidateQuery: listInvalidate,
         fetchNextPage: fetchNextListPage,
-        refetch: refetchList,
+        isFetching: isListFetching,
         hasNextPage: hasNextListPage,
         isFetchingNextPage: isFetchingNextListPage,
     } = useListVariablesPagination<PaginationResult<Value, Metadata>>({
@@ -110,13 +110,13 @@ export function Listing<Value, Metadata>() {
         enabled: Boolean(structureItem) && structureType === 'list',
     });
 
-    const { data, hasNextPage, fetchNextPage, refetch, error, invalidateQuery, isFetching } = {
+    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, invalidateQuery, isFetching } = {
         data: resolveListing<Value, Metadata>(mapData?.pages, listData?.pages, pageRef.current),
         error: structureType === 'list' ? listError : mapError,
+        isFetching: structureType === 'list' ? isListFetching : isMapFetching,
         invalidateQuery: structureType === 'list' ? listInvalidate : mapInvalidate,
-        isFetching: structureType === 'list' ? isFetchingNextListPage : isFetchingNextMapPage,
+        isFetchingNextPage: structureType === 'list' ? isFetchingNextListPage : isFetchingNextMapPage,
         fetchNextPage: structureType === 'list' ? fetchNextListPage : fetchNextMapPage,
-        refetch: structureType === 'list' ? refetchList : refetchMap,
         hasNextPage: structureType === 'list' ? hasNextListPage : hasNextMapPage,
     };
 
@@ -274,8 +274,8 @@ export function Listing<Value, Metadata>() {
                                 {hasNextPage && (
                                     <Button
                                         variant="outline"
-                                        disabled={isFetching}
-                                        rightSection={isFetching ? <Loader size={12} /> : undefined}
+                                        disabled={isFetchingNextPage}
+                                        rightSection={isFetchingNextPage ? <Loader size={12} /> : undefined}
                                         onClick={() => {
                                             pageRef.current = pageRef.current + 1;
                                             fetchNextPage();

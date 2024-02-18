@@ -4,6 +4,7 @@ import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
 import { Runtime } from '@app/runtime/Runtime';
 import getVariableGroups from '@lib/api/declarations/shared/getVariableGroups';
+import type { Group } from '@root/types/api/groups';
 export default function useGetVariableGroups(
     structureType: string,
     structureId: string,
@@ -13,10 +14,10 @@ export default function useGetVariableGroups(
     const queryClient = useQueryClient();
     const key = ['get_groups', structureType, structureId];
     return {
-        ...useQuery<TryResult<string[]>, ApiError>(
+        ...useQuery<TryResult<Group[]>, ApiError>(
             key,
             async () => {
-                const fn = throwIfHttpFails<string[]>(() =>
+                const fn = throwIfHttpFails<Group[]>(() =>
                     getVariableGroups({
                         structureType: structureType,
                         structureId: structureId,

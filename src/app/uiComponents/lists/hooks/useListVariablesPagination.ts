@@ -20,7 +20,7 @@ interface Props {
 export default function useListVariablesPagination<Response>({
     name,
     search = '',
-    limit = '100',
+    limit = '25',
     groups = [],
     orderBy = 'created_at',
     direction = 'desc',
@@ -75,7 +75,6 @@ export default function useListVariablesPagination<Response>({
             },
             retry: 1,
             enabled,
-            staleTime: Infinity,
             keepPreviousData: true,
             refetchOnWindowFocus: false,
         }),
