@@ -14,7 +14,7 @@ import Item from '@app/uiComponents/show/referenceListing/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { StructureType } from '@root/types/shell/shell';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
-import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
+import useSearchQuery from '@app/uiComponents/show/hooks/useSearchQuery';
 import { IconMistOff } from '@tabler/icons-react';
 import NothingFound from '@app/uiComponents/shared/NothingFound';
 

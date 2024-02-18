@@ -8,6 +8,7 @@ class QueryParams {
     public readonly behaviour: Behaviour | undefined = undefined;
     public readonly orderBy: CurrentSortType | undefined = undefined;
     public readonly locales: string[] = [];
+
     constructor(
         private readonly hiddenLocales: string | undefined,
         private readonly hiddenDirection: string | undefined,
@@ -15,6 +16,7 @@ class QueryParams {
         private readonly hiddenGroups: string | undefined,
         private readonly hiddenBehaviour: string | undefined,
         readonly search: string | undefined,
+        readonly activeTab: string,
     ) {
         if (!hiddenGroups) {
             this.groups = [];
@@ -57,6 +59,7 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
         params.get('groups') || '',
         params.get('behaviour') || '',
         params.get('search') || '',
+        params.get('activeTab') || 'structure',
     );
 
     return {
@@ -70,6 +73,7 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
                 orderBy: q.orderBy || orderBy,
                 behaviour: q.behaviour ? q.behaviour : '',
                 search: q.search ? q.search : '',
+                activeTab: q.activeTab ? q.activeTab : 'structure',
                 [key]: value,
             });
         },
