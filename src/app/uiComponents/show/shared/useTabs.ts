@@ -55,6 +55,15 @@ export default function useTabs(references: QueryReference[]): {
         }
     }, [references]);
 
+    useEffect(() => {
+        if (selectedTab.value !== activeTab) {
+            const foundTab = tabs.find((item) => item.value === activeTab);
+            if (foundTab) {
+                setSelectedTab(foundTab);
+            }
+        }
+    }, [activeTab]);
+
     return {
         selected: selectedTab,
         tabs: tabs,
