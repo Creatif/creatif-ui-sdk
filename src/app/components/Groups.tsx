@@ -19,7 +19,7 @@ function GroupsPopover({ groups }: Props) {
                     <Popover.Target>
                         <p onMouseEnter={open} onMouseLeave={close} className={styles.popoverTarget}>
                             <IconPlus size={10} />
-                            {groups.length - 3} more
+                            {groups.length - 3}
                         </p>
                     </Popover.Target>
 

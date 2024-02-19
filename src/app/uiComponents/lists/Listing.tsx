@@ -26,6 +26,9 @@ import type { StructureType } from '@root/types/shell/shell';
 import useMapVariablesPagination from '@app/uiComponents/lists/hooks/useMapVariablesPagination';
 import { IconMistOff } from '@tabler/icons-react';
 
+import gridStyles from '@app/uiComponents/lists/css/listGrid.module.css';
+import { Item as GridItem } from '@app/uiComponents/lists/gridItem/Item';
+
 export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
     page: number;
 }
@@ -169,6 +172,79 @@ export function Listing<Value, Metadata>() {
                     }}
                 />
             )}
+
+            {structureItem && <div className={gridStyles.container}>
+                <div className={gridStyles.root}>
+                    <p className={gridStyles.column}></p>
+                    <p className={gridStyles.column}>NAME</p>
+                    <p className={gridStyles.column}>BEHAVIOUR</p>
+                    <p className={gridStyles.column}>LOCALE</p>
+                    <p className={gridStyles.column}>GROUPS</p>
+                    <p className={gridStyles.column}>CREATED ON</p>
+                    <p className={gridStyles.column}>ACTIONS</p>
+
+
+                    <div className={gridStyles.row}>
+                        <DndProvider backend={HTML5Backend}>
+                            <DraggableList<Value, Metadata>
+                                data={data}
+                                structureItem={structureItem}
+                                structureType={structureType as StructureType}
+                                onRearrange={rearrange}
+                                renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
+                                    <>
+                                        {list.map((item, i) => (
+                                            <GridItem
+                                                onMove={onMove}
+                                                onDrop={onDrop}
+                                                isHovered={item.id === hoveredId}
+                                                onChecked={(itemId, checked) => {
+                                                    const idx = checkedItems.findIndex((item) => item === itemId);
+                                                    if (idx !== -1 && !checked) {
+                                                        checkedItems.splice(idx, 1);
+                                                        setCheckedItems([...checkedItems]);
+                                                        return;
+                                                    }
+
+                                                    if (checked) {
+                                                        setCheckedItems([...checkedItems, itemId]);
+                                                    }
+                                                }}
+                                                onDeleted={(error) => {
+                                                    if (!error) {
+                                                        invalidateQuery();
+                                                        return;
+                                                    }
+
+                                                    if (error && error.error && error.error.data['isParent']) {
+                                                        errorNotification(
+                                                            'Item is a parent reference',
+                                                            'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
+                                                            15000,
+                                                        );
+
+                                                        return;
+                                                    }
+                                                }}
+                                                disabled={Boolean(
+                                                    (areItemsDeleting && checkedItems.includes(item.id)) ||
+                                                    (movingSource && movingSource === item.id) ||
+                                                    (movingDestination && movingDestination === item.id),
+                                                )}
+                                                key={item.id}
+                                                index={i}
+                                                item={item}
+                                                structureItem={structureItem}
+                                            />
+                                        ))}
+                                    </>
+                                )}
+                            />
+                        </DndProvider>
+                    </div>
+                </div>
+            </div>}
+
 
             <div className={contentContainerStyles.root}>
                 {checkedItems.length > 0 && (
