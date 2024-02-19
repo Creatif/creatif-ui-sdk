@@ -6,10 +6,11 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import type { AppShellItem } from '@root/types/shell/shell';
 import { Tooltip } from '@mantine/core';
-import { IconLogout, IconRoute2, IconStack3 } from '@tabler/icons-react';
+import { IconChevronRight, IconLogout, IconStack3, IconTopologyBus } from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import { NavigationDropdown } from '@app/uiComponents/shell/NavigationDropdown';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];
@@ -83,6 +84,26 @@ export default function Navigation({ navItems, logo }: Props) {
                     />
                     Groups
                 </NavLink>
+
+                <NavigationDropdown topItem={{
+                    text: <span className={styles.appMenuInnerDecoration}>
+                        Structures <IconChevronRight size={14} />
+                    </span>,
+                    icon: <IconTopologyBus
+                        className="navItemIcon"
+                        style={{
+                            alignSelf: 'center',
+                        }}
+                        size={20}
+                    />,
+                }} dropdownItems={[
+                    {
+                        text: 'Maps',
+                    },
+                    {
+                        text: 'Lists',
+                    }
+                ]} />
 
                 <button
                     onClick={async () => {

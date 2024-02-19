@@ -130,6 +130,15 @@
     width: 100%;
 }
 
+.appMenuInnerDecoration {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+    align-items: center;
+    align-content: center;
+}
+
 .appMenuButton {
     width: 100%;
     display: flex;
@@ -155,4 +164,26 @@
 
 .appMenu a.active .navItemIcon {
     color: var(--mantine-color-indigo-9);
+}
+
+.appMenuDropdown {
+
+}
+
+.appMenuDropdown ul {
+    display: none;
+    margin-left: 2rem;
+}
+
+.appMenuDropdownOpen ul {
+    display: block;
+    
+}
+
+.appMenuDropdownClose ul {
+    display: none;
+}
+
+
+.appMenuDropdownButton {
 }
