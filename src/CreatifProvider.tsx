@@ -22,7 +22,6 @@ import type LocalesCache from '@lib/storage/localesCache';
 import FirstTimeSetup from '@app/uiComponents/shell/FirstTimeSetup';
 import AuthPage from '@app/uiComponents/shell/AuthPage';
 import Banner from '@app/uiComponents/shell/Banner';
-import DevBar from '@app/devBar/DevBar';
 import { Runtime } from '@app/runtime/Runtime';
 import { validateConfig } from '@app/setupUtil';
 import { createSetup } from '@app/setup';
@@ -118,8 +117,6 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
                         <FirstTimeSetup>
                             <div className={animations.initialAnimation}>
                                 <Shell options={app} />
-
-                                <DevBar />
                             </div>
                         </FirstTimeSetup>
                     </QueryClientProvider>
