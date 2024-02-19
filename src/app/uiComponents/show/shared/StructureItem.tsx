@@ -34,7 +34,9 @@ export default function StructureItem({ variable }: Props) {
 
             <div className={styles.row}>
                 <h2>Groups</h2>
-                <div>{variable.groups && <Groups groups={variable.groups} />}</div>
+                <div>
+                    {variable.groups && Boolean(variable.groups.length) ? <Groups groups={variable.groups} /> : '-'}
+                </div>
             </div>
 
             <div className={styles.row}>

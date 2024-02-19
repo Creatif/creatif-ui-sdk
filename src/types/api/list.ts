@@ -1,6 +1,7 @@
 import type { Behaviour } from '@root/types/api/shared';
 import type { QueryReference } from '@root/types/api/reference';
 import type { StructureType } from '@root/types/shell/shell';
+import type { Group } from '@root/types/api/groups';
 export interface CreateListBlueprint {
     name: string;
     projectId: string;
@@ -42,6 +43,39 @@ export interface QueriedListItem<Value = unknown, Metadata = unknown> {
 
     createdAt: string;
     updatedAt: string;
+}
+
+export interface PaginateListBlueprint {
+    name: string;
+    projectId: string;
+    search: string;
+    limit: string | number;
+    page: number;
+    groups?: string[];
+    orderBy?: string;
+    direction?: 'desc' | 'asc';
+    behaviour?: Behaviour;
+    locales?: string[];
+    fields?: string[];
+}
+export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
+    id: string;
+    name: string;
+    shortId: string;
+    index: number;
+    behaviour: Behaviour;
+    locale: string;
+    groups?: string[];
+    value: Value;
+    metadata: Metadata;
+
+    createdAt: string;
+    updatedAt: string;
+}
+export interface PaginationResult<Value, Metadata> {
+    total: number;
+    page: number;
+    data: PaginatedVariableResult<Value, Metadata>[];
 }
 export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
@@ -92,7 +126,7 @@ export interface UpdateListItemResult<Value = unknown, Metadata = unknown> {
     name: string;
     locale: string;
     behaviour: Behaviour;
-    groups: string[];
+    groups: Group[];
     metadata: Metadata;
     value: Value;
     createdAt: string;

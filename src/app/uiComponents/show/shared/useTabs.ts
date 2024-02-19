@@ -1,5 +1,6 @@
 import type { QueryReference } from '@root/types/api/reference';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 type Tab = { label: string; value: string; type: 'internal' | 'reference'; reference?: QueryReference };
 
@@ -15,8 +16,10 @@ function createTabsFromReferences(references: QueryReference[]): Tab[] {
 export default function useTabs(references: QueryReference[]): {
     selected: Tab;
     tabs: Tab[];
-    onChange: (value: string) => void;
+    onChange: (value: string | null) => void;
 } {
+    const [params, setParams] = useSearchParams();
+
     const tabs = useMemo<Tab[]>(
         () => [
             {
@@ -34,14 +37,44 @@ export default function useTabs(references: QueryReference[]): {
         [references],
     );
 
-    const [selectedTab, setSelectedTab] = useState<Tab>(tabs[0]);
+    const activeTab = params.get('activeTab');
+    const selectedTabFromActiveTab = tabs.find((tab) => activeTab === tab.value);
+
+    const [selectedTab, setSelectedTab] = useState<Tab>(selectedTabFromActiveTab ? selectedTabFromActiveTab : tabs[0]);
+
+    useEffect(() => {
+        const activeTab = params.get('activeTab');
+
+        for (const ref of references) {
+            if (ref.id === activeTab) {
+                const foundTab = tabs.find((tab) => tab.value === ref.id);
+                if (foundTab) {
+                    setSelectedTab(foundTab);
+                }
+            }
+        }
+    }, [references]);
+
+    useEffect(() => {
+        if (selectedTab.value !== activeTab) {
+            const foundTab = tabs.find((item) => item.value === activeTab);
+            if (foundTab) {
+                setSelectedTab(foundTab);
+            }
+        }
+    }, [activeTab]);
 
     return {
-        selectedTab: selectedTab,
+        selected: selectedTab,
         tabs: tabs,
-        onChange: (value: string) => {
+        onChange: (value: string | null) => {
+            if (!value) return;
+
             const item = tabs.find((item) => item.value === value);
-            if (item) setSelectedTab(item);
+            if (item) {
+                setParams({ ...params, activeTab: value });
+                setSelectedTab(item);
+            }
         },
     };
 }

@@ -1,14 +1,14 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import type { ApiError } from '@lib/http/apiError';
 import { Runtime } from '@app/runtime/Runtime';
+import type { PaginationResult } from '@root/types/api/list';
 interface Props {
     name: string;
     locales?: string[];
     limit?: string;
-    page?: number;
     behaviour?: Behaviour | undefined;
     groups?: string[];
     orderBy?: string;
@@ -20,25 +20,24 @@ interface Props {
 export default function useMapVariablesPagination<Response>({
     name,
     search = '',
-    limit = '15',
+    limit = '25',
     groups = [],
     orderBy = 'created_at',
     direction = 'desc',
     behaviour = undefined,
     locales = [],
-    page = 1,
     fields = [],
     enabled = true,
 }: Props) {
     const queryClient = useQueryClient();
     const key = [name, limit, groups, behaviour, orderBy, locales, direction, search, fields];
 
-    async function fetchListing({ page = 1 }) {
-        const fetchFn = throwIfHttpFails(() =>
+    async function fetchPage({ pageParam = 1 }) {
+        const fn = throwIfHttpFails(() =>
             paginateMapVariables({
                 name: name,
                 projectId: Runtime.instance.credentials.projectId,
-                page,
+                page: pageParam,
                 limit,
                 groups,
                 orderBy,
@@ -50,18 +49,31 @@ export default function useMapVariablesPagination<Response>({
             }),
         );
 
-        const response = await fetchFn();
+        const response = await fn();
+        if (response.result) {
+            return response.result;
+        }
 
-        return response.result.data;
+        return undefined;
     }
 
     return {
-        ...useInfiniteQuery<unknown, ApiError, Response>(key, fetchListing, {
+        ...useInfiniteQuery<unknown, ApiError, Response>(key, fetchPage, {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            getNextPageParam: (
+                lastPage: PaginationResult<Response, unknown>,
+                allPages: PaginationResult<Response, unknown>[],
+            ) => {
+                for (const page of allPages) {
+                    if (page?.data.length === 0) {
+                        return undefined;
+                    }
+                }
+                return lastPage.page + 1;
+            },
             enabled,
-            getNextPageParam: (lastPage) => 5,
             retry: 1,
-            staleTime: Infinity,
-            keepPreviousData: true,
             refetchOnWindowFocus: false,
         }),
         invalidateQuery() {

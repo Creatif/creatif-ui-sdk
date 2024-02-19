@@ -6,8 +6,8 @@ import { CreatifProvider } from '@root/CreatifProvider';
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$rwnx8s5eUKJrzg.uZ77pYOhNAtGQ6MBm5PkKj0oU.YwtOYw7QwLd6"
-            projectId="01HPM6GZV6JKZDYY1YAH5JQM7H"
+            apiKey="$2a$10$mbSuTe6tYkXbaf/q2MKkoOdxJ5BwTd3wn6bX1mS9AzsbFFzIS8h0i"
+            projectId="01HQ02PP6XQW275WRW0ZRXBN5Z"
             app={{
                 logo: 'Break free',
                 items: [

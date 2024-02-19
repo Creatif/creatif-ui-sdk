@@ -13,22 +13,24 @@ import { useMutation } from 'react-query';
 import { addGroups } from '@lib/api/groups/addGroups';
 import { Runtime } from '@app/runtime/Runtime';
 import type { ApiError } from '@lib/http/apiError';
-import type { AddGroupsBlueprint } from '@root/types/api/groups';
+import type { AddGroupsBlueprint, Group, SingleGroupBlueprint } from '@root/types/api/groups';
 import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
+import type { InternalGroup } from '@app/uiComponents/groups/components/MultiSelectNoDropdown';
 import { MultiSelectNoDropdown } from '@app/uiComponents/groups/components/MultiSelectNoDropdown';
 
 export function AddGroup() {
-    const methods = useForm<{ groups: string[] }>({
+    const methods = useForm<{ groups: InternalGroup[] }>({
         defaultValues: {
             groups: [],
         },
     });
 
-    const { success } = useNotification();
+    const { success, error: errorNotification } = useNotification();
 
     const [isFormDirty, setIsFormDirty] = useState(false);
-    const { isFetching, data, error } = useGetGroups<TryResult<string[]>>();
+    const { isFetching, data, error } = useGetGroups<TryResult<Group[]>>();
+
     const {
         isLoading,
         error: addGroupsError,
@@ -37,12 +39,9 @@ export function AddGroup() {
     } = useMutation<unknown, ApiError, AddGroupsBlueprint>((data) => addGroups(data));
 
     useEffect(() => {
-        if (!isLoading && isSuccess) {
+        if (!isLoading && !addGroupsError && isSuccess) {
             success('Groups saved', 'Your groups save been successfully saved.');
             setIsFormDirty(false);
-        }
-
-        if (!isLoading && !isSuccess) {
         }
     }, [isLoading, isSuccess]);
 
@@ -70,7 +69,7 @@ export function AddGroup() {
                         <form
                             onSubmit={methods.handleSubmit((data) => {
                                 mutate({
-                                    groups: data.groups,
+                                    groups: data.groups as SingleGroupBlueprint[],
                                     projectId: Runtime.instance.credentials.projectId,
                                 });
                             })}

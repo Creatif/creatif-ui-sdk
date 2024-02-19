@@ -19,7 +19,6 @@ function localesToSelectOptions(data: Locale[] | undefined) {
 export default function Header() {
     const { info } = useNotification();
 
-    console.log(Runtime.instance.currentLocaleStorage.getLocale());
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
     const [currentLocale, setCurrentLocale] = useState<string>(Runtime.instance.currentLocaleStorage.getLocale());
     const [isLocalesModalOpen, setIsLocalesModalOpen] = useState(false);

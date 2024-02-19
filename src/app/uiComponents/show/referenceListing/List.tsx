@@ -1,8 +1,6 @@
 import usePaginateReferences from '@app/uiComponents/show/hooks/usePaginateReferences';
 import type { QueryReference } from '@root/types/api/reference';
-import React, { useState } from 'react';
-import type { Behaviour } from '@root/types/api/shared';
-import type { CurrentSortType } from '@root/types/components/components';
+import React from 'react';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -10,19 +8,35 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
-import { Pagination, Select } from '@mantine/core';
+import { Button, Loader } from '@mantine/core';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/uiComponents/show/referenceListing/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { StructureType } from '@root/types/shell/shell';
-import type { TryResult } from '@root/types/shared';
-import type { PaginationResult } from '@root/types/api/list';
-import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
+import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
+import useSearchQuery from '@app/uiComponents/show/hooks/useSearchQuery';
+import { IconMistOff } from '@tabler/icons-react';
+import NothingFound from '@app/uiComponents/shared/NothingFound';
 
 interface Props {
     reference: QueryReference;
     structureType: StructureType;
     relationshipType: string;
+}
+
+function resolveListing<Value, Metadata>(
+    results: PaginationResult<Value, Metadata>[] | undefined,
+): PaginatedVariableResult<Value, Metadata>[] {
+    if (results && results.length > 0) {
+        let data: PaginatedVariableResult<Value, Metadata>[] = [];
+        for (const page of results) {
+            data = [...data, ...page.data];
+        }
+
+        return data;
+    }
+
+    return [];
 }
 
 export function List<Value, Metadata>({ reference, structureType, relationshipType }: Props) {
@@ -31,17 +45,8 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
         .getState()
         .getStructureItemByName(reference.structureName, structureType);
 
-    const [page, setPage] = useState(queryParams.page);
-    const [locales, setLocales] = useState<string[]>(queryParams.locales);
-    const [search, setSearch] = useState(queryParams.search);
-    const [groups, setGroups] = useState<string[]>(queryParams.groups);
-    const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(queryParams.direction);
-    const [behaviour, setBehaviour] = useState<Behaviour | undefined>(queryParams.behaviour);
-    const [orderBy, setOrderBy] = useState<CurrentSortType>(queryParams.orderBy as CurrentSortType);
-    const [limit, setLimit] = useState(queryParams.limit);
-
-    const { data, error, invalidateQuery, isFetching } = usePaginateReferences<
-        TryResult<PaginationResult<Value, Metadata>>
+    const { data, error, isFetching, fetchNextPage, isFetchingNextPage, hasNextPage } = usePaginateReferences<
+        PaginationResult<Value, Metadata>
     >({
         parentId: reference.parentId,
         childId: reference.childId,
@@ -49,16 +54,16 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
         parentStructureId: reference.parentStructureId,
         relationshipType: relationshipType,
         structureType: structureType,
-        page: page,
-        locales: locales,
-        groups: groups,
-        direction: direction,
-        behaviour: behaviour,
-        limit: limit as string,
-        orderBy: orderBy,
-        search: search as string,
+        locales: queryParams.locales,
+        groups: queryParams.groups,
+        direction: queryParams.direction,
+        behaviour: queryParams.behaviour,
+        orderBy: queryParams.orderBy,
+        search: queryParams.search,
         fields: ['groups'],
     });
+
+    const listing = resolveListing(data?.pages);
 
     return (
         <>
@@ -69,48 +74,34 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                     includeSortBy={['created_at', 'updated_at']}
                     structureItem={referenceStructureItem}
                     isLoading={isFetching}
-                    sortBy={orderBy}
-                    search={search || ''}
-                    locales={locales}
-                    direction={direction}
-                    behaviour={behaviour}
-                    groups={groups}
+                    sortBy={queryParams.orderBy || 'index'}
+                    search={queryParams.search || ''}
+                    locales={queryParams.locales}
+                    direction={queryParams.direction}
+                    behaviour={queryParams.behaviour}
+                    groups={queryParams.groups}
                     onDirectionChange={(direction) => {
-                        setDirection(direction);
                         setParam('direction', direction as string);
                     }}
                     onSelectedLocales={(locales) => {
-                        setLocales(locales);
                         setParam('locales', locales.join(','));
                     }}
                     onBehaviourChange={(behaviour) => {
-                        setBehaviour(behaviour);
                         setParam('behaviour', behaviour as string);
                     }}
                     onSortChange={(sortType) => {
-                        setOrderBy(sortType);
                         setParam('orderBy', sortType);
                     }}
                     onSelectedGroups={(groups) => {
-                        setGroups(groups);
                         setParam('groups', groups.join(','));
                     }}
                     onSearch={(text) => {
-                        setSearch(text);
                         setParam('search', text);
                     }}
                 />
             )}
 
             <div className={contentContainerStyles.root}>
-                {data?.result && data.result.data && (
-                    <div className={styles.listChoiceHeading}>
-                        <p className={styles.totalInfo}>
-                            Showing <span>{limit}</span> of <span>{data.result.total}</span> total items
-                        </p>
-                    </div>
-                )}
-
                 {error && (
                     <div className={styles.skeleton}>
                         <CenteredError title="An error occurred">
@@ -120,44 +111,33 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                     </div>
                 )}
 
-                {!isFetching && data?.result && data.result.data && referenceStructureItem && (
+                {!isFetching && data && listing.length === 0 && <NothingFound />}
+
+                {data && listing.length !== 0 && referenceStructureItem && (
                     <div className={styles.container}>
-                        {data.result.data.map((item) => (
+                        {listing.map((item) => (
                             <Item structureItem={referenceStructureItem} isHovered={false} key={item.id} item={item} />
                         ))}
 
-                        {data.result.data.length >= parseInt(limit) && (
-                            <div className={styles.stickyPagination}>
-                                <Pagination
-                                    value={page}
-                                    onChange={setPage}
-                                    radius={20}
-                                    boundaries={2}
-                                    total={Math.ceil(data.result.total / parseInt(limit))}
-                                />
-                                <Select
-                                    label="TOTAL"
-                                    onChange={(l) => {
-                                        if (!l) {
-                                            setLimit('15');
-                                            return;
-                                        }
+                        {Boolean(listing.length) && (
+                            <div className={styles.pagination}>
+                                {hasNextPage && (
+                                    <Button
+                                        variant="outline"
+                                        disabled={isFetchingNextPage}
+                                        rightSection={isFetchingNextPage ? <Loader size={12} /> : undefined}
+                                        onClick={() => {
+                                            fetchNextPage();
+                                        }}>
+                                        LOAD MORE
+                                    </Button>
+                                )}
 
-                                        setLimit(l);
-                                    }}
-                                    value={limit}
-                                    placeholder="Limit"
-                                    data={['15', '50', '100', '500', '1000']}
-                                    styles={{
-                                        root: {
-                                            width: '100px',
-                                        },
-                                        label: {
-                                            fontSize: '0.7rem',
-                                            color: 'var(--mantine-color-gray-6)',
-                                        },
-                                    }}
-                                />
+                                {!hasNextPage && (
+                                    <p className={styles.paginationEmpty}>
+                                        <IconMistOff size={16} /> No more items
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>

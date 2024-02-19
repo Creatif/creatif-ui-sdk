@@ -4,7 +4,7 @@ import CreateNew from '@app/uiComponents/button/CreateNew';
 import styles from '@app/uiComponents/lists/list/css/NothingFound.module.css';
 
 interface Props {
-    createNewPath: string;
+    createNewPath?: string;
 }
 
 export default function NothingFound({ createNewPath }: Props) {
@@ -13,7 +13,7 @@ export default function NothingFound({ createNewPath }: Props) {
             <div className={styles.inner}>
                 <p>NOTHING FOUND</p>
 
-                <CreateNew path={createNewPath} />
+                {createNewPath && <CreateNew path={createNewPath} />}
             </div>
         </div>
     );

@@ -1,14 +1,14 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import { useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import type { ApiError } from '@lib/http/apiError';
 import { Runtime } from '@app/runtime/Runtime';
+import type { PaginationResult } from '@root/types/api/list';
 interface Props {
     name: string;
     locales?: string[];
     limit?: string;
-    page?: number;
     behaviour?: Behaviour | undefined;
     groups?: string[];
     orderBy?: string;
@@ -20,8 +20,7 @@ interface Props {
 export default function useListVariablesPagination<Response>({
     name,
     search = '',
-    limit = '15',
-    page = 1,
+    limit = '25',
     groups = [],
     orderBy = 'created_at',
     direction = 'desc',
@@ -32,34 +31,53 @@ export default function useListVariablesPagination<Response>({
 }: Props) {
     const queryClient = useQueryClient();
 
-    const key = [name, page, limit, groups, behaviour, orderBy, locales, direction, search, fields];
+    const key = [name, limit, groups, behaviour, orderBy, locales, direction, search, fields];
+
+    async function fetchPage({ pageParam = 1 }) {
+        const fn = throwIfHttpFails(() =>
+            paginateList({
+                name: name,
+                projectId: Runtime.instance.credentials.projectId,
+                page: pageParam,
+                limit,
+                groups,
+                orderBy,
+                direction,
+                search,
+                behaviour,
+                locales,
+                fields,
+            }),
+        );
+
+        const response = await fn();
+        if (response.result) {
+            return response.result;
+        }
+
+        return undefined;
+    }
 
     return {
-        ...useQuery<unknown, ApiError, Response>(
-            key,
-            throwIfHttpFails(() =>
-                paginateList({
-                    name: name,
-                    projectId: Runtime.instance.credentials.projectId,
-                    page,
-                    limit,
-                    groups,
-                    orderBy,
-                    direction,
-                    search,
-                    behaviour,
-                    locales,
-                    fields,
-                }),
-            ),
-            {
-                retry: 1,
-                enabled,
-                staleTime: Infinity,
-                keepPreviousData: true,
-                refetchOnWindowFocus: false,
+        ...useInfiniteQuery<unknown, ApiError, Response>(key, fetchPage, {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            getNextPageParam: (
+                lastPage: PaginationResult<Response, unknown>,
+                allPages: PaginationResult<Response, unknown>[],
+            ) => {
+                for (const page of allPages) {
+                    if (page?.data.length === 0) {
+                        return undefined;
+                    }
+                }
+                return lastPage.page + 1;
             },
-        ),
+            retry: 1,
+            enabled,
+            keepPreviousData: true,
+            refetchOnWindowFocus: false,
+        }),
         invalidateQuery() {
             queryClient.invalidateQueries(key);
         },

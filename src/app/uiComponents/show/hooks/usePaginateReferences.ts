@@ -1,9 +1,10 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import { useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import type { ApiError } from '@lib/http/apiError';
 import paginateReferences from '@lib/api/declarations/references/paginateMapVariables';
 import { Runtime } from '@app/runtime/Runtime';
+import type { PaginationResult } from '@root/types/api/list';
 interface Props {
     parentId: string;
     childId: string;
@@ -29,7 +30,7 @@ export default function usePaginateReferences<Response>({
     childStructureId,
     parentStructureId,
     search = '',
-    limit = '15',
+    limit = '25',
     page = 1,
     groups = [],
     orderBy = 'created_at',
@@ -55,36 +56,57 @@ export default function usePaginateReferences<Response>({
         fields,
     ];
 
+    async function fetchPage({ pageParam = 1 }) {
+        const fn = throwIfHttpFails(() =>
+            paginateReferences({
+                parentId,
+                childId,
+                structureType,
+                relationshipType,
+                parentStructureId,
+                childStructureId,
+                projectId: Runtime.instance.credentials.projectId,
+                page: pageParam,
+                limit,
+                groups,
+                orderBy,
+                direction,
+                search,
+                behaviour,
+                locales,
+                fields,
+            }),
+        );
+
+        const response = await fn();
+        if (response.result) {
+            return response.result;
+        }
+
+        return undefined;
+    }
+
     return {
-        ...useQuery<unknown, ApiError, Response>(
-            key,
-            throwIfHttpFails(() =>
-                paginateReferences({
-                    parentId,
-                    childId,
-                    structureType,
-                    relationshipType,
-                    parentStructureId,
-                    childStructureId,
-                    projectId: Runtime.instance.credentials.projectId,
-                    page,
-                    limit,
-                    groups,
-                    orderBy,
-                    direction,
-                    search,
-                    behaviour,
-                    locales,
-                    fields,
-                }),
-            ),
-            {
-                retry: 1,
-                staleTime: Infinity,
-                keepPreviousData: true,
-                refetchOnWindowFocus: false,
+        ...useInfiniteQuery<unknown, ApiError, Response>(key, fetchPage, {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            getNextPageParam: (
+                lastPage: PaginationResult<Response, unknown>,
+                allPages: PaginationResult<Response, unknown>[],
+            ) => {
+                for (const page of allPages) {
+                    if (page?.data.length === 0) {
+                        return undefined;
+                    }
+                }
+
+                return lastPage.page + 1;
             },
-        ),
+            retry: 1,
+            staleTime: Infinity,
+            keepPreviousData: true,
+            refetchOnWindowFocus: false,
+        }),
         invalidateQuery() {
             queryClient.invalidateQueries(key);
         },
