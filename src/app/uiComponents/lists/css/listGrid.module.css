@@ -8,18 +8,42 @@
 }
 
 .root {
+}
+
+.columnGrid {
+    position: sticky;
+    top: 0;
+
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: 120px 1fr 100px 100px 1fr 1fr 1fr;
+    gap: 0.5rem;
+    padding: 1rem 0 1rem 0;
+
+    border-bottom: 1px solid var(--mantine-color-gray-2);
+    background-color: white;
+    z-index: 10;
 }
 
 .root .column {
-    padding: 1rem 0 1rem 0;
     font-size: 0.8rem;
     color: var(--mantine-color-gray-9);
     font-weight: 500;
 }
 
+.root .checkboxColumn {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2rem;
+    align-items: center;
+}
+
+.flexPlaceholder {
+    width: 18px;
+    height: 18px;
+    margin-left: 0.8rem;
+}
+
 .root .row {
     grid-column: span 7;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }

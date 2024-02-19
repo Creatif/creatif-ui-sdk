@@ -1,16 +1,19 @@
 .container {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: 120px 1fr 100px 100px 1fr 1fr 1fr;
     align-items: center;
+    gap: 0.5rem;
 
     border-bottom: 1px solid var(--mantine-color-indigo-0);
 
-    padding: 0.8rem 0 0.8rem 0;
+    padding: 1rem 0 1rem 0;
     margin-bottom: 0.8rem;
     border-radius: 4px;
 
     font-size: 0.9rem;
     color: var(--mantine-color-gray-9);
+
+    transition: transform 0.3s, border-bottom 0.3s;
 }
 
 .container:hover {
@@ -26,9 +29,34 @@
     padding-left: 0.8rem;
 }
 
+.hovered {
+    border-bottom: 1px solid var(--mantine-color-indigo-2);
+    transform: translate(16px, 0);
+}
+
 .actionRow {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 0.3rem;
+}
+
+.actionIconOverride {
+    background-color: var(--mantine-color-gray-0);
+    border: 1px solid var(--mantine-color-gray-2);
+    transition: background-color 0.4s;
+}
+
+.actionIconOverride:hover {
+    background-color: var(--mantine-color-gray-3);
+}
+
+.actionIconDeleteOverride {
+    background-color: var(--mantine-color-red-0);
+    border: 1px solid var(--mantine-color-red-2);
+    transition: background-color 0.4s;
+}
+
+.actionIconDeleteOverride:hover {
+    background-color: var(--mantine-color-red-2);
 }

@@ -4,18 +4,8 @@ import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/listGridItem.module.css';
-import { ActionIcon, Checkbox, Menu, Tooltip } from '@mantine/core';
-import {
-    IconCalendarTime,
-    IconDotsVertical,
-    IconEdit,
-    IconEyeOff,
-    IconGripVertical,
-    IconLanguage,
-    IconReplace,
-    IconRoute,
-    IconTrash,
-} from '@tabler/icons-react';
+import { ActionIcon, Checkbox, Tooltip } from '@mantine/core';
+import { IconEdit, IconEye, IconGripVertical, IconLanguage, IconRoute, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
 import { type MouseEvent, useCallback, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -183,52 +173,124 @@ export function Item<Value, Metadata>({
 
             <Groups groups={item.groups || []} />
 
-            <div className={styles.createdAt}>
-                {appDate(item.createdAt)}
-            </div>
+            <div className={styles.createdAt}>{appDate(item.createdAt)}</div>
 
             <div className={styles.actionRow}>
-
                 {structureItem && (
-                    <Tooltip label="Edit">
-                        <ActionIcon variant="filled" color="var(--mantine-color-gray-0)" radius="xl" component={Link} to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${item.id}`}>
+                    <Tooltip
+                        styles={{
+                            tooltip: {
+                                backgroundColor: 'white',
+                                border: '1px solid var(--mantine-color-gray-2)',
+                                color: 'var(--mantine-color-gray-9)',
+                            },
+                        }}
+                        label="Edit">
+                        <ActionIcon
+                            classNames={{
+                                root: styles.actionIconOverride,
+                            }}
+                            variant="filled"
+                            radius="xl"
+                            component={Link}
+                            to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${item.id}`}>
                             <IconEdit color="var(--mantine-color-gray-9)" size={16} />
                         </ActionIcon>
                     </Tooltip>
                 )}
 
-                <Tooltip label="Change locale">
-                    <ActionIcon variant="filled" color="var(--mantine-color-gray-0)"  radius="xl"                           onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setIsEditLocaleOpen(true);
-                    }}>
+                <Tooltip
+                    styles={{
+                        tooltip: {
+                            backgroundColor: 'white',
+                            border: '1px solid var(--mantine-color-gray-2)',
+                            color: 'var(--mantine-color-gray-9)',
+                        },
+                    }}
+                    label="Change locale">
+                    <ActionIcon
+                        variant="filled"
+                        classNames={{
+                            root: styles.actionIconOverride,
+                        }}
+                        radius="xl"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setIsEditLocaleOpen(true);
+                        }}>
                         <IconLanguage color="var(--mantine-color-gray-9)" size={16} />
                     </ActionIcon>
                 </Tooltip>
 
-
-                <Tooltip label="Change groups">
-                    <ActionIcon variant="filled" color="var(--mantine-color-gray-0)" radius="xl"                           onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setIsEditGroupsOpen(true);
-                    }}>
+                <Tooltip
+                    styles={{
+                        tooltip: {
+                            backgroundColor: 'white',
+                            border: '1px solid var(--mantine-color-gray-2)',
+                            color: 'var(--mantine-color-gray-9)',
+                        },
+                    }}
+                    label="Change groups">
+                    <ActionIcon
+                        variant="filled"
+                        classNames={{
+                            root: styles.actionIconOverride,
+                        }}
+                        radius="xl"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setIsEditGroupsOpen(true);
+                        }}>
                         <IconRoute color="var(--mantine-color-gray-9)" size={16} />
                     </ActionIcon>
                 </Tooltip>
 
-
-                <Tooltip label="Delete item">
-                    <ActionIcon variant="filled" color="var(--mantine-color-red-0)"   radius="xl"                          onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setDeleteItemId(item.id);
-                    }}>
-                        <IconTrash color="var(--mantine-color-red-9)" size={16} />
+                <Tooltip
+                    styles={{
+                        tooltip: {
+                            backgroundColor: 'white',
+                            border: '1px solid var(--mantine-color-gray-2)',
+                            color: 'var(--mantine-color-gray-9)',
+                        },
+                    }}
+                    label="View item">
+                    <ActionIcon
+                        component={Link}
+                        to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}`}
+                        variant="filled"
+                        classNames={{
+                            root: styles.actionIconOverride,
+                        }}
+                        radius="xl">
+                        <IconEye color="var(--mantine-color-gray-9)" size={16} />
                     </ActionIcon>
                 </Tooltip>
 
+                <Tooltip
+                    styles={{
+                        tooltip: {
+                            backgroundColor: 'white',
+                            border: '1px solid var(--mantine-color-gray-2)',
+                            color: 'var(--mantine-color-gray-9)',
+                        },
+                    }}
+                    label="Delete item">
+                    <ActionIcon
+                        variant="filled"
+                        classNames={{
+                            root: styles.actionIconDeleteOverride,
+                        }}
+                        radius="xl"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setDeleteItemId(item.id);
+                        }}>
+                        <IconTrash color="var(--mantine-color-red-9)" size={16} />
+                    </ActionIcon>
+                </Tooltip>
             </div>
 
             {structureItem && (

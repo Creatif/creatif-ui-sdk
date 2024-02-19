@@ -67,18 +67,11 @@
 .stickyFooter {
     width: 100%;
 
-    position: sticky;
-    bottom: 0;
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
     background-color: white;
     padding: 1rem;
     gap: 2rem;
-    margin: 2rem 0 2rem 0;
     border-radius: 4px;
-
-    box-shadow: 2px 2px 5px 0px rgba(222,222,222,0.75);
-    -webkit-box-shadow: 2px 2px 5px 0px rgba(222,222,222,0.75);
-    -moz-box-shadow: 2px 2px 5px 0px rgba(222,222,222,0.75);
 }
