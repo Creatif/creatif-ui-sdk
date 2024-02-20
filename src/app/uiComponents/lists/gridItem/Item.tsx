@@ -7,7 +7,7 @@ import styles from '@app/uiComponents/lists/css/listGridItem.module.css';
 import { ActionIcon, Checkbox, Tooltip } from '@mantine/core';
 import { IconEdit, IconEye, IconGripVertical, IconLanguage, IconRoute, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { type MouseEvent, useCallback, useRef, useState } from 'react';
+import { type MouseEvent, useCallback, useRef, useState, memo } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import type { DragSourceMonitor } from 'react-dnd';
@@ -32,7 +32,7 @@ interface Props<Value, Metadata> {
     isHovered: boolean;
     index: number;
 }
-export function Item<Value, Metadata>({
+function GridItem<Value, Metadata>({
     item,
     structureItem,
     onDeleted,
@@ -349,3 +349,5 @@ export function Item<Value, Metadata>({
         </div>
     );
 }
+
+export const Item = memo(GridItem);

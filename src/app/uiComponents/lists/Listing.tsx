@@ -12,7 +12,7 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import { Button, Checkbox, Loader } from '@mantine/core';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -30,6 +30,7 @@ import { IconMistOff } from '@tabler/icons-react';
 import gridStyles from '@app/uiComponents/lists/css/listGrid.module.css';
 import { Item as GridItem } from '@app/uiComponents/lists/gridItem/Item';
 import classNames from 'classnames';
+import type { ApiError } from '@lib/http/apiError';
 
 export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
     page: number;
@@ -141,6 +142,39 @@ export function Listing<Value, Metadata>() {
         },
     );
 
+    const onChecked = useCallback(
+        (itemId: string, checked: boolean) => {
+            const idx = checkedItems.findIndex((item) => item === itemId);
+            if (idx !== -1 && !checked) {
+                checkedItems.splice(idx, 1);
+                setCheckedItems([...checkedItems]);
+                return;
+            }
+
+            if (checked) {
+                setCheckedItems([...checkedItems, itemId]);
+            }
+        },
+        [checkedItems],
+    );
+
+    const onDeleted = useCallback((error?: ApiError) => {
+        if (!error) {
+            invalidateQuery();
+            return;
+        }
+
+        if (error && error.error && error.error.data['isParent']) {
+            errorNotification(
+                'Item is a parent reference',
+                'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
+                15000,
+            );
+
+            return;
+        }
+    }, []);
+
     return (
         <>
             {structureItem && structureType && (
@@ -227,34 +261,8 @@ export function Listing<Value, Metadata>() {
                                                     onMove={onMove}
                                                     onDrop={onDrop}
                                                     isHovered={item.id === hoveredId}
-                                                    onChecked={(itemId, checked) => {
-                                                        const idx = checkedItems.findIndex((item) => item === itemId);
-                                                        if (idx !== -1 && !checked) {
-                                                            checkedItems.splice(idx, 1);
-                                                            setCheckedItems([...checkedItems]);
-                                                            return;
-                                                        }
-
-                                                        if (checked) {
-                                                            setCheckedItems([...checkedItems, itemId]);
-                                                        }
-                                                    }}
-                                                    onDeleted={(error) => {
-                                                        if (!error) {
-                                                            invalidateQuery();
-                                                            return;
-                                                        }
-
-                                                        if (error && error.error && error.error.data['isParent']) {
-                                                            errorNotification(
-                                                                'Item is a parent reference',
-                                                                'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
-                                                                15000,
-                                                            );
-
-                                                            return;
-                                                        }
-                                                    }}
+                                                    onChecked={onChecked}
+                                                    onDeleted={onDeleted}
                                                     disabled={Boolean(
                                                         (areItemsDeleting && checkedItems.includes(item.id)) ||
                                                             (movingSource && movingSource === item.id) ||
