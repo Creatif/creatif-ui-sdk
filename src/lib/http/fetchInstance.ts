@@ -7,6 +7,7 @@ export interface FetchInstance {
 
 let declarationsInstance: FetchInstance | undefined;
 let appInstance: FetchInstance | undefined;
+let publishInstance: FetchInstance | undefined;
 export const declarations = (): FetchInstance => {
     if (!declarationsInstance) {
         return {
@@ -24,4 +25,14 @@ export const app = () => {
     }
 
     return appInstance;
+};
+
+export const publishing = () => {
+    if (!publishInstance) {
+        return {
+            baseURL: `${composeBaseUrl()}${Routes.PUBLISHING}`,
+        };
+    }
+
+    return publishInstance;
 };

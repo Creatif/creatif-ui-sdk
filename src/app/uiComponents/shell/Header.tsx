@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import styles from './css/header.module.css';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import { Runtime } from '@app/runtime/Runtime';
+import { PublishButton } from '@app/uiComponents/shell/PublishButton';
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];
 
@@ -65,9 +66,7 @@ export default function Header() {
                         </span>
                     </div>
 
-                    <Button color="green" leftSection={<IconStackPush size={24} />}>
-                        Publish
-                    </Button>
+                    <PublishButton />
                 </div>
             </div>
 
