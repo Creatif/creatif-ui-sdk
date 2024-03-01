@@ -96,7 +96,6 @@ export function createFirstTimeSetupStore({ projectMetadata, configItems }: Prop
             for (const configItem of currentStore.configItems) {
                 const maps = currentStore.projectMetadata.maps;
                 const lists = currentStore.projectMetadata.lists;
-                const variables = currentStore.projectMetadata.variables;
 
                 if (configItem.structureType === 'list') {
                     const foundItem = lists.find(
@@ -128,23 +127,6 @@ export function createFirstTimeSetupStore({ projectMetadata, configItems }: Prop
                                 {
                                     name: configItem.structureName,
                                     fn: createMapFn,
-                                },
-                            ],
-                        }));
-                    }
-                }
-
-                if (configItem.structureType === 'variable') {
-                    const foundItem = variables.find((t) => t.name === configItem.structureName);
-
-                    if (!foundItem) {
-                        set((current) => ({
-                            ...current,
-                            runBlueprints: [
-                                ...current.runBlueprints,
-                                {
-                                    name: configItem.structureName,
-                                    fn: createVariableFn,
                                 },
                             ],
                         }));

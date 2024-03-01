@@ -110,30 +110,28 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
 
     return (
         <MantineProvider theme={theme}>
-            {isLoggedIn && (
-                <>
-                    <Notifications limit={5} />
-                    <QueryClientProvider client={queryClient}>
-                        <FirstTimeSetup>
-                            <div className={animations.initialAnimation}>
-                                <Shell options={app} />
-                            </div>
-                        </FirstTimeSetup>
-                    </QueryClientProvider>
-                </>
-            )}
+            <QueryClientProvider client={queryClient}>
+                <Notifications limit={5} />
+                {isLoggedIn && (
+                    <FirstTimeSetup>
+                        <div className={animations.initialAnimation}>
+                            <Shell options={app} />
+                        </div>
+                    </FirstTimeSetup>
+                )}
 
-            {!isLoggedIn && checkedAuth === 'fail' && (
-                <AuthPage>
-                    <Banner />
-                    <Authentication
-                        apiKey={apiKey}
-                        projectId={projectId}
-                        onSuccess={init}
-                        validationMessages={validationMessages}
-                    />
-                </AuthPage>
-            )}
+                {!isLoggedIn && checkedAuth === 'fail' && (
+                    <AuthPage>
+                        <Banner />
+                        <Authentication
+                            apiKey={apiKey}
+                            projectId={projectId}
+                            onSuccess={init}
+                            validationMessages={validationMessages}
+                        />
+                    </AuthPage>
+                )}
+            </QueryClientProvider>
         </MantineProvider>
     );
 }

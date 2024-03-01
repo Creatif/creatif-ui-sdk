@@ -12,6 +12,7 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // @ts-ignore
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import { Button, Checkbox, Loader } from '@mantine/core';
+import type { MouseEvent } from 'react';
 import React, { useCallback, useRef, useState } from 'react';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import { DndProvider } from 'react-dnd';
@@ -70,6 +71,7 @@ export function Listing<Value, Metadata>() {
         .getStructureItemByID(structureId || '');
 
     const pageRef = useRef(1);
+    const checkedRef = useRef(false);
     const { error: errorNotification, success: successNotification } = useNotification();
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
@@ -175,6 +177,19 @@ export function Listing<Value, Metadata>() {
         }
     }, []);
 
+    const onCheckAll = useCallback(
+        (e: MouseEvent) => {
+            e.stopPropagation();
+            if (!checkedRef.current) {
+                setCheckedItems([]);
+                return;
+            }
+
+            setCheckedItems(data.map((item) => item.id));
+        },
+        [data, checkedItems],
+    );
+
     return (
         <>
             {structureItem && structureType && (
@@ -235,7 +250,8 @@ export function Listing<Value, Metadata>() {
                                 <div className={gridStyles.flexPlaceholder} />
                                 <Checkbox
                                     onClick={(e) => {
-                                        e.stopPropagation();
+                                        checkedRef.current = !checkedRef.current;
+                                        onCheckAll(e);
                                     }}
                                 />
                             </div>
@@ -263,6 +279,7 @@ export function Listing<Value, Metadata>() {
                                                     isHovered={item.id === hoveredId}
                                                     onChecked={onChecked}
                                                     onDeleted={onDeleted}
+                                                    checked={checkedItems.includes(item.id)}
                                                     disabled={Boolean(
                                                         (areItemsDeleting && checkedItems.includes(item.id)) ||
                                                             (movingSource && movingSource === item.id) ||

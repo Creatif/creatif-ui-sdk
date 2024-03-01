@@ -7,10 +7,12 @@ import { useEffect } from 'react';
 import useNotification from '@app/systems/notifications/useNotification';
 
 export function PublishButton() {
-    const {success, error: errorNotification} = useNotification();
-    const {isLoading, error, data, mutate} = useMutation(() => publish({
+    const { success, error: errorNotification } = useNotification();
+    const { isLoading, error, data, mutate } = useMutation(() =>
+        publish({
             projectId: Runtime.instance.credentials.projectId,
-        }));
+        }),
+    );
 
     useEffect(() => {
         if (error) {
@@ -22,8 +24,13 @@ export function PublishButton() {
         }
     }, [error, data]);
 
-
-    return <Button onClick={() => mutate()} color="green" disabled={isLoading} leftSection={isLoading ? <Loader size={14} /> : <IconStackPush size={24} />}>
-        Publish
-    </Button>;
+    return (
+        <Button
+            onClick={() => mutate()}
+            color="green"
+            disabled={isLoading}
+            leftSection={isLoading ? <Loader size={14} /> : <IconStackPush size={24} />}>
+            {isLoading ? 'Publishing' : 'Publish'}
+        </Button>
+    );
 }

@@ -1,6 +1,5 @@
 .container {
     position: relative;
-    min-height: 80vh;
     max-width: 1280px;
     margin: 2rem auto;
 
@@ -27,7 +26,7 @@
 .root .column {
     font-size: 0.8rem;
     color: var(--mantine-color-gray-9);
-    font-weight: 500;
+    font-weight: bolder;
 }
 
 .root .checkboxColumn {

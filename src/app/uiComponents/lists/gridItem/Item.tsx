@@ -24,6 +24,7 @@ import type { ApiError } from '@lib/http/apiError';
 interface Props<Value, Metadata> {
     item: PaginatedVariableResult<Value, Metadata>;
     structureItem: StructureItem;
+    checked: boolean;
     onDeleted: (error?: ApiError) => void;
     disabled?: boolean;
     onChecked: (itemId: string, checked: boolean) => void;
@@ -38,6 +39,7 @@ function GridItem<Value, Metadata>({
     onDeleted,
     onChecked,
     disabled,
+    checked,
     index,
     onMove,
     onDrop,
@@ -154,7 +156,8 @@ function GridItem<Value, Metadata>({
                 <IconGripVertical className={styles.dragAndDropIcon} color="gray" size={18} />
 
                 <Checkbox
-                    onClick={(e) => {
+                    checked={checked}
+                    onChange={(e) => {
                         e.stopPropagation();
                         onChecked(item.id, e.currentTarget.checked);
                     }}
