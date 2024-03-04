@@ -4,6 +4,7 @@ import { Api } from './api';
 import type { FetchInstance } from '@lib/http/fetchInstance';
 import type { TryResult } from '@root/types/types';
 import { Runtime } from '@app/runtime/Runtime';
+import logout from '@lib/api/auth/logout';
 export async function tryHttp<ReturnType, Body = unknown>(
     instance: FetchInstance,
     method: 'get' | 'post' | 'put' | 'delete',
@@ -21,7 +22,9 @@ export async function tryHttp<ReturnType, Body = unknown>(
             };
         }
 
-        if (res.status === 403) {
+        if (res.status === 403 && !path.includes('api-check')) {
+            await logout();
+            location.href = '/';
             return {
                 error: new ApiError('Forbidden', { data: { message: 'Forbidden' } }, 403),
                 status: res.status,

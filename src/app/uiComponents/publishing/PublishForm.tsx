@@ -10,7 +10,6 @@ import { Runtime } from '@app/runtime/Runtime';
 import { useEffect, useState } from 'react';
 import { IconStackPush } from '@tabler/icons-react';
 import type { ApiError } from '@lib/http/apiError';
-import UIError from '@app/components/UIError';
 import { UIWarning } from '@app/components/UIWarning';
 
 interface Props {
@@ -27,7 +26,12 @@ export function PublishForm({ listLength }: Props) {
         },
     });
 
-    const { register, handleSubmit, reset, formState: {errors} } = methods;
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = methods;
 
     const { success, error: errorNotification } = useNotification();
     const { isLoading, error, data, mutate } = useMutation<unknown, ApiError, { versionName: string }>(
@@ -37,8 +41,6 @@ export function PublishForm({ listLength }: Props) {
                 name: model.versionName,
             }),
     );
-
-    console.log(errors);
 
     useEffect(() => {
         if (listLength !== -1 && listLength === 2) {
@@ -84,9 +86,10 @@ export function PublishForm({ listLength }: Props) {
                 <TextInput
                     error={
                         (error &&
-                        error.error &&
-                        error.error.data['versionExists'] &&
-                        'Version with this name already exists') || errors.versionName?.message
+                            error.error &&
+                            error.error.data['versionExists'] &&
+                            'Version with this name already exists') ||
+                        errors.versionName?.message
                     }
                     disabled={isLoading || listLength === -1 || isMaxVersionsReached}
                     placeholder="Version name"
