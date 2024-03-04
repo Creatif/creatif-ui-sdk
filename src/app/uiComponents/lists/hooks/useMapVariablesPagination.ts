@@ -33,7 +33,7 @@ export default function useMapVariablesPagination<Response>({
     const key = [name, limit, groups, behaviour, orderBy, locales, direction, search, fields];
 
     async function fetchPage({ pageParam = 1 }) {
-        const fn = throwIfHttpFails(() =>
+        const response = await throwIfHttpFails(() =>
             paginateMapVariables({
                 name: name,
                 projectId: Runtime.instance.credentials.projectId,
@@ -49,7 +49,6 @@ export default function useMapVariablesPagination<Response>({
             }),
         );
 
-        const response = await fn();
         if (response.result) {
             return response.result;
         }

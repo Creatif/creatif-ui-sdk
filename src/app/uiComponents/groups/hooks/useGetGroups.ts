@@ -11,11 +11,12 @@ export function useGetGroups<Response>() {
     return {
         ...useQuery<unknown, ApiError, Response>(
             key,
-            throwIfHttpFails(() => {
-                return getGroups({
-                    projectId: Runtime.instance.credentials.projectId,
-                });
-            }),
+            () =>
+                throwIfHttpFails(() =>
+                    getGroups({
+                        projectId: Runtime.instance.credentials.projectId,
+                    }),
+                ),
             {
                 retry: 1,
                 enabled: true,

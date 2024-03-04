@@ -2,6 +2,7 @@ import { Button, Modal } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '../css/modal.module.css';
+import { IconAlertCircle } from '@tabler/icons-react';
 interface Props {
     open: boolean;
     message: string;
@@ -11,15 +12,40 @@ interface Props {
 export default function DeleteModal({ open, message, onClose, onDelete }: Props) {
     return (
         <>
-            <Modal opened={Boolean(open)} onClose={onClose} centered>
+            <Modal
+                styles={{
+                    header: {
+                        backgroundColor: 'var(--mantine-color-red-1)',
+                    },
+                }}
+                opened={Boolean(open)}
+                title={<IconAlertCircle color="var(--mantine-color-red-5)" size={24} />}
+                onClose={onClose}
+                centered>
+                <h1 className={styles.header}>You are about to delete an item</h1>
                 <p className={styles.text}>{message}</p>
 
                 <div className={styles.buttonGroup}>
-                    <Button onClick={onClose} variant="light" color="gray">
+                    <Button
+                        styles={{
+                            root: {
+                                width: '50%',
+                            },
+                        }}
+                        onClick={onClose}
+                        variant="light"
+                        color="gray">
                         Cancel
                     </Button>
 
-                    <Button onClick={() => onDelete()} color="red">
+                    <Button
+                        styles={{
+                            root: {
+                                width: '50%',
+                            },
+                        }}
+                        onClick={() => onDelete()}
+                        color="red">
                         Delete
                     </Button>
                 </div>

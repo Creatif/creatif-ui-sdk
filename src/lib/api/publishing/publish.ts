@@ -4,6 +4,14 @@ import type { PublishBlueprint } from '@root/types/api/publishing';
 
 export async function publish(blueprint: PublishBlueprint) {
     return throwIfHttpFails(() =>
-        tryHttp(publishing(), 'put', `/publish/${blueprint.projectId}`, null, authHeaders()),
-    )();
+        tryHttp(
+            publishing(),
+            'put',
+            `/publish/${blueprint.projectId}`,
+            {
+                name: blueprint.name,
+            },
+            authHeaders(),
+        ),
+    );
 }

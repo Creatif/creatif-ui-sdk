@@ -8,6 +8,7 @@ export interface FetchInstance {
 let declarationsInstance: FetchInstance | undefined;
 let appInstance: FetchInstance | undefined;
 let publishInstance: FetchInstance | undefined;
+let publicInstance: FetchInstance | undefined;
 export const declarations = (): FetchInstance => {
     if (!declarationsInstance) {
         return {
@@ -35,4 +36,14 @@ export const publishing = () => {
     }
 
     return publishInstance;
+};
+
+export const publicApi = () => {
+    if (!publicInstance) {
+        return {
+            baseURL: `${composeBaseUrl()}${Routes.PUBLIC}`,
+        };
+    }
+
+    return publicInstance;
 };

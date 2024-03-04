@@ -1,0 +1,86 @@
+.gridRoot {
+    margin-top: 4rem;
+    width: 80%;
+}
+
+.columnGrid {
+    display: grid;
+    grid-template-columns: 150px 1fr 1fr;
+    gap: 1rem;
+    border-bottom: 1px solid var(--mantine-color-indigo-0);
+
+    padding: 1rem 0 1rem 0;
+    margin-bottom: 0.8rem;
+    border-radius: 4px;
+    font-weight: bolder;
+
+    font-size: 0.9rem;
+    color: var(--mantine-color-gray-9);
+
+    transition: transform 0.3s, border-bottom 0.3s;
+}
+
+.gridRoot .column {
+    font-size: 0.8rem;
+    color: var(--mantine-color-gray-9);
+    font-weight: bolder;
+}
+
+.gridRoot .row {
+    grid-column: span 3;
+    margin-top: 0.5rem;
+}
+
+.itemRoot {
+    display: grid;
+    grid-template-columns: 150px 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+
+    border-bottom: 1px solid var(--mantine-color-indigo-0);
+
+    padding: 1rem 0 1rem 0;
+    margin-bottom: 0.8rem;
+    border-radius: 4px;
+
+    font-size: 0.9rem;
+    color: var(--mantine-color-gray-9);
+
+    transition: transform 0.3s, border-bottom 0.3s;
+}
+
+.nameWrapper {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actionIconDeleteOverride {
+    background-color: var(--mantine-color-red-0);
+    border: 1px solid var(--mantine-color-red-2);
+    transition: background-color 0.4s;
+}
+
+.actionGroup {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    align-items: center;
+    align-content: center;
+}
+
+.listEmpty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    margin-top: 8rem;
+}
+
+.listEmpty p {
+    margin-top: 1rem;
+    color: var(--mantine-color-gray-6);
+    font-size: 0.9rem;
+}

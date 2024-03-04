@@ -71,13 +71,11 @@ export async function tryHttp<ReturnType, Body = unknown>(
         return handleError<ReturnType>(e as TypeError);
     }
 }
-export function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
-    return async () => {
-        const response = await fn();
-        if (response.error) throw response.error;
+export async function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
+    const response = await fn();
+    if (response.error) throw response.error;
 
-        return response;
-    };
+    return response;
 }
 
 export const authHeaders = () => ({

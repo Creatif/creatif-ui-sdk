@@ -1,0 +1,13 @@
+.root {
+    position: relative;
+    max-width: 1280px;
+    margin: 2rem 0 2rem 2rem;
+    padding: 0 1rem 0 1rem;
+}
+
+.heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--mantine-color-gray-9);
+    margin-bottom: 1rem;
+}
