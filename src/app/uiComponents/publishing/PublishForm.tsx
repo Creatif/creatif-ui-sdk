@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { IconStackPush } from '@tabler/icons-react';
 import type { ApiError } from '@lib/http/apiError';
 import UIError from '@app/components/UIError';
+import { UIWarning } from '@app/components/UIWarning';
 
 interface Props {
     listLength: number;
@@ -70,7 +71,7 @@ export function PublishForm({ listLength }: Props) {
                 })}
                 className={styles.root}>
                 {isMaxVersionsReached && (
-                    <UIError
+                    <UIWarning
                         style={{
                             margin: '2rem 0 2rem 0',
                         }}
@@ -96,7 +97,7 @@ export function PublishForm({ listLength }: Props) {
                         type="submit"
                         color="green"
                         disabled={isLoading || listLength === -1 || isMaxVersionsReached}
-                        leftSection={isLoading ? <Loader color="green" size={18} /> : <IconStackPush size={24} />}>
+                        leftSection={isLoading ? <Loader color="gray" size={18} /> : <IconStackPush size={24} />}>
                         {isLoading ? 'Publishing' : 'Publish'}
                     </Button>
                 </div>

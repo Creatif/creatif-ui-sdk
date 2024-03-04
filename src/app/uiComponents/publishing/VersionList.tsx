@@ -2,7 +2,7 @@
 // @ts-ignore
 import versionList from '@app/uiComponents/publishing/css/versionList.module.css';
 import React, { useEffect } from 'react';
-import { Button } from '@mantine/core';
+import { Button, Pill } from '@mantine/core';
 import { useQuery } from 'react-query';
 import { getVersions } from '@lib/api/public/getVersions';
 import { Runtime } from '@app/runtime/Runtime';
@@ -33,7 +33,6 @@ export function VersionList({ onListLength }: Props) {
 
     useEffect(() => {
         if (data && data.result) {
-            console.log('reevaluate', data);
             onListLength(data.result.length || 0);
         }
     }, [data]);
@@ -44,6 +43,7 @@ export function VersionList({ onListLength }: Props) {
                 {Boolean(data?.result?.length) && (
                     <div className={versionList.columnGrid}>
                         <p className={versionList.column}>NAME</p>
+                        <p className={versionList.column}>PRODUCTION</p>
                         <p className={versionList.column}>CREATED AT</p>
                         <p className={versionList.column} />
                     </div>
@@ -67,6 +67,17 @@ export function VersionList({ onListLength }: Props) {
                                     <p>{item.name.length > 8 ? `${item.name.substring(0, 12)}...` : item.name}</p>
                                     <Copy onClick={() => navigator.clipboard.writeText(item.name || '')} />
                                 </div>
+                                <div>{item.isProductionVersion ? <Pill styles={{
+                                    root: {
+                                        backgroundColor: 'var(--mantine-color-green-2)',
+                                        color: 'var(--mantine-color-gray-9)',
+                                    }
+                                }} color="green">Yes</Pill> : <Pill styles={{
+                                    root: {
+                                        backgroundColor: 'var(--mantine-color-red-2)',
+                                        color: 'var(--mantine-color-gray-9)',
+                                    }
+                                }}>No</Pill>}</div>
                                 <p>{appDate(item.createdAt)}</p>
                                 <div className={versionList.actionGroup}>
                                     <Button size="compact-xs" variant="outline">

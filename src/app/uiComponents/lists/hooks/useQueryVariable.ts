@@ -17,7 +17,7 @@ export default function useQueryVariable<Value, Metadata>(
     return {
         ...useQuery(
             key,
-            throwIfHttpFails(() => {
+            () => throwIfHttpFails(() => {
                 if (!name || !itemId) {
                     return Promise.reject({
                         error: new ApiError(
