@@ -4,31 +4,40 @@ import versionList from '@app/uiComponents/publishing/css/versionList.module.css
 import React, { useEffect } from 'react';
 import { Button, Pill } from '@mantine/core';
 import { useQuery } from 'react-query';
-import { getVersions } from '@lib/api/public/getVersions';
-import { Runtime } from '@app/runtime/Runtime';
 import appDate from '@lib/helpers/appDate';
 import Copy from '@app/components/Copy';
 import { DeleteButton } from '@app/uiComponents/publishing/DeleteButton';
 import UIError from '@app/components/UIError';
-import type { TryResult } from '@root/types/shared';
-import type { Version } from '@root/types/api/public';
 import type { ApiError } from '@lib/http/apiError';
 import { IconBox } from '@tabler/icons-react';
-import { ToggleProductionButton } from '@app/uiComponents/publishing/ToggleProductionButton';
+import { ToggleButton } from '@app/uiComponents/publishing/ToggleProductionButton';
+import { Link } from 'react-router-dom';
+import { Version } from '@root/types/api/public';
+import { getVersions } from '@lib/publicApi/app/versions/getVersions';
+import { Result } from '@root/types/api/publicApi/Http';
+import { initialize } from '@lib/publicApi/app/initialize';
+import { Runtime } from '@app/runtime/Runtime';
 
 interface Props {
     onListLength: (l: number) => void;
 }
 
 export function VersionList({ onListLength }: Props) {
-    const { data, error } = useQuery<TryResult<Version[]>, ApiError>(
+    initialize(Runtime.instance.credentials.projectId);
+
+    const { data, error } = useQuery<Result<Version[]>, ApiError>(
         'get_versions',
-        () =>
-            getVersions({
-                projectId: Runtime.instance.credentials.projectId,
-            }),
+        async () => {
+            const { result, error } = await getVersions();
+            if (error) {
+                throw error;
+            }
+
+            return { result, error };
+        },
         {
             keepPreviousData: true,
+            staleTime: Infinity,
         },
     );
 
@@ -94,14 +103,11 @@ export function VersionList({ onListLength }: Props) {
                                 </div>
                                 <p>{appDate(item.createdAt)}</p>
                                 <div className={versionList.actionGroup}>
-                                    <Button size="compact-xs" variant="outline">
+                                    <Button component={Link} to="/api" size="compact-xs" variant="outline">
                                         Explore API
                                     </Button>
 
-                                    <ToggleProductionButton
-                                        versionId={item.id}
-                                        isInProduction={item.isProductionVersion}
-                                    />
+                                    <ToggleButton versionId={item.id} isInProduction={item.isProductionVersion} />
 
                                     <DeleteButton id={item.id} />
                                 </div>

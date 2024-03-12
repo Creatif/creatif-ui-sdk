@@ -1,0 +1,22 @@
+.root {
+    padding: 1rem 0 1rem 0;
+}
+
+.selectedId {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.selectedId span {
+    font-weight: 500;
+}
+
+.selectWrapper {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.jsonData {
+    margin-top: 2rem;
+}

@@ -12,6 +12,7 @@ import { Item as ShowItem } from '@app/uiComponents/show/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { AddGroup } from '@app/uiComponents/groups/AddGroup';
 import { PublishingMain } from '@app/uiComponents/publishing/PublishingMain';
+import { Api } from '@app/uiComponents/api/Api';
 interface Props {
     options: CreatifApp;
 }
@@ -45,6 +46,7 @@ export default function Shell({ options }: Props) {
                             return (
                                 <React.Fragment key={i}>
                                     <Route path="publishing" element={<PublishingMain />} />
+                                    <Route path="api" element={<Api />} />
                                     <Route path={item.createPath} element={configOption.form} />
                                     {item.structureType === 'list' && (
                                         <>

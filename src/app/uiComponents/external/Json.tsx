@@ -28,7 +28,7 @@ export default function JSON({ value }: Props) {
                 fontSize: '0.8rem',
                 '--jsonPaddingLeft': '1.5rem',
                 fontWeight: 200,
-                'ul li': 'margin-bottom: 0.4rem',
+                'ul li': 'margin-bottom: 0.6rem',
             }}
             ref={ref}
         />
