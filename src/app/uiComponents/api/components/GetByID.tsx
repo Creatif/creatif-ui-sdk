@@ -64,7 +64,10 @@ export function GetByID({ structureType }: Props) {
             <div className={styles.selectWrapper}>
                 <IDSelect structureData={structureData} onSelected={(id) => setId(id)} />
                 <StructureSelect
-                    onSelected={(name, structureType) => setStructureData({ name: name, type: structureType })}
+                    onSelected={(name, structureType) => {
+                        setStructureData({ name: name, type: structureType });
+                        setId('');
+                    }}
                 />
             </div>
 

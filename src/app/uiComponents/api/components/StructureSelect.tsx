@@ -83,12 +83,10 @@ export function StructureSelect({ onSelected }: Props) {
             }}
             leftSection={isLoading && <Loader size={14} />}
             allowDeselect
-            clearable
             error={isError && 'An error occurred while trying to fetch a list of structures. Please, try again later.'}
             description="Select a structure to search"
             data={data}
             placeholder="Search structures"
-            searchable
         />
     );
 }
