@@ -1,7 +1,7 @@
 // @ts-ignore
 import baseStyles from '@app/uiComponents/api/css/base.module.css';
 import { VersionSelect } from '@app/uiComponents/api/components/VersionSelect';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Accordion } from '@mantine/core';
 import { GetByID } from '@app/uiComponents/api/components/GetByID';
 import { initialize } from '@lib/publicApi/app/initialize';
@@ -36,24 +36,31 @@ const httpCalls = [
 
 export function Api() {
     const versionRef = useRef('');
+    const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
 
     initialize(Runtime.instance.credentials.projectId);
 
-    const items = useMemo(() => {
-        return httpCalls.map((item) => (
-            <Accordion.Item key={item.id} value={item.id}>
-                <Accordion.Control
-                    styles={{
-                        control: {
-                            padding: '0.7rem',
-                        },
-                    }}>
-                    {item.title}
-                </Accordion.Control>
-                <Accordion.Panel>{item.id === 'getItemById' && <GetByID structureType="list" />}</Accordion.Panel>
-            </Accordion.Item>
-        ));
-    }, []);
+    const items = useMemo(
+        () =>
+            httpCalls.map((item) => (
+                <Accordion.Item key={item.id} value={item.id}>
+                    <Accordion.Control
+                        styles={{
+                            control: {
+                                padding: '0.7rem',
+                            },
+                        }}>
+                        {item.title}
+                    </Accordion.Control>
+                    {controlledAccordionValue === item.id && (
+                        <Accordion.Panel>
+                            <GetByID />
+                        </Accordion.Panel>
+                    )}
+                </Accordion.Item>
+            )),
+        [controlledAccordionValue],
+    );
 
     return (
         <div className={baseStyles.container}>
@@ -63,7 +70,9 @@ export function Api() {
                 <VersionSelect onVersionChange={(id) => (versionRef.current = id)} />
             </div>
 
-            <Accordion>{items}</Accordion>
+            <Accordion value={controlledAccordionValue} onChange={(value) => setControlledAccordionValue(value)}>
+                {items}
+            </Accordion>
         </div>
     );
 }

@@ -1,8 +1,7 @@
-import { IDSelect } from '@app/uiComponents/api/components/IDSelect';
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/api/css/apiBase.module.css';
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
 import { useState } from 'react';
 import { StructureSelect } from '@app/uiComponents/api/components/StructureSelect';
 import JSON from '@app/uiComponents/external/Json';
@@ -10,12 +9,9 @@ import { useQuery } from 'react-query';
 import UIError from '@app/components/UIError';
 import { getListItemById } from '@lib/publicApi/app/lists/getListItemById';
 import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
+import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSelect';
 
-interface Props {
-    structureType: StructureType;
-}
-
-export function GetByID({ structureType }: Props) {
+export function GetByID() {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [isError, setIsError] = useState(false);
@@ -53,6 +49,7 @@ export function GetByID({ structureType }: Props) {
         },
         {
             enabled: Boolean(id && structureData),
+            staleTime: -1,
             onError() {
                 setIsError(true);
             },
@@ -62,7 +59,7 @@ export function GetByID({ structureType }: Props) {
     return (
         <div className={styles.root}>
             <div className={styles.selectWrapper}>
-                <IDSelect structureData={structureData} onSelected={(id) => setId(id)} />
+                <ComboboxIDSelect structureData={structureData} onSelected={(id) => setId(id)} />
                 <StructureSelect
                     onSelected={(name, structureType) => {
                         setStructureData({ name: name, type: structureType });
