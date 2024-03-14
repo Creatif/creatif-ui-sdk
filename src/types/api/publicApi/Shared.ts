@@ -1,6 +1,10 @@
 export type Behaviour = 'modifiable' | 'readonly';
 export type ConnectionType = 'map' | 'list';
 
+export interface Options {
+    valueOnly?: boolean;
+}
+
 export interface ConnectionItem<Value> {
     structureId: string;
     structureShortId: string;

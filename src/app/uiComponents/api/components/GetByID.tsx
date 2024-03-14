@@ -10,14 +10,17 @@ import UIError from '@app/components/UIError';
 import { getListItemById } from '@lib/publicApi/app/lists/getListItemById';
 import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
 import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSelect';
+import { Checkbox, Loader } from '@mantine/core';
 
 export function GetByID() {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [isError, setIsError] = useState(false);
 
+    const [isValueOnly, setIsValueOnly] = useState(false);
+
     const { isFetching, data } = useQuery(
-        ['get_item_by_id', structureData, id],
+        ['get_item_by_id', structureData, id, isValueOnly],
         async () => {
             if (!id || !structureData) return;
 
@@ -25,6 +28,9 @@ export function GetByID() {
                 if (structureData.type === 'list') {
                     const { result, error } = await getListItemById({
                         id: id,
+                        options: {
+                            valueOnly: isValueOnly,
+                        },
                     });
 
                     if (error) throw error;
@@ -37,6 +43,9 @@ export function GetByID() {
                 if (structureData.type === 'map') {
                     const { result, error } = await getMapItemById({
                         id: id,
+                        options: {
+                            valueOnly: isValueOnly,
+                        },
                     });
 
                     if (error) throw error;
@@ -49,6 +58,8 @@ export function GetByID() {
         },
         {
             enabled: Boolean(id && structureData),
+            refetchOnWindowFocus: false,
+            keepPreviousData: true,
             staleTime: -1,
             onError() {
                 setIsError(true);
@@ -59,13 +70,24 @@ export function GetByID() {
     return (
         <div className={styles.root}>
             <div className={styles.selectWrapper}>
-                <ComboboxIDSelect structureData={structureData} onSelected={(id) => setId(id)} />
-                <StructureSelect
-                    onSelected={(name, structureType) => {
-                        setStructureData({ name: name, type: structureType });
-                        setId('');
-                    }}
-                />
+                <div className={styles.selectActionWrapper}>
+                    <ComboboxIDSelect structureData={structureData} onSelected={(id) => setId(id)} />
+                    <StructureSelect
+                        onSelected={(name, structureType) => {
+                            setStructureData({ name: name, type: structureType });
+                            setId('');
+                        }}
+                    />
+
+                    <Checkbox
+                        className={styles.valueOnlyCheckbox}
+                        checked={isValueOnly}
+                        onChange={(env) => setIsValueOnly(env.target.checked)}
+                        label="Value only"
+                    />
+                </div>
+
+                {isFetching && <Loader size={20} />}
             </div>
 
             {id && (
@@ -83,7 +105,7 @@ export function GetByID() {
                 />
             )}
 
-            {!isFetching && data && (
+            {id && !isFetching && data && (
                 <div className={styles.jsonData}>
                     <JSON value={data} />
                 </div>

@@ -4,10 +4,10 @@ import type { ApiError } from '@lib/http/apiError';
 import { Select } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { getVersions } from '@lib/publicApi/app/versions/getVersions';
-import { Result } from '@root/types/api/publicApi/Http';
+import type { Result } from '@root/types/api/publicApi/Http';
 
 interface Props {
-    onVersionChange: (id: string) => void;
+    onVersionChange: (id: string | null) => void;
 }
 
 export function VersionSelect({ onVersionChange }: Props) {
@@ -16,6 +16,12 @@ export function VersionSelect({ onVersionChange }: Props) {
         keepPreviousData: true,
         staleTime: Infinity,
     });
+
+    const componentError = error
+        ? 'Versions could not be loaded. Please, try again later.'
+        : data && data.result && data.result.length === 0
+        ? 'There are no published version. Publish a version first to use the API.'
+        : undefined;
 
     useEffect(() => {
         if (!isFetching && data && data.result) {
@@ -41,8 +47,9 @@ export function VersionSelect({ onVersionChange }: Props) {
         <Select
             onChange={(item) => {
                 setSelectedVersion(item);
+                onVersionChange(item);
             }}
-            error={error && 'Versions could not be loaded. Please, try again later.'}
+            error={componentError}
             description="Select a version to use to make API requests"
             value={selectedVersion}
             disabled={isFetching}

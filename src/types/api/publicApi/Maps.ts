@@ -1,4 +1,10 @@
-import { Behaviour, ConnectionItem, type OrderBy, type OrderDirection } from '@root/types/api/publicApi/Shared';
+import {
+    Behaviour,
+    ConnectionItem,
+    Options,
+    type OrderBy,
+    type OrderDirection,
+} from '@root/types/api/publicApi/Shared';
 
 export interface MapItem<Value> {
     structureId: string;
@@ -22,6 +28,7 @@ export interface MapItem<Value> {
 
 export interface GetMapItemByID {
     id: string;
+    options?: Options;
 }
 
 export interface PaginateMapItems {

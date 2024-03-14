@@ -180,7 +180,9 @@ export function ComboboxIDSelect({ onSelected, structureData }: Props) {
             </Combobox.Target>
 
             <Combobox.Dropdown>
-                <Combobox.Options>{options}</Combobox.Options>
+                <Combobox.Options>
+                    {options.length === 0 ? <Combobox.Empty>Nothing found</Combobox.Empty> : options}
+                </Combobox.Options>
             </Combobox.Dropdown>
         </Combobox>
     );

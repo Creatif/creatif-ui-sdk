@@ -9,11 +9,7 @@ import { Runtime } from '@app/runtime/Runtime';
 
 const httpCalls = [
     {
-        title: (
-            <p className={baseStyles.accordionTitle}>
-                Get list/map item by ID <span>(getListItemById and getMapItemById)</span>
-            </p>
-        ),
+        title: 'Get list/map item by ID',
         id: 'getItemById',
     },
     {
@@ -35,7 +31,7 @@ const httpCalls = [
 ];
 
 export function Api() {
-    const versionRef = useRef('');
+    const [versionId, setVersionId] = useState<string | null>('');
     const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
 
     initialize(Runtime.instance.credentials.projectId);
@@ -67,12 +63,14 @@ export function Api() {
             <h1 className={baseStyles.heading}>API</h1>
 
             <div className={baseStyles.contentSection}>
-                <VersionSelect onVersionChange={(id) => (versionRef.current = id)} />
+                <VersionSelect onVersionChange={(id) => setVersionId(id)} />
             </div>
 
-            <Accordion value={controlledAccordionValue} onChange={(value) => setControlledAccordionValue(value)}>
-                {items}
-            </Accordion>
+            {versionId && (
+                <Accordion value={controlledAccordionValue} onChange={(value) => setControlledAccordionValue(value)}>
+                    {items}
+                </Accordion>
+            )}
         </div>
     );
 }

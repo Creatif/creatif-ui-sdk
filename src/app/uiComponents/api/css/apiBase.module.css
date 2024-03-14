@@ -11,10 +11,24 @@
     font-weight: 500;
 }
 
-.selectWrapper {
+.selectActionWrapper {
     display: flex;
     justify-content: flex-start;
+    align-items: center;
+    align-content: center;
     gap: 1rem;
+}
+
+.selectWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    gap: 1rem;
+}
+
+.valueOnlyCheckbox {
+    margin-top: 18px;
 }
 
 .jsonData {
