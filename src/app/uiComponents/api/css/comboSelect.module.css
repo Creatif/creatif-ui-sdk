@@ -1,0 +1,9 @@
+.label {
+
+}
+
+.label span {
+    font-weight: 200;
+    color: var(--mantine-color-gray-6);
+    margin-left: 8px;
+}

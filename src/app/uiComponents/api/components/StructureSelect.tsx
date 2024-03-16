@@ -2,13 +2,14 @@ import { Loader, Select } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { getStructures } from '@lib/publicApi/app/structures/getStructures';
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
 
 interface Props {
     onSelected: (name: string, structureType: StructureType) => void;
+    structureToShow?: StructureType | undefined;
 }
 
-export function StructureSelect({ onSelected }: Props) {
+export function StructureSelect({ onSelected, structureToShow }: Props) {
     const [selected, setSelected] = useState<string>('');
 
     const [data, setData] = useState<{ group: string; items: { label: string; value: string }[] }[]>([]);
@@ -48,10 +49,16 @@ export function StructureSelect({ onSelected }: Props) {
                 },
             ];
 
-            if (lists.length !== 0) {
+            if (structureToShow === 'list') {
+                groups.splice(1, 1);
+            } else if (structureToShow === 'map') {
+                groups.splice(0, 1);
+            }
+
+            if (lists.length !== 0 && (structureToShow === 'list' || !structureToShow)) {
                 setSelected(lists[0].id);
                 onSelected(lists[0].name, 'list');
-            } else if (maps.length !== 0) {
+            } else if (maps.length !== 0 && (structureToShow === 'map' || !structureToShow)) {
                 setSelected(maps[0].id);
                 onSelected(maps[0].name, 'map');
             }

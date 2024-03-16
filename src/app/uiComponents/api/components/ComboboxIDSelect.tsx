@@ -1,18 +1,20 @@
-import { Combobox, InputBase, Loader, TextInput, useCombobox } from '@mantine/core';
+import { Combobox, Loader, TextInput, useCombobox } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { paginateListItems } from '@lib/publicApi/app/lists/paginateListItems';
 import { paginateMapItems } from '@lib/publicApi/app/maps/paginateMapItems';
 import { useDebouncedValue } from '@mantine/hooks';
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
 import { IconX } from '@tabler/icons-react';
+import type { ListItem } from '@root/types/api/publicApi/Lists';
 
 interface Props {
     onSelected: (id: string) => void;
+    toSelect?: 'name';
     structureData: { name: string; type: StructureType } | undefined;
 }
 
-export function ComboboxIDSelect({ onSelected, structureData }: Props) {
+export function ComboboxIDSelect({ onSelected, structureData, toSelect }: Props) {
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
     });
@@ -22,6 +24,8 @@ export function ComboboxIDSelect({ onSelected, structureData }: Props) {
     const [searchCriteria, setSearchCriteria] = useState('');
     const [debounced] = useDebouncedValue(search, 500);
     const [data, setData] = useState<{ label: string; value: string }[]>([]);
+
+    const savedDataRef = useRef<ListItem<unknown>[]>();
 
     const [isError, setIsError] = useState(false);
 
@@ -54,7 +58,7 @@ export function ComboboxIDSelect({ onSelected, structureData }: Props) {
         ? 'An error occurred while trying to fetch a list of items. Please, try again later.'
         : undefined;
 
-    const { isFetching } = useQuery(
+    const { isFetching: areListsFetching } = useQuery(
         ['paginate_list_items', structureData, searchCriteria, forceRequery],
         async () => {
             if (!structureData) return;
@@ -72,12 +76,51 @@ export function ComboboxIDSelect({ onSelected, structureData }: Props) {
 
             if (error) throw error;
 
+            savedDataRef.current = result;
             return { result, error };
         },
         {
             enabled: structureData && structureData.type === 'list',
             keepPreviousData: true,
             refetchOnWindowFocus: false,
+            onError() {
+                setIsError(true);
+            },
+            onSuccess(data) {
+                if (data && data.result) {
+                    const d = data.result.map((item) => ({
+                        value: item.itemId,
+                        label: `${item.itemName} (${item.locale})`,
+                    }));
+                    setData(d);
+                }
+            },
+        },
+    );
+
+    const { isFetching: areMapsFetching } = useQuery(
+        ['paginate_map_items', structureData, searchCriteria, forceRequery],
+        async () => {
+            if (!structureData) return;
+            if (!forceRequery) return;
+
+            const { result, error } = await paginateMapItems({
+                structureName: structureData.name,
+                page: 1,
+                groups: [],
+                orderBy: 'index',
+                orderDirection: 'desc',
+                search: searchCriteria,
+                locales: [],
+            });
+
+            if (error) throw error;
+
+            savedDataRef.current = result;
+            return { result, error };
+        },
+        {
+            enabled: structureData && structureData.type === 'map',
             onError() {
                 setIsError(true);
             },
@@ -99,45 +142,18 @@ export function ComboboxIDSelect({ onSelected, structureData }: Props) {
         }
     }, [structureData]);
 
-    useQuery(
-        ['paginate_map_items', structureData, searchCriteria, forceRequery],
-        async () => {
-            if (!structureData) return;
-            if (!forceRequery) return;
-
-            const { result, error } = await paginateMapItems({
-                structureName: structureData.name,
-                page: 1,
-                groups: [],
-                orderBy: 'index',
-                orderDirection: 'desc',
-                search: searchCriteria,
-                locales: [],
-            });
-
-            if (error) throw error;
-
-            return { result, error };
-        },
-        {
-            enabled: structureData && structureData.type === 'map',
-            onError() {
-                setIsError(true);
-            },
-            onSuccess(data) {
-                if (data && data.result) {
-                    const d = data.result.map((item) => ({ value: item.itemId, label: item.itemName }));
-                    setData(d);
-                }
-            },
-        },
-    );
+    const isFetching = areMapsFetching || areListsFetching;
 
     const options = data.map((item) => (
         <Combobox.Option
             onClick={() => {
                 setSearch(item.label);
-                onSelected(item.value);
+                if (!toSelect) onSelected(item.value);
+                if (toSelect === 'name' && savedDataRef.current) {
+                    const found = savedDataRef.current.find((t) => t.itemId === item.value);
+                    if (found) onSelected(found.itemName);
+                }
+
                 combobox.closeDropdown();
             }}
             key={item.value}
@@ -150,7 +166,7 @@ export function ComboboxIDSelect({ onSelected, structureData }: Props) {
         <Combobox
             store={combobox}
             withinPortal={false}
-            onOptionSubmit={(val) => {
+            onOptionSubmit={() => {
                 combobox.closeDropdown();
             }}>
             <Combobox.Target>

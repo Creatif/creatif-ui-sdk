@@ -1,11 +1,12 @@
 // @ts-ignore
 import baseStyles from '@app/uiComponents/api/css/base.module.css';
 import { VersionSelect } from '@app/uiComponents/api/components/VersionSelect';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Accordion } from '@mantine/core';
 import { GetByID } from '@app/uiComponents/api/components/GetByID';
 import { initialize } from '@lib/publicApi/app/initialize';
 import { Runtime } from '@app/runtime/Runtime';
+import { GetListItemsByName } from '@app/uiComponents/api/components/GetListItemsByName';
 
 const httpCalls = [
     {
@@ -13,16 +14,8 @@ const httpCalls = [
         id: 'getItemById',
     },
     {
-        title: 'Get list item by name and locale (getListItemByNameAndLocale)',
-        id: 'getListItemByNameAndLocale',
-    },
-    {
-        title: 'Get list items by name (getListItemByName)',
+        title: 'Get list items by name',
         id: 'getListItemsByName',
-    },
-    {
-        title: 'Get map item by ID (getMapItemById)',
-        id: 'getMapItemById',
     },
     {
         title: 'Get map item by name (getMapItemByName)',
@@ -48,9 +41,15 @@ export function Api() {
                         }}>
                         {item.title}
                     </Accordion.Control>
-                    {controlledAccordionValue === item.id && (
+                    {controlledAccordionValue === item.id && item.id === 'getItemById' && (
                         <Accordion.Panel>
                             <GetByID />
+                        </Accordion.Panel>
+                    )}
+
+                    {controlledAccordionValue === item.id && item.id === 'getListItemsByName' && (
+                        <Accordion.Panel>
+                            <GetListItemsByName />
                         </Accordion.Panel>
                     )}
                 </Accordion.Item>

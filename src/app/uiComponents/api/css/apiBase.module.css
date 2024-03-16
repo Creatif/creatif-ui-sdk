@@ -2,6 +2,32 @@
     padding: 1rem 0 1rem 0;
 }
 
+.sectionDescription {
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    font-size: 0.9em;
+    width: 50%;
+    color: var(--mantine-color-gray-6);
+    line-height: 1.4rem;
+
+    margin-bottom: 2rem;
+
+    background-color: var(--mantine-color-gray-0);
+    padding: 1rem 1rem 1rem 0.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--mantine-color-gray-2);
+}
+
+.sectionDescription .highlight {
+    display: inline-block;
+    font-weight: 600;
+    margin-right: 0.3rem;
+}
+
 .selectedId {
     margin-top: 1rem;
     font-size: 0.9rem;
@@ -29,6 +55,10 @@
 
 .valueOnlyCheckbox {
     margin-top: 18px;
+}
+
+.findButton {
+    margin-top: 15px;
 }
 
 .jsonData {

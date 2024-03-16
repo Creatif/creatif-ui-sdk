@@ -25,6 +25,13 @@ export interface GetListItemByID {
     options?: Options;
 }
 
+export interface GetListItemsByName {
+    structureName: string;
+    name: string;
+    locale: string;
+    options?: Options;
+}
+
 export interface PaginateListItems {
     structureName: string;
     page: number;
