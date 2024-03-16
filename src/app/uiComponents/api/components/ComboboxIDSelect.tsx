@@ -188,6 +188,7 @@ export function ComboboxIDSelect({ onSelected, structureData, toSelect }: Props)
                     value={search}
                     onChange={(evn) => {
                         setSearch(evn.target.value);
+                        onSelected(evn.target.value);
                     }}
                     placeholder={structureData ? `Search ${structureData.name}` : 'Search...'}
                     description="Search for an item to see its raw response"

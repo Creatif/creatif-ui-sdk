@@ -11,15 +11,12 @@ export default function useGetGroups(enabled?: boolean) {
     return {
         ...useQuery<TryResult<Group[]>, ApiError>(
             key,
-            async () => {
-                const fn = throwIfHttpFails<Group[]>(() =>
+            async () =>
+                await throwIfHttpFails<Group[]>(() =>
                     getGroups({
                         projectId: Runtime.instance.credentials.projectId,
                     }),
-                );
-
-                return await fn();
-            },
+                ),
             {
                 enabled: typeof enabled === 'boolean' ? enabled : true,
                 retry: 1,

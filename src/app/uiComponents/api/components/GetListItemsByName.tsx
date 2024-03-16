@@ -23,7 +23,7 @@ export function GetListItemsByName() {
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
 
     const { isFetching, data } = useQuery(
-        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled],
+        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
         async () => {
             console.log(submitQueryEnabled);
             if (!submitQueryEnabled) return;
@@ -35,6 +35,9 @@ export function GetListItemsByName() {
                     name: id,
                     locale: selectedLocale,
                     structureName: structureData.name,
+                    options: {
+                        valueOnly: isValueOnly,
+                    },
                 });
 
                 if (error) throw error;
