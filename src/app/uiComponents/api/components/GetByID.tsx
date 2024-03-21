@@ -11,6 +11,8 @@ import { getListItemById } from '@lib/publicApi/app/lists/getListItemById';
 import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
 import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSelect';
 import { Checkbox, Loader } from '@mantine/core';
+import { Curl } from '@app/uiComponents/api/components/Curl';
+import { Result } from '@app/uiComponents/api/components/Result';
 
 export function GetByID() {
     const [id, setId] = useState<string>('');
@@ -90,10 +92,19 @@ export function GetByID() {
                 {isFetching && <Loader size={20} />}
             </div>
 
-            {id && (
-                <p className={styles.selectedId}>
-                    Selected ID: <span>{id}</span>
-                </p>
+            {id && data && (
+                <div className={styles.viewSection}>
+                    <Result
+                        data={data}
+                        curlBlueprint={{
+                            id: id,
+                            options: {
+                                valueOnly: isValueOnly,
+                            },
+                        }}
+                        curlType="getListItemById"
+                    />
+                </div>
             )}
 
             {isError && (
@@ -103,12 +114,6 @@ export function GetByID() {
                     }}
                     title="Unable to get item. Please, try again later."
                 />
-            )}
-
-            {id && !isFetching && data && (
-                <div className={styles.jsonData}>
-                    <JSON value={data} />
-                </div>
             )}
         </div>
     );

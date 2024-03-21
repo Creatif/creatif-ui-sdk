@@ -12,6 +12,8 @@ import { getListItemsByName } from '@lib/publicApi/app/lists/getListItemsByName'
 import UIError from '@app/components/UIError';
 import JSON from '@app/uiComponents/external/Json';
 import { IconInfoCircle } from '@tabler/icons-react';
+import { Curl } from '@app/uiComponents/api/components/Curl';
+import { Result } from '@app/uiComponents/api/components/Result';
 
 export function GetListItemsByName() {
     const [id, setId] = useState<string>('');
@@ -25,11 +27,10 @@ export function GetListItemsByName() {
     const { isFetching, data } = useQuery(
         ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
         async () => {
-            console.log(submitQueryEnabled);
             if (!submitQueryEnabled) return;
-
             if (!id || !structureData) return;
 
+            console.log(isValueOnly);
             if (structureData && id) {
                 const { result, error } = await getListItemsByName({
                     name: id,
@@ -95,7 +96,10 @@ export function GetListItemsByName() {
                     <Checkbox
                         className={styles.valueOnlyCheckbox}
                         checked={isValueOnly}
-                        onChange={(env) => setIsValueOnly(env.target.checked)}
+                        onChange={(env) => {
+                            setIsValueOnly(env.target.checked);
+                            setSubmitQueryEnabled(true);
+                        }}
                         label="Value only"
                     />
 
@@ -107,10 +111,21 @@ export function GetListItemsByName() {
                 {isFetching && <Loader size={20} />}
             </div>
 
-            {id && (
-                <p className={styles.selectedId}>
-                    Selected ID: <span>{id}</span>
-                </p>
+            {id && structureData && data && (
+                <div className={styles.viewSection}>
+                    <Result
+                        data={data}
+                        curlBlueprint={{
+                            name: id,
+                            locale: selectedLocale,
+                            structureName: structureData.name,
+                            options: {
+                                valueOnly: isValueOnly,
+                            },
+                        }}
+                        curlType="getListItemsByName"
+                    />
+                </div>
             )}
 
             {isError && (
@@ -120,12 +135,6 @@ export function GetListItemsByName() {
                     }}
                     title="Unable to get item. Please, try again later."
                 />
-            )}
-
-            {id && !isFetching && data && (
-                <div className={styles.jsonData}>
-                    <JSON value={data} />
-                </div>
             )}
         </div>
     );

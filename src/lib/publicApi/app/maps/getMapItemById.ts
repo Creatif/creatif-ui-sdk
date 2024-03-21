@@ -8,7 +8,7 @@ import { parseQuery } from '@lib/publicApi/app/parseQuery';
 export async function getMapItemById<Value>(blueprint: GetMapItemByID): Promise<Result<MapItem<Value>>> {
     const httpResult = await tryHttp<MapItem<Value>>(
         'get',
-        `${Routes.GET_MAP_ITEM_BY_ID}/${blueprint.id}${parseQuery(blueprint.options)}`,
+        `${Routes.GET_MAP_ITEM_BY_ID}/${blueprint.id}${parseQuery(blueprint.options, undefined)}`,
         null,
         {},
     );

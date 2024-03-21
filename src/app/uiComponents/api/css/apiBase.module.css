@@ -33,6 +33,35 @@
     font-size: 0.9rem;
 }
 
+.viewSection {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.curl {
+    position: relative;
+    margin-top: 2rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--mantine-color-gray-2);
+    border-radius: 8px;
+
+    background-color: var(--mantine-color-gray-0);
+}
+
+.curlOverflowedSection {
+    width: 90%;
+    line-height: 1.4rem;
+}
+
+.curlCopyIcon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
 .selectedId span {
     font-weight: 500;
 }
