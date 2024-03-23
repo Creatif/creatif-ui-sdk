@@ -11,14 +11,13 @@ import { useEffect, useState } from 'react';
 interface Props {
     data: object;
     curlBlueprint: GetListItemByID | GetListItemsByName | GetMapItemByID;
-    curlType: 'getListItemsByName' | 'getListItemById' | 'getMapItemById';
+    curlType: 'getListItemsByName' | 'getListItemById' | 'getMapItemById' | 'getMapItemByName';
 }
 export function Result({ data, curlBlueprint, curlType }: Props) {
     const [reRenderJson, setReRenderJson] = useState(true);
 
     useEffect(() => {
         if (data) {
-            console.log(data, reRenderJson);
             setReRenderJson(false);
             setTimeout(() => {
                 setReRenderJson(true);

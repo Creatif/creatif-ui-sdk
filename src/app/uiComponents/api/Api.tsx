@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import baseStyles from '@app/uiComponents/api/css/base.module.css';
 import { VersionSelect } from '@app/uiComponents/api/components/VersionSelect';
@@ -7,6 +8,7 @@ import { GetByID } from '@app/uiComponents/api/components/GetByID';
 import { initialize } from '@lib/publicApi/app/initialize';
 import { Runtime } from '@app/runtime/Runtime';
 import { GetListItemsByName } from '@app/uiComponents/api/components/GetListItemsByName';
+import { GetMapItemByName } from '@app/uiComponents/api/components/GetMapItemByName';
 
 const httpCalls = [
     {
@@ -18,7 +20,7 @@ const httpCalls = [
         id: 'getListItemsByName',
     },
     {
-        title: 'Get map item by name (getMapItemByName)',
+        title: 'Get map item by name',
         id: 'getMapItemByName',
     },
 ];
@@ -50,6 +52,12 @@ export function Api() {
                     {controlledAccordionValue === item.id && item.id === 'getListItemsByName' && (
                         <Accordion.Panel>
                             <GetListItemsByName />
+                        </Accordion.Panel>
+                    )}
+
+                    {controlledAccordionValue === item.id && item.id === 'getMapItemByName' && (
+                        <Accordion.Panel>
+                            <GetMapItemByName />
                         </Accordion.Panel>
                     )}
                 </Accordion.Item>

@@ -1,10 +1,17 @@
-import {
+import type {
     Behaviour,
     ConnectionItem,
     Options,
     type OrderBy,
     type OrderDirection,
 } from '@root/types/api/publicApi/Shared';
+
+export interface GetMapItemByName {
+    structureName: string;
+    name: string;
+    locale: string;
+    options?: Options;
+}
 
 export interface MapItem<Value> {
     structureId: string;

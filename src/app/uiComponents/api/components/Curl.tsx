@@ -6,7 +6,7 @@ import { parseQuery } from '@lib/publicApi/app/parseQuery';
 import type { GetListItemByID, GetListItemsByName } from '@root/types/api/publicApi/Lists';
 import Copy from '@app/components/Copy';
 import { Runtime } from '@lib/publicApi/lib/runtime';
-import type { GetMapItemByID } from '@root/types/api/publicApi/Maps';
+import type { GetMapItemByID, GetMapItemByName } from '@root/types/api/publicApi/Maps';
 
 function constructUrl(type: string, blueprint: GetListItemByID | GetListItemsByName | GetMapItemByID) {
     if (type === 'getListItemById' || type === 'getMapItemById') {
@@ -22,12 +22,20 @@ function constructUrl(type: string, blueprint: GetListItemByID | GetListItemsByN
         )}`;
     }
 
+    if (type === 'getMapItemByName') {
+        const b = blueprint as GetMapItemByName;
+        return `${Runtime.instance.baseUrl()}${Routes.GET_MAP_ITEM_BY_NAME}/${b.structureName}/${b.name}${parseQuery(
+            b.options,
+            b.locale,
+        )}`;
+    }
+
     throw new Error(`Cannot construct URL with type ${type} and blueprint ${JSON.stringify(blueprint)}`);
 }
 
 interface Props {
     type: string;
-    blueprint: GetListItemByID | GetListItemsByName;
+    blueprint: GetListItemByID | GetListItemsByName | GetMapItemByName;
 }
 
 export function Curl({ blueprint, type }: Props) {

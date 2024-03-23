@@ -8,12 +8,12 @@ import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSel
 import { useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { useQuery } from 'react-query';
-import { getListItemsByName } from '@lib/publicApi/app/lists/getListItemsByName';
 import UIError from '@app/components/UIError';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { Result } from '@app/uiComponents/api/components/Result';
+import { getMapItemByName } from '@lib/publicApi/app/maps/getMapItemByName';
 
-export function GetListItemsByName() {
+export function GetMapItemByName() {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [selectedLocale, setSelectedLocale] = useState<string>('');
@@ -23,14 +23,13 @@ export function GetListItemsByName() {
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
 
     const { isFetching, data } = useQuery(
-        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
+        ['get_map_item_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
         async () => {
             if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
-            console.log(isValueOnly);
             if (structureData && id) {
-                const { result, error } = await getListItemsByName({
+                const { result, error } = await getMapItemByName({
                     name: id,
                     locale: selectedLocale,
                     structureName: structureData.name,
@@ -64,15 +63,13 @@ export function GetListItemsByName() {
     return (
         <div className={styles.root}>
             <div className={styles.sectionDescription}>
-                <IconInfoCircle size="64px" color="var(--mantine-color-indigo-3)" />
+                <IconInfoCircle size="36px" color="var(--mantine-color-indigo-3)" />
                 <p>
-                    If you select the list item from the dropdown, that item will be fetched. If you don&apos;t and just
-                    type in the name of your item, all list items with that name will be fetched. If you also select a
-                    locale, all items with that name and locale will be fetched. Locale is optional and the default is{' '}
-                    <span className={styles.highlight}>eng</span>
-                    locale.
+                    Since map items must have a unique name, specifying a locale is optional but if you specify a name
+                    with an incorrect locale, the item will not be found.
                 </p>
             </div>
+
             <div className={styles.selectWrapper}>
                 <form
                     className={styles.selectActionWrapper}
@@ -84,7 +81,7 @@ export function GetListItemsByName() {
                     <ComboboxIDSelect toSelect="name" structureData={structureData} onSelected={(id) => setId(id)} />
                     <LocaleSelect onSelected={setSelectedLocale} />
                     <StructureSelect
-                        structureToShow="list"
+                        structureToShow="map"
                         onSelected={(name, structureType) => {
                             setStructureData({ name: name, type: structureType });
                             setId('');
@@ -121,7 +118,7 @@ export function GetListItemsByName() {
                                 valueOnly: isValueOnly,
                             },
                         }}
-                        curlType="getListItemsByName"
+                        curlType="getMapItemByName"
                     />
                 </div>
             )}
