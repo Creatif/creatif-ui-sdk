@@ -1,11 +1,11 @@
-import InputText from '@app/uiComponents/inputs/InputText';
+import { InputText } from '@app/uiComponents/inputs/InputText';
 import type { TextInputProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends TextInputProps {
     name: string;
     options?: RegisterOptions;
 }
-export default function InputEmail({ options, ...rest }: Props) {
+export function InputEmail({ options, ...rest }: Props) {
     let optionsCopy = {};
     if (options) {
         optionsCopy = options;

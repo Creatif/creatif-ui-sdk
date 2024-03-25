@@ -18,4 +18,4 @@ export interface Result<Response> {
     error?: CreatifError;
 }
 
-export type TryHttpResult<T> = { result: T; status: number };
+export type TryHttpResult<T> = { result: T; status: number; response: Response | undefined };

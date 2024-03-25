@@ -10,9 +10,9 @@ export const groupsField = 'creatif_groups';
 
 export function resolveBindings<Value>(values: Value, binding: Bindings<Value>): BindedValues {
     return {
-        name: (new NameBindingResolver(values, binding.name)).resolve(),
-        groups: (new GroupsBindingResolver(values, binding.groups)).resolve(),
-        locale: (new LocaleBindingResolver(values, binding.locale)).resolve(),
-        behaviour: (new BehaviourBindingResolver(values, binding.behaviour)).resolve(),
-    }
+        name: new NameBindingResolver(values, binding.name).resolve(),
+        groups: new GroupsBindingResolver(values, binding.groups).resolve(),
+        locale: new LocaleBindingResolver(values, binding.locale).resolve(),
+        behaviour: new BehaviourBindingResolver(values, binding.behaviour).resolve(),
+    };
 }

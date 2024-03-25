@@ -14,7 +14,7 @@ interface Props extends CheckboxGroupProps {
     component?: (data: { value: string[]; formState: FormState<FieldValues> }) => React.ReactNode;
     children?: ReactNode;
 }
-export default function InputCheckboxGroupControlled({
+export function InputCheckboxGroupControlled({
     name,
     validation,
     onInputChange,

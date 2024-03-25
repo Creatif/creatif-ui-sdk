@@ -4,14 +4,12 @@ import styles from '@app/uiComponents/api/css/apiBase.module.css';
 import type { StructureType } from '@root/types/shell/shell';
 import { useState } from 'react';
 import { StructureSelect } from '@app/uiComponents/api/components/StructureSelect';
-import JSON from '@app/uiComponents/external/Json';
 import { useQuery } from 'react-query';
 import UIError from '@app/components/UIError';
 import { getListItemById } from '@lib/publicApi/app/lists/getListItemById';
 import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
 import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSelect';
 import { Checkbox, Loader } from '@mantine/core';
-import { Curl } from '@app/uiComponents/api/components/Curl';
 import { Result } from '@app/uiComponents/api/components/Result';
 
 export function GetByID() {
@@ -63,6 +61,7 @@ export function GetByID() {
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: -1,
+            retry: -1,
             onError() {
                 setIsError(true);
             },

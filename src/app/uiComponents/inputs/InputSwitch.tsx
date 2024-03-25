@@ -7,7 +7,7 @@ interface Props extends SwitchProps {
     name: string;
     options?: RegisterOptions;
 }
-export default function InputSwitch({ name, options, ...rest }: Props) {
+export function InputSwitch({ name, options, ...rest }: Props) {
     const { register, getValues } = useFormContext();
 
     return (

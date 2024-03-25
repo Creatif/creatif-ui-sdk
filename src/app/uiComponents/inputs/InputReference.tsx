@@ -20,7 +20,7 @@ interface Props {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     store: UseBoundStore<StoreApi<ReferencesStore>>;
 }
-export default function InputReference({
+export function InputReference({
     parentStructureItem,
     structureName,
     structureType,

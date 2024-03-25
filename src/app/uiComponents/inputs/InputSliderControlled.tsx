@@ -2,6 +2,8 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { Slider } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/InputSlider.module.css';
 import type { SliderProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
@@ -10,7 +12,7 @@ interface Props extends SliderProps {
     onInputChange?: (value: number) => void;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export default function InputSliderControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputSliderControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState<number | undefined>(getValues(name));
     const error = useFirstError(name);

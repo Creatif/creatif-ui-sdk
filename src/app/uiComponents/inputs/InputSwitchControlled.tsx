@@ -10,7 +10,7 @@ interface Props extends SwitchProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     options?: RegisterOptions;
 }
-export default function InputSwitchControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputSwitchControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [checked, setChecked] = useState(getValues(name));
 

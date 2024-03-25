@@ -9,7 +9,7 @@ interface Props extends TextareaProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string) => void;
 }
-export default function InputTextareaControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputTextareaControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string>(getValues(name));
 

@@ -12,15 +12,23 @@ import UIError from '@app/components/UIError';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { Result } from '@app/uiComponents/api/components/Result';
 import { getMapItemByName } from '@lib/publicApi/app/maps/getMapItemByName';
+import type { CreatifError } from '@root/types/api/publicApi/Http';
 
 export function GetMapItemByName() {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [selectedLocale, setSelectedLocale] = useState<string>('');
-    const [isError, setIsError] = useState(false);
+    const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
+
+    let errorMessage = '';
+    if (isError && isError === 'notFound') {
+        errorMessage = 'Item is not found';
+    } else if (isError && isError === 'generalError') {
+        errorMessage = 'Something went wrong. Please try again later.';
+    }
 
     const { isFetching, data } = useQuery(
         ['get_map_item_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
@@ -50,11 +58,18 @@ export function GetMapItemByName() {
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: -1,
-            onError() {
-                setIsError(true);
+            retry: -1,
+            onError(error: CreatifError) {
+                if (error.status === 404) {
+                    setIsError('notFound');
+                } else {
+                    setIsError('generalError');
+                }
+
                 setSubmitQueryEnabled(false);
             },
             onSuccess() {
+                setIsError(undefined);
                 setSubmitQueryEnabled(false);
             },
         },
@@ -66,7 +81,7 @@ export function GetMapItemByName() {
                 <IconInfoCircle size="36px" color="var(--mantine-color-indigo-3)" />
                 <p>
                     Since map items must have a unique name, specifying a locale is optional but if you specify a name
-                    with an incorrect locale, the item will not be found.
+                    with an incorrect locale (a locale with which this item is not created), the item will not be found.
                 </p>
             </div>
 
@@ -123,12 +138,12 @@ export function GetMapItemByName() {
                 </div>
             )}
 
-            {isError && (
+            {errorMessage && (
                 <UIError
                     style={{
                         marginTop: '1rem',
                     }}
-                    title="Unable to get item. Please, try again later."
+                    title={errorMessage}
                 />
             )}
         </div>

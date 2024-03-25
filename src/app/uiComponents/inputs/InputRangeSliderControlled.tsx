@@ -2,6 +2,8 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { RangeSlider } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/InputSlider.module.css';
 import type { RangeSliderProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
@@ -29,7 +31,7 @@ function resolveDefaultValue(
 
     return [0, 0];
 }
-export default function InputRangeSliderControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
+export function InputRangeSliderControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
     const { control, getValues, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState<[number, number] | undefined>(
         resolveDefaultValue(defaultValue, getValues(name)),

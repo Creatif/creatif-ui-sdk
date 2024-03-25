@@ -26,6 +26,8 @@ export function StructureSelect({ onSelected, structureToShow }: Props) {
         },
         {
             staleTime: Infinity,
+            retry: -1,
+            refetchOnWindowFocus: false,
             keepPreviousData: true,
             onError() {
                 setIsError(true);

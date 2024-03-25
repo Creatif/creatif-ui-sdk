@@ -14,6 +14,7 @@ export interface SpecialFieldsStore {
     setLocale: (l: string) => void;
     setBehaviour: (l: Behaviour) => void;
     setGroups: (g: string[]) => void;
+    dump: () => void;
 }
 
 const store: Record<string, UseBoundStore<StoreApi<SpecialFieldsStore>>> = {};
@@ -39,22 +40,34 @@ export function createSpecialFields() {
 
             return duplicates;
         },
-        addField: (field: string) => set((current) => ({...current, fieldsUsed: [...current.fieldsUsed, field]})),
-        removeField: (field: string) => set((current) => {
-           const currentFields = current.fieldsUsed;
-           if (currentFields.includes(field)) {
-               const idx = currentFields.indexOf(field);
-               if (idx !== -1) {
-                   currentFields.splice(idx, 1);
-                   return {...current, fieldsUsed: [...currentFields]};
-               }
-           }
-           
-           return current;
-        }),
+        addField: (field: string) =>
+            set((current) => {
+                const fieldsUsed = current.fieldsUsed;
+                if (!fieldsUsed.includes(field)) {
+                    return { ...current, ...{ fieldsUsed: [...fieldsUsed, field] } };
+                }
+
+                return current;
+            }),
+        removeField: (field: string) =>
+            set((current) => {
+                const currentFields = current.fieldsUsed;
+                if (currentFields.includes(field)) {
+                    const idx = currentFields.indexOf(field);
+                    if (idx !== -1) {
+                        currentFields.splice(idx, 1);
+                        return { ...current, fieldsUsed: [...currentFields] };
+                    }
+                }
+
+                return current;
+            }),
         setLocale: (l: string) => set(() => ({ locale: l })),
         setBehaviour: (l: Behaviour) => set(() => ({ behaviour: l })),
         setGroups: (l: string[]) => set(() => ({ groups: l })),
+        dump: () => {
+            console.info(get());
+        },
     }));
 }
 export function getSpecialFields(structureName: string, locale: string, type: string) {

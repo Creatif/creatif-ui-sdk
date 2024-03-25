@@ -2,6 +2,8 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { Chip } from '@mantine/core';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/InputChip.module.css';
 import type { ChipProps } from '@mantine/core';
 import type { PropsWithChildren } from 'react';
@@ -12,13 +14,7 @@ interface Props extends ChipProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (checked: boolean) => void;
 }
-export default function InputChipControlled({
-    name,
-    validation,
-    onInputChange,
-    children,
-    ...rest
-}: Props & PropsWithChildren) {
+export function InputChipControlled({ name, validation, onInputChange, children, ...rest }: Props & PropsWithChildren) {
     const { control, getValues } = useFormContext();
     const [checked, setChecked] = useState<boolean | undefined>(getValues(name));
     const err = useFirstError(name);

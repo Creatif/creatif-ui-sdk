@@ -14,7 +14,7 @@ interface Props extends SwitchGroupProps {
     component?: (data: { value: string[]; formState: FormState<FieldValues> }) => React.ReactNode;
     children?: ReactNode;
 }
-export default function InputSwitchGroupControlled({
+export function InputSwitchGroupControlled({
     name,
     validation,
     onInputChange,

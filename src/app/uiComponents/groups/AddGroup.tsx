@@ -26,7 +26,7 @@ export function AddGroup() {
         },
     });
 
-    const { success, error: errorNotification } = useNotification();
+    const { success } = useNotification();
 
     const [isFormDirty, setIsFormDirty] = useState(false);
     const { isFetching, data, error } = useGetGroups<TryResult<Group[]>>();

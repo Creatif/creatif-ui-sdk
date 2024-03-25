@@ -30,7 +30,6 @@ import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { useQueryClient } from 'react-query';
 import type { UpdateListItemResult } from '@root/types/api/list';
-import chooseAndDeleteBindings, { type IncomingValues } from '@app/uiComponents/form/bindings/deleteBindings';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import type { CreatedVariable } from '@root/types/api/variable';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -127,160 +126,172 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
         }
     }, [structureItem, itemId]);
 
-    const onInternalSubmit = useCallback((value: T, e: BaseSyntheticEvent | undefined) => {
-        if (!value) {
-            errorNotification(
-                'No data submitted.',
-                'undefined has been submitted which means there are no values to save. Have you added some fields to your form?',
-            );
+    const onInternalSubmit = useCallback(
+        (value: T, e: BaseSyntheticEvent | undefined) => {
+            if (!value) {
+                errorNotification(
+                    'No data submitted.',
+                    'undefined has been submitted which means there are no values to save. Have you added some fields to your form?',
+                );
 
-            return;
-        }
-
-        wrappedBeforeSave<T>(value, e, beforeSave).then(async (result) => {
-            if (!valueMetadataValidator(result)) {
-                setBeforeSaveError(true);
                 return;
             }
 
-            setIsVariableExistsError(false);
-            setIsGenericUpdateError(false);
-            setIsVariableReadonly(false);
-            setIsNotFoundError(false);
-
-            setIsSaving(true);
-
-            if (!isUpdate && result && structureItem) {
-                const {name, locale, behaviour, groups} = resolveBindings(result.value as T, bindings);
-                if (!name) {
-                    errorNotification('\'name\' could not be determined', '\'name\' is required and you have to create a binding for it that returns a string.');
-                    return;
-                }
-                deleteBindings(result.value);
-                removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
-
-                const addFn = add?.();
-                if (!addFn) return undefined;
-
-                const {result: response, error} = await addFn({
-                    name: structureItem.id,
-                    projectId: Runtime.instance.credentials.projectId,
-                    variable: {
-                        name: name,
-                        behaviour: behaviour,
-                        value: result.value,
-                        metadata: result.metadata,
-                        groups: groups,
-                        locale: locale,
-                    },
-                    references: referenceStore.getState().references.map((item) => ({
-                        structureName: item.structureName,
-                        structureType: item.structureType,
-                        name: item.name,
-                        variableId: item.variableId,
-                    })) as Reference[],
-                });
-
-                setIsSaving(false);
-
-                if (error && error.error.data['exists']) {
-                    setIsVariableExistsError(true);
-                    errorNotification('Map item exists', 'Map item with this name and locale already exists');
-                    return;
-                } else if (error) {
-                    setIsGenericUpdateError(true);
+            wrappedBeforeSave<T>(value, e, beforeSave).then(async (result) => {
+                if (!valueMetadataValidator(result)) {
+                    setBeforeSaveError(true);
                     return;
                 }
 
-                if (response && structureItem) {
-                    successNotification(
-                        'List item created',
-                        `List item with name '${name}' and locale '${locale}' has been created.`,
-                    );
+                setIsVariableExistsError(false);
+                setIsGenericUpdateError(false);
+                setIsVariableReadonly(false);
+                setIsNotFoundError(false);
 
-                    queryClient.invalidateQueries(structureItem.id);
-                    afterSave?.(response, e);
+                setIsSaving(true);
+
+                if (!isUpdate && result && structureItem) {
+                    const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
+                    if (!name) {
+                        errorNotification(
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
+                        );
+                        return;
+                    }
+                    deleteBindings(result.value);
+                    removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
+
+                    const addFn = add?.();
+                    if (!addFn) return undefined;
+
+                    const { result: response, error } = await addFn({
+                        name: structureItem.id,
+                        projectId: Runtime.instance.credentials.projectId,
+                        variable: {
+                            name: name,
+                            behaviour: behaviour,
+                            value: result.value,
+                            metadata: result.metadata,
+                            groups: groups,
+                            locale: locale,
+                        },
+                        references: referenceStore.getState().references.map((item) => ({
+                            structureName: item.structureName,
+                            structureType: item.structureType,
+                            name: item.name,
+                            variableId: item.variableId,
+                        })) as Reference[],
+                    });
+
                     setIsSaving(false);
-                    if (structureItem) {
-                        navigate(`${structureItem.navigationListPath}/${structureId}`);
+
+                    if (error && error.error.data['exists']) {
+                        setIsVariableExistsError(true);
+                        errorNotification('Map item exists', 'Map item with this name and locale already exists');
+                        return;
+                    } else if (error) {
+                        setIsGenericUpdateError(true);
+                        return;
+                    }
+
+                    if (response && structureItem) {
+                        successNotification(
+                            'List item created',
+                            `List item with name '${name}' and locale '${locale}' has been created.`,
+                        );
+
+                        queryClient.invalidateQueries(structureItem.id);
+                        afterSave?.(response, e);
+                        setIsSaving(false);
+                        if (structureItem) {
+                            navigate(`${structureItem.navigationListPath}/${structureId}`);
+                        }
                     }
                 }
-            }
 
-            if (isUpdate && result && structureItem && itemId) {
-                const {name, locale, behaviour, groups} = resolveBindings(result.value as T, bindings);
-                if (!name) {
-                    errorNotification('\'name\' could not be determined', '\'name\' is required and you have to create a binding for it that returns a string.');
-                    return;
-                }
-                deleteBindings(result.value);
+                if (isUpdate && result && structureItem && itemId) {
+                    const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
+                    if (!name) {
+                        errorNotification(
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
+                        );
+                        return;
+                    }
+                    deleteBindings(result.value);
 
-                const specialFields = useSpecialFields.getState().fieldsUsed;
-                const isReferenceStoreLocked = referenceStore.getState().locked;
-                removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
+                    const specialFields = useSpecialFields.getState().fieldsUsed;
 
-                let fields = ['name', 'value', 'metadata'];
-                if (!isReferenceStoreLocked) {
-                    fields.push('references');
-                }
-                
-                if (specialFields.length > 0) {
-                    fields = [...fields, ...specialFields.map((item) => item.replace('creatif_', ''))];
-                }
+                    const isReferenceStoreLocked = referenceStore.getState().locked;
+                    removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
-                const updateFn = update?.();
-                if (!updateFn) return undefined;
+                    let fields = ['name', 'value', 'metadata'];
+                    if (!isReferenceStoreLocked) {
+                        fields.push('references');
+                    }
 
-                const {result: response, error} = await updateFn({
-                    fields: fields,
-                    name: structureItem.id,
-                    projectId: Runtime.instance.credentials.projectId,
-                    itemId: itemId,
-                    values: {
-                        name: name,
-                        value: result.value,
-                        metadata: result.metadata,
-                        groups: groups,
-                        behaviour: behaviour,
-                        locale: locale,
-                    },
-                    references: !isReferenceStoreLocked ? referenceStore.getState().references.map((item) => ({
-                        structureName: item.structureName,
-                        name: item.name,
-                        structureType: item.structureType,
-                        variableId: item.variableId,
-                    })) as UpdateMapVariableReferenceBlueprint[] : [],
-                });
+                    if (specialFields.length > 0) {
+                        fields = [...fields, ...specialFields.map((item) => item.replace('creatif_', ''))];
+                    }
 
-                setIsSaving(false);
+                    const updateFn = update?.();
+                    if (!updateFn) return undefined;
 
-                if (error && error.error && error.error.data['exists']) {
-                    setIsVariableExistsError(true);
-                    return;
-                } else if (error && error.error && error.error.data['behaviourReadonly']) {
-                    setIsVariableReadonly(true);
-                    return;
-                } else if (error) {
-                    setIsGenericUpdateError(true);
-                    return;
-                }
+                    const { result: response, error } = await updateFn({
+                        fields: fields,
+                        name: structureItem.id,
+                        projectId: Runtime.instance.credentials.projectId,
+                        itemId: itemId,
+                        values: {
+                            name: name,
+                            value: result.value,
+                            metadata: result.metadata,
+                            groups: groups,
+                            behaviour: behaviour,
+                            locale: locale,
+                        },
+                        references: !isReferenceStoreLocked
+                            ? (referenceStore.getState().references.map((item) => ({
+                                  structureName: item.structureName,
+                                  name: item.name,
+                                  structureType: item.structureType,
+                                  variableId: item.variableId,
+                              })) as UpdateMapVariableReferenceBlueprint[])
+                            : [],
+                    });
 
-                if (response && structureItem) {
-                    successNotification(
-                        'List item updated',
-                        `List item with item name '${name}' has been updated.`,
-                    );
+                    setIsSaving(false);
 
-                    invalidateQuery();
-                    queryClient.invalidateQueries(structureItem.id);
-                    afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
-                    if (structureItem) {
-                        navigate(`${structureItem.navigationListPath}/${structureId}`);
+                    if (error && error.error && error.error.data['exists']) {
+                        setIsVariableExistsError(true);
+                        return;
+                    } else if (error && error.error && error.error.data['behaviourReadonly']) {
+                        setIsVariableReadonly(true);
+                        return;
+                    } else if (error) {
+                        setIsGenericUpdateError(true);
+                        return;
+                    }
+
+                    if (response && structureItem) {
+                        successNotification(
+                            'List item updated',
+                            `List item with item name '${name}' has been updated.`,
+                        );
+
+                        invalidateQuery();
+                        queryClient.invalidateQueries(structureItem.id);
+                        afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
+                        if (structureItem) {
+                            navigate(`${structureItem.navigationListPath}/${structureId}`);
+                        }
                     }
                 }
-            }
-        });
-    }, []);
+            });
+        },
+        [useSpecialFields],
+    );
 
     return (
         <div className={contentContainerStyles.root}>
@@ -292,7 +303,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
@@ -311,13 +322,24 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                 show={isVariableReadonly}
             />
 
-            {Boolean(duplicateFields.length) && <RuntimeErrorModal open={Boolean(duplicateFields.length)} error={{
-                message: 'Some fields are duplicated.'
-            }} />}
+            {Boolean(duplicateFields.length) && (
+                <RuntimeErrorModal
+                    open={Boolean(duplicateFields.length)}
+                    error={{
+                        message: 'Some fields are duplicated.',
+                    }}
+                />
+            )}
 
-            {(!bindings?.name || typeof bindings.name !== 'function') && <RuntimeErrorModal open={true} error={{
-                message: 'Name binding is not provided. You must provide the name as a function that accepts the submitted form values.'
-            }} />}
+            {(!bindings?.name || typeof bindings.name !== 'function') && (
+                <RuntimeErrorModal
+                    open={true}
+                    error={{
+                        message:
+                            'Name binding is not provided. You must provide the name as a function that accepts the submitted form values.',
+                    }}
+                />
+            )}
 
             <Loading isLoading={isFetching} />
 

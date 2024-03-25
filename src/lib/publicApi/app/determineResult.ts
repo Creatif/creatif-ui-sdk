@@ -1,5 +1,5 @@
 import { isError } from '@lib/publicApi/lib/http/tryHttp';
-import { TryHttpResult } from '@root/types/api/publicApi/Http';
+import type { TryHttpResult } from '@root/types/api/publicApi/Http';
 
 export function determineResult<T>(httpResult: TryHttpResult<T>) {
     const result = httpResult.result;

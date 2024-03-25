@@ -1,11 +1,29 @@
 export { CreatifProvider } from '@root/CreatifProvider';
-
-/*
-const rootElement = document.getElementById('root');
-if (rootElement) {
-	ReactDOM.createRoot(rootElement).render(
-		<React.StrictMode>
-			<CreatifProvider />
-		</React.StrictMode>,
-	);
-}*/
+export { InputCheckbox } from '@root/app/uiComponents/inputs/InputCheckbox';
+export { InputBehaviour } from '@root/app/uiComponents/inputs/InputBehaviour';
+export { InputCheckboxControlled } from '@root/app/uiComponents/inputs/InputCheckboxControlled';
+export { InputCheckboxGroupControlled } from '@root/app/uiComponents/inputs/InputCheckboxGroupControlled';
+export { InputChipControlled } from '@root/app/uiComponents/inputs/InputChipControlled';
+export { InputDateControlled } from '@root/app/uiComponents/inputs/InputDateControlled';
+export { InputEmail } from '@root/app/uiComponents/inputs/InputEmail';
+export { InputEmailControlled } from '@root/app/uiComponents/inputs/InputEmailControlled';
+export { InputGroups } from '@root/app/uiComponents/inputs/InputGroups';
+export { InputLocale } from '@root/app/uiComponents/inputs/InputLocale';
+export { InputNumberControlled } from '@root/app/uiComponents/inputs/InputNumberControlled';
+export { InputPinControlled } from '@root/app/uiComponents/inputs/InputPinControlled';
+export { InputRadio } from '@root/app/uiComponents/inputs/InputRadio';
+export { InputRadioControlled } from '@root/app/uiComponents/inputs/InputRadioControlled';
+export { InputRadioGroupControlled } from '@root/app/uiComponents/inputs/InputRadioGroupControlled';
+export { InputRangeSliderControlled } from '@root/app/uiComponents/inputs/InputRangeSliderControlled';
+export { InputRatingControlled } from '@root/app/uiComponents/inputs/InputRatingControlled';
+export { InputReference } from '@root/app/uiComponents/inputs/InputReference';
+export { InputSegmentedControlControlled } from '@root/app/uiComponents/inputs/InputSegmentedControlControlled';
+export { InputSelectControlled } from '@root/app/uiComponents/inputs/InputSelectControlled';
+export { InputSliderControlled } from '@root/app/uiComponents/inputs/InputSliderControlled';
+export { InputSwitch } from '@root/app/uiComponents/inputs/InputSwitch';
+export { InputSwitchControlled } from '@root/app/uiComponents/inputs/InputSwitchControlled';
+export { InputSwitchGroupControlled } from '@root/app/uiComponents/inputs/InputSwitchGroupControlled';
+export { InputText } from '@root/app/uiComponents/inputs/InputText';
+export { InputTextarea } from '@root/app/uiComponents/inputs/InputTextarea';
+export { InputTextareaControlled } from '@root/app/uiComponents/inputs/InputTextareaControlled';
+export { InputTextControlled } from '@app/uiComponents/inputs/InputTextControlled';

@@ -1,4 +1,4 @@
-import InputText from '@app/uiComponents/inputs/InputText';
+import { InputText } from '@app/uiComponents/inputs/InputText';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -10,7 +10,7 @@ interface Props extends TextInputProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string) => void;
 }
-export default function InputEmailControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputEmailControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string>(getValues(name));
     let optionsCopy = {};

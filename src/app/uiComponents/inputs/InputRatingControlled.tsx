@@ -6,7 +6,7 @@ interface Props extends RatingProps {
     name: string;
     onInputChange?: (value: number) => void;
 }
-export default function InputRatingControlled({ name, defaultValue, onInputChange, ...rest }: Props) {
+export function InputRatingControlled({ name, defaultValue, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState(defaultValue || getValues(name));
 

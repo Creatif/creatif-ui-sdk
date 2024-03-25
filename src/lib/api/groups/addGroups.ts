@@ -13,5 +13,5 @@ export async function addGroups(blueprint: AddGroupsBlueprint) {
             },
             authHeaders(),
         ),
-    )();
+    );
 }

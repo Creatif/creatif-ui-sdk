@@ -14,7 +14,7 @@ interface Props extends RadioGroupProps {
     component?: (data: { value: string; formState: FormState<FieldValues> }) => React.ReactNode;
     children?: ReactNode;
 }
-export default function InputRadioGroupControlled({
+export function InputRadioGroupControlled({
     name,
     validation,
     onInputChange,

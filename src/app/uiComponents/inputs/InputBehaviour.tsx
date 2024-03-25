@@ -10,7 +10,7 @@ import { behaviourField } from '@app/uiComponents/form/bindings/bindingResolver'
 export interface InputBehaviourProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
 }
-export default function InputBehaviour({ store }: InputBehaviourProps) {
+export function InputBehaviour({ store }: InputBehaviourProps) {
     const { control, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState<Behaviour>(store.getState().behaviour || 'modifiable');
 

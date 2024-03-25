@@ -10,7 +10,7 @@ interface Props extends CheckboxProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     options?: RegisterOptions;
 }
-export default function InputCheckboxControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputCheckboxControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [checked, setChecked] = useState(getValues(name));
 

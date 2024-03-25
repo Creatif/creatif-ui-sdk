@@ -12,13 +12,7 @@ interface Props extends DateInputProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (date: string) => void;
 }
-export default function InputDateControlled({
-    name,
-    format = 'do MMMM, yyyy',
-    validation,
-    onInputChange,
-    ...rest
-}: Props) {
+export function InputDateControlled({ name, format = 'do MMMM, yyyy', validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     let def = getValues(name);
     if (typeof def === 'string' && def) {

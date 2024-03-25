@@ -2,6 +2,8 @@ import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { PinInput } from '@mantine/core';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './css/InputPin.module.css';
 import type { PinInputProps } from '@mantine/core/lib';
 import type { RegisterOptions } from 'react-hook-form';
@@ -10,7 +12,7 @@ interface Props extends PinInputProps {
     onInputChange?: (value: string) => void;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export default function InputPinControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
+export function InputPinControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string | undefined>(defaultValue || getValues(name));
     const error = useFirstError(name);

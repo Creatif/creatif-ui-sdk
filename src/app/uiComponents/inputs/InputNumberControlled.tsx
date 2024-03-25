@@ -9,7 +9,7 @@ interface Props extends NumberInputProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (checked: string | number) => void;
 }
-export default function InputNumberControlled({ name, onInputChange, validation, ...rest }: Props) {
+export function InputNumberControlled({ name, onInputChange, validation, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string | number>(getValues(name));
 

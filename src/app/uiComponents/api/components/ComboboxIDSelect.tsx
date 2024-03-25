@@ -82,6 +82,8 @@ export function ComboboxIDSelect({ onSelected, structureData, toSelect }: Props)
         {
             enabled: structureData && structureData.type === 'list',
             keepPreviousData: true,
+            retry: -1,
+            staleTime: -1,
             refetchOnWindowFocus: false,
             onError() {
                 setIsError(true);

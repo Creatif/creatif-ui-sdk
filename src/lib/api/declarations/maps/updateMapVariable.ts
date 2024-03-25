@@ -6,6 +6,7 @@ export async function updateMapVariable(blueprint: UpdateMapVariableBlueprint) {
     if (Array.isArray(blueprint.fields) && blueprint.fields.length !== 0) {
         fields = blueprint.fields.join('|');
     }
+
     return tryHttp<UpdateMapItemResult>(
         declarations(),
         'post',

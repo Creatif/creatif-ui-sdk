@@ -1,10 +1,8 @@
-import InputText from '@app/uiComponents/inputs/InputText';
 import { Grid } from '@mantine/core';
-import Form from '@app/uiComponents/form/Form';
-interface Props {
-    mode?: 'update';
-}
-export default function LanguageForm({ mode }: Props) {
+import { InputText } from '../../src/app/uiComponents/inputs/InputText';
+import Form from '../../src/app/uiComponents/form/Form';
+
+export default function LanguageForm() {
     return (
         <Form<{
             name: string;

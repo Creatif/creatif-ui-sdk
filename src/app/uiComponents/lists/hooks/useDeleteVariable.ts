@@ -13,8 +13,8 @@ export default function useDeleteVariable(
     const queryClient = useQueryClient();
     return {
         ...useMutation<unknown, ApiError, { name: string; itemId: string }>(
-            async (body: { name: string; itemId: string }) => {
-                const fn = throwIfHttpFails<unknown>(() => {
+            async (body: { name: string; itemId: string }) =>
+                await throwIfHttpFails<unknown>(() => {
                     if (structureType === 'list') {
                         return deleteListItemByID({
                             name: body.name,
@@ -28,10 +28,7 @@ export default function useDeleteVariable(
                         itemId: body.itemId,
                         projectId: Runtime.instance.credentials.projectId,
                     });
-                });
-
-                return await fn();
-            },
+                }),
             {
                 onSuccess: onSuccess,
                 onError: onError,

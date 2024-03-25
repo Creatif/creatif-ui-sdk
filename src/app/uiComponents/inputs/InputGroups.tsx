@@ -22,7 +22,7 @@ function createOptions(groups: Group[]) {
 
 export function InputGroups({ validation, store }: InputGroupsProps) {
     const { control, setValue: setFormValue, setError } = useFormContext();
-    const [value, setValue] = useState<string[]>(store.getState().groups || []);
+    const [value, setValue] = useState<string[]>([]);
     const { isFetching, data: groups, error: groupsError } = useGetGroups();
 
     const name = groupsField;
@@ -30,9 +30,22 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
     useEffect(() => {
         store.getState().addField(name);
         setFormValue(name, value);
-
-        return () => store.getState().removeField(name);
     }, [value]);
+
+    useEffect(() => {
+        if (groups) {
+            const currentGroups = store.getState().groups;
+            const allGroups = groups.result;
+
+            if (allGroups) {
+                const filtered = allGroups.filter((allGroupsItem) =>
+                    currentGroups.find((currentItem) => currentItem === allGroupsItem.name),
+                );
+
+                setValue(filtered.map((item) => item.id));
+            }
+        }
+    }, [groups]);
 
     useEffect(() => {
         if (groupsError) {

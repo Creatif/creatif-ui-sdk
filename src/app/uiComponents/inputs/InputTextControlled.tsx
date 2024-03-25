@@ -1,4 +1,4 @@
-import InputText from '@app/uiComponents/inputs/InputText';
+import { InputText } from '@app/uiComponents/inputs/InputText';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { TextInputProps } from '@mantine/core';
@@ -9,7 +9,7 @@ interface Props extends TextInputProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string) => void;
 }
-export default function InputTextControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputTextControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string>(getValues(name));
 

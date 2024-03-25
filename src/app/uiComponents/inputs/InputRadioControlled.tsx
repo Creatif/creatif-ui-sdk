@@ -9,7 +9,7 @@ interface Props extends RadioProps {
     onInputChange?: (value: boolean) => void;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export default function InputRadioControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputRadioControlled({ name, validation, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [checked, setChecked] = useState(getValues(name));
 

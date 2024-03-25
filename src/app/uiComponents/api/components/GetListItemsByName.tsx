@@ -28,7 +28,6 @@ export function GetListItemsByName() {
             if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
-            console.log(isValueOnly);
             if (structureData && id) {
                 const { result, error } = await getListItemsByName({
                     name: id,
@@ -51,6 +50,7 @@ export function GetListItemsByName() {
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: -1,
+            retry: -1,
             onError() {
                 setIsError(true);
                 setSubmitQueryEnabled(false);

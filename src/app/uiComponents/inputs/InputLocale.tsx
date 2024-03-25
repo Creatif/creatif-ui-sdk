@@ -18,7 +18,7 @@ function createOptions(locales: Locale[]) {
         value: item.alpha,
     }));
 }
-export default function InputLocale({ store, validation, ...rest }: InputLocaleProps) {
+export function InputLocale({ store, validation, ...rest }: InputLocaleProps) {
     const { control, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState(store.getState().locale || Runtime.instance.currentLocaleStorage.getLocale());
     const locales: Locale[] = Runtime.instance.localesCache.getLocales() || [];
