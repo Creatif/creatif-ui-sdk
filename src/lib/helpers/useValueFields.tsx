@@ -49,7 +49,7 @@ function recursiveFieldsResolved(value: object) {
                             values.push({
                                 column: '',
                                 value: '',
-                                innerColumn: recursiveFieldsResolved(v),
+                                innerColumn: recursiveFieldsResolved(v, ''),
                             });
                         }
                     }
@@ -79,14 +79,15 @@ function recursiveFieldsResolved(value: object) {
 
             if (typeof val === 'object' && !Array.isArray(val)) {
                 values.push({
-                    column: '',
+                    column: key,
                     value: '',
-                    innerColumn: recursiveFieldsResolved(val),
+                    innerColumn: recursiveFieldsResolved(val, key),
                 });
             }
         }
     }
 
+    console.log(values);
     return values;
 }
 

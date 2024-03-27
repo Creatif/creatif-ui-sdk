@@ -36,7 +36,7 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
     return (
         <div className={isInnerRow ? styles.columnSpacing : undefined}>
             {values.map((item, i) => {
-                const isNextInnerColumn = values[i + 1] && values[i + 1].innerColumn;
+                const isNextInnerColumn = values[i].innerColumn;
 
                 return (
                     <React.Fragment key={i}>
@@ -209,9 +209,19 @@ export function Item() {
                 />
             )}
 
-            {structureItem && internalResult && <DeleteItemWrapperModal isOpen={isDeleteModalOpen} deleteItemId={internalResult.id} structureId={structureItem.id} structureType={structureItem.structureType} itemId={internalResult.id} onClose={() => setIsDeleteModalOpen(false)} onDeleted={() => {
-                navigate(`/${structureItem?.structureType}/${structureItem?.name}/list/${structureItem?.id}`);
-            }} />}
+            {structureItem && internalResult && (
+                <DeleteItemWrapperModal
+                    isOpen={isDeleteModalOpen}
+                    deleteItemId={internalResult.id}
+                    structureId={structureItem.id}
+                    structureType={structureItem.structureType}
+                    itemId={internalResult.id}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onDeleted={() => {
+                        navigate(`/${structureItem?.structureType}/${structureItem?.name}/list/${structureItem?.id}`);
+                    }}
+                />
+            )}
 
             {structureItem && internalResult && (
                 <EditGroupsWrapperModal

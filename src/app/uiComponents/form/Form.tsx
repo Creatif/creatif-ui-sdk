@@ -70,6 +70,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
+    beforeFormMount?: (httpData: unknown) => unknown;
     afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
     form?: HTMLAttributes<HTMLFormElement>;
 }
@@ -79,6 +80,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
     bindings,
     inputs,
     beforeSave,
+    beforeFormMount,
     afterSave,
 }: Props<T, Value, Metadata>) {
     const useSpecialFields = createSpecialFields();
@@ -295,6 +297,12 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
         [useSpecialFields],
     );
 
+    let currentData = data?.result;
+    if (isUpdate && beforeFormMount && data?.result) {
+        const result = data.result;
+        currentData = beforeFormMount(result);
+    }
+
     return (
         <div className={contentContainerStyles.root}>
             {beforeSaveError && (
@@ -360,7 +368,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                         referenceStore={referenceStore}
                         onSubmit={onInternalSubmit}
                         isSaving={isSaving}
-                        currentData={data?.result}
+                        currentData={currentData}
                     />
                 </>
             )}
