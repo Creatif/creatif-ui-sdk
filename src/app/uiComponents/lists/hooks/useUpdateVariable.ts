@@ -24,8 +24,8 @@ export default function useUpdateVariable(
 
     return {
         ...useMutation<TryResult<UpdateListItemResult>, ApiError, Body>(
-            async (body: Body) => {
-                const fn = throwIfHttpFails(() => {
+            async (body: Body) =>
+                await throwIfHttpFails(() => {
                     if (structureType === 'list') {
                         return updateListItem({
                             name: listName,
@@ -45,10 +45,7 @@ export default function useUpdateVariable(
                         fields: body.fields,
                         references: [],
                     });
-                });
-
-                return await fn();
-            },
+                }),
             {
                 onSuccess: () => {
                     successNotification(

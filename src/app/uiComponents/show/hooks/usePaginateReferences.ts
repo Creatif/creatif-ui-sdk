@@ -1,5 +1,5 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import type { ApiError } from '@lib/http/apiError';
 import paginateReferences from '@lib/api/declarations/references/paginateMapVariables';
@@ -57,7 +57,7 @@ export default function usePaginateReferences<Response>({
     ];
 
     async function fetchPage({ pageParam = 1 }) {
-        const fn = throwIfHttpFails(() =>
+        const { result } = await throwIfHttpFails(() =>
             paginateReferences({
                 parentId,
                 childId,
@@ -78,9 +78,8 @@ export default function usePaginateReferences<Response>({
             }),
         );
 
-        const response = await fn();
-        if (response.result) {
-            return response.result;
+        if (result) {
+            return result;
         }
 
         return undefined;

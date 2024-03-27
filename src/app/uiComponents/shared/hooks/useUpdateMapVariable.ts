@@ -18,8 +18,8 @@ export default function useUpdateMapVariable(mapName: string, itemId: string, it
 
     return {
         ...useMutation<TryResult<UpdateMapItemResult>, ApiError, Body>(
-            async (body: Body) => {
-                const fn = throwIfHttpFails(() =>
+            async (body: Body) =>
+                await throwIfHttpFails(() =>
                     updateMapVariable({
                         name: mapName,
                         itemId: itemId,
@@ -28,10 +28,7 @@ export default function useUpdateMapVariable(mapName: string, itemId: string, it
                         fields: body.fields,
                         references: [],
                     }),
-                );
-
-                return await fn();
-            },
+                ),
             {
                 onSuccess: () => {
                     successNotification(

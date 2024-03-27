@@ -267,6 +267,7 @@ export function Listing<Value, Metadata>() {
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
                                     data={data}
+                                    sortingDirection={queryParams.direction}
                                     structureItem={structureItem}
                                     structureType={structureType as StructureType}
                                     onRearrange={rearrange}

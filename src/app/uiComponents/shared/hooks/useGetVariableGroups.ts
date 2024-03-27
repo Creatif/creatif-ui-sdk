@@ -16,18 +16,15 @@ export default function useGetVariableGroups(
     return {
         ...useQuery<TryResult<Group[]>, ApiError>(
             key,
-            async () => {
-                const fn = throwIfHttpFails<Group[]>(() =>
+            async () =>
+                await throwIfHttpFails<Group[]>(() =>
                     getVariableGroups({
                         structureType: structureType,
                         structureId: structureId,
                         itemId: itemId,
                         projectId: Runtime.instance.credentials.projectId,
                     }),
-                );
-
-                return await fn();
-            },
+                ),
             {
                 enabled: typeof enabled === 'boolean' ? enabled : true,
                 retry: 1,

@@ -22,6 +22,7 @@ import type {
     UseFormTrigger,
     UseFormUnregister,
     UseFormWatch,
+    UseFormStateReturn,
 } from 'react-hook-form';
 import BaseForm, { type ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
@@ -60,6 +61,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
             watch: UseFormWatch<T>;
             trigger: UseFormTrigger<T>;
             getFieldState: UseFormGetFieldState<T>;
+            formState: UseFormStateReturn<T>;
             defaultValues: T;
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;

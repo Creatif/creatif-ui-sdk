@@ -9,8 +9,8 @@ export default function useDeleteRange(structureType: StructureType, onSuccess: 
     const queryClient = useQueryClient();
     return {
         ...useMutation<unknown, ApiError, { items: string[]; name: string }>(
-            async (body: { items: string[]; name: string }) => {
-                const fn = throwIfHttpFails<unknown>(() => {
+            async (body: { items: string[]; name: string }) =>
+                await throwIfHttpFails<unknown>(() => {
                     if (structureType === 'list') {
                         return deleteRange({
                             name: body.name,
@@ -24,10 +24,7 @@ export default function useDeleteRange(structureType: StructureType, onSuccess: 
                         items: body.items,
                         projectId: Runtime.instance.credentials.projectId,
                     });
-                });
-
-                return await fn();
-            },
+                }),
             {
                 onSuccess: onSuccess,
                 onError: onError,

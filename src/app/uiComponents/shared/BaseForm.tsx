@@ -12,6 +12,7 @@ import type {
     UseFormTrigger,
     UseFormUnregister,
     UseFormWatch,
+    UseFormStateReturn,
 } from 'react-hook-form';
 import { Button, Group } from '@mantine/core';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
@@ -61,6 +62,7 @@ interface Props<T extends FieldValues> {
             watch: UseFormWatch<T>;
             trigger: UseFormTrigger<T>;
             getFieldState: UseFormGetFieldState<T>;
+            formState: UseFormStateReturn<T>;
             defaultValues: T;
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
@@ -130,8 +132,10 @@ export default function BaseForm<T extends FieldValues>({
         watch,
         trigger,
         getFieldState,
-        formState: { isLoading },
+        formState,
     } = methods;
+
+    const isLoading = formState.isLoading;
 
     return (
         <FormProvider {...methods}>
@@ -154,6 +158,7 @@ export default function BaseForm<T extends FieldValues>({
                             unregister: unregister,
                             watch: watch,
                             trigger: trigger,
+                            formState: formState,
                             getFieldState: getFieldState,
                             defaultValues: getValues(),
                             inputLocale: (props?: InputLocaleProps) => (

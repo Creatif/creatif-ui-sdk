@@ -5,6 +5,7 @@ import useNotification from '@app/systems/notifications/useNotification';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { Runtime } from '@app/runtime/Runtime';
 import type { PaginationDataWithPage } from '@app/uiComponents/lists/Listing';
+import { CurrentSortType } from '@root/types/components/components';
 
 type OnDrop = (source: DragItem, destination: DragItem) => void;
 type OnMove = (dragIndex: number, hoverIdx: number) => void;
@@ -18,6 +19,7 @@ interface Props<Value, Metadata> {
     structureItem: StructureItem;
     structureType: 'list' | 'map';
     onRearrange: typeof rearrange;
+    sortingDirection: 'desc' | 'asc' | undefined;
     renderItems: (
         onDrop: OnDrop,
         onMove: OnMove,
@@ -33,6 +35,7 @@ export default function DraggableList<Value, Metadata>({
     structureType,
     renderItems,
     onRearrange,
+    sortingDirection = 'desc',
 }: Props<Value, Metadata>) {
     const [list, setList] = useState<PaginationDataWithPage<Value, Metadata>[]>(data);
     const [hoveredId, setHoveredId] = useState<string>('');
@@ -75,14 +78,20 @@ export default function DraggableList<Value, Metadata>({
                 }
 
                 if (result) {
-                    const sourceIdx = list.findIndex((t) => t.id === source.id);
+                    const tempList = [...list];
+                    const sourceIdx = tempList.findIndex((t) => t.id === source.id);
                     if (sourceIdx !== -1) {
-                        const t = list[sourceIdx];
+                        const t = tempList[sourceIdx];
+
+                        console.log(t);
 
                         t.index = result;
-                        list.sort((a, b) => b.index - a.index);
+                        tempList.sort((a, b) => b.index - a.index);
 
-                        setList([...list]);
+                        console.log(t);
+                        console.log(tempList);
+
+                        setList(tempList);
                     }
                 }
             });

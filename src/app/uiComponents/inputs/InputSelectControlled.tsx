@@ -11,7 +11,7 @@ interface Props extends SelectProps {
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
-export function InputSelectControlled({ data, name, ...rest }: Props) {
+export function InputSelectControlled({ data, name, validation, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string | null>(getValues(name));
 
@@ -19,6 +19,7 @@ export function InputSelectControlled({ data, name, ...rest }: Props) {
         <Controller
             control={control}
             name={name}
+            rules={validation}
             render={({ field: { onChange: onChange } }) => (
                 <Select
                     error={useFirstError(name)}

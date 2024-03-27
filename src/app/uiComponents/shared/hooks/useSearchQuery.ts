@@ -47,7 +47,7 @@ class QueryParams {
         this.orderBy = hiddenOrderBy;
     }
 }
-export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') {
+export default function useSearchQuery(orderBy: CurrentSortType = 'index') {
     const [params, setParams] = useSearchParams();
 
     const q = new QueryParams(
