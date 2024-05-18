@@ -1,0 +1,26 @@
+.root {
+    padding: 0.5rem;
+    width: 80%;
+    margin: 0 auto;
+
+    animation: fadeIn ease 0.4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 1rem;
+}
+
+.button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    margin-top: 2rem;
+}

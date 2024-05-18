@@ -28,6 +28,7 @@ import { createSetup } from '@app/setup';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 import { createFirstTimeSetupStore } from '@app/systems/stores/firstTimeSetupStore';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Login } from '@app/components/authentication/Login';
 
 interface Props {
     apiKey: string;
@@ -124,7 +125,7 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
             element: (
                 <AuthPage>
                     <Banner />
-                    <div>Login</div>
+                    <Login />
                 </AuthPage>
             ),
         },
