@@ -3,25 +3,16 @@
 import styles from '@app/css/authentication/wrapper.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import css from '@app/components/authentication/css/login.module.css';
-import type { FieldErrors } from 'react-hook-form';
+import shared from '@app/components/authentication/css/shared.module.css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextInput } from '@mantine/core';
-
-function getFirstError(errors: FieldErrors, field: string) {
-    const fieldError = errors[field];
-    if (!fieldError) return undefined;
-
-    if (fieldError.message && typeof fieldError?.message === 'string') {
-        return fieldError.message;
-    }
-
-    return 'This field is invalid.';
-}
+import { getFirstError } from '@app/components/authentication/getFirstError';
+import { useAuthRedirect } from '@app/components/authentication/useAuthRedirect';
 
 export function Login() {
-    const methods = useForm();
+    const safeToShow = useAuthRedirect('/', (isFetching, exists) => !isFetching && !exists);
 
+    const methods = useForm();
     const {
         handleSubmit,
         register,
@@ -29,33 +20,37 @@ export function Login() {
     } = methods;
 
     return (
-        <div className={styles.root}>
-            <div className={styles.centerRoot}>
-                <div className={css.root}>
-                    <FormProvider {...methods}>
-                        <form className={css.form} onSubmit={handleSubmit(console.log)}>
-                            <TextInput
-                                error={getFirstError(errors, 'email')}
-                                {...register('email', {
-                                    required: 'Email is required',
-                                })}
-                                label="Email"
-                            />
-                            <TextInput
-                                error={getFirstError(errors, 'password')}
-                                {...register('password', {
-                                    required: 'Password is required',
-                                })}
-                                label="Password"
-                            />
+        <>
+            {safeToShow && (
+                <div className={styles.root}>
+                    <div className={styles.centerRoot}>
+                        <div className={shared.root}>
+                            <FormProvider {...methods}>
+                                <form className={shared.form} onSubmit={handleSubmit(console.log)}>
+                                    <TextInput
+                                        error={getFirstError(errors, 'email')}
+                                        {...register('email', {
+                                            required: 'Email is required',
+                                        })}
+                                        label="Email"
+                                    />
+                                    <TextInput
+                                        error={getFirstError(errors, 'password')}
+                                        {...register('password', {
+                                            required: 'Password is required',
+                                        })}
+                                        label="Password"
+                                    />
 
-                            <div className={css.button}>
-                                <Button type="submit">Login</Button>
-                            </div>
-                        </form>
-                    </FormProvider>
+                                    <div className={shared.button}>
+                                        <Button type="submit">Login</Button>
+                                    </div>
+                                </form>
+                            </FormProvider>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 }

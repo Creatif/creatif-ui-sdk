@@ -1,6 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import css from '@app/components/authentication/css/stepOne.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import shared from '@app/components/authentication/css/shared.module.css';
 import { Button } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
@@ -31,7 +34,7 @@ export function StepOne({ onContinue }: Props) {
                 must always be one admin user. In the next screen, you will create the admin user.
             </p>
 
-            <div className={css.button}>
+            <div className={shared.button}>
                 <Button
                     onClick={() => {
                         setExit(1);

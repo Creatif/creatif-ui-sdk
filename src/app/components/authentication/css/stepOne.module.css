@@ -24,12 +24,6 @@
     margin-bottom: 3rem;
 }
 
-.button {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-}
-
 @media screen and (min-width: 960px) {
     .root {
         width: 80%;

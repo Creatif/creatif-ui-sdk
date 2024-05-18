@@ -1,6 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import css from '@app/components/authentication/css/stepTwo.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import shared from '@app/components/authentication/css/shared.module.css';
 import type { FieldErrors } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextInput } from '@mantine/core';
@@ -11,20 +14,10 @@ import type { ApiError } from '@lib/http/apiError';
 import createAdmin from '@lib/api/auth/createAdmin';
 import type { AdminUserCreate } from '@root/types/api/auth';
 import UIError from '@app/components/UIError';
+import { getFirstError } from '@app/components/authentication/getFirstError';
 
 interface Props {
     onContinue: () => void;
-}
-
-function getFirstError(errors: FieldErrors, field: string) {
-    const fieldError = errors[field];
-    if (!fieldError) return undefined;
-
-    if (fieldError.message && typeof fieldError?.message === 'string') {
-        return fieldError.message;
-    }
-
-    return 'This field is invalid.';
 }
 
 export function StepTwo({ onContinue }: Props) {
@@ -49,10 +42,10 @@ export function StepTwo({ onContinue }: Props) {
     }, [isSuccess]);
 
     return (
-        <div className={classNames(css.root)}>
+        <div className={classNames(shared.root)}>
             <FormProvider {...methods}>
                 <form
-                    className={css.form}
+                    className={shared.form}
                     onSubmit={handleSubmit((data) => {
                         mutate({
                             name: data.name,
@@ -113,7 +106,7 @@ export function StepTwo({ onContinue }: Props) {
 
                     {createAdminError && <UIError title="Cannot create admin user" />}
 
-                    <div className={css.button}>
+                    <div className={shared.button}>
                         <Button loading={isLoading} type="submit">
                             Create
                         </Button>
