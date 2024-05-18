@@ -4,7 +4,7 @@ import { Badge } from '@mantine/core';
 
 export type Column = {
     column: string;
-    innerColumn?: Column[];
+    innerColumn?: Column[] | Column[][];
     value: React.ReactNode;
 };
 
@@ -45,13 +45,17 @@ function recursiveFieldsResolved(value: object) {
                             value: <ArrayBadges values={val} />,
                         });
                     } else {
-                        for (const v of val) {
-                            values.push({
-                                column: '',
-                                value: '',
-                                innerColumn: recursiveFieldsResolved(v, ''),
-                            });
+                        const columns = [];
+                        for (let i = 0; i < val.length; i++) {
+                            const v = val[i];
+                            columns.push(recursiveFieldsResolved(v));
                         }
+
+                        values.push({
+                            column: key,
+                            value: '',
+                            innerColumn: columns,
+                        });
                     }
                 }
             }
@@ -81,13 +85,11 @@ function recursiveFieldsResolved(value: object) {
                 values.push({
                     column: key,
                     value: '',
-                    innerColumn: recursiveFieldsResolved(val, key),
+                    innerColumn: recursiveFieldsResolved(val),
                 });
             }
         }
     }
-
-    console.log(values);
     return values;
 }
 

@@ -2,7 +2,6 @@ import type { StructureType } from '@root/types/shell/shell';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import { Runtime } from '@app/runtime/Runtime';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
-import paginateVariables from '@lib/api/declarations/variables/paginateVariables';
 import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
 import type { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
@@ -12,6 +11,8 @@ export async function searchAndCreateOptions(
     structureId: string,
     structureType: StructureType,
     search: string,
+    page: number,
+    limit = 100,
 ): Promise<{
     options: ReferenceSearchInputOption[] | undefined;
     error: ApiError | undefined;
@@ -20,8 +21,8 @@ export async function searchAndCreateOptions(
         const { result, error } = await paginateList({
             search: search,
             name: structureId,
-            limit: 1000,
-            page: 1,
+            limit: limit,
+            page: page,
             orderBy: 'created_at',
             projectId: Runtime.instance.credentials.projectId,
         });
@@ -65,7 +66,7 @@ export async function searchAndCreateOptions(
             search: search,
             name: structureId,
             limit: 100,
-            page: 1,
+            page: page,
             projectId: Runtime.instance.credentials.projectId,
         });
 
@@ -100,34 +101,6 @@ export async function searchAndCreateOptions(
                 },
                 400,
             ),
-        };
-    }
-
-    const { result, error } = await paginateVariables({
-        search: search,
-        name: structureId,
-        limit: 100,
-        page: 1,
-        projectId: Runtime.instance.credentials.projectId,
-    });
-
-    if (result) {
-        return {
-            options: result.data.map((item) => ({
-                label: item.name,
-                value: JSON.stringify({
-                    id: item.id,
-                    structureType: 'variable',
-                }),
-            })),
-            error: undefined,
-        };
-    }
-
-    if (error) {
-        return {
-            options: undefined,
-            error: error,
         };
     }
 

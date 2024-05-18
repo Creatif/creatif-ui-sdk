@@ -1,5 +1,5 @@
-import { Combobox, useCombobox, TextInput, Loader } from '@mantine/core';
-import React, { useEffect, useRef, useState } from 'react';
+import { Combobox, useCombobox, TextInput, Loader, ScrollArea } from '@mantine/core';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
@@ -8,6 +8,7 @@ import type { ApiError } from '@lib/http/apiError';
 import type { ReferenceStoreItem } from '@app/systems/stores/inputReferencesStore';
 import { queryItemById, searchAndCreateOptions } from '@app/uiComponents/inputs/fields/searchHelper';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { IntersectionObserverOption } from '@app/uiComponents/inputs/fields/IntersectionObserverOption';
 
 export interface ReferenceSearchInputOption {
     label: string;
@@ -38,6 +39,10 @@ export default function ReferenceSearchInput({
     const [searchedOptions, setSearchedOptions] = useState<ReferenceSearchInputOption[]>([]);
     const [debouncedValue] = useDebouncedValue(search, 300);
     const [internalError, setInternalError] = useState<ApiError | undefined>();
+
+    const scrollAreaViewportRef = useRef<HTMLDivElement | null>(null);
+
+    const [page, setPage] = useState(1);
 
     // when an item dropdown item is clicked, onChange event on input is fired.
     // Setting this ref to true disables that. On first user search input, it should be
@@ -85,12 +90,31 @@ export default function ReferenceSearchInput({
     }, []);
 
     useEffect(() => {
+        setIsSearching(true);
+
+        searchAndCreateOptions(referenceStructureItem.id, referenceStructureItem.structureType, '', page).then(
+            ({ options, error }) => {
+                if (error) {
+                    setInternalError(error);
+                }
+
+                if (options) {
+                    setSearchedOptions([...searchedOptions, ...options]);
+                }
+
+                setIsSearching(false);
+            },
+        );
+    }, [page]);
+
+    useEffect(() => {
         if (debouncedValue && !selectedRef.current) {
             setIsSearching(true);
             searchAndCreateOptions(
                 referenceStructureItem.id,
                 referenceStructureItem.structureType,
                 debouncedValue,
+                page,
             ).then(({ options, error }) => {
                 if (error) {
                     setInternalError(error);
@@ -105,9 +129,17 @@ export default function ReferenceSearchInput({
         }
     }, [debouncedValue]);
 
-    const options = searchedOptions.map((item) => (
+    const options = searchedOptions.map((item, idx) => (
         <Combobox.Option value={item.value} key={item.value}>
             {item.label}
+
+            {idx === searchedOptions.length - 1 && scrollAreaViewportRef.current && (
+                <IntersectionObserverOption
+                    isFinal={searchedOptions.length % 100 !== 0}
+                    rootElem={scrollAreaViewportRef.current}
+                    onIntersected={() => setPage((p) => p + 1)}
+                />
+            )}
         </Combobox.Option>
     ));
 
@@ -164,7 +196,9 @@ export default function ReferenceSearchInput({
                     <Combobox.Dropdown>
                         {options.length > 0 && (
                             <Combobox.Options mah={200} style={{ overflowY: 'auto' }}>
-                                {options}
+                                <ScrollArea.Autosize viewportRef={scrollAreaViewportRef} mah={50} type="scroll">
+                                    {options}
+                                </ScrollArea.Autosize>
                             </Combobox.Options>
                         )}
 
@@ -177,7 +211,7 @@ export default function ReferenceSearchInput({
                                         textAlign: 'center',
                                         padding: '0.5rem',
                                     }}>
-                                    Type to search...
+                                    Nothing found
                                 </p>
                             </Combobox.Options>
                         )}

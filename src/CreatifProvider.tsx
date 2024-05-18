@@ -27,6 +27,7 @@ import { validateConfig } from '@app/setupUtil';
 import { createSetup } from '@app/setup';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 import { createFirstTimeSetupStore } from '@app/systems/stores/firstTimeSetupStore';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 interface Props {
     apiKey: string;
@@ -69,7 +70,7 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
         const errors = setup.getErrors();
 
         if (errors.length !== 0) {
-            setIsAuthCheck('fail');
+            console.error(errors);
             return;
         }
 
@@ -108,28 +109,39 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
         });
     }, [app]);
 
+    const router = createBrowserRouter([
+        {
+            path: '/',
+            element: (
+                <AuthPage>
+                    <Banner />
+                    <Authentication />
+                </AuthPage>
+            ),
+        },
+        {
+            path: '/login',
+            element: (
+                <AuthPage>
+                    <Banner />
+                    <div>Login</div>
+                </AuthPage>
+            ),
+        },
+    ]);
+
     return (
         <MantineProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
                 <Notifications limit={5} />
+                <RouterProvider router={router} />
+
                 {isLoggedIn && (
                     <FirstTimeSetup>
                         <div className={animations.initialAnimation}>
                             <Shell options={app} />
                         </div>
                     </FirstTimeSetup>
-                )}
-
-                {!isLoggedIn && checkedAuth === 'fail' && (
-                    <AuthPage>
-                        <Banner />
-                        <Authentication
-                            apiKey={apiKey}
-                            projectId={projectId}
-                            onSuccess={init}
-                            validationMessages={validationMessages}
-                        />
-                    </AuthPage>
                 )}
             </QueryClientProvider>
         </MantineProvider>

@@ -1,37 +1,19 @@
 import React from 'react';
 import { CreatifProvider } from '../src/CreatifProvider';
-import { RegionsForm } from './forms/hotel/RegionsForm';
-import { ManagersForm } from './forms/hotel/ManagersForm';
-import { CategoriesForm } from './forms/hotel/CategoriesForm';
-import { PropertiesForm } from './forms/hotel/PropertiesForm';
+import { NavigationForm } from './forms/landingPage/NavigationForm';
 
 export default function App() {
     return (
         <CreatifProvider
-            apiKey="$2a$10$3j58zLNQdzso41Al0wE0NOtaImVL5XxtHsdMvrCK0yDmbiX15mchq"
-            projectId="01HSV503TW8AVKNW4ZHH43JX38"
+            apiKey="$2a$10$1UDkF.6jZohmd6WCNwj9Le5id4DCP..uUmJzqlO09GwHnGZzdff26"
+            projectId="01HY3TFMTAS8BV50Z9P6D6FC2H"
             app={{
                 logo: 'Hotels',
                 items: [
                     {
-                        structureType: 'map',
-                        structureName: 'Regions',
-                        form: <RegionsForm />,
-                    },
-                    {
-                        structureType: 'map',
-                        structureName: 'Managers',
-                        form: <ManagersForm />,
-                    },
-                    {
-                        structureType: 'map',
-                        structureName: 'Categories',
-                        form: <CategoriesForm />,
-                    },
-                    {
-                        structureType: 'map',
-                        structureName: 'Properties',
-                        form: <PropertiesForm />,
+                        structureType: 'list',
+                        structureName: 'Navigations',
+                        form: <NavigationForm />,
                     },
                 ],
             }}

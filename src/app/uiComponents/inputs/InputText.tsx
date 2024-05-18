@@ -7,6 +7,7 @@ interface Props extends TextInputProps {
     name: string;
     options?: RegisterOptions;
 }
+
 export function InputText({ name, options, ...rest }: Props) {
     const { register } = useFormContext();
 

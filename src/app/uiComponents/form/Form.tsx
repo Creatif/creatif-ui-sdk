@@ -141,6 +141,8 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                 return;
             }
 
+            console.log(value);
+
             wrappedBeforeSave<T>(value, e, beforeSave).then(async (result) => {
                 if (!valueMetadataValidator(result)) {
                     setBeforeSaveError(true);

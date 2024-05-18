@@ -59,9 +59,16 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
                             </div>
                         )}
 
-                        {item.innerColumn && isInnerExpanded && (
+                        {item.innerColumn && !Array.isArray(item.innerColumn) && isInnerExpanded && (
                             <ColumnValue values={item.innerColumn} isInnerRow={true} />
                         )}
+
+                        {item.innerColumn &&
+                            Array.isArray(item.innerColumn) &&
+                            isInnerExpanded &&
+                            item.innerColumn.map((inner, idx) => (
+                                <ColumnValue key={idx} values={inner} isInnerRow={true} />
+                            ))}
                     </React.Fragment>
                 );
             })}

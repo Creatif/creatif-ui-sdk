@@ -65,7 +65,6 @@
 }
 
 .hasExpandableRow {
-    border-bottom: 1px solid var(--mantine-color-gray-1);
     padding-bottom: 0.4rem;
 }
 
@@ -87,7 +86,14 @@
 }
 
 .columnSpacing {
-    border-left: 1px solid var(--mantine-color-gray-1);
-    margin-left: 1rem;
-    padding-left: 0.5rem;
+    border: 1px solid var(--mantine-color-gray-1);
+    margin: 0 0 1rem 1rem;
+    padding: 1rem 1rem 1rem 1rem;
+    border-radius: 6px;
+
+    transition: box-shadow 0.2s;
+}
+
+.columnSpacing:hover {
+    box-shadow: 0px 2px 15px -3px rgba(0,0,0,0.1);
 }
