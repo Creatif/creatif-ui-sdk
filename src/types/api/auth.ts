@@ -14,3 +14,8 @@ export interface AdminUserCreate {
     email: string;
     password: string;
 }
+
+export interface LoginBlueprint {
+    email: string;
+    password: string;
+}

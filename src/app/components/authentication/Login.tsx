@@ -8,9 +8,30 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextInput } from '@mantine/core';
 import { getFirstError } from '@app/components/authentication/getFirstError';
 import { useAuthRedirect } from '@app/components/authentication/useAuthRedirect';
+import { useMutation } from 'react-query';
+import type { ApiError } from '@lib/http/apiError';
+import type { LoginBlueprint } from '@root/types/api/auth';
+import login from '@lib/api/auth/login';
+import { useEffect } from 'react';
+import UIError from '@app/components/UIError';
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
     const safeToShow = useAuthRedirect('/', (isFetching, exists) => !isFetching && !exists);
+    const navigate = useNavigate();
+
+    const {
+        isLoading: isLoginLoading,
+        error: loginError,
+        isSuccess: isLoginSuccess,
+        mutate: mutateLogin,
+    } = useMutation<unknown, ApiError, LoginBlueprint>((data) => login(data));
+
+    useEffect(() => {
+        if (isLoginSuccess) {
+            navigate('/setup');
+        }
+    }, [isLoginSuccess]);
 
     const methods = useForm();
     const {
@@ -26,7 +47,14 @@ export function Login() {
                     <div className={styles.centerRoot}>
                         <div className={shared.root}>
                             <FormProvider {...methods}>
-                                <form className={shared.form} onSubmit={handleSubmit(console.log)}>
+                                <form
+                                    className={shared.form}
+                                    onSubmit={handleSubmit((data) => {
+                                        mutateLogin({
+                                            email: data.email,
+                                            password: data.password,
+                                        });
+                                    })}>
                                     <TextInput
                                         error={getFirstError(errors, 'email')}
                                         {...register('email', {
@@ -35,6 +63,7 @@ export function Login() {
                                         label="Email"
                                     />
                                     <TextInput
+                                        type="password"
                                         error={getFirstError(errors, 'password')}
                                         {...register('password', {
                                             required: 'Password is required',
@@ -42,8 +71,12 @@ export function Login() {
                                         label="Password"
                                     />
 
+                                    {loginError && <UIError title="Cannot login at this moment" />}
+
                                     <div className={shared.button}>
-                                        <Button type="submit">Login</Button>
+                                        <Button loading={isLoginLoading} type="submit">
+                                            Login
+                                        </Button>
                                     </div>
                                 </form>
                             </FormProvider>

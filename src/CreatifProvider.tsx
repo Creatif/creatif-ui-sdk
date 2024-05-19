@@ -1,6 +1,5 @@
 import Authentication from '@app/components/authentication/Authentication';
 import { Credentials } from '@app/credentials';
-import authCheck from '@lib/api/auth/authCheck';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
@@ -29,6 +28,7 @@ import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 import { createFirstTimeSetupStore } from '@app/systems/stores/firstTimeSetupStore';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Login } from '@app/components/authentication/Login';
+import { Setup } from '@app/components/setup/Setup';
 
 interface Props {
     apiKey: string;
@@ -59,55 +59,17 @@ const theme = createTheme({
     headings: { fontFamily: 'Barlow, sans-serif' },
 });
 
-export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChildren) {
+export function CreatifProvider({ app }: Props & PropsWithChildren) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [checkedAuth, setIsAuthCheck] = useState<'idle' | 'success' | 'fail'>('idle');
     const [validationMessages, setValidationMessages] = useState<string[]>([]);
-
-    const init = useCallback(async () => {
-        const setup = createSetup(apiKey, projectId);
-        await setup.run();
-
-        const errors = setup.getErrors();
-
-        if (errors.length !== 0) {
-            console.error(errors);
-            return;
-        }
-
-        const locales = setup.getStorage<LocalesCache>('locales') as LocalesCache;
-        const projectMetadata = setup.getStorage<ProjectMetadata>('projectMetadata') as ProjectMetadata;
-
-        Runtime.init(new Runtime(new Credentials(apiKey, projectId), new CurrentLocaleStorage('eng'), locales));
-
-        createFirstTimeSetupStore({
-            projectMetadata: projectMetadata,
-            configItems: app.items.map((item) => ({
-                structureName: item.structureName,
-                structureType: item.structureType,
-            })),
-        });
-
-        setIsLoggedIn(true);
-    }, []);
 
     useEffect(() => {
         const v = validateConfig(app);
         if (v.length !== 0) {
-            setIsAuthCheck('fail');
             setValidationMessages(v);
 
             return;
         }
-
-        authCheck({ apiKey: apiKey, projectId: projectId }).then(async (res) => {
-            if (res.error) {
-                setIsAuthCheck('fail');
-                return;
-            }
-
-            init();
-        });
     }, [app]);
 
     const router = createBrowserRouter([
@@ -128,6 +90,10 @@ export function CreatifProvider({ apiKey, projectId, app }: Props & PropsWithChi
                     <Login />
                 </AuthPage>
             ),
+        },
+        {
+            path: '/setup',
+            element: <Setup />,
         },
     ]);
 
