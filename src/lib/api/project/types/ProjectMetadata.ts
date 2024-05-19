@@ -8,8 +8,6 @@ export interface ProjectMetadata {
     id: string;
     name: string;
     state: string;
-    userId: string;
-    variables: Structure[];
     maps: Structure[];
     lists: Structure[];
 }

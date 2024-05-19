@@ -68,7 +68,7 @@ function createStructureItems(incomingStructureItems: IncomingStructureItem[]): 
 export function createProjectMetadataStore(metadata: ProjectMetadata, incomingStructureItems: IncomingStructureItem[]) {
     if (store) return store;
 
-    const key = `creatif-${Runtime.instance.credentials.projectId}`;
+    const key = `creatif-${Runtime.instance.currentProjectCache.getProject().id}`;
     if (!Object.keys(localStorage).includes(key)) {
         localStorage.setItem(key, JSON.stringify(metadata));
     }

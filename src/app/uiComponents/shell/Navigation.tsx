@@ -11,12 +11,13 @@ import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { NavigationDropdown } from '@app/uiComponents/shell/NavigationDropdown';
+import { Runtime } from '@app/runtime/Runtime';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];
 }
 export default function Navigation({ navItems, logo }: Props) {
-    const projectName = getProjectMetadataStore().getState().getProjectName();
+    const projectName = Runtime.instance.currentProjectCache.getProject().name;
 
     return (
         <div className={styles.navigationGrid}>
@@ -102,25 +103,32 @@ export default function Navigation({ navItems, logo }: Props) {
                     API
                 </NavLink>
 
-                <NavigationDropdown topItem={{
-                    text: <span className={styles.appMenuInnerDecoration}>
-                        Structures <IconChevronRight size={14} />
-                    </span>,
-                    icon: <IconTopologyBus
-                        className="navItemIcon"
-                        style={{
-                            alignSelf: 'center',
-                        }}
-                        size={20}
-                    />,
-                }} dropdownItems={[
-                    {
-                        text: 'Maps',
-                    },
-                    {
-                        text: 'Lists',
-                    }
-                ]} />
+                <NavigationDropdown
+                    topItem={{
+                        text: (
+                            <span className={styles.appMenuInnerDecoration}>
+                                Structures <IconChevronRight size={14} />
+                            </span>
+                        ),
+                        icon: (
+                            <IconTopologyBus
+                                className="navItemIcon"
+                                style={{
+                                    alignSelf: 'center',
+                                }}
+                                size={20}
+                            />
+                        ),
+                    }}
+                    dropdownItems={[
+                        {
+                            text: 'Maps',
+                        },
+                        {
+                            text: 'Lists',
+                        },
+                    ]}
+                />
 
                 <button
                     onClick={async () => {

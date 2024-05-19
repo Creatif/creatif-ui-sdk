@@ -2,6 +2,9 @@ import { getProjectMetadata } from '@lib/api/project/getProjectMetadata';
 import type LocalesCache from '@lib/storage/localesCache';
 import { createLocalesCache } from '@lib/storage/localesCache';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
+import type { Project } from '@root/types/api/project';
+import type CurrentProjectCache from '@lib/storage/currentProjectCache';
+import { createProjectCache } from '@lib/storage/currentProjectCache';
 
 interface StageError {
     type: string;
@@ -14,7 +17,7 @@ interface StageStorage<T> {
 }
 
 interface Stage {
-    run(): Promise<void>;
+    run(): void;
     getErrors(): StageError[];
     getStorage(): StageStorage<unknown>;
 
@@ -30,6 +33,31 @@ class Storage<T> implements StageStorage<T> {
 
     addItem(key: string, item: T) {
         this.items[key] = item;
+    }
+}
+
+class CurrentProjectStage implements Stage {
+    private readonly stageStorage = new Storage<CurrentProjectCache>();
+
+    constructor(
+        private readonly project: Project,
+        private readonly stageErrors: StageError[] = [],
+    ) {}
+
+    async run() {
+        const createdCache = createProjectCache(this.project);
+
+        if (createdCache) {
+            this.stageStorage.addItem('currentProject', createdCache);
+        }
+    }
+
+    getErrors(): StageError[] {
+        return this.stageErrors;
+    }
+
+    getStorage(): StageStorage<CurrentProjectCache> {
+        return this.stageStorage;
     }
 }
 
@@ -58,45 +86,6 @@ class RemoveAppCacheStage implements Stage {
 
     getStorage(): StageStorage<unknown> {
         return new Storage<unknown>();
-    }
-}
-
-class GetProjectMetadataStage implements Stage {
-    public readonly isRecoverable = false;
-    private readonly stageStorage = new Storage<ProjectMetadata>();
-
-    constructor(
-        private readonly apiKey: string,
-        private readonly projectId: string,
-        private readonly stageErrors: StageError[] = [],
-    ) {}
-
-    async run() {
-        const { result: projectMetadata, error } = await getProjectMetadata({
-            apiKey: this.apiKey,
-            projectId: this.projectId,
-        });
-
-        if (error) {
-            this.stageErrors.push({
-                type: 'projectMetadata',
-                message: 'Project metadata failed to load',
-            });
-
-            return;
-        }
-
-        if (projectMetadata) {
-            this.stageStorage.addItem('projectMetadata', projectMetadata);
-        }
-    }
-
-    getErrors(): StageError[] {
-        return this.stageErrors;
-    }
-
-    getStorage(): StageStorage<ProjectMetadata> {
-        return this.stageStorage;
     }
 }
 
@@ -165,10 +154,6 @@ export class Setup {
     }
 }
 
-export function createSetup(apiKey: string, projectId: string): Setup {
-    return new Setup([
-        new RemoveAppCacheStage(projectId),
-        new GetProjectMetadataStage(apiKey, projectId),
-        new CreateLocalesStage(),
-    ]);
+export function createSetup(project: Project): Setup {
+    return new Setup([new RemoveAppCacheStage(project.id), new CurrentProjectStage(project), new CreateLocalesStage()]);
 }

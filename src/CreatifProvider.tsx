@@ -32,8 +32,6 @@ import { Setup } from '@app/routes/setup/Setup';
 import { Dashboard } from '@app/routes/dashboard/Dashboard';
 
 interface Props {
-    apiKey: string;
-    projectId: string;
     app: CreatifApp;
 }
 
@@ -94,7 +92,7 @@ export function CreatifProvider({ app }: Props & PropsWithChildren) {
         },
         {
             path: '/setup',
-            element: <Setup />,
+            element: <Setup config={app} />,
         },
         {
             path: '/dashboard',

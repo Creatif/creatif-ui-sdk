@@ -1,14 +1,14 @@
-import type { Credentials } from '@app/credentials';
 import type CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import type LocalesCache from '@lib/storage/localesCache';
+import type CurrentProjectCache from '@lib/storage/currentProjectCache';
 
 export class Runtime {
     public static instance: Runtime;
 
     constructor(
-        public readonly credentials: Credentials,
+        public readonly currentProjectCache: CurrentProjectCache,
         public readonly currentLocaleStorage: CurrentLocaleStorage,
-        public readonly localesCache: LocalesCache
+        public readonly localesCache: LocalesCache,
     ) {}
 
     static init(runtime: Runtime) {
