@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import css from '@app/components/setup/css/setup.module.css';
+import css from '@app/routes/setup/css/setup.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import shared from '@app/components/authentication/css/shared.module.css';
@@ -15,8 +15,10 @@ import Loading from '@app/components/Loading';
 import type { CreateProjectBlueprint } from '@root/types/api/project';
 import createProject from '@lib/api/project/createProject';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function Setup() {
+    const navigate = useNavigate();
     const {
         isFetching,
         data: projectExistsData,
@@ -37,9 +39,15 @@ export function Setup() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            navigate('/dashboard');
         }
     }, [data]);
+
+    useEffect(() => {
+        if (projectExistsData?.result) {
+            navigate('/dashboard');
+        }
+    }, [projectExistsData]);
 
     const methods = useForm();
     const { handleSubmit, register } = methods;

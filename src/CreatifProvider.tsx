@@ -27,8 +27,9 @@ import { createSetup } from '@app/setup';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 import { createFirstTimeSetupStore } from '@app/systems/stores/firstTimeSetupStore';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Login } from '@app/components/authentication/Login';
-import { Setup } from '@app/components/setup/Setup';
+import { Login } from '@app/routes/login/Login';
+import { Setup } from '@app/routes/setup/Setup';
+import { Dashboard } from '@app/routes/dashboard/Dashboard';
 
 interface Props {
     apiKey: string;
@@ -94,6 +95,10 @@ export function CreatifProvider({ app }: Props & PropsWithChildren) {
         {
             path: '/setup',
             element: <Setup />,
+        },
+        {
+            path: '/dashboard',
+            element: <Dashboard app={app} />,
         },
     ]);
 
