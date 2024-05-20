@@ -1,5 +1,5 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { DeleteMapItemBlueprint } from '@root/types/api/map';
 
 export default function deleteMapItem(blueprint: DeleteMapItemBlueprint) {
@@ -8,6 +8,5 @@ export default function deleteMapItem(blueprint: DeleteMapItemBlueprint) {
         'delete',
         `/map/entry/${blueprint.projectId}/${blueprint.name}/${blueprint.itemId}`,
         null,
-        authHeaders(),
     );
 }

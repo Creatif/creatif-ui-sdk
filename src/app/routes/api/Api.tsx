@@ -1,14 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import baseStyles from '@app/uiComponents/api/css/base.module.css';
-import { VersionSelect } from '@app/uiComponents/api/components/VersionSelect';
+import baseStyles from '@app/routes/api/css/base.module.css';
+import { VersionSelect } from '@app/routes/api/components/VersionSelect';
 import { useMemo, useState } from 'react';
 import { Accordion } from '@mantine/core';
-import { GetByID } from '@app/uiComponents/api/components/GetByID';
+import { GetByID } from '@app/routes/api/components/GetByID';
 import { initialize } from '@lib/publicApi/app/initialize';
-import { Runtime } from '@app/runtime/Runtime';
-import { GetListItemsByName } from '@app/uiComponents/api/components/GetListItemsByName';
-import { GetMapItemByName } from '@app/uiComponents/api/components/GetMapItemByName';
+import { Runtime } from '@app/systems/runtime/Runtime';
+import { GetListItemsByName } from '@app/routes/api/components/GetListItemsByName';
+import { GetMapItemByName } from '@app/routes/api/components/GetMapItemByName';
 
 const httpCalls = [
     {
@@ -29,7 +29,7 @@ export function Api() {
     const [versionId, setVersionId] = useState<string | null>('');
     const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
 
-    initialize(Runtime.instance.credentials.projectId);
+    initialize(Runtime.instance.currentProjectCache.getProject().id);
 
     const items = useMemo(
         () =>

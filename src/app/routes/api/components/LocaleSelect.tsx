@@ -1,6 +1,6 @@
 import { Select } from '@mantine/core';
 import { useState } from 'react';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 interface Props {
     onSelected: (locale: string) => void;

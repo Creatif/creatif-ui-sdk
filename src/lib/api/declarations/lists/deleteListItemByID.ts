@@ -1,7 +1,7 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { DeleteListItemBlueprint } from '@root/types/api/list';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
     if (!blueprint.id && !blueprint.name && !blueprint.shortId) {
@@ -13,18 +13,12 @@ export default function deleteListItemByID(blueprint: DeleteListItemBlueprint) {
     }
 
     const locale = blueprint.locale ? blueprint.locale : Runtime.instance.currentLocaleStorage.getLocale();
-    return tryHttp(
-        declarations(),
-        'post',
-        `/list/item-id/${blueprint.projectId}`,
-        {
-            name: blueprint.name,
-            id: blueprint.id,
-            locale: locale,
-            shortID: blueprint.shortId,
-            itemID: blueprint.itemId,
-            itemShortID: blueprint.itemShortId,
-        },
-        authHeaders(),
-    );
+    return tryHttp(declarations(), 'post', `/list/item-id/${blueprint.projectId}`, {
+        name: blueprint.name,
+        id: blueprint.id,
+        locale: locale,
+        shortID: blueprint.shortId,
+        itemID: blueprint.itemId,
+        itemShortID: blueprint.itemShortId,
+    });
 }

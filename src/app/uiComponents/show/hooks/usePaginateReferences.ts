@@ -3,7 +3,7 @@ import { useInfiniteQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import type { ApiError } from '@lib/http/apiError';
 import paginateReferences from '@lib/api/declarations/references/paginateMapVariables';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { PaginationResult } from '@root/types/api/list';
 interface Props {
     parentId: string;
@@ -65,7 +65,7 @@ export default function usePaginateReferences<Response>({
                 relationshipType,
                 parentStructureId,
                 childStructureId,
-                projectId: Runtime.instance.credentials.projectId,
+                projectId: Runtime.instance.currentProjectCache.getProject().id,
                 page: pageParam,
                 limit,
                 groups,

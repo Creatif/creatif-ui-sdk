@@ -3,7 +3,6 @@ import { handleError } from '@lib/http/handleError';
 import { Api } from './api';
 import type { FetchInstance } from '@lib/http/fetchInstance';
 import type { TryResult } from '@root/types/types';
-import { Runtime } from '@app/runtime/Runtime';
 import logout from '@lib/api/auth/logout';
 export async function tryHttp<ReturnType, Body = unknown>(
     instance: FetchInstance,
@@ -23,7 +22,6 @@ export async function tryHttp<ReturnType, Body = unknown>(
         }
 
         if (res.status === 403 && !path.includes('api-check')) {
-            await logout();
             return {
                 error: new ApiError('Forbidden', { data: { message: 'Forbidden' } }, 403),
                 status: res.status,
@@ -79,8 +77,3 @@ export async function throwIfHttpFails<T>(fn: () => Promise<TryResult<T>>) {
 
     return response;
 }
-
-export const authHeaders = () => ({
-    'X-CREATIF-API-KEY': Runtime.instance.credentials.apiKey,
-    'X-CREATIF-PROJECT-ID': Runtime.instance.credentials.projectId,
-});

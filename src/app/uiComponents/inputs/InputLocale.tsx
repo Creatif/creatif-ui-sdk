@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import { localeField } from '@app/uiComponents/form/bindings/bindingResolver';
 export interface InputLocaleProps extends SelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;

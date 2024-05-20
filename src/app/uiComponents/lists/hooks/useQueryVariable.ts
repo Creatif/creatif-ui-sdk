@@ -2,7 +2,7 @@ import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
 import { ApiError } from '@lib/http/apiError';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
 export default function useQueryVariable<Value, Metadata>(
@@ -17,32 +17,33 @@ export default function useQueryVariable<Value, Metadata>(
     return {
         ...useQuery(
             key,
-            () => throwIfHttpFails(() => {
-                if (!name || !itemId) {
-                    return Promise.reject({
-                        error: new ApiError(
-                            'List name and item ID not provided. They should be provided in the URL',
-                            { data: { message: 'List name and item ID not provided' } },
-                            500,
-                        ),
-                        status: 500,
-                    });
-                }
+            () =>
+                throwIfHttpFails(() => {
+                    if (!name || !itemId) {
+                        return Promise.reject({
+                            error: new ApiError(
+                                'List name and item ID not provided. They should be provided in the URL',
+                                { data: { message: 'List name and item ID not provided' } },
+                                500,
+                            ),
+                            status: 500,
+                        });
+                    }
 
-                if (structureType === 'list') {
-                    return queryListItemByID<Value, Metadata>({
+                    if (structureType === 'list') {
+                        return queryListItemByID<Value, Metadata>({
+                            structureId: name,
+                            itemId: itemId,
+                            projectId: Runtime.instance.currentProjectCache.getProject().id,
+                        });
+                    }
+
+                    return queryMapVariable<Value, Metadata>({
                         structureId: name,
                         itemId: itemId,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                     });
-                }
-
-                return queryMapVariable<Value, Metadata>({
-                    structureId: name,
-                    itemId: itemId,
-                    projectId: Runtime.instance.credentials.projectId,
-                });
-            }),
+                }),
             {
                 retry: 0,
                 staleTime: Infinity,

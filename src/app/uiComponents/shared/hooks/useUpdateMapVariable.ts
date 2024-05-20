@@ -6,7 +6,7 @@ import type { UpdateListItemVariableBlueprint } from '@root/types/api/list';
 import type { TryResult } from '@root/types/shared';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
 import type { UpdateMapItemResult } from '@root/types/api/map';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 type Body = {
     fields: string[];
@@ -23,7 +23,7 @@ export default function useUpdateMapVariable(mapName: string, itemId: string, it
                     updateMapVariable({
                         name: mapName,
                         itemId: itemId,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                         values: body.values,
                         fields: body.fields,
                         references: [],

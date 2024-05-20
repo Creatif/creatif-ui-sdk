@@ -2,7 +2,7 @@ import { Button } from '@mantine/core';
 import React, { useCallback, useEffect, useState, memo } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toggleProduction } from '@lib/api/publishing/toggleProduction';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import useNotification from '@app/systems/notifications/useNotification';
 import ConfirmationModal from '@app/uiComponents/shared/modals/ConfirmationModal';
 
@@ -19,7 +19,7 @@ function ToggleProductionButton({ versionId, isInProduction }: Props) {
     const { isLoading, mutate, isSuccess } = useMutation(
         () =>
             toggleProduction({
-                projectId: Runtime.instance.credentials.projectId,
+                projectId: Runtime.instance.currentProjectCache.getProject().id,
                 id: versionId,
             }),
         {

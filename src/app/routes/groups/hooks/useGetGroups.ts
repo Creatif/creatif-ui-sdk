@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from 'react-query';
 import { throwIfHttpFails } from '@lib/http/tryHttp';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import { getGroups } from '@lib/api/groups/getGroups';
 import type { ApiError } from '@lib/http/apiError';
 

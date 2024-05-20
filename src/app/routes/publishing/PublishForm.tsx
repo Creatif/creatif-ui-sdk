@@ -2,11 +2,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Button, Loader, TextInput } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/publishing/css/publishForm.module.css';
+import styles from '@app/routes/publishing/css/publishForm.module.css';
 import useNotification from '@app/systems/notifications/useNotification';
 import { useMutation, useQueryClient } from 'react-query';
 import { publish } from '@lib/api/publishing/publish';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import { useEffect, useState } from 'react';
 import { IconStackPush } from '@tabler/icons-react';
 import type { ApiError } from '@lib/http/apiError';
@@ -37,7 +37,7 @@ export function PublishForm({ listLength }: Props) {
     const { isLoading, error, data, mutate } = useMutation<unknown, ApiError, { versionName: string }>(
         (model: { versionName: string }) =>
             publish({
-                projectId: Runtime.instance.credentials.projectId,
+                projectId: Runtime.instance.currentProjectCache.getProject().id,
                 name: model.versionName,
             }),
     );

@@ -1,7 +1,7 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import deleteListItemByID from '@lib/api/declarations/lists/deleteListItemByID';
 import deleteMapItem from '@lib/api/declarations/maps/deleteMapItem';
@@ -19,14 +19,14 @@ export default function useDeleteVariable(
                         return deleteListItemByID({
                             name: body.name,
                             itemId: body.itemId,
-                            projectId: Runtime.instance.credentials.projectId,
+                            projectId: Runtime.instance.currentProjectCache.getProject().id,
                         });
                     }
 
                     return deleteMapItem({
                         name: body.name,
                         itemId: body.itemId,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                     });
                 }),
             {

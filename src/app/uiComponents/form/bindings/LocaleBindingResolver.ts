@@ -1,6 +1,6 @@
 import type { LocaleBinding } from '@root/types/forms/forms';
 import { localeField } from '@app/uiComponents/form/bindings/bindingResolver';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 interface CastType {
     [key: string]: unknown;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectMetadata';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 
 export interface IncomingStructureItem {
@@ -55,10 +55,10 @@ function createStructureItems(incomingStructureItems: IncomingStructureItem[]): 
             listPath: `:structureType/${structureName}/list/:structureId`,
             showPath: `:structureType/${structureName}/show/:structureId/:itemId`,
 
-            navigationUpdatePath: `${structureType}/${structureName}/update`,
-            navigationListPath: `${structureType}/${structureName}/list`,
-            navigationCreatePath: `${structureType}/${structureName}/create`,
-            navigationShowPath: `${structureType}/${structureName}/show`,
+            navigationUpdatePath: `${Runtime.instance.rootPath()}/${structureType}/${structureName}/update`,
+            navigationListPath: `${Runtime.instance.rootPath()}/${structureType}/${structureName}/list`,
+            navigationCreatePath: `${Runtime.instance.rootPath()}/${structureType}/${structureName}/create`,
+            navigationShowPath: `${Runtime.instance.rootPath()}/${structureType}/${structureName}/show`,
         });
     }
 

@@ -3,7 +3,7 @@ import { useInfiniteQuery, useQueryClient } from 'react-query';
 import type { Behaviour } from '@root/types/api/shared';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import type { ApiError } from '@lib/http/apiError';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { PaginationResult } from '@root/types/api/list';
 interface Props {
     name: string;
@@ -37,7 +37,7 @@ export default function useListVariablesPagination<Response>({
         const response = await throwIfHttpFails(() =>
             paginateList({
                 name: name,
-                projectId: Runtime.instance.credentials.projectId,
+                projectId: Runtime.instance.currentProjectCache.getProject().id,
                 page: pageParam,
                 limit,
                 groups,

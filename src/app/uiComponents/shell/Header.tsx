@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 // @ts-ignore
 import styles from './css/header.module.css';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import { PublishButton } from '@app/uiComponents/shell/PublishButton';
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];

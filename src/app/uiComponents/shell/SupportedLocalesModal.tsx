@@ -5,7 +5,7 @@ import { Button, Modal, ScrollArea, Table, TextInput } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 interface Props {
     open: boolean;
     onClose: () => void;

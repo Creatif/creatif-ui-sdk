@@ -6,14 +6,9 @@ export default class CurrentProjectCache {
     constructor(project: Project) {
         this.project = project;
 
-        const s = localStorage.getItem(CurrentProjectCache.key);
+        localStorage.setItem(CurrentProjectCache.key, JSON.stringify(project));
 
-        if (!s) {
-            localStorage.setItem(CurrentProjectCache.key, JSON.stringify(project));
-            return;
-        }
-
-        this.project = JSON.parse(s) as Project;
+        this.project = project;
     }
 
     static isLoaded() {

@@ -2,7 +2,7 @@ import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { type QueryKey, useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import deleteRange from '@lib/api/declarations/lists/deleteRange';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import deleteMapRange from '@lib/api/declarations/maps/deleteMapRange';
 import type { StructureType } from '@root/types/shell/shell';
 export default function useDeleteRange(structureType: StructureType, onSuccess: () => void, onError: () => void) {
@@ -15,14 +15,14 @@ export default function useDeleteRange(structureType: StructureType, onSuccess: 
                         return deleteRange({
                             name: body.name,
                             items: body.items,
-                            projectId: Runtime.instance.credentials.projectId,
+                            projectId: Runtime.instance.currentProjectCache.getProject().id,
                         });
                     }
 
                     return deleteMapRange({
                         name: body.name,
                         items: body.items,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                     });
                 }),
             {

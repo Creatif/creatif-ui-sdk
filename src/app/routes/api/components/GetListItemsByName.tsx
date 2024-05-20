@@ -1,43 +1,35 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/api/css/apiBase.module.css';
-import { LocaleSelect } from '@app/uiComponents/api/components/LocaleSelect';
-import { StructureSelect } from '@app/uiComponents/api/components/StructureSelect';
+import styles from '@app/routes/api/css/apiBase.module.css';
+import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
+import { StructureSelect } from '@app/routes/api/components/StructureSelect';
 import { Loader, Checkbox, Button } from '@mantine/core';
-import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSelect';
+import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { useQuery } from 'react-query';
+import { getListItemsByName } from '@lib/publicApi/app/lists/getListItemsByName';
 import UIError from '@app/components/UIError';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { Result } from '@app/uiComponents/api/components/Result';
-import { getMapItemByName } from '@lib/publicApi/app/maps/getMapItemByName';
-import type { CreatifError } from '@root/types/api/publicApi/Http';
+import { Result } from '@app/routes/api/components/Result';
 
-export function GetMapItemByName() {
+export function GetListItemsByName() {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [selectedLocale, setSelectedLocale] = useState<string>('');
-    const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
+    const [isError, setIsError] = useState(false);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
 
-    let errorMessage = '';
-    if (isError && isError === 'notFound') {
-        errorMessage = 'Item is not found';
-    } else if (isError && isError === 'generalError') {
-        errorMessage = 'Something went wrong. Please try again later.';
-    }
-
     const { isFetching, data } = useQuery(
-        ['get_map_item_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
+        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
         async () => {
             if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
             if (structureData && id) {
-                const { result, error } = await getMapItemByName({
+                const { result, error } = await getListItemsByName({
                     name: id,
                     locale: selectedLocale,
                     structureName: structureData.name,
@@ -59,17 +51,11 @@ export function GetMapItemByName() {
             keepPreviousData: true,
             staleTime: -1,
             retry: -1,
-            onError(error: CreatifError) {
-                if (error.status === 404) {
-                    setIsError('notFound');
-                } else {
-                    setIsError('generalError');
-                }
-
+            onError() {
+                setIsError(true);
                 setSubmitQueryEnabled(false);
             },
             onSuccess() {
-                setIsError(undefined);
                 setSubmitQueryEnabled(false);
             },
         },
@@ -78,13 +64,15 @@ export function GetMapItemByName() {
     return (
         <div className={styles.root}>
             <div className={styles.sectionDescription}>
-                <IconInfoCircle size="36px" color="var(--mantine-color-indigo-3)" />
+                <IconInfoCircle size="64px" color="var(--mantine-color-indigo-3)" />
                 <p>
-                    Since map items must have a unique name, specifying a locale is optional but if you specify a name
-                    with an incorrect locale (a locale with which this item is not created), the item will not be found.
+                    If you select the list item from the dropdown, that item will be fetched. If you don&apos;t and just
+                    type in the name of your item, all list items with that name will be fetched. If you also select a
+                    locale, all items with that name and locale will be fetched. Locale is optional and the default is{' '}
+                    <span className={styles.highlight}>eng</span>
+                    locale.
                 </p>
             </div>
-
             <div className={styles.selectWrapper}>
                 <form
                     className={styles.selectActionWrapper}
@@ -96,7 +84,7 @@ export function GetMapItemByName() {
                     <ComboboxIDSelect toSelect="name" structureData={structureData} onSelected={(id) => setId(id)} />
                     <LocaleSelect onSelected={setSelectedLocale} />
                     <StructureSelect
-                        structureToShow="map"
+                        structureToShow="list"
                         onSelected={(name, structureType) => {
                             setStructureData({ name: name, type: structureType });
                             setId('');
@@ -133,17 +121,17 @@ export function GetMapItemByName() {
                                 valueOnly: isValueOnly,
                             },
                         }}
-                        curlType="getMapItemByName"
+                        curlType="getListItemsByName"
                     />
                 </div>
             )}
 
-            {errorMessage && (
+            {isError && (
                 <UIError
                     style={{
                         marginTop: '1rem',
                     }}
-                    title={errorMessage}
+                    title="Unable to get item. Please, try again later."
                 />
             )}
         </div>

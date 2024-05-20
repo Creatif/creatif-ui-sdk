@@ -4,6 +4,6 @@ import type { RemoveVersionBlueprint } from '@root/types/api/publishing';
 
 export async function removeVersion(blueprint: RemoveVersionBlueprint) {
     return throwIfHttpFails(() =>
-        tryHttp(publishing(), 'delete', `/publish/version/${blueprint.projectId}/${blueprint.id}`, null, authHeaders()),
+        tryHttp(publishing(), 'delete', `/publish/version/${blueprint.projectId}/${blueprint.id}`, null),
     );
 }

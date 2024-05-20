@@ -1,5 +1,5 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { UpdateListItemBlueprint, UpdateListItemResult } from '@root/types/api/list';
 export async function updateListItem(blueprint: UpdateListItemBlueprint) {
     let fields = 'name|metadata|groups|behaviour|value|locale';
@@ -20,6 +20,5 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
                 metadata: blueprint.values.metadata ? JSON.stringify(blueprint.values.metadata) : null,
             },
         },
-        authHeaders(),
     );
 }

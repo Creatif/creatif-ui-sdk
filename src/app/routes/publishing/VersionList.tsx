@@ -1,29 +1,29 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import versionList from '@app/uiComponents/publishing/css/versionList.module.css';
+import versionList from '@app/routes/publishing/css/versionList.module.css';
 import React, { useEffect } from 'react';
 import { Button, Pill } from '@mantine/core';
 import { useQuery } from 'react-query';
 import appDate from '@lib/helpers/appDate';
 import Copy from '@app/components/Copy';
-import { DeleteButton } from '@app/uiComponents/publishing/DeleteButton';
+import { DeleteButton } from '@app/routes/publishing/DeleteButton';
 import UIError from '@app/components/UIError';
 import type { ApiError } from '@lib/http/apiError';
 import { IconBox } from '@tabler/icons-react';
-import { ToggleButton } from '@app/uiComponents/publishing/ToggleProductionButton';
+import { ToggleButton } from '@app/routes/publishing/ToggleProductionButton';
 import { Link } from 'react-router-dom';
-import { Version } from '@root/types/api/public';
+import type { Version } from '@root/types/api/public';
 import { getVersions } from '@lib/publicApi/app/versions/getVersions';
-import { Result } from '@root/types/api/publicApi/Http';
+import type { Result } from '@root/types/api/publicApi/Http';
 import { initialize } from '@lib/publicApi/app/initialize';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 interface Props {
     onListLength: (l: number) => void;
 }
 
 export function VersionList({ onListLength }: Props) {
-    initialize(Runtime.instance.credentials.projectId);
+    initialize(Runtime.instance.currentProjectCache.getProject().id);
 
     const { data, error } = useQuery<Result<Version[]>, ApiError>(
         'get_versions',

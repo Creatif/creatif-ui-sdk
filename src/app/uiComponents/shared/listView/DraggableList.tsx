@@ -3,7 +3,7 @@ import { useEffect, useCallback, useState } from 'react';
 import type rearrange from '@lib/api/declarations/lists/rearrange';
 import useNotification from '@app/systems/notifications/useNotification';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { PaginationDataWithPage } from '@app/uiComponents/lists/Listing';
 import { CurrentSortType } from '@root/types/components/components';
 
@@ -59,7 +59,7 @@ export default function DraggableList<Value, Metadata>({
 
             onRearrange(
                 {
-                    projectId: Runtime.instance.credentials.projectId,
+                    projectId: Runtime.instance.currentProjectCache.getProject().id,
                     name: structureItem.id,
                     source: source.id,
                     destination: destination.id,

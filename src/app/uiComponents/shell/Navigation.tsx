@@ -11,7 +11,7 @@ import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { NavigationDropdown } from '@app/uiComponents/shell/NavigationDropdown';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];

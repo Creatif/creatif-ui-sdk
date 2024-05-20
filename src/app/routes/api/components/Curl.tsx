@@ -1,7 +1,7 @@
 import { Routes } from '@lib/publicApi/lib/http/routes';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/api/css/apiBase.module.css';
+import styles from '@app/routes/api/css/apiBase.module.css';
 import { parseQuery } from '@lib/publicApi/app/parseQuery';
 import type { GetListItemByID, GetListItemsByName } from '@root/types/api/publicApi/Lists';
 import Copy from '@app/components/Copy';

@@ -1,6 +1,6 @@
 import type { StructureType } from '@root/types/shell/shell';
 import paginateList from '@lib/api/declarations/lists/paginateList';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
@@ -24,7 +24,7 @@ export async function searchAndCreateOptions(
             limit: limit,
             page: page,
             orderBy: 'created_at',
-            projectId: Runtime.instance.credentials.projectId,
+            projectId: Runtime.instance.currentProjectCache.getProject().id,
         });
 
         if (result) {
@@ -67,7 +67,7 @@ export async function searchAndCreateOptions(
             name: structureId,
             limit: 100,
             page: page,
-            projectId: Runtime.instance.credentials.projectId,
+            projectId: Runtime.instance.currentProjectCache.getProject().id,
         });
 
         if (result) {
@@ -123,7 +123,7 @@ export async function queryItemById(structureId: string, id: string, structureTy
         return await queryListItemByID({
             structureId: structureId,
             itemId: id,
-            projectId: Runtime.instance.credentials.projectId,
+            projectId: Runtime.instance.currentProjectCache.getProject().id,
         });
     }
 
@@ -131,7 +131,7 @@ export async function queryItemById(structureId: string, id: string, structureTy
         return await queryMapVariable({
             structureId: structureId,
             itemId: id,
-            projectId: Runtime.instance.credentials.projectId,
+            projectId: Runtime.instance.currentProjectCache.getProject().id,
         });
     }
 }

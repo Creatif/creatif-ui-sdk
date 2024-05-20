@@ -1,5 +1,5 @@
 import type { PaginationResult } from '@root/types/api/list';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import { declarations } from '@lib/http/fetchInstance';
 import { queryConstructor } from '@lib/api/declarations/queryConstructor';
 import type { PaginateMapBlueprint } from '@root/types/api/map';
@@ -19,6 +19,5 @@ export default function paginateMapVariables<Value = unknown, Metadata = unknown
             blueprint.fields,
         )}`,
         null,
-        authHeaders(),
     );
 }

@@ -5,7 +5,7 @@ import type { ApiError } from '@lib/http/apiError';
 import type { UpdateListItemResult, UpdateListItemVariableBlueprint } from '@root/types/api/list';
 import type { TryResult } from '@root/types/shared';
 import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
 
@@ -30,7 +30,7 @@ export default function useUpdateVariable(
                         return updateListItem({
                             name: listName,
                             itemId: itemId,
-                            projectId: Runtime.instance.credentials.projectId,
+                            projectId: Runtime.instance.currentProjectCache.getProject().id,
                             values: body.values,
                             fields: body.fields,
                             references: [],
@@ -40,7 +40,7 @@ export default function useUpdateVariable(
                     return updateMapVariable({
                         name: listName,
                         itemId: itemId,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                         values: body.values,
                         fields: body.fields,
                         references: [],

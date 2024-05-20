@@ -2,7 +2,7 @@ import { create, type StoreApi, type UseBoundStore } from 'zustand';
 import type { AppShellItem } from '@root/types/shell/shell';
 import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
 import createList from '@lib/api/declarations/lists/createList';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import createMap from '@lib/api/declarations/maps/createMap';
 import type { CreatedList } from '@root/types/api/list';
 import type { CreatedMap } from '@root/types/api/map';
@@ -40,7 +40,7 @@ interface Props {
 async function createListFn(name: string): Promise<RunResult> {
     const { result, error } = await createList({
         name: name,
-        projectId: Runtime.instance.credentials.projectId,
+        projectId: Runtime.instance.currentProjectCache.getProject().id,
     });
 
     return {
@@ -53,7 +53,7 @@ async function createListFn(name: string): Promise<RunResult> {
 async function createVariableFn(name: string): Promise<RunResult> {
     const { result, error } = await createVariable({
         name: name,
-        projectId: Runtime.instance.credentials.projectId,
+        projectId: Runtime.instance.currentProjectCache.getProject().id,
         locale: 'eng',
     });
 
@@ -67,7 +67,7 @@ async function createVariableFn(name: string): Promise<RunResult> {
 async function createMapFn(name: string): Promise<RunResult> {
     const { result, error } = await createMap({
         name: name,
-        projectId: Runtime.instance.credentials.projectId,
+        projectId: Runtime.instance.currentProjectCache.getProject().id,
     });
 
     return {

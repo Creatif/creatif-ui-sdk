@@ -1,6 +1,6 @@
 import { Credentials } from '@app/credentials';
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { DeleteVariableBlueprint } from '@root/types/api/variable';
 export default function deleteVariable(blueprint: DeleteVariableBlueprint) {
     return tryHttp<null>(
@@ -10,6 +10,5 @@ export default function deleteVariable(blueprint: DeleteVariableBlueprint) {
             blueprint.name
         }`,
         null,
-        authHeaders(),
     );
 }

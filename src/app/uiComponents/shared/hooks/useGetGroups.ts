@@ -2,7 +2,7 @@ import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useQuery, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import { getGroups } from '@lib/api/groups/getGroups';
 import type { Group } from '@root/types/api/groups';
 export default function useGetGroups(enabled?: boolean) {
@@ -14,7 +14,7 @@ export default function useGetGroups(enabled?: boolean) {
             async () =>
                 await throwIfHttpFails<Group[]>(() =>
                     getGroups({
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                     }),
                 ),
             {

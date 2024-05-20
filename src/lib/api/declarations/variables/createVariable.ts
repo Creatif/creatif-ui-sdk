@@ -1,8 +1,8 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import { exists } from '@lib/validation/exists';
 import type { CreatedVariable, CreateVariableBlueprint } from '@root/types/api/variable';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 export async function createVariable<Value, Metadata>(blueprint: CreateVariableBlueprint) {
     return tryHttp<CreatedVariable<Value, Metadata>>(
         declarations(),
@@ -17,6 +17,5 @@ export async function createVariable<Value, Metadata>(blueprint: CreateVariableB
             metadata: !exists('metadata', blueprint.metadata) ? JSON.stringify(blueprint.metadata) : null,
             value: !exists('value', blueprint.value) ? JSON.stringify(blueprint.value) : null,
         },
-        authHeaders(),
     );
 }

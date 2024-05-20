@@ -11,7 +11,7 @@ import type { ComboboxItem } from '@mantine/core';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import AppPill from '@app/uiComponents/shared/AppPill';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 interface Props {
     currentSort: CurrentSortType;
     currentGroups: string[];

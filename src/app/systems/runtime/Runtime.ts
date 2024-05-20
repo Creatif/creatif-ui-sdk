@@ -11,6 +11,10 @@ export class Runtime {
         public readonly localesCache: LocalesCache,
     ) {}
 
+    rootPath() {
+        return `/dashboard/${this.currentProjectCache.getProject().id}`;
+    }
+
     static init(runtime: Runtime) {
         Runtime.instance = runtime;
     }

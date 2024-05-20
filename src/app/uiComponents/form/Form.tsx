@@ -36,7 +36,7 @@ import type { CreatedVariable } from '@root/types/api/variable';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
 import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import { Error } from '@app/uiComponents/shared/Error';
 import { useHttpActions } from '@app/uiComponents/form/hooks/useHttpActions';
 import type { StructureType } from '@root/types/shell/shell';
@@ -173,7 +173,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
 
                     const { result: response, error } = await addFn({
                         name: structureItem.id,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                         variable: {
                             name: name,
                             behaviour: behaviour,
@@ -247,7 +247,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     const { result: response, error } = await updateFn({
                         fields: fields,
                         name: structureItem.id,
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                         itemId: itemId,
                         values: {
                             name: name,

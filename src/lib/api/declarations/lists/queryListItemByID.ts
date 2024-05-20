@@ -1,5 +1,5 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { QueriedListItem, QueryListItemByIDBlueprint } from '@root/types/api/list';
 
 export default function queryListItemByID<Value = unknown, Metadata = unknown>(blueprint: QueryListItemByIDBlueprint) {
@@ -8,6 +8,5 @@ export default function queryListItemByID<Value = unknown, Metadata = unknown>(b
         'get',
         `/list/query-id/${blueprint.projectId}/${blueprint.structureId}/${blueprint.itemId}`,
         null,
-        authHeaders(),
     );
 }

@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/publishing/css/publishingMain.module.css';
-import { PublishForm } from '@app/uiComponents/publishing/PublishForm';
-import { VersionList } from '@app/uiComponents/publishing/VersionList';
+import styles from '@app/routes/publishing/css/publishingMain.module.css';
+import { PublishForm } from '@app/routes/publishing/PublishForm';
+import { VersionList } from '@app/routes/publishing/VersionList';
 import { useState } from 'react';
 import UIError from '@app/components/UIError';
 

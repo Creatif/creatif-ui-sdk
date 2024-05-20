@@ -1,13 +1,16 @@
 import LocalesCache from '@lib/storage/localesCache';
-import { ApiError } from '@lib/http/apiError';
+import type { ApiError } from '@lib/http/apiError';
 import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
 import { getStructureMetadata } from '@lib/api/project/getStructureMetadata';
 import { createProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import CurrentProjectCache from '@lib/storage/currentProjectCache';
 import { getProject } from '@lib/api/project/getProject';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
+import { tryHttp } from '@lib/http/tryHttp';
+import type { StructureMetadata } from '@root/types/api/project';
+import { app } from '@lib/http/fetchInstance';
 
 async function writeLocalesToCache(): Promise<{ cache?: LocalesCache; error?: ApiError }> {
     if (!LocalesCache.isLoaded()) {
@@ -27,8 +30,7 @@ async function createStructureMetadataStore(
     projectId: string,
     config: { name: string; type: StructureType }[],
 ): Promise<{ error?: ApiError }> {
-    const { result, error } = await getStructureMetadata({
-        projectId: projectId,
+    const { result, error } = await tryHttp<StructureMetadata>(app(), 'post', `/project/metadata/${projectId}`, {
         config: config,
     });
 
@@ -52,7 +54,19 @@ async function writeCurrentProjectCache(projectId: string): Promise<{ cache?: Cu
         return { error: error };
     }
 
-    return { cache: CurrentProjectCache.createInstanceWithExistingCache() };
+    const currentProject = CurrentProjectCache.createInstanceWithExistingCache();
+    if (currentProject.getProject().id !== projectId) {
+        const { result, error } = await getProject(projectId);
+        console.log(currentProject.getProject(), projectId);
+
+        if (result) {
+            return { cache: new CurrentProjectCache(result) };
+        }
+
+        return { error: error };
+    }
+
+    return { cache: currentProject };
 }
 
 export async function createRuntime(

@@ -1,5 +1,5 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type {
     CreatedVariable,
     UpdateableVariableValuesBlueprint,
@@ -36,16 +36,10 @@ export default function updateVariable(blueprint: UpdateVariableBlueprint) {
         }
     }
 
-    return tryHttp<CreatedVariable>(
-        declarations(),
-        'post',
-        `/variable/${blueprint.projectId}`,
-        {
-            name: blueprint.name,
-            locale: blueprint.locale,
-            fields: blueprint.fields,
-            values: values,
-        },
-        authHeaders(),
-    );
+    return tryHttp<CreatedVariable>(declarations(), 'post', `/variable/${blueprint.projectId}`, {
+        name: blueprint.name,
+        locale: blueprint.locale,
+        fields: blueprint.fields,
+        values: values,
+    });
 }

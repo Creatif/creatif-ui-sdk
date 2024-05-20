@@ -1,12 +1,12 @@
 import { ActionIcon, Loader } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import versionList from '@app/uiComponents/publishing/css/versionList.module.css';
+import versionList from '@app/routes/publishing/css/versionList.module.css';
 import { IconTrash } from '@tabler/icons-react';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { removeVersion } from '@lib/api/publishing/removeVersion';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import useNotification from '@app/systems/notifications/useNotification';
 import DeleteModal from '@app/uiComponents/shared/modals/DeleteModal';
 
@@ -22,7 +22,7 @@ export function DeleteButton({ id }: Props) {
     const { isLoading: isDeleting, mutate: deleteVersion } = useMutation(
         (model: { id: string }) =>
             removeVersion({
-                projectId: Runtime.instance.credentials.projectId,
+                projectId: Runtime.instance.currentProjectCache.getProject().id,
                 id: model.id,
             }),
         {

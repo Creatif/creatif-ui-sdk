@@ -1,5 +1,5 @@
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { UpdateMapItemResult, UpdateMapVariableBlueprint } from '@root/types/api/map';
 export async function updateMapVariable(blueprint: UpdateMapVariableBlueprint) {
     let fields = 'name|metadata|groups|behaviour|value|locale';
@@ -22,6 +22,5 @@ export async function updateMapVariable(blueprint: UpdateMapVariableBlueprint) {
             },
             references: blueprint.references,
         },
-        authHeaders(),
     );
 }

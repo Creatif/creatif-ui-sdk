@@ -1,6 +1,6 @@
 import { Credentials } from '@app/credentials';
 import { declarations } from '@lib/http/fetchInstance';
-import { authHeaders, tryHttp } from '@lib/http/tryHttp';
+import { tryHttp } from '@lib/http/tryHttp';
 import type { GetVariableBlueprint, GetVariableResponse } from '@root/types/api/variable';
 
 export default function getVariable<Value = unknown, Metadata = unknown>(blueprint: GetVariableBlueprint) {
@@ -11,6 +11,5 @@ export default function getVariable<Value = unknown, Metadata = unknown>(bluepri
             blueprint.locale ? blueprint.locale : Credentials.Locale()
         }`,
         null,
-        authHeaders(),
     );
 }

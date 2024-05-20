@@ -2,22 +2,22 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Button } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/groups/css/addGroup.module.css';
+import styles from '@app/routes/groups/css/addGroup.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import classNames from 'classnames';
-import { useGetGroups } from '@app/uiComponents/groups/hooks/useGetGroups';
+import { useGetGroups } from '@app/routes/groups/hooks/useGetGroups';
 import type { TryResult } from '@root/types/shared';
 import { useMutation } from 'react-query';
 import { addGroups } from '@lib/api/groups/addGroups';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 import type { ApiError } from '@lib/http/apiError';
 import type { AddGroupsBlueprint, Group, SingleGroupBlueprint } from '@root/types/api/groups';
 import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
-import type { InternalGroup } from '@app/uiComponents/groups/components/MultiSelectNoDropdown';
-import { MultiSelectNoDropdown } from '@app/uiComponents/groups/components/MultiSelectNoDropdown';
+import type { InternalGroup } from '@app/routes/groups/components/MultiSelectNoDropdown';
+import { MultiSelectNoDropdown } from '@app/routes/groups/components/MultiSelectNoDropdown';
 
 export function AddGroup() {
     const methods = useForm<{ groups: InternalGroup[] }>({
@@ -70,7 +70,7 @@ export function AddGroup() {
                             onSubmit={methods.handleSubmit((data) => {
                                 mutate({
                                     groups: data.groups as SingleGroupBlueprint[],
-                                    projectId: Runtime.instance.credentials.projectId,
+                                    projectId: Runtime.instance.currentProjectCache.getProject().id,
                                 });
                             })}
                             className={styles.form}>

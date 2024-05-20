@@ -1,9 +1,9 @@
 import { Tabs } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/api/css/apiBase.module.css';
+import styles from '@app/routes/api/css/apiBase.module.css';
 import JSON from '@app/uiComponents/external/Json';
-import { Curl } from '@app/uiComponents/api/components/Curl';
+import { Curl } from '@app/routes/api/components/Curl';
 import type { GetListItemByID, GetListItemsByName } from '@root/types/api/publicApi/Lists';
 import type { GetMapItemByID } from '@root/types/api/publicApi/Maps';
 import { useEffect, useState } from 'react';

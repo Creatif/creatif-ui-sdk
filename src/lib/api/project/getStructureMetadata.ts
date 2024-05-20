@@ -1,4 +1,4 @@
-import type { GetStructureMetadataBlueprint, Project, StructureMetadata } from '@root/types/api/project';
+import type { GetStructureMetadataBlueprint, StructureMetadata } from '@root/types/api/project';
 import { throwIfHttpFails, tryHttp } from '@lib/http/tryHttp';
 import { app } from '@lib/http/fetchInstance';
 

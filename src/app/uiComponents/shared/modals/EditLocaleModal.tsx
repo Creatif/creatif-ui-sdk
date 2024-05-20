@@ -3,7 +3,7 @@
 import styles from '@app/uiComponents/shared/css/modal.module.css';
 import { Button, type ComboboxItem, Modal, Select } from '@mantine/core';
 import { useState } from 'react';
-import { Runtime } from '@app/runtime/Runtime';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 interface Props {
     open: boolean;

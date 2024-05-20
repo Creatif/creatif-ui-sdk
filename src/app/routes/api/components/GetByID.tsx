@@ -1,16 +1,16 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/api/css/apiBase.module.css';
+import styles from '@app/routes/api/css/apiBase.module.css';
 import type { StructureType } from '@root/types/shell/shell';
 import { useState } from 'react';
-import { StructureSelect } from '@app/uiComponents/api/components/StructureSelect';
+import { StructureSelect } from '@app/routes/api/components/StructureSelect';
 import { useQuery } from 'react-query';
 import UIError from '@app/components/UIError';
 import { getListItemById } from '@lib/publicApi/app/lists/getListItemById';
 import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
-import { ComboboxIDSelect } from '@app/uiComponents/api/components/ComboboxIDSelect';
+import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { Checkbox, Loader } from '@mantine/core';
-import { Result } from '@app/uiComponents/api/components/Result';
+import { Result } from '@app/routes/api/components/Result';
 
 export function GetByID() {
     const [id, setId] = useState<string>('');
