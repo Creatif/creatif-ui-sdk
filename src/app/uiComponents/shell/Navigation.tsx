@@ -70,7 +70,7 @@ export default function Navigation({ navItems, logo }: Props) {
 
             <nav className={styles.appMenu}>
                 <NavLink
-                    to="/groups"
+                    to="groups"
                     className={({ isActive }) => {
                         if (isActive) return classNames(styles.appMenuButton, styles.active);
 
@@ -87,7 +87,7 @@ export default function Navigation({ navItems, logo }: Props) {
                 </NavLink>
 
                 <NavLink
-                    to="/api"
+                    to="api"
                     className={({ isActive }) => {
                         if (isActive) return classNames(styles.appMenuButton, styles.active);
 

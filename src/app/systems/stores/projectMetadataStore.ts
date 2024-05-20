@@ -50,15 +50,15 @@ function createStructureItems(incomingStructureItems: IncomingStructureItem[]): 
             name: structureItem.name,
             shortId: structureItem.shortId,
             structureType: structureType,
-            createPath: `/:structureType/${structureName}/create/:structureId`,
-            updatePath: `/:structureType/${structureName}/update/:structureId/:itemId`,
-            listPath: `/:structureType/${structureName}/list/:structureId`,
-            showPath: `/:structureType/${structureName}/show/:structureId/:itemId`,
+            createPath: `:structureType/${structureName}/create/:structureId`,
+            updatePath: `:structureType/${structureName}/update/:structureId/:itemId`,
+            listPath: `:structureType/${structureName}/list/:structureId`,
+            showPath: `:structureType/${structureName}/show/:structureId/:itemId`,
 
-            navigationUpdatePath: `/${structureType}/${structureName}/update`,
-            navigationListPath: `/${structureType}/${structureName}/list`,
-            navigationCreatePath: `/${structureType}/${structureName}/create`,
-            navigationShowPath: `/${structureType}/${structureName}/show`,
+            navigationUpdatePath: `${structureType}/${structureName}/update`,
+            navigationListPath: `${structureType}/${structureName}/list`,
+            navigationCreatePath: `${structureType}/${structureName}/create`,
+            navigationShowPath: `${structureType}/${structureName}/show`,
         });
     }
 

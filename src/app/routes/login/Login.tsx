@@ -7,7 +7,6 @@ import shared from '@app/components/authentication/css/shared.module.css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextInput } from '@mantine/core';
 import { getFirstError } from '@app/components/authentication/getFirstError';
-import { useAuthRedirect } from '@app/components/authentication/useAuthRedirect';
 import { useMutation, useQuery } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { LoginBlueprint } from '@root/types/api/auth';
@@ -15,19 +14,26 @@ import login from '@lib/api/auth/login';
 import { useEffect, useState } from 'react';
 import UIError from '@app/components/UIError';
 import { useNavigate } from 'react-router-dom';
-import { TryResult } from '@root/types/shared';
-import hasProjects from '@lib/api/project/hasProject';
+import type { TryResult } from '@root/types/shared';
+import { getProject } from '@lib/api/project/getProject';
+import type { CreatifApp } from '@root/types/shell/shell';
+import type { Project } from '@root/types/api/project';
+import createProject from '@lib/api/project/createProject';
 
-export function Login() {
-    const safeToShow = useAuthRedirect('/', (isFetching, exists) => !isFetching && !exists);
+interface Props {
+    config: CreatifApp;
+}
+
+export function Login({ config }: Props) {
     const navigate = useNavigate();
     const [enableProjectExistsCheck, setEnableProjectExistsCheck] = useState(false);
+    const [createProjectError, setCreateProjectError] = useState(false);
 
     const {
         isFetching,
-        data: projectExistsData,
-        error: projectExistsError,
-    } = useQuery<unknown, ApiError, TryResult<boolean>>('project_exists', async () => hasProjects(), {
+        data: projectData,
+        error: projectError,
+    } = useQuery<unknown, ApiError, TryResult<Project>>('get_project', async () => getProject(config.projectName), {
         enabled: enableProjectExistsCheck,
         staleTime: -1,
         retry: 3,
@@ -50,13 +56,28 @@ export function Login() {
 
     useEffect(() => {
         if (!isLoginSuccess) return;
-        if (projectExistsData && projectExistsData.result && !projectExistsError) {
-            navigate('/dashboard');
+
+        if (projectData && projectData.result) {
+            navigate(`/dashboard/${projectData.result.id}`);
             return;
         }
 
-        navigate('/setup');
-    }, [projectExistsData, projectExistsError, isLoginSuccess]);
+        if (projectError && projectError.status === 404) {
+            createProject({
+                name: config.projectName,
+            }).then(({ result, error }) => {
+                if (error) {
+                    setCreateProjectError(true);
+                }
+
+                if (result) {
+                    navigate(`/dashboard/${result.id}`);
+                }
+            });
+
+            return;
+        }
+    }, [projectData, projectError, isLoginSuccess]);
 
     const methods = useForm();
     const {
@@ -68,51 +89,47 @@ export function Login() {
     const isProcessing = isLoginLoading || isFetching;
 
     return (
-        <>
-            {safeToShow && (
-                <div className={styles.root}>
-                    <div className={styles.centerRoot}>
-                        <div className={shared.root}>
-                            <FormProvider {...methods}>
-                                <form
-                                    className={shared.form}
-                                    onSubmit={handleSubmit((data) => {
-                                        mutateLogin({
-                                            email: data.email,
-                                            password: data.password,
-                                        });
-                                    })}>
-                                    <TextInput
-                                        error={getFirstError(errors, 'email')}
-                                        {...register('email', {
-                                            required: 'Email is required',
-                                        })}
-                                        label="Email"
-                                    />
-                                    <TextInput
-                                        type="password"
-                                        error={getFirstError(errors, 'password')}
-                                        {...register('password', {
-                                            required: 'Password is required',
-                                        })}
-                                        label="Password"
-                                    />
+        <div className={styles.root}>
+            <div className={styles.centerRoot}>
+                <div className={shared.root}>
+                    <FormProvider {...methods}>
+                        <form
+                            className={shared.form}
+                            onSubmit={handleSubmit((data) => {
+                                mutateLogin({
+                                    email: data.email,
+                                    password: data.password,
+                                });
+                            })}>
+                            <TextInput
+                                error={getFirstError(errors, 'email')}
+                                {...register('email', {
+                                    required: 'Email is required',
+                                })}
+                                label="Email"
+                            />
+                            <TextInput
+                                type="password"
+                                error={getFirstError(errors, 'password')}
+                                {...register('password', {
+                                    required: 'Password is required',
+                                })}
+                                label="Password"
+                            />
 
-                                    {(loginError || projectExistsError) && (
-                                        <UIError title="Cannot login at this moment" />
-                                    )}
+                            {(loginError || createProjectError || (projectError && projectError.status !== 404)) && (
+                                <UIError title="Cannot login at this moment" />
+                            )}
 
-                                    <div className={shared.button}>
-                                        <Button loading={isProcessing} type="submit">
-                                            Login
-                                        </Button>
-                                    </div>
-                                </form>
-                            </FormProvider>
-                        </div>
-                    </div>
+                            <div className={shared.button}>
+                                <Button loading={isProcessing} type="submit">
+                                    Login
+                                </Button>
+                            </div>
+                        </form>
+                    </FormProvider>
                 </div>
-            )}
-        </>
+            </div>
+        </div>
     );
 }

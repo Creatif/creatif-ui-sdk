@@ -1,9 +1,6 @@
-import Authentication from '@app/components/authentication/Authentication';
-import { Credentials } from '@app/credentials';
-import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import type { CreatifApp } from '@root/types/shell/shell';
 import type { PropsWithChildren } from 'react';
@@ -13,23 +10,9 @@ import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css';
 import '@app/css/reset.module.css';
 import '@app/css/global.module.css';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import animations from '@app/css/animations.module.css';
-import Shell from '@app/uiComponents/shell/Shell';
-import type LocalesCache from '@lib/storage/localesCache';
-import FirstTimeSetup from '@app/uiComponents/shell/FirstTimeSetup';
-import AuthPage from '@app/uiComponents/shell/AuthPage';
-import Banner from '@app/uiComponents/shell/Banner';
-import { Runtime } from '@app/runtime/Runtime';
 import { validateConfig } from '@app/setupUtil';
-import { createSetup } from '@app/setup';
-import type { ProjectMetadata } from '@lib/api/project/types/ProjectMetadata';
-import { createFirstTimeSetupStore } from '@app/systems/stores/firstTimeSetupStore';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Login } from '@app/routes/login/Login';
-import { Setup } from '@app/routes/setup/Setup';
-import { Dashboard } from '@app/routes/dashboard/Dashboard';
+import { Setup } from '@root/Setup';
+import { BrowserRouter } from 'react-router-dom';
 
 interface Props {
     app: CreatifApp;
@@ -71,48 +54,14 @@ export function CreatifProvider({ app }: Props & PropsWithChildren) {
         }
     }, [app]);
 
-    const router = createBrowserRouter([
-        {
-            path: '/',
-            element: (
-                <AuthPage>
-                    <Banner />
-                    <Authentication />
-                </AuthPage>
-            ),
-        },
-        {
-            path: '/login',
-            element: (
-                <AuthPage>
-                    <Banner />
-                    <Login />
-                </AuthPage>
-            ),
-        },
-        {
-            path: '/setup',
-            element: <Setup config={app} />,
-        },
-        {
-            path: '/dashboard',
-            element: <Dashboard app={app} />,
-        },
-    ]);
-
     return (
         <MantineProvider theme={theme}>
-            <QueryClientProvider client={queryClient}>
-                <Notifications limit={5} />
-                <RouterProvider router={router} />
+            <Notifications limit={5} />
 
-                {isLoggedIn && (
-                    <FirstTimeSetup>
-                        <div className={animations.initialAnimation}>
-                            <Shell options={app} />
-                        </div>
-                    </FirstTimeSetup>
-                )}
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter basename="/">
+                    <Setup app={app} />
+                </BrowserRouter>
             </QueryClientProvider>
         </MantineProvider>
     );

@@ -14,7 +14,7 @@ export function useGetGroups<Response>() {
             () =>
                 throwIfHttpFails(() =>
                     getGroups({
-                        projectId: Runtime.instance.credentials.projectId,
+                        projectId: Runtime.instance.currentProjectCache.getProject().id,
                     }),
                 ),
             {
