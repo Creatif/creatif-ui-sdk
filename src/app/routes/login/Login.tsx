@@ -8,17 +8,32 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextInput } from '@mantine/core';
 import { getFirstError } from '@app/components/authentication/getFirstError';
 import { useAuthRedirect } from '@app/components/authentication/useAuthRedirect';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { LoginBlueprint } from '@root/types/api/auth';
 import login from '@lib/api/auth/login';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import UIError from '@app/components/UIError';
 import { useNavigate } from 'react-router-dom';
+import { TryResult } from '@root/types/shared';
+import hasProjects from '@lib/api/project/hasProject';
 
 export function Login() {
     const safeToShow = useAuthRedirect('/', (isFetching, exists) => !isFetching && !exists);
     const navigate = useNavigate();
+    const [enableProjectExistsCheck, setEnableProjectExistsCheck] = useState(false);
+
+    const {
+        isFetching,
+        data: projectExistsData,
+        error: projectExistsError,
+    } = useQuery<unknown, ApiError, TryResult<boolean>>('project_exists', async () => hasProjects(), {
+        enabled: enableProjectExistsCheck,
+        staleTime: -1,
+        retry: 3,
+        refetchOnWindowFocus: false,
+        keepPreviousData: false,
+    });
 
     const {
         isLoading: isLoginLoading,
@@ -29,9 +44,19 @@ export function Login() {
 
     useEffect(() => {
         if (isLoginSuccess) {
-            navigate('/setup');
+            setEnableProjectExistsCheck(true);
         }
     }, [isLoginSuccess]);
+
+    useEffect(() => {
+        if (!isLoginSuccess) return;
+        if (projectExistsData && projectExistsData.result && !projectExistsError) {
+            navigate('/dashboard');
+            return;
+        }
+
+        navigate('/setup');
+    }, [projectExistsData, projectExistsError, isLoginSuccess]);
 
     const methods = useForm();
     const {
@@ -39,6 +64,8 @@ export function Login() {
         register,
         formState: { errors },
     } = methods;
+
+    const isProcessing = isLoginLoading || isFetching;
 
     return (
         <>
@@ -71,10 +98,12 @@ export function Login() {
                                         label="Password"
                                     />
 
-                                    {loginError && <UIError title="Cannot login at this moment" />}
+                                    {(loginError || projectExistsError) && (
+                                        <UIError title="Cannot login at this moment" />
+                                    )}
 
                                     <div className={shared.button}>
-                                        <Button loading={isLoginLoading} type="submit">
+                                        <Button loading={isProcessing} type="submit">
                                             Login
                                         </Button>
                                     </div>

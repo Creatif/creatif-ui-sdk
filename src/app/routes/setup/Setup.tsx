@@ -96,8 +96,6 @@ interface Props {
 
 export function Setup({ config }: Props) {
     const navigate = useNavigate();
-    const [setupError, setSetupError] = useState(false);
-    const [isRuntimeProcessing, setIsRuntimeProcessing] = useState(false);
 
     const {
         isFetching,
@@ -112,26 +110,36 @@ export function Setup({ config }: Props) {
 
     const {
         mutate: mutateProject,
-        isLoading,
+        isLoading: isProjectCreateLoading,
         error: projectCreateError,
-        data,
+        data: createdProjectData,
     } = useMutation<TryResult<Project>, ApiError, CreateProjectBlueprint>((data) => createProject(data));
 
+    /**
+     * A lot of useEffects, needs another thought
+     */
     useEffect(() => {
-        if (data && data.result) {
-            setIsRuntimeProcessing(true);
-            const itemsConfig = config.items.map((t) => ({ name: t.structureName, type: t.structureType }));
-            createRuntime(data.result.id, itemsConfig).then((error) => {
-                if (error) {
-                    setSetupError(true);
-                    return;
-                }
+        if (isFetching) return;
 
-                setIsRuntimeProcessing(false);
-                navigate('/dashboard');
+        if (!isFetching && projectExistsData && projectExistsData.result) {
+            navigate('/dashboard');
+            return;
+        }
+
+        if (projectExistsData && !projectExistsData.result) {
+            const projectName = config.projectName;
+
+            mutateProject({
+                name: projectName,
             });
         }
-    }, [data]);
+    }, [projectExistsData, isFetching]);
+
+    useEffect(() => {
+        if (!isProjectCreateLoading && createdProjectData?.result) {
+            navigate('/dashboard');
+        }
+    }, [isProjectCreateLoading, createdProjectData]);
 
     useEffect(() => {
         if (projectExistsData?.result) {
@@ -139,60 +147,15 @@ export function Setup({ config }: Props) {
         }
     }, [projectExistsData]);
 
-    const methods = useForm();
-    const { handleSubmit, register } = methods;
-
-    const isSetupLoading = isLoading || isRuntimeProcessing;
+    const isProcessing = isFetching || isProjectCreateLoading;
 
     return (
         <div className={css.root}>
-            <Loading isLoading={isFetching} />
-            {!isFetching && !projectExistsData?.result && !projectExistsError && (
-                <>
-                    <div className={css.header}>
-                        <h1>Create your first project</h1>
-                        <p>
-                            In order to use Creatif, a project is needed. After you create this project, you can create
-                            a many project as you want.
-                        </p>
-                    </div>
+            <Loading isLoading={isProcessing} />
 
-                    <div className={css.content}>
-                        <FormProvider {...methods}>
-                            <form
-                                className={css.form}
-                                onSubmit={handleSubmit((data) => {
-                                    mutateProject({
-                                        name: data.name,
-                                    });
-                                })}>
-                                <TextInput
-                                    {...register('name', {
-                                        required: 'Project name is required',
-                                    })}
-                                    label="Name"
-                                />
-
-                                {projectCreateError && (
-                                    <UIError title="Unable to create project at this moment. Please, try again later." />
-                                )}
-
-                                {setupError && (
-                                    <UIError title="Unable to setup your project at this moment. Please, try again later." />
-                                )}
-
-                                <div className={shared.button}>
-                                    <Button loading={isSetupLoading} type="submit">
-                                        Create
-                                    </Button>
-                                </div>
-                            </form>
-                        </FormProvider>
-                    </div>
-                </>
+            {(projectExistsError || projectCreateError) && (
+                <UIError title="Unable to start setup. Please, try again later." />
             )}
-
-            {projectExistsError && <UIError title="Unable to start setup. Please, try again later." />}
         </div>
     );
 }

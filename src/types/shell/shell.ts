@@ -2,6 +2,7 @@ import type React from 'react';
 
 export interface CreatifApp {
     logo: React.ReactNode;
+    projectName: string;
     items: AppShellItem[];
 }
 
