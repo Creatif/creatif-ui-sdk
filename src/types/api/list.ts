@@ -132,14 +132,7 @@ export interface UpdateListItemResult<Value = unknown, Metadata = unknown> {
     createdAt: string;
     updatedAt: string;
 }
-export interface AppendedListResponse {
-    id: string;
-    projectID: string;
-    name: string;
-    locale: string;
-    createdAt: string;
-    updatedAt: string;
-}
+
 export interface DeleteListItemBlueprint {
     name?: string;
     id?: string;
@@ -160,4 +153,22 @@ export interface RearrangeBlueprint {
     source: string;
     destination: string;
     projectId: string;
+}
+
+export interface PaginateListStructureBlueprint {
+    projectId: string;
+    limit: string | number;
+    page: number;
+    orderBy?: string;
+    direction?: 'desc' | 'asc';
+    search: string;
+}
+
+export interface PaginateMapStructureBlueprint {
+    projectId: string;
+    limit: string | number;
+    page: number;
+    orderBy?: string;
+    direction?: 'desc' | 'asc';
+    search: string;
 }

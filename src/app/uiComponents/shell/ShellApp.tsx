@@ -1,17 +1,17 @@
 import { Container } from '@mantine/core';
-import { Outlet, Route, Routes } from 'react-router-dom';
-import styles from '@app/uiComponents/shell/css/root.module.css';
-import Navigation from '@app/uiComponents/shell/Navigation';
-import Header from '@app/uiComponents/shell/Header';
+import { Route, Routes } from 'react-router-dom';
 import { AddGroup } from '@app/routes/groups/AddGroup';
 import React from 'react';
 import { PublishingMain } from '@app/routes/publishing/PublishingMain';
 import { Api } from '@app/routes/api/Api';
 import { Listing } from '@app/uiComponents/lists/Listing';
+import { Listing as StructureListing } from '@app/routes/structures/Listing';
 import { Item as ShowItem } from '@app/routes/show/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { CreatifApp } from '@root/types/shell/shell';
 import { Dashboard } from '@app/routes/dashboard/Dashboard';
+import { List } from '@app/routes/structures/List';
+import { Map } from '@app/routes/structures/Map';
 
 interface Props {
     options: CreatifApp;
@@ -35,6 +35,8 @@ export function ShellApp({ options }: Props) {
                             <React.Fragment key={i}>
                                 <Route path="publishing" element={<PublishingMain />} />
                                 <Route path="api" element={<Api />} />
+                                <Route path="structures/maps" element={<Map />} />
+                                <Route path="structures/lists" element={<List />} />
                                 <Route path={item.createPath} element={configOption.form} />
                                 {item.structureType === 'list' && (
                                     <>

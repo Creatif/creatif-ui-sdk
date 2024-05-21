@@ -3,7 +3,6 @@ import { handleError } from '@lib/http/handleError';
 import { Api } from './api';
 import type { FetchInstance } from '@lib/http/fetchInstance';
 import type { TryResult } from '@root/types/types';
-import logout from '@lib/api/auth/logout';
 export async function tryHttp<ReturnType, Body = unknown>(
     instance: FetchInstance,
     method: 'get' | 'post' | 'put' | 'delete',

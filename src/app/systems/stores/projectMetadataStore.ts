@@ -3,6 +3,7 @@ import type { StoreApi, UseBoundStore } from 'zustand';
 import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectMetadata';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
+import { StructureDiff, StructureMetadata } from '@root/types/api/project';
 
 export interface IncomingStructureItem {
     id: string;
@@ -29,12 +30,14 @@ export interface StructureItem {
 
 interface OptionsStore {
     metadata: ProjectMetadata;
+    diff: StructureDiff;
     getProjectName: () => string;
     getMap: (name: string) => Structure | undefined;
     getList: (name: string) => Structure | undefined;
     getStructureItemByID: (id: string) => StructureItem | undefined;
     getStructureItemByName: (name: string, type: StructureType) => StructureItem | undefined;
     structureItems: StructureItem[];
+    existsInConfig: (id: string, structureType: StructureType) => boolean;
 }
 
 let store: UseBoundStore<StoreApi<OptionsStore>> | undefined = undefined;
@@ -65,7 +68,11 @@ function createStructureItems(incomingStructureItems: IncomingStructureItem[]): 
     return structureItems;
 }
 
-export function createProjectMetadataStore(metadata: ProjectMetadata, incomingStructureItems: IncomingStructureItem[]) {
+export function createProjectMetadataStore(
+    metadata: ProjectMetadata,
+    diff: StructureDiff,
+    incomingStructureItems: IncomingStructureItem[],
+) {
     if (store) return store;
 
     const key = `creatif-${Runtime.instance.currentProjectCache.getProject().id}`;
@@ -75,6 +82,24 @@ export function createProjectMetadataStore(metadata: ProjectMetadata, incomingSt
 
     store = create<OptionsStore>((_, get) => ({
         metadata: metadata,
+        diff: diff,
+        existsInConfig: (id: string, structureType: StructureType) => {
+            const store = get();
+
+            if (structureType === 'list') {
+                const found = store.diff.lists.find((t) => t.id === id);
+
+                return !found;
+            }
+
+            if (structureType === 'map') {
+                const found = store.diff.maps.find((t) => t.id === id);
+
+                return !found;
+            }
+
+            return false;
+        },
         structureItems: createStructureItems(incomingStructureItems),
         getProjectName: () => get().metadata.name,
         getMap: (name: string) => get().metadata.maps.find((item) => item.name === name),

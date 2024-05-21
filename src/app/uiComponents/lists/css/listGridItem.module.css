@@ -20,6 +20,10 @@
     cursor: grab;
 }
 
+.pointerContainer:hover {
+    cursor: initial;
+}
+
 .checkboxWrapper {
     display: flex;
     justify-content: flex-start;

@@ -10,12 +10,14 @@ export interface GetStructureMetadataBlueprint {
     config: { name: string; type: StructureType }[];
 }
 
+export interface StructureDiff {
+    lists: { id: string; name: string; shortId: string }[];
+    maps: { id: string; name: string; shortId: string }[];
+}
+
 export interface StructureMetadata {
     metadata: ProjectMetadata;
-    diff: {
-        lists: { id: string; name: string; shortId: string }[];
-        maps: { id: string; name: string; shortId: string }[];
-    };
+    diff: StructureDiff;
     structures: { id: string; name: string; shortId: string; structureType: StructureType }[];
 }
 

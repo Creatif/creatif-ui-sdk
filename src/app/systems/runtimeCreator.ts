@@ -53,7 +53,7 @@ async function createStructureMetadataStore(
     if (error) return { error: error };
 
     if (result) {
-        createProjectMetadataStore(result.metadata, result.structures);
+        createProjectMetadataStore(result.metadata, result.diff, result.structures);
     }
 
     return { error: undefined };
