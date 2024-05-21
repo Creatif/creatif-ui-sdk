@@ -7,7 +7,7 @@ import successStyles from './success.module.css';
 import warnStyles from './warn.module.css';
 export default function useNotification() {
     return {
-        warn: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
+        warn: (title: string, description: React.ReactNode, autoClose: number | boolean = 7000, clean = false) => {
             notifications.show({
                 withCloseButton: true,
                 autoClose: autoClose,
@@ -20,7 +20,7 @@ export default function useNotification() {
 
             if (clean) notifications.clean();
         },
-        error: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
+        error: (title: string, description: React.ReactNode, autoClose: number | boolean = 7000, clean = false) => {
             notifications.show({
                 withCloseButton: true,
                 autoClose: autoClose,

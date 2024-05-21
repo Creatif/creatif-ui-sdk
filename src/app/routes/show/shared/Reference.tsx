@@ -1,5 +1,5 @@
 import type { QueryReference } from '@root/types/api/reference';
-import { List } from '@app/uiComponents/show/referenceListing/List';
+import { List } from '@app/routes/show/referenceListing/List';
 
 interface Props {
     reference: QueryReference;

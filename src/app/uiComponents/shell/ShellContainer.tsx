@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import type { CreatifApp } from '@root/types/shell/shell';
 import { createRuntime } from '@app/systems/runtimeCreator';
 import { ShellApp } from '@app/uiComponents/shell/ShellApp';
-import UIError from '@app/components/UIError';
 import { Runtime } from '@app/systems/runtime/Runtime';
+import CenteredError from '@app/components/CenteredError';
 
 interface Props {
     options: CreatifApp;
@@ -36,7 +36,7 @@ export default function ShellContainer({ options }: Props) {
     return (
         <>
             {runtimeCreated && <ShellApp options={options} />}
-            {runtimeFailed && <UIError title="Failed to initiate project. Please, try again later" />}
+            {runtimeFailed && <CenteredError title="Failed to initiate project. Please, try again later" />}
         </>
     );
 }

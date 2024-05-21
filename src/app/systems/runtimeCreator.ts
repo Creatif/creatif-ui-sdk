@@ -2,7 +2,6 @@ import LocalesCache from '@lib/storage/localesCache';
 import type { ApiError } from '@lib/http/apiError';
 import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
 import type { StructureType } from '@root/types/shell/shell';
-import { getStructureMetadata } from '@lib/api/project/getStructureMetadata';
 import { createProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import CurrentProjectCache from '@lib/storage/currentProjectCache';
 import { getProject } from '@lib/api/project/getProject';
@@ -11,6 +10,23 @@ import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { tryHttp } from '@lib/http/tryHttp';
 import type { StructureMetadata } from '@root/types/api/project';
 import { app } from '@lib/http/fetchInstance';
+import { Project } from '@root/types/api/project';
+
+function removeAppCache(projectId: string) {
+    const lsKeys = Object.keys(localStorage);
+    const incomingKey = `creatif-${projectId}`;
+    // filter out the keys that are not project key
+    const possibleAppKeys = lsKeys.filter((item) => new RegExp('creatif-').test(item));
+    // if this is a different app key, remove all creatif keys since they will be recreated later
+    if (!possibleAppKeys.includes(incomingKey)) {
+        console.info('Removing previous app LS keys. They will be recreated.');
+        for (const lsKey of lsKeys) {
+            if (new RegExp('creatif-').test(lsKey)) {
+                localStorage.removeItem(lsKey);
+            }
+        }
+    }
+}
 
 async function writeLocalesToCache(): Promise<{ cache?: LocalesCache; error?: ApiError }> {
     if (!LocalesCache.isLoaded()) {
@@ -45,7 +61,7 @@ async function createStructureMetadataStore(
 
 async function writeCurrentProjectCache(projectId: string): Promise<{ cache?: CurrentProjectCache; error?: ApiError }> {
     if (!CurrentProjectCache.isLoaded()) {
-        const { result, error } = await getProject(projectId);
+        const { result, error } = await tryHttp<Project>(app(), 'get', `/project/single/${projectId}`, undefined);
 
         if (result) {
             return { cache: new CurrentProjectCache(result) };
@@ -56,8 +72,7 @@ async function writeCurrentProjectCache(projectId: string): Promise<{ cache?: Cu
 
     const currentProject = CurrentProjectCache.createInstanceWithExistingCache();
     if (currentProject.getProject().id !== projectId) {
-        const { result, error } = await getProject(projectId);
-        console.log(currentProject.getProject(), projectId);
+        const { result, error } = await tryHttp<Project>(app(), 'get', `/project/single/${projectId}`, undefined);
 
         if (result) {
             return { cache: new CurrentProjectCache(result) };
@@ -73,6 +88,8 @@ export async function createRuntime(
     projectId: string,
     config: { name: string; type: StructureType }[],
 ): Promise<ApiError | undefined> {
+    removeAppCache(projectId);
+
     const { cache: projectCache, error: projectError } = await writeCurrentProjectCache(projectId);
     if (projectError) return projectError;
 

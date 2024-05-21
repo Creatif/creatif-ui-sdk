@@ -47,13 +47,7 @@ export default function Sort({
     const [direction, setDirection] = useState<'desc' | 'asc' | undefined>(currentDirection);
     const { isFetching: areGroupsLoading, data, error: groupError } = useGetGroups();
 
-    const [debouncedGroups] = useDebouncedValue(groups, 500);
-
     const groupsAreDisabled = areGroupsLoading || Boolean(groupError);
-
-    useEffect(() => {
-        onSelectedGroups(debouncedGroups);
-    }, [debouncedGroups]);
 
     const onSortSelected = useCallback(
         (field: CurrentSortType) => {
@@ -179,7 +173,10 @@ export default function Sort({
                         value={groups}
                         clearable
                         searchable
-                        onChange={setGroups}
+                        onChange={(groups) => {
+                            onSelectedGroups(groups);
+                            setGroups(groups);
+                        }}
                         nothingFoundMessage="No groups found"
                         filter={({ options, search }) => {
                             const filtered = (options as ComboboxItem[]).filter((option) =>

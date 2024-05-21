@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import UIError from '@app/components/UIError';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/show/css/item.module.css';
+import styles from '@app/routes/show/css/item.module.css';
 import { ActionIcon, Tabs } from '@mantine/core';
 import {
     IconChevronDown,
@@ -11,6 +11,7 @@ import {
     IconClock,
     IconEdit,
     IconLanguage,
+    IconRoute,
     IconStack3,
     IconTrash,
 } from '@tabler/icons-react';
@@ -19,15 +20,16 @@ import Loading from '@app/components/Loading';
 import type { Column } from '@lib/helpers/useValueFields';
 import useValueFields from '@lib/helpers/useValueFields';
 import classNames from 'classnames';
-import useTabs from '@app/uiComponents/show/shared/useTabs';
-import StructureItem from '@app/uiComponents/show/shared/StructureItem';
-import Reference from '@app/uiComponents/show/shared/Reference';
+import useTabs from '@app/routes/show/shared/useTabs';
+import StructureItem from '@app/routes/show/shared/StructureItem';
+import Reference from '@app/routes/show/shared/Reference';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import type { StructureType } from '@root/types/shell/shell';
-import { EditLocaleWrapperModal } from '@app/uiComponents/show/modals/EditLocaleWrapperModal';
-import { EditGroupsWrapperModal } from '@app/uiComponents/show/modals/EditGroupsWrapperModal';
-import { DeleteItemWrapperModal } from '@app/uiComponents/show/modals/DeleteItemWrapperModal';
+import { EditLocaleWrapperModal } from '@app/routes/show/modals/EditLocaleWrapperModal';
+import { EditGroupsWrapperModal } from '@app/routes/show/modals/EditGroupsWrapperModal';
+import { DeleteItemWrapperModal } from '@app/routes/show/modals/DeleteItemWrapperModal';
+import { Runtime } from '@app/systems/runtime/Runtime';
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -122,7 +124,7 @@ export function Item() {
                                 </ActionIcon>
 
                                 <ActionIcon onClick={() => setIsEditGroupsOpen(true)} variant="default">
-                                    <IconStack3 size={16} />
+                                    <IconRoute size={16} />
                                 </ActionIcon>
 
                                 <ActionIcon onClick={() => setIsEditLocaleOpen(true)} variant="default">
@@ -219,13 +221,14 @@ export function Item() {
             {structureItem && internalResult && (
                 <DeleteItemWrapperModal
                     isOpen={isDeleteModalOpen}
-                    deleteItemId={internalResult.id}
                     structureId={structureItem.id}
                     structureType={structureItem.structureType}
                     itemId={internalResult.id}
                     onClose={() => setIsDeleteModalOpen(false)}
                     onDeleted={() => {
-                        navigate(`/${structureItem?.structureType}/${structureItem?.name}/list/${structureItem?.id}`);
+                        navigate(
+                            `${Runtime.instance.rootPath()}/${structureItem?.structureType}/${structureItem?.name}/list/${structureItem?.id}`,
+                        );
                     }}
                 />
             )}

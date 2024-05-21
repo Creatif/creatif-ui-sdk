@@ -8,9 +8,10 @@ import React from 'react';
 import { PublishingMain } from '@app/routes/publishing/PublishingMain';
 import { Api } from '@app/routes/api/Api';
 import { Listing } from '@app/uiComponents/lists/Listing';
-import { Item as ShowItem } from '@app/uiComponents/show/Item';
+import { Item as ShowItem } from '@app/routes/show/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { CreatifApp } from '@root/types/shell/shell';
+import { Dashboard } from '@app/routes/dashboard/Dashboard';
 
 interface Props {
     options: CreatifApp;
@@ -23,19 +24,7 @@ export function ShellApp({ options }: Props) {
     return (
         <Container fluid m={0} p={0}>
             <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <div className={styles.root}>
-                            {options && <Navigation navItems={options.items} logo={options.logo} />}
-
-                            <div>
-                                <Header />
-
-                                <div className={styles.content}>{<Outlet />}</div>
-                            </div>
-                        </div>
-                    }>
+                <Route path="/" element={<Dashboard app={options} />}>
                     <Route path="groups" element={<AddGroup />} />
 
                     {structures.map((item, i) => {

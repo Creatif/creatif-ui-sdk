@@ -17,6 +17,11 @@ export default function App() {
                     },
                     {
                         structureType: 'list',
+                        structureName: 'Shit',
+                        form: <DeckForm />,
+                    },
+                    {
+                        structureType: 'list',
                         structureName: 'Languages',
                         form: <LanguageForm />,
                     },

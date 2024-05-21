@@ -1,4 +1,4 @@
-import usePaginateReferences from '@app/uiComponents/show/hooks/usePaginateReferences';
+import usePaginateReferences from '@app/routes/show/hooks/usePaginateReferences';
 import type { QueryReference } from '@root/types/api/reference';
 import React from 'react';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
@@ -10,11 +10,11 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
 import { Button, Loader } from '@mantine/core';
 import CenteredError from '@app/components/CenteredError';
-import Item from '@app/uiComponents/show/referenceListing/Item';
+import Item from '@app/routes/show/referenceListing/Item';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { StructureType } from '@root/types/shell/shell';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
-import useSearchQuery from '@app/uiComponents/show/hooks/useSearchQuery';
+import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';
 import { IconMistOff } from '@tabler/icons-react';
 import NothingFound from '@app/uiComponents/shared/NothingFound';
 

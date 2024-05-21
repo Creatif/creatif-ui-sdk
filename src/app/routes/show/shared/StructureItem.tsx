@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/show/css/item.module.css';
+import styles from '@app/routes/show/css/item.module.css';
 import Copy from '@app/components/Copy';
 import Groups from '@app/components/Groups';
 import React from 'react';

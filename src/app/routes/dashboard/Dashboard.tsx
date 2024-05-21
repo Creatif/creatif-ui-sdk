@@ -14,16 +14,14 @@ interface Props {
 
 export function Dashboard({ app }: Props) {
     return (
-        <Container fluid m={0} p={0}>
-            <div className={styles.root}>
-                {app && <Navigation navItems={app.items} logo={app.logo} />}
+        <div className={styles.root}>
+            {app && <Navigation navItems={app.items} logo={app.logo} />}
 
-                <div>
-                    <Header />
+            <div>
+                <Header />
 
-                    <div className={styles.content}>{<Outlet />}</div>
-                </div>
+                <div className={styles.content}>{<Outlet />}</div>
             </div>
-        </Container>
+        </div>
     );
 }
