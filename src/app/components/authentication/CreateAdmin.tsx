@@ -34,7 +34,7 @@ export default function CreateAdmin() {
     return (
         <div className={styles.root}>
             <div className={styles.centerRoot}>
-                {!isAdminExistsFetching && adminExistsData?.result && (
+                {!isAdminExistsFetching && adminExistsData && !adminExistsData.result && (
                     <div className={styles.root}>
                         <AdminWizard />
 

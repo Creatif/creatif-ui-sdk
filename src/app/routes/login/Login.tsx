@@ -36,7 +36,7 @@ export function Login({ config }: Props) {
     } = useQuery<unknown, ApiError, TryResult<Project>>('get_project', async () => getProject(config.projectName), {
         enabled: enableProjectExistsCheck,
         staleTime: -1,
-        retry: 3,
+        retry: -1,
         refetchOnWindowFocus: false,
         keepPreviousData: false,
     });
