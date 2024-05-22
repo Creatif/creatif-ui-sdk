@@ -12,7 +12,6 @@ import {
     IconEdit,
     IconLanguage,
     IconRoute,
-    IconStack3,
     IconTrash,
 } from '@tabler/icons-react';
 import appDate from '@lib/helpers/appDate';
@@ -78,7 +77,7 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
     );
 }
 
-export function Item() {
+export default function Item() {
     const { structureId, itemId, structureType } = useParams();
     const { isFetching, data } = useQueryVariable(
         structureId,

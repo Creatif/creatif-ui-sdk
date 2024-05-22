@@ -1,5 +1,5 @@
 import { Combobox, useCombobox, TextInput, Loader, ScrollArea } from '@mantine/core';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';

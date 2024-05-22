@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import useGetGroups from '@app/uiComponents/shared/hooks/useGetGroups';
 import useGetVariableGroups from '@app/uiComponents/shared/hooks/useGetVariableGroups';
 import type { Group } from '@root/types/api/groups';
-import { NativeSelectOption } from '@mantine/core/lib/components/NativeSelect/NativeSelectOption';
 
 interface Props {
     open: boolean;

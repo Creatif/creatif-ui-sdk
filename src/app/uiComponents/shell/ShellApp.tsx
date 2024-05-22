@@ -1,17 +1,17 @@
 import { Container } from '@mantine/core';
 import { Route, Routes } from 'react-router-dom';
-import { AddGroup } from '@app/routes/groups/AddGroup';
-import React from 'react';
-import { PublishingMain } from '@app/routes/publishing/PublishingMain';
-import { Api } from '@app/routes/api/Api';
-import { Listing } from '@app/uiComponents/lists/Listing';
-import { Listing as StructureListing } from '@app/routes/structures/Listing';
-import { Item as ShowItem } from '@app/routes/show/Item';
+import React, { Suspense } from 'react';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { CreatifApp } from '@root/types/shell/shell';
-import { Dashboard } from '@app/routes/dashboard/Dashboard';
-import { List } from '@app/routes/structures/List';
-import { Map } from '@app/routes/structures/Map';
+
+const AddGroup = React.lazy(() => import('@app/routes/groups/AddGroup'));
+const Dashboard = React.lazy(() => import('@app/routes/dashboard/Dashboard'));
+const PublishingMain = React.lazy(() => import('@app/routes/publishing/PublishingMain'));
+const Api = React.lazy(() => import('@app/routes/api/Api'));
+const ShowItem = React.lazy(() => import('@app/routes/show/Item'));
+const List = React.lazy(() => import('@app/routes/structures/List'));
+const Map = React.lazy(() => import('@app/routes/structures/Map'));
+const Listing = React.lazy(() => import('@app/uiComponents/lists/Listing'));
 
 interface Props {
     options: CreatifApp;
@@ -25,7 +25,14 @@ export function ShellApp({ options }: Props) {
         <Container fluid m={0} p={0}>
             <Routes>
                 <Route path="/" element={<Dashboard app={options} />}>
-                    <Route path="groups" element={<AddGroup />} />
+                    <Route
+                        path="groups"
+                        element={
+                            <Suspense fallback={null}>
+                                <AddGroup />
+                            </Suspense>
+                        }
+                    />
 
                     {structures.map((item, i) => {
                         const configOption = options.items.find((option) => option.structureName === item.name);
@@ -33,26 +40,82 @@ export function ShellApp({ options }: Props) {
 
                         return (
                             <React.Fragment key={i}>
-                                <Route path="publishing" element={<PublishingMain />} />
-                                <Route path="api" element={<Api />} />
-                                <Route path="structures/maps" element={<Map />} />
-                                <Route path="structures/lists" element={<List />} />
+                                <Route
+                                    path="publishing"
+                                    element={
+                                        <Suspense>
+                                            <PublishingMain />
+                                        </Suspense>
+                                    }
+                                />
+                                <Route
+                                    path="api"
+                                    element={
+                                        <Suspense>
+                                            <Api />
+                                        </Suspense>
+                                    }
+                                />
+                                <Route
+                                    path="structures/maps"
+                                    element={
+                                        <Suspense>
+                                            <Map />
+                                        </Suspense>
+                                    }
+                                />
+                                <Route
+                                    path="structures/lists"
+                                    element={
+                                        <Suspense>
+                                            <List />
+                                        </Suspense>
+                                    }
+                                />
                                 <Route path={item.createPath} element={configOption.form} />
                                 {item.structureType === 'list' && (
                                     <>
                                         <Route path={item.updatePath} element={configOption.form} />
-                                        <Route path={item.listPath} element={<Listing />} />
+                                        <Route
+                                            path={item.listPath}
+                                            element={
+                                                <Suspense>
+                                                    <Listing />
+                                                </Suspense>
+                                            }
+                                        />
 
-                                        <Route path={item.showPath} element={<ShowItem />} />
+                                        <Route
+                                            path={item.showPath}
+                                            element={
+                                                <Suspense>
+                                                    <ShowItem />
+                                                </Suspense>
+                                            }
+                                        />
                                     </>
                                 )}
 
                                 {item.structureType === 'map' && (
                                     <>
                                         <Route path={item.updatePath} element={configOption.form} />
-                                        <Route path={item.listPath} element={<Listing />} />
+                                        <Route
+                                            path={item.listPath}
+                                            element={
+                                                <Suspense>
+                                                    <Listing />
+                                                </Suspense>
+                                            }
+                                        />
 
-                                        <Route path={item.showPath} element={<ShowItem />} />
+                                        <Route
+                                            path={item.showPath}
+                                            element={
+                                                <Suspense>
+                                                    <ShowItem />
+                                                </Suspense>
+                                            }
+                                        />
                                     </>
                                 )}
                             </React.Fragment>

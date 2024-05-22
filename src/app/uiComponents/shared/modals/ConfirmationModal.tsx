@@ -2,7 +2,6 @@ import { Button, Modal } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '../css/modal.module.css';
-import { IconAlertCircle, IconInfoCircle } from '@tabler/icons-react';
 interface Props {
     open: boolean;
     message: string;

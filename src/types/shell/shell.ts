@@ -6,12 +6,6 @@ export interface CreatifApp {
     items: AppShellItem[];
 }
 
-export interface Shell {
-    logo: React.ReactNode;
-    header: React.ReactNode;
-    items: AppShellItem[];
-}
-
 export interface AppShellItem {
     menuText?: string;
     menuIcon?: React.ReactNode;

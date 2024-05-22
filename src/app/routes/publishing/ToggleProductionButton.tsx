@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import React, { useCallback, useEffect, useState, memo } from 'react';
+import React, { useCallback, useState, memo } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toggleProduction } from '@lib/api/publishing/toggleProduction';
 import { Runtime } from '@app/systems/runtime/Runtime';
@@ -16,7 +16,7 @@ function ToggleProductionButton({ versionId, isInProduction }: Props) {
     const queryClient = useQueryClient();
     const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
 
-    const { isLoading, mutate, isSuccess } = useMutation(
+    const { isLoading, mutate } = useMutation(
         () =>
             toggleProduction({
                 projectId: Runtime.instance.currentProjectCache.getProject().id,

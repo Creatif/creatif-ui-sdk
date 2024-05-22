@@ -19,13 +19,6 @@ interface Props {
     navItems: AppShellItem[];
 }
 
-function processNotInConfigStructures(diff: StructureDiff) {
-    const lists = diff.lists.map((t) => ({ ...t, type: 'list' }));
-    const maps = diff.maps.map((t) => ({ ...t, type: 'map' }));
-
-    return [...lists, ...maps];
-}
-
 export default function Navigation({ navItems, logo }: Props) {
     const projectName = Runtime.instance.currentProjectCache.getProject().name;
     const store = getProjectMetadataStore();

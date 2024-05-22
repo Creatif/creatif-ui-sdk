@@ -4,9 +4,8 @@ import styles from '@app/routes/publishing/css/publishingMain.module.css';
 import { PublishForm } from '@app/routes/publishing/PublishForm';
 import { VersionList } from '@app/routes/publishing/VersionList';
 import { useState } from 'react';
-import UIError from '@app/components/UIError';
 
-export function PublishingMain() {
+export default function PublishingMain() {
     const [listLength, setListLength] = useState(-1);
 
     return (

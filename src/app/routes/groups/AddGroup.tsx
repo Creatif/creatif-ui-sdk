@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import type { InternalGroup } from '@app/routes/groups/components/MultiSelectNoDropdown';
 import { MultiSelectNoDropdown } from '@app/routes/groups/components/MultiSelectNoDropdown';
 
-export function AddGroup() {
+export default function AddGroup() {
     const methods = useForm<{ groups: InternalGroup[] }>({
         defaultValues: {
             groups: [],

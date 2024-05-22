@@ -1,6 +1,6 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/shell/SupportedLocalesModal';
-import { Button, type ComboboxItem, Select } from '@mantine/core';
+import { type ComboboxItem, Select } from '@mantine/core';
 import { useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

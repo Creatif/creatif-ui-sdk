@@ -1,12 +1,5 @@
 export type Behaviour = 'modifiable' | 'readonly';
 export type PaginationDirection = 'asc' | 'desc';
-export interface PaginationBlueprint {
-    page?: number;
-    limit?: number;
-    groups?: string[];
-    orderBy?: string;
-    direction?: PaginationDirection;
-}
 
 export interface GetGroupsBlueprint {
     structureType: string;
@@ -15,19 +8,6 @@ export interface GetGroupsBlueprint {
     itemId: string;
 }
 
-export interface PaginateListBlueprint {
-    name: string;
-    projectId: string;
-    search: string;
-    limit: string | number;
-    page: number;
-    groups?: string[];
-    orderBy?: string;
-    direction?: 'desc' | 'asc';
-    behaviour?: Behaviour;
-    locales?: string[];
-    fields?: string[];
-}
 export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
     id: string;
     name: string;

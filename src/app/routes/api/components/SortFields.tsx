@@ -1,6 +1,5 @@
 import { Select } from '@mantine/core';
 import { useState } from 'react';
-import { PaginationDirection } from '@root/types/api/shared';
 import type { OrderBy } from '@root/types/api/publicApi/Shared';
 
 interface Props {

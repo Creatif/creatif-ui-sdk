@@ -25,7 +25,6 @@ interface Props {
 }
 
 export function Login({ config }: Props) {
-    const navigate = useNavigate();
     const [enableProjectExistsCheck, setEnableProjectExistsCheck] = useState(false);
     const [createProjectError, setCreateProjectError] = useState(false);
 

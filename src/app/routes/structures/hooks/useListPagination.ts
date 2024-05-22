@@ -1,6 +1,5 @@
 import { throwIfHttpFails } from '@lib/http/tryHttp';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
-import type { Behaviour } from '@root/types/api/shared';
 import type { ApiError } from '@lib/http/apiError';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { PaginationResult } from '@root/types/api/list';

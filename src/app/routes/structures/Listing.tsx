@@ -89,7 +89,7 @@ export function Listing({ structureType }: Props) {
         enabled: structureType === 'list',
     });
 
-    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, invalidateQuery, isFetching } = {
+    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, isFetching } = {
         data: resolveListing(structureType, mapData?.pages, listData?.pages, pageRef.current),
         error: structureType === 'list' ? listError : mapError,
         isFetching: structureType === 'list' ? isListFetching : isMapFetching,

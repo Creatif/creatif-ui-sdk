@@ -2,19 +2,6 @@ import type { Behaviour } from '@root/types/api/shared';
 import type { QueryReference } from '@root/types/api/reference';
 import type { StructureType } from '@root/types/shell/shell';
 import type { Group } from '@root/types/api/groups';
-export interface CreateListBlueprint {
-    name: string;
-    projectId: string;
-}
-
-export interface CreatedList {
-    id: string;
-    shortId: string;
-    name: string;
-    locale: string;
-    createdAt: string;
-    updatedAt: string;
-}
 export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
     behaviour: Behaviour;
@@ -76,11 +63,6 @@ export interface PaginationResult<Value, Metadata> {
     total: number;
     page: number;
     data: PaginatedVariableResult<Value, Metadata>[];
-}
-export interface AppendToListBlueprint<Value = unknown, Metadata = unknown> {
-    name: string;
-    variables: AppendingVariableBlueprint<Value, Metadata>[];
-    projectId: string;
 }
 
 export interface Reference {

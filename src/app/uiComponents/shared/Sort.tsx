@@ -1,9 +1,8 @@
 import useGetGroups from '@app/uiComponents/shared/hooks/useGetGroups';
 import { MultiSelect } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
 import { IconCheck, IconEyeOff, IconReplace, IconSortAscending, IconSortDescending } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from './css/Sort.module.css';

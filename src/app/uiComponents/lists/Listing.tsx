@@ -63,7 +63,7 @@ function resolveListing<Value, Metadata>(
     return [];
 }
 
-export function Listing<Value, Metadata>() {
+export default function Listing<Value, Metadata>() {
     const { queryParams, setParam } = useSearchQuery();
     const { structureId, structureType } = useParams();
     const structureItem = getProjectMetadataStore()

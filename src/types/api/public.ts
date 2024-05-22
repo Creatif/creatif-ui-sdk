@@ -7,7 +7,3 @@ export interface Version {
     createdAt: string;
     updatedAt: string | null;
 }
-
-export interface VersionBlueprint {
-    projectId: string;
-}

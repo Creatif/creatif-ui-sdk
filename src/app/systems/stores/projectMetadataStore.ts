@@ -3,8 +3,7 @@ import type { StoreApi, UseBoundStore } from 'zustand';
 import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectMetadata';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
-import type { StructureDiff} from '@root/types/api/project';
-import { StructureMetadata } from '@root/types/api/project';
+import type { StructureDiff } from '@root/types/api/project';
 
 export interface IncomingStructureItem {
     id: string;

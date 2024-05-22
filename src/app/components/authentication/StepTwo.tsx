@@ -1,10 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import css from '@app/components/authentication/css/stepTwo.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import shared from '@app/components/authentication/css/shared.module.css';
-import type { FieldErrors } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button, TextInput } from '@mantine/core';
 import classNames from 'classnames';

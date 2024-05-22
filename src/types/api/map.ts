@@ -2,31 +2,6 @@ import type { Behaviour } from '@root/types/api/shared';
 import type { QueryReference } from '@root/types/api/reference';
 import type { StructureType } from '@root/types/shell/shell';
 
-export interface CreateMapBlueprint {
-    name: string;
-    projectId: string;
-}
-
-export interface GetMapBlueprint {
-    name: string;
-    projectId: string;
-}
-
-export interface AppMap {
-    id: string;
-    name: string;
-    projectId: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-export interface CreatedMapVariable {
-    id: string;
-    name: string;
-    shortId: string;
-    locale: string;
-}
-
 export interface CreatedMap {
     id: string;
     shortId: string;

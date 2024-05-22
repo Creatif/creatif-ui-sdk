@@ -1,5 +1,4 @@
 import EditGroups from '@app/uiComponents/shared/modals/EditGroups';
-import { StructureType } from '@root/types/shell/shell';
 import useUpdateVariable from '@app/uiComponents/lists/hooks/useUpdateVariable';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { useEffect } from 'react';

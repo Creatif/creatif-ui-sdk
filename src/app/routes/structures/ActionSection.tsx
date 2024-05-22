@@ -19,7 +19,6 @@ interface Props {
     isLoading: boolean;
     search: string;
 
-    includeCreateButton?: boolean;
     includeHeading?: boolean;
 }
 export default function ActionSection({
@@ -32,7 +31,6 @@ export default function ActionSection({
     onDirectionChange,
     direction,
     sortBy,
-    includeCreateButton = true,
     includeHeading = true,
 }: Props) {
     const [isDrawerOpened, setIsDrawerOpened] = useState(false);

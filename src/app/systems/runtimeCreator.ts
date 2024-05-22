@@ -4,11 +4,10 @@ import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
 import type { StructureType } from '@root/types/shell/shell';
 import { createProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import CurrentProjectCache from '@lib/storage/currentProjectCache';
-import { getProject } from '@lib/api/project/getProject';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { tryHttp } from '@lib/http/tryHttp';
-import type { StructureMetadata , Project } from '@root/types/api/project';
+import type { StructureMetadata, Project } from '@root/types/api/project';
 import { app } from '@lib/http/fetchInstance';
 
 function removeAppCache(projectId: string) {

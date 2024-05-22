@@ -30,7 +30,7 @@ const httpCalls = [
     },
 ];
 
-export function Api() {
+export default function Api() {
     const [versionId, setVersionId] = useState<string | null>('');
     const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
 
@@ -68,7 +68,7 @@ export function Api() {
 
                     {controlledAccordionValue === item.id && item.id === 'paginateLists' && (
                         <Accordion.Panel>
-                            <PaginateLists />
+                            <PaginateLists versionId={versionId} />
                         </Accordion.Panel>
                     )}
                 </Accordion.Item>
