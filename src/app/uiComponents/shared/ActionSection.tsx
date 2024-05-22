@@ -69,13 +69,13 @@ export default function ActionSection({
     return (
         <>
             <div className={styles.root}>
-                {includeHeading && <div className={styles.paddingSection}>
-                    <h1 className={styles.heading}>{structureItem.name}</h1>
-                </div>}
-
+                {includeHeading && (
+                    <div className={styles.paddingSection}>
+                        <h1 className={styles.heading}>{structureItem.name}</h1>
+                    </div>
+                )}
 
                 <div className={styles.paddingSection}>
-
                     <div className={styles.leftMenu}>
                         <TextInput
                             styles={{

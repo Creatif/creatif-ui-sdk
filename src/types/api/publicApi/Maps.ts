@@ -1,10 +1,4 @@
-import type {
-    Behaviour,
-    ConnectionItem,
-    Options,
-    type OrderBy,
-    type OrderDirection,
-} from '@root/types/api/publicApi/Shared';
+import type { Behaviour, ConnectionItem, Options, OrderBy, OrderDirection } from '@root/types/api/publicApi/Shared';
 
 export interface GetMapItemByName {
     structureName: string;

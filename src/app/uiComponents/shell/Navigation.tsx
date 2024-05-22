@@ -12,7 +12,7 @@ import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { NavigationDropdown } from '@app/uiComponents/shell/NavigationDropdown';
 import { Runtime } from '@app/systems/runtime/Runtime';
-import { StructureDiff } from '@root/types/api/project';
+import type { StructureDiff } from '@root/types/api/project';
 
 interface Props {
     logo?: React.ReactNode;
@@ -29,7 +29,6 @@ function processNotInConfigStructures(diff: StructureDiff) {
 export default function Navigation({ navItems, logo }: Props) {
     const projectName = Runtime.instance.currentProjectCache.getProject().name;
     const store = getProjectMetadataStore();
-    const notInConfigStructures = processNotInConfigStructures(store.getState().diff);
 
     return (
         <div className={styles.navigationGrid}>
@@ -53,7 +52,7 @@ export default function Navigation({ navItems, logo }: Props) {
 
             <nav className={styles.root}>
                 {navItems.map((item, index) => {
-                    const structures = getProjectMetadataStore().getState().structureItems;
+                    const structures = store.getState().structureItems;
                     const structureItem = structures.find((t) => t.name === item.structureName);
 
                     return (
@@ -74,29 +73,6 @@ export default function Navigation({ navItems, logo }: Props) {
                                 </NavLink>
                             )}
                         </React.Fragment>
-                    );
-                })}
-
-                <h2 className={styles.notInConfigHeader}>NOT IN CONFIG</h2>
-                {notInConfigStructures.map((item, index) => {
-                    const structures = store.getState().structureItems;
-                    const structureItem = structures.find((t) => t.name === item.name);
-
-                    return (
-                        <div key={index}>
-                            {structureItem && (
-                                <NavLink
-                                    className={({ isActive }) => {
-                                        if (isActive) return classNames(styles.navItem, styles.active);
-
-                                        return styles.navItem;
-                                    }}
-                                    to={`${structureItem.navigationListPath}/${structureItem.id}`}>
-                                    {<NavigationIcon type={item.type} />}
-                                    <span className={styles.navItemText}>{item.name}</span>
-                                </NavLink>
-                            )}
-                        </div>
                     );
                 })}
             </nav>

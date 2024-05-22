@@ -8,9 +8,8 @@ import { getProject } from '@lib/api/project/getProject';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { tryHttp } from '@lib/http/tryHttp';
-import type { StructureMetadata } from '@root/types/api/project';
+import type { StructureMetadata , Project } from '@root/types/api/project';
 import { app } from '@lib/http/fetchInstance';
-import { Project } from '@root/types/api/project';
 
 function removeAppCache(projectId: string) {
     const lsKeys = Object.keys(localStorage);

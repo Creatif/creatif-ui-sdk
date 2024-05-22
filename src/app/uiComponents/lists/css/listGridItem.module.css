@@ -13,7 +13,9 @@
     font-size: 0.9rem;
     color: var(--mantine-color-gray-9);
 
-    transition: transform 0.3s, border-bottom 0.3s;
+    transition:
+        transform 0.3s,
+        border-bottom 0.3s;
 }
 
 .container:hover {

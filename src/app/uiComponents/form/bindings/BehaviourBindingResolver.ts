@@ -8,7 +8,10 @@ interface CastType {
 
 export class BehaviourBindingResolver<Value> {
     private key = behaviourField;
-    constructor(private values: Value, private bindFn: BehaviourBinding<Value> | undefined) {}
+    constructor(
+        private values: Value,
+        private bindFn: BehaviourBinding<Value> | undefined,
+    ) {}
 
     resolve(): Behaviour {
         if (this.bindFn) {
@@ -21,7 +24,8 @@ export class BehaviourBindingResolver<Value> {
                 typeof this.values === 'object' &&
                 this.key in this.values &&
                 typeof (this.values as CastType)[this.key] === 'string' &&
-                ((this.values as CastType)[this.key] === 'modifiable' || (this.values as CastType)[this.key] === 'readonly')
+                ((this.values as CastType)[this.key] === 'modifiable' ||
+                    (this.values as CastType)[this.key] === 'readonly')
             ) {
                 return (this.values as CastType)[this.key] as Behaviour;
             }

@@ -58,7 +58,7 @@ export function Login({ config }: Props) {
         if (!isLoginSuccess) return;
 
         if (projectData && projectData.result) {
-            navigate(`/dashboard/${projectData.result.id}`);
+            location.href = `/dashboard/${projectData.result.id}`;
             return;
         }
 
@@ -71,7 +71,7 @@ export function Login({ config }: Props) {
                 }
 
                 if (result) {
-                    navigate(`/dashboard/${result.id}`);
+                    location.href = `/dashboard/${result.id}`;
                 }
             });
 

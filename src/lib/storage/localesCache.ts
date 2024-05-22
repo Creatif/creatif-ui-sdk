@@ -1,6 +1,6 @@
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
-import { ApiError } from '@lib/http/apiError';
+import type { ApiError } from '@lib/http/apiError';
 
 export default class LocalesCache {
     private readonly locales: Locale[];
@@ -31,18 +31,18 @@ export default class LocalesCache {
     }
 }
 
-export async function createLocalesCache(): Promise<{createdCache?: LocalesCache; error?: ApiError}> {
+export async function createLocalesCache(): Promise<{ createdCache?: LocalesCache; error?: ApiError }> {
     if (!LocalesCache.isLoaded()) {
         const { result: locales, error } = await getSupportedLocales();
 
         if (Array.isArray(locales)) {
-            return {createdCache: new LocalesCache(locales)};
+            return { createdCache: new LocalesCache(locales) };
         }
 
         if (error) {
-            return {error: error};
+            return { error: error };
         }
     }
 
-    return {createdCache: LocalesCache.createInstanceWithExistingCache()};
+    return { createdCache: LocalesCache.createInstanceWithExistingCache() };
 }

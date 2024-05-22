@@ -7,7 +7,7 @@ import appDate from '@lib/helpers/appDate';
 import type { ListStructure, MapStructure } from '@root/types/api/structures';
 import { IconCheck, IconCircleX } from '@tabler/icons-react';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
 interface Props {
     item: ListStructure | MapStructure;
     structureType: StructureType;
@@ -28,7 +28,7 @@ function GridItem({ item, structureType }: Props) {
 
             <div className={styles.createdAt}>{appDate(item.createdAt)}</div>
 
-            <div className={styles.actionRow}></div>
+            <div className={styles.actionRow} />
         </div>
     );
 }

@@ -16,7 +16,6 @@
     width: 100%;
     font-weight: bold;
     margin-bottom: 0.5rem;
-
 }
 
 .info .danger {
@@ -36,4 +35,3 @@
     flex-direction: column;
     gap: 2rem;
 }
-

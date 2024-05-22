@@ -5,7 +5,9 @@
     align-items: center;
 }
 
-.successAnimation { margin:50px auto;}
+.successAnimation {
+    margin: 50px auto;
+}
 
 .checkmark {
     width: 100px;
@@ -16,8 +18,10 @@
     stroke: #4bb71b;
     stroke-miterlimit: 10;
     box-shadow: inset 0px 0px 0px #4bb71b;
-    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-    position:relative;
+    animation:
+        fill 0.4s ease-in-out 0.4s forwards,
+        scale 0.3s ease-in-out 0.9s both;
+    position: relative;
     top: 5px;
     right: 5px;
     margin: 0 auto;
@@ -31,7 +35,6 @@
     stroke: #4bb71b;
     fill: #fff;
     animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-
 }
 
 .checkmarkCheck {
@@ -48,7 +51,8 @@
 }
 
 @keyframes scale {
-    0%, 100% {
+    0%,
+    100% {
         transform: none;
     }
 

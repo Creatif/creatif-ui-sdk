@@ -13,12 +13,12 @@ export type BindedValues = {
     locale: string;
     groups: string[] | null;
     behaviour: Behaviour;
-}
+};
 
-export type NameBinding<T> = ((values: T) => string);
-export type BehaviourBinding<T> = ((values: T) => Behaviour);
-export type LocaleBinding<T> = ((values: T) => string);
-export type GroupBinding<T> = ((values: T) => string[]);
+export type NameBinding<T> = (values: T) => string;
+export type BehaviourBinding<T> = (values: T) => Behaviour;
+export type LocaleBinding<T> = (values: T) => string;
+export type GroupBinding<T> = (values: T) => string[];
 
 export type AfterSaveFn<T> = (result: T, e: BaseSyntheticEvent | undefined) => void;
 

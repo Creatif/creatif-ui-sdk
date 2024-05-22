@@ -12,4 +12,3 @@ export interface ToggleProductionBlueprint {
     id: string;
     projectId: string;
 }
-

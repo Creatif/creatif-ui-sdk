@@ -103,7 +103,11 @@ export function VersionList({ onListLength }: Props) {
                                 </div>
                                 <p>{appDate(item.createdAt)}</p>
                                 <div className={versionList.actionGroup}>
-                                    <Button component={Link} to="/api" size="compact-xs" variant="outline">
+                                    <Button
+                                        component={Link}
+                                        to={`${Runtime.instance.rootPath()}/api`}
+                                        size="compact-xs"
+                                        variant="outline">
                                         Explore API
                                     </Button>
 

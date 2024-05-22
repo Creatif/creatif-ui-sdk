@@ -167,7 +167,6 @@
 }
 
 .appMenuDropdown {
-
 }
 
 .appMenuDropdown ul {
@@ -177,23 +176,11 @@
 
 .appMenuDropdownOpen ul {
     display: block;
-
 }
 
 .appMenuDropdownClose ul {
     display: none;
 }
 
-
 .appMenuDropdownButton {
-}
-
-.notInConfigHeader {
-    font-weight: bold;
-    font-size: 0.8rem;
-    color: var(--mantine-color-gray-8);
-
-    border-top: 1px solid var(--mantine-color-gray-4);
-
-    padding: 1rem 0 1rem 0;
 }

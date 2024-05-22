@@ -18,7 +18,12 @@ export function LocaleSelect({ onSelected }: Props) {
             clearable
             value={selected}
             onChange={(id) => {
-                if (!id) return;
+                if (!id) {
+                    setSelected('');
+                    onSelected('');
+
+                    return;
+                }
 
                 setSelected(id);
                 onSelected(id);

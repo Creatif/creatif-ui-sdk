@@ -160,8 +160,8 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            "'name' could not be determined",
-                            "'name' is required and you have to create a binding for it that returns a string.",
+                            '\'name\' could not be determined',
+                            '\'name\' is required and you have to create a binding for it that returns a string.',
                         );
                         return;
                     }
@@ -220,8 +220,8 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            "'name' could not be determined",
-                            "'name' is required and you have to create a binding for it that returns a string.",
+                            '\'name\' could not be determined',
+                            '\'name\' is required and you have to create a binding for it that returns a string.',
                         );
                         return;
                     }
@@ -315,7 +315,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
+                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
                     }
                 </Alert>
             )}

@@ -37,8 +37,9 @@ export function StructureSelect({ onSelected, structureToShow }: Props) {
 
     useEffect(() => {
         if (queryData && queryData.result) {
-            const lists = queryData.result.lists;
-            const maps = queryData.result.maps;
+            const structures = queryData.result;
+            const lists = structures.filter((t) => t.structureType === 'list');
+            const maps = structures.filter((t) => t.structureType === 'map');
 
             const groups = [
                 {

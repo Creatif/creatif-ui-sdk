@@ -7,18 +7,15 @@ import useNotification from '@app/systems/notifications/useNotification';
 import { useMutation, useQueryClient } from 'react-query';
 import { publish } from '@lib/api/publishing/publish';
 import { Runtime } from '@app/systems/runtime/Runtime';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { IconStackPush } from '@tabler/icons-react';
 import type { ApiError } from '@lib/http/apiError';
-import { UIWarning } from '@app/components/UIWarning';
 
 interface Props {
     listLength: number;
 }
 
 export function PublishForm({ listLength }: Props) {
-    const [isMaxVersionsReached, setIsMaxVersionsReached] = useState(false);
-
     const queryClient = useQueryClient();
     const methods = useForm({
         defaultValues: {
@@ -43,15 +40,6 @@ export function PublishForm({ listLength }: Props) {
     );
 
     useEffect(() => {
-        if (listLength !== -1 && listLength === 2) {
-            setIsMaxVersionsReached(true);
-            return;
-        }
-
-        setIsMaxVersionsReached(false);
-    }, [listLength]);
-
-    useEffect(() => {
         if (error && error.error.data['versionExists']) return;
 
         if (error) {
@@ -74,15 +62,6 @@ export function PublishForm({ listLength }: Props) {
                     });
                 })}
                 className={styles.root}>
-                {isMaxVersionsReached && (
-                    <UIWarning
-                        style={{
-                            margin: '2rem 0 2rem 0',
-                        }}
-                        title="Maximum number of versions reached. If you wish to publish a new version, you have to delete one of the current versions."
-                    />
-                )}
-
                 <TextInput
                     error={
                         (error &&
@@ -91,7 +70,7 @@ export function PublishForm({ listLength }: Props) {
                             'Version with this name already exists') ||
                         errors.versionName?.message
                     }
-                    disabled={isLoading || listLength === -1 || isMaxVersionsReached}
+                    disabled={isLoading || listLength === -1}
                     placeholder="Version name"
                     description="Version name is not required. If you choose not give this version a name, a name will be automatically generated for you."
                     {...register('versionName', {
@@ -103,7 +82,7 @@ export function PublishForm({ listLength }: Props) {
                     <Button
                         type="submit"
                         color="green"
-                        disabled={isLoading || listLength === -1 || isMaxVersionsReached}
+                        disabled={isLoading || listLength === -1}
                         leftSection={isLoading ? <Loader color="gray" size={18} /> : <IconStackPush size={24} />}>
                         {isLoading ? 'Publishing' : 'Publish'}
                     </Button>

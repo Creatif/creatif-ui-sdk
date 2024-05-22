@@ -9,13 +9,10 @@ interface Props {
 }
 export function UIWarning({ title, style }: Props) {
     return (
+        <div style={style} className={styles.root}>
+            <IconInfoCircle size={36} color="var(--mantine-color-gray-7)" />
 
-            <div style={style} className={styles.root}>
-                <IconInfoCircle size={36} color="var(--mantine-color-gray-7)" />
-
-                <p className={styles.title}>
-                    {title}
-                </p>
-            </div>
+            <p className={styles.title}>{title}</p>
+        </div>
     );
 }

@@ -1,6 +1,6 @@
 import type { ListItem, PaginateListItems } from '@root/types/api/publicApi/Lists';
 import { tryHttp } from '@lib/publicApi/lib/http/tryHttp';
-import { Result } from '@root/types/api/publicApi/Http';
+import type { Result } from '@root/types/api/publicApi/Http';
 import { determineResult } from '@lib/publicApi/app/determineResult';
 import { Routes } from '@lib/publicApi/lib/http/routes';
 import { queryConstructor } from '@lib/publicApi/lib/queryConstructor';

@@ -31,7 +31,7 @@ export function createInputReferenceStore() {
         references: [],
         locked: true,
         unlock: () => {
-            set((current) => ({...current, locked: false}));
+            set((current) => ({ ...current, locked: false }));
         },
         add: (item: ReferenceStoreItem) =>
             set((current) => ({ ...current, references: [...current.references, item] })),

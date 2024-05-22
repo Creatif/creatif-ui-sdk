@@ -40,8 +40,7 @@ export function NavigationDropdown({ topItem, dropdownItems }: Props) {
                 </button>
 
                 <ul>
-                    {dropdownItems.map((item, i) => {
-                        return (
+                    {dropdownItems.map((item, i) => (
                             <li key={i}>
                                 <NavLink
                                     to={item.to}
@@ -59,8 +58,7 @@ export function NavigationDropdown({ topItem, dropdownItems }: Props) {
                                     {item.text}
                                 </NavLink>
                             </li>
-                        );
-                    })}
+                        ))}
                 </ul>
             </li>
         </ul>

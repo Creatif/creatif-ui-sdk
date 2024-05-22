@@ -3,7 +3,10 @@ import { groupsField } from '@app/uiComponents/form/bindings/bindingResolver';
 
 export class GroupsBindingResolver<Value> {
     private readonly key = groupsField;
-    constructor(private values: Value, private bindFn: GroupBinding<Value> | undefined) {}
+    constructor(
+        private values: Value,
+        private bindFn: GroupBinding<Value> | undefined,
+    ) {}
 
     resolve(): string[] | null {
         if (this.bindFn) {
@@ -16,7 +19,7 @@ export class GroupsBindingResolver<Value> {
                 typeof this.values === 'object' &&
                 this.key in this.values &&
                 Array.isArray(this.values[this.key]) &&
-                (this.values[this.key] as unknown[]).every(t => typeof t === 'string')
+                (this.values[this.key] as unknown[]).every((t) => typeof t === 'string')
             ) {
                 return this.values[this.key] as string[];
             }

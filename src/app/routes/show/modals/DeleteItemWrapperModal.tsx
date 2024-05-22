@@ -2,8 +2,8 @@ import DeleteModal from '@app/uiComponents/shared/modals/DeleteModal';
 import deleteVariable from '@lib/api/declarations/variables/deleteVariable';
 import useDeleteVariable from '@app/uiComponents/lists/hooks/useDeleteVariable';
 import useNotification from '@app/systems/notifications/useNotification';
-import { StructureType } from '@root/types/shell/shell';
-import { ApiError } from '@lib/http/apiError';
+import type { StructureType } from '@root/types/shell/shell';
+import type { ApiError } from '@lib/http/apiError';
 
 interface Props {
     structureId: string;

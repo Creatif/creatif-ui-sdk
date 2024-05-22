@@ -1,8 +1,6 @@
 import { behaviourField, groupsField, localeField } from '@app/uiComponents/form/bindings/bindingResolver';
 
-export default function deleteBindings<Value>(
-    value: Value,
-) {
+export default function deleteBindings<Value>(value: Value) {
     if (value && typeof value === 'object') {
         if (Object.hasOwn(value, localeField)) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

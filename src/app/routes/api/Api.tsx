@@ -9,6 +9,7 @@ import { initialize } from '@lib/publicApi/app/initialize';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { GetListItemsByName } from '@app/routes/api/components/GetListItemsByName';
 import { GetMapItemByName } from '@app/routes/api/components/GetMapItemByName';
+import { PaginateLists } from '@app/routes/api/components/PaginateLists';
 
 const httpCalls = [
     {
@@ -22,6 +23,10 @@ const httpCalls = [
     {
         title: 'Get map item by name',
         id: 'getMapItemByName',
+    },
+    {
+        title: 'Paginate lists',
+        id: 'paginateLists',
     },
 ];
 
@@ -58,6 +63,12 @@ export function Api() {
                     {controlledAccordionValue === item.id && item.id === 'getMapItemByName' && (
                         <Accordion.Panel>
                             <GetMapItemByName />
+                        </Accordion.Panel>
+                    )}
+
+                    {controlledAccordionValue === item.id && item.id === 'paginateLists' && (
+                        <Accordion.Panel>
+                            <PaginateLists />
                         </Accordion.Panel>
                     )}
                 </Accordion.Item>
