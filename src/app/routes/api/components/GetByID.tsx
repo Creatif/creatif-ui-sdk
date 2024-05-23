@@ -12,8 +12,9 @@ import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { Checkbox, Loader } from '@mantine/core';
 import { Result } from '@app/routes/api/components/Result';
 import { ApiError } from '@lib/http/apiError';
-import { TryResult } from '@root/types/shared';
+import type { Result as HttpResult } from '@root/types/api/publicApi/Http';
 import { ListItem } from '@root/types/api/publicApi/Lists';
+import { MapItem } from '@root/types/api/publicApi/Maps';
 
 interface Props {
     versionName: string;
@@ -25,7 +26,7 @@ export function GetByID({ versionName }: Props) {
 
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const { isFetching, data, error } = useQuery<typeof getListItemById | typeof getMapItemById, ApiError>(
+    const { isFetching, data, error } = useQuery<ListItem<unknown> | MapItem<unknown> | undefined, ApiError>(
         ['get_item_by_id', structureData, id, isValueOnly, versionName],
         async () => {
             if (!id || !structureData) return;
