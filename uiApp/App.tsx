@@ -11,18 +11,13 @@ export default function App() {
                 projectName: 'project',
                 items: [
                     {
-                        structureType: 'list',
+                        structureType: 'map',
                         structureName: 'Decks',
                         form: <DeckForm />,
                     },
                     {
                         structureType: 'list',
                         structureName: 'Languages',
-                        form: <LanguageForm />,
-                    },
-                    {
-                        structureType: 'map',
-                        structureName: 'Map example',
                         form: <LanguageForm />,
                     },
                 ],
