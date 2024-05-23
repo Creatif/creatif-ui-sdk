@@ -13,7 +13,11 @@ import UIError from '@app/components/UIError';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { Result } from '@app/routes/api/components/Result';
 
-export function GetListItemsByName() {
+interface Props {
+    versionName: string;
+}
+
+export function GetListItemsByName({ versionName }: Props) {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [selectedLocale, setSelectedLocale] = useState<string>('');
@@ -23,13 +27,14 @@ export function GetListItemsByName() {
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
 
     const { isFetching, data } = useQuery(
-        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
+        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly, versionName],
         async () => {
             if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
             if (structureData && id) {
                 const { result, error } = await getListItemsByName({
+                    versionName: versionName,
                     name: id,
                     locale: selectedLocale,
                     structureName: structureData.name,

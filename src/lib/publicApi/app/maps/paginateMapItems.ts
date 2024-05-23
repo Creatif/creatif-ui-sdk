@@ -17,7 +17,9 @@ export async function paginateMapItems<Value>(blueprint: PaginateMapItems): Prom
             blueprint.locales,
         )}`,
         null,
-        {},
+        {
+            'Creatif-Version': blueprint.versionName || '',
+        },
     );
 
     return determineResult<MapItem<Value>[]>(httpResult);

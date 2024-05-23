@@ -14,7 +14,11 @@ import { Result } from '@app/routes/api/components/Result';
 import { getMapItemByName } from '@lib/publicApi/app/maps/getMapItemByName';
 import type { CreatifError } from '@root/types/api/publicApi/Http';
 
-export function GetMapItemByName() {
+interface Props {
+    versionName: string;
+}
+
+export function GetMapItemByName({ versionName }: Props) {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [selectedLocale, setSelectedLocale] = useState<string>('');
@@ -31,13 +35,14 @@ export function GetMapItemByName() {
     }
 
     const { isFetching, data } = useQuery(
-        ['get_map_item_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly],
+        ['get_map_item_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly, versionName],
         async () => {
             if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
             if (structureData && id) {
                 const { result, error } = await getMapItemByName({
+                    versionName: versionName,
                     name: id,
                     locale: selectedLocale,
                     structureName: structureData.name,

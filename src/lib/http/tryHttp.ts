@@ -3,6 +3,7 @@ import { handleError } from '@lib/http/handleError';
 import { Api } from './api';
 import type { FetchInstance } from '@lib/http/fetchInstance';
 import type { TryResult } from '@root/types/types';
+import logout from '@lib/api/auth/logout';
 export async function tryHttp<ReturnType, Body = unknown>(
     instance: FetchInstance,
     method: 'get' | 'post' | 'put' | 'delete',
@@ -20,16 +21,14 @@ export async function tryHttp<ReturnType, Body = unknown>(
             };
         }
 
-        if (res.status === 403 && !path.includes('api-check')) {
-            return {
-                error: new ApiError('Forbidden', { data: { message: 'Forbidden' } }, 403),
-                status: res.status,
-            };
+        if (res.status === 403) {
+            await logout();
+            location.href = '/login';
         }
 
         if (res.status === 422) {
             return {
-                error: new ApiError('Forbidden', await res.json(), 403),
+                error: new ApiError('Validation error', await res.json(), 422),
                 status: res.status,
             };
         }

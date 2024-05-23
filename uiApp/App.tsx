@@ -20,6 +20,11 @@ export default function App() {
                         structureName: 'Languages',
                         form: <LanguageForm />,
                     },
+                    {
+                        structureType: 'map',
+                        structureName: 'Map example',
+                        form: <LanguageForm />,
+                    },
                 ],
             }}
         />

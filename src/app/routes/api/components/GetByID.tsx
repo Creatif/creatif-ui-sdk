@@ -11,23 +11,30 @@ import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
 import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { Checkbox, Loader } from '@mantine/core';
 import { Result } from '@app/routes/api/components/Result';
+import { ApiError } from '@lib/http/apiError';
+import { TryResult } from '@root/types/shared';
+import { ListItem } from '@root/types/api/publicApi/Lists';
 
-export function GetByID() {
+interface Props {
+    versionName: string;
+}
+
+export function GetByID({ versionName }: Props) {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
-    const [isError, setIsError] = useState(false);
 
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const { isFetching, data } = useQuery(
-        ['get_item_by_id', structureData, id, isValueOnly],
+    const { isFetching, data, error } = useQuery<typeof getListItemById | typeof getMapItemById, ApiError>(
+        ['get_item_by_id', structureData, id, isValueOnly, versionName],
         async () => {
             if (!id || !structureData) return;
 
             if (structureData && id) {
                 if (structureData.type === 'list') {
-                    const { result, error } = await getListItemById({
+                    const { result, error } = await getListItemById<unknown>({
                         id: id,
+                        versionName: versionName,
                         options: {
                             valueOnly: isValueOnly,
                         },
@@ -41,8 +48,9 @@ export function GetByID() {
                 }
 
                 if (structureData.type === 'map') {
-                    const { result, error } = await getMapItemById({
+                    const { result, error } = await getMapItemById<unknown>({
                         id: id,
+                        versionName: versionName,
                         options: {
                             valueOnly: isValueOnly,
                         },
@@ -62,9 +70,6 @@ export function GetByID() {
             keepPreviousData: true,
             staleTime: -1,
             retry: -1,
-            onError() {
-                setIsError(true);
-            },
         },
     );
 
@@ -72,7 +77,11 @@ export function GetByID() {
         <div className={styles.root}>
             <div className={styles.selectWrapper}>
                 <div className={styles.selectActionWrapper}>
-                    <ComboboxIDSelect structureData={structureData} onSelected={(id) => setId(id)} />
+                    <ComboboxIDSelect
+                        versionName={versionName}
+                        structureData={structureData}
+                        onSelected={(id) => setId(id)}
+                    />
                     <StructureSelect
                         onSelected={(name, structureType) => {
                             setStructureData({ name: name, type: structureType });
@@ -106,12 +115,21 @@ export function GetByID() {
                 </div>
             )}
 
-            {isError && (
+            {error && error.status === 404 && (
                 <UIError
                     style={{
                         marginTop: '1rem',
                     }}
-                    title="Unable to get item. Please, try again later."
+                    title="This item could not be found"
+                />
+            )}
+
+            {error && error.status !== 404 && (
+                <UIError
+                    style={{
+                        marginTop: '1rem',
+                    }}
+                    title="Something went wrong. Please, try again later."
                 />
             )}
         </div>

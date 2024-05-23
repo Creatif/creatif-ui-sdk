@@ -13,7 +13,9 @@ export async function getMapItemByName<Value>(blueprint: GetMapItemByName): Prom
             blueprint.locale,
         )}`,
         null,
-        {},
+        {
+            'Creatif-Version': blueprint.versionName || '',
+        },
     );
 
     return determineResult<MapItem<Value>>(httpResult);

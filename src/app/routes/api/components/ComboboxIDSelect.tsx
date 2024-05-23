@@ -9,12 +9,13 @@ import { IconX } from '@tabler/icons-react';
 import type { ListItem } from '@root/types/api/publicApi/Lists';
 
 interface Props {
+    versionName: string;
     onSelected: (id: string) => void;
     toSelect?: 'name';
     structureData: { name: string; type: StructureType } | undefined;
 }
 
-export function ComboboxIDSelect({ onSelected, structureData, toSelect }: Props) {
+export function ComboboxIDSelect({ versionName, onSelected, structureData, toSelect }: Props) {
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
     });
@@ -59,12 +60,13 @@ export function ComboboxIDSelect({ onSelected, structureData, toSelect }: Props)
         : undefined;
 
     const { isFetching: areListsFetching } = useQuery(
-        ['paginate_list_items', structureData, searchCriteria, forceRequery],
+        ['paginate_list_items', structureData, searchCriteria, forceRequery, versionName],
         async () => {
             if (!structureData) return;
             if (!forceRequery) return;
 
             const { result, error } = await paginateListItems({
+                versionName: versionName,
                 structureName: structureData.name,
                 page: 1,
                 groups: [],
@@ -190,7 +192,6 @@ export function ComboboxIDSelect({ onSelected, structureData, toSelect }: Props)
                     value={search}
                     onChange={(evn) => {
                         setSearch(evn.target.value);
-                        onSelected(evn.target.value);
                     }}
                     placeholder={structureData ? `Search ${structureData.name}` : 'Search...'}
                     description="Search for an item to see its raw response"

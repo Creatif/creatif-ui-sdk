@@ -17,7 +17,9 @@ export async function paginateListItems<Value>(blueprint: PaginateListItems): Pr
             blueprint.locales,
         )}`,
         null,
-        {},
+        {
+            'Creatif-Version': blueprint.versionName || '',
+        },
     );
 
     return determineResult<ListItem<Value>[]>(httpResult);

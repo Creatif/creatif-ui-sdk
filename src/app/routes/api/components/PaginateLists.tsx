@@ -16,7 +16,11 @@ import { GroupsSelect } from '@app/routes/api/components/GroupsSelect';
 import { paginateListItems } from '@lib/publicApi/app/lists/paginateListItems';
 import type { OrderBy, OrderDirection } from '@root/types/api/publicApi/Shared';
 
-export function PaginateLists() {
+interface Props {
+    versionName: string;
+}
+
+export function PaginateLists({ versionName }: Props) {
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
     const [selectedLocale, setSelectedLocale] = useState<string>('');
     const [selectedDirection, setSelectedDirection] = useState<OrderDirection>('desc');
@@ -36,13 +40,14 @@ export function PaginateLists() {
     }
 
     const { isFetching, data } = useQuery(
-        ['get_map_item_by_name', structureData, selectedLocale, submitQueryEnabled, isValueOnly],
+        ['paginate_public_api_lists', structureData, selectedLocale, submitQueryEnabled, isValueOnly, versionName],
         async () => {
             if (!submitQueryEnabled) return;
             if (!structureData) return;
 
             if (structureData) {
                 const { result, error } = await paginateListItems({
+                    versionName: versionName,
                     structureName: structureData.name,
                     page: 1,
                     search: '',

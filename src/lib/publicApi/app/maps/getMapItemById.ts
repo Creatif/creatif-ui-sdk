@@ -10,7 +10,9 @@ export async function getMapItemById<Value>(blueprint: GetMapItemByID): Promise<
         'get',
         `${Routes.GET_MAP_ITEM_BY_ID}/${blueprint.id}${parseQuery(blueprint.options, undefined)}`,
         null,
-        {},
+        {
+            'Creatif-Version': blueprint.versionName || '',
+        },
     );
 
     return determineResult<MapItem<Value>>(httpResult);

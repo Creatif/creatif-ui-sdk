@@ -7,11 +7,12 @@ import { getVersions } from '@lib/publicApi/app/versions/getVersions';
 import type { Result } from '@root/types/api/publicApi/Http';
 
 interface Props {
-    onVersionChange: (id: string | null) => void;
+    onVersionChange: (id: string) => void;
+    currentVersion: string | null;
 }
 
-export function VersionSelect({ onVersionChange }: Props) {
-    const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
+export function VersionSelect({ onVersionChange, currentVersion }: Props) {
+    const [selectedVersion, setSelectedVersion] = useState<string>(currentVersion || '');
     const { data, isFetching, error } = useQuery<Result<Version[]>, ApiError>('get_versions', () => getVersions(), {
         keepPreviousData: true,
         staleTime: Infinity,
@@ -29,33 +30,45 @@ export function VersionSelect({ onVersionChange }: Props) {
                 return;
             }
 
+            if (currentVersion) return;
+
             for (const item of data.result) {
                 if (item.isProductionVersion) {
-                    onVersionChange(item.id);
-                    setSelectedVersion(item.id);
+                    onVersionChange(item.name);
+                    setSelectedVersion(item.name);
                     return;
                 }
             }
 
             const version = data.result[0];
             setSelectedVersion(version.id);
-            onVersionChange(version.id);
+            onVersionChange(version.name);
         }
     }, [isFetching, data]);
 
     return (
         <Select
             onChange={(item) => {
-                setSelectedVersion(item);
-                onVersionChange(item);
+                if (currentVersion === item) return;
+
+                setSelectedVersion(item || '');
+                onVersionChange(item || '');
             }}
+            defaultValue={currentVersion}
             error={componentError}
             description="Select a version to use to make API requests"
             value={selectedVersion}
             disabled={isFetching}
             label="Versions"
             placeholder="Select a version"
-            data={data && data.result && data.result.map((item) => ({ label: item.name, value: item.id }))}
+            data={
+                data &&
+                data.result &&
+                data.result.map((item) => ({
+                    label: `${item.isProductionVersion ? item.name + ' (in production)' : item.name}`,
+                    value: item.name,
+                }))
+            }
         />
     );
 }

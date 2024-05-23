@@ -10,6 +10,7 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import { GetListItemsByName } from '@app/routes/api/components/GetListItemsByName';
 import { GetMapItemByName } from '@app/routes/api/components/GetMapItemByName';
 import { PaginateLists } from '@app/routes/api/components/PaginateLists';
+import { useSearchParams } from 'react-router-dom';
 
 const httpCalls = [
     {
@@ -31,57 +32,65 @@ const httpCalls = [
 ];
 
 export default function Api() {
-    const [versionId, setVersionId] = useState<string | null>('');
     const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
+    const [params, setParams] = useSearchParams();
+    const versionId = params.get('version');
 
     initialize(Runtime.instance.currentProjectCache.getProject().id);
 
-    const items = useMemo(
-        () =>
-            httpCalls.map((item) => (
-                <Accordion.Item key={item.id} value={item.id}>
-                    <Accordion.Control
-                        styles={{
-                            control: {
-                                padding: '0.7rem',
-                            },
-                        }}>
-                        {item.title}
-                    </Accordion.Control>
-                    {controlledAccordionValue === item.id && item.id === 'getItemById' && (
-                        <Accordion.Panel>
-                            <GetByID />
-                        </Accordion.Panel>
-                    )}
+    const items = useMemo(() => {
+        if (!versionId) return null;
 
-                    {controlledAccordionValue === item.id && item.id === 'getListItemsByName' && (
-                        <Accordion.Panel>
-                            <GetListItemsByName />
-                        </Accordion.Panel>
-                    )}
+        return httpCalls.map((item) => (
+            <Accordion.Item key={item.id} value={item.id}>
+                <Accordion.Control
+                    styles={{
+                        control: {
+                            padding: '0.7rem',
+                        },
+                    }}>
+                    {item.title}
+                </Accordion.Control>
+                {controlledAccordionValue === item.id && item.id === 'getItemById' && (
+                    <Accordion.Panel>
+                        <GetByID versionName={versionId} />
+                    </Accordion.Panel>
+                )}
 
-                    {controlledAccordionValue === item.id && item.id === 'getMapItemByName' && (
-                        <Accordion.Panel>
-                            <GetMapItemByName />
-                        </Accordion.Panel>
-                    )}
+                {controlledAccordionValue === item.id && item.id === 'getListItemsByName' && (
+                    <Accordion.Panel>
+                        <GetListItemsByName versionName={versionId} />
+                    </Accordion.Panel>
+                )}
 
-                    {controlledAccordionValue === item.id && item.id === 'paginateLists' && (
-                        <Accordion.Panel>
-                            <PaginateLists versionId={versionId} />
-                        </Accordion.Panel>
-                    )}
-                </Accordion.Item>
-            )),
-        [controlledAccordionValue],
-    );
+                {controlledAccordionValue === item.id && item.id === 'getMapItemByName' && (
+                    <Accordion.Panel>
+                        <GetMapItemByName versionName={versionId} />
+                    </Accordion.Panel>
+                )}
+
+                {controlledAccordionValue === item.id && item.id === 'paginateLists' && (
+                    <Accordion.Panel>
+                        <PaginateLists versionName={versionId} />
+                    </Accordion.Panel>
+                )}
+            </Accordion.Item>
+        ));
+    }, [controlledAccordionValue, versionId]);
 
     return (
         <div className={baseStyles.container}>
             <h1 className={baseStyles.heading}>API</h1>
 
             <div className={baseStyles.contentSection}>
-                <VersionSelect onVersionChange={(id) => setVersionId(id)} />
+                <VersionSelect
+                    currentVersion={versionId}
+                    onVersionChange={(id) => {
+                        setParams({
+                            version: id,
+                        });
+                    }}
+                />
             </div>
 
             {versionId && (

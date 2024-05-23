@@ -23,6 +23,7 @@ export interface ListItem<Value> {
 export interface GetListItemByID {
     id: string;
     options?: Options;
+    versionName?: string;
 }
 
 export interface GetListItemsByName {
@@ -30,9 +31,11 @@ export interface GetListItemsByName {
     name: string;
     locale: string;
     options?: Options;
+    versionName?: string;
 }
 
 export interface PaginateListItems {
+    versionName?: string;
     structureName: string;
     page: number;
     search: string;

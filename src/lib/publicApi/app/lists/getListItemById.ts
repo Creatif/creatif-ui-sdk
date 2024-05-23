@@ -10,7 +10,9 @@ export async function getListItemById<Value>(blueprint: GetListItemByID): Promis
         'get',
         `${Routes.GET_LIST_ITEM_BY_ID}/${blueprint.id}${parseQuery(blueprint.options, undefined)}`,
         null,
-        {},
+        {
+            'Creatif-Version': blueprint.versionName || '',
+        },
     );
 
     return determineResult<ListItem<Value>>(httpResult);

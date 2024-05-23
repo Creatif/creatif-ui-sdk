@@ -1,6 +1,7 @@
 import type { Behaviour, ConnectionItem, Options, OrderBy, OrderDirection } from '@root/types/api/publicApi/Shared';
 
 export interface GetMapItemByName {
+    versionName?: string;
     structureName: string;
     name: string;
     locale: string;
@@ -30,10 +31,12 @@ export interface MapItem<Value> {
 export interface GetMapItemByID {
     id: string;
     options?: Options;
+    versionName?: string;
 }
 
 export interface PaginateMapItems {
     structureName: string;
+    versionName?: string;
     page: number;
     search: string;
     orderBy: OrderBy;

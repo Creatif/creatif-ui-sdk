@@ -13,7 +13,9 @@ export async function getListItemsByName<Value>(blueprint: GetListItemsByName): 
             blueprint.locale,
         )}`,
         null,
-        {},
+        {
+            'Creatif-Version': blueprint.versionName || '',
+        },
     );
 
     return determineResult<ListItem<Value>[]>(httpResult);
