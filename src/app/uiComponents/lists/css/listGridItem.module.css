@@ -18,6 +18,10 @@
         border-bottom 0.3s;
 }
 
+.nameRowTitle {
+    line-height: 1.3rem;
+}
+
 .container:hover {
     cursor: grab;
 }

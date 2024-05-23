@@ -21,7 +21,7 @@ export async function tryHttp<ReturnType, Body = unknown>(
             };
         }
 
-        if (res.status === 403) {
+        if (res.status === 403 && !path.includes('/auth/login')) {
             await logout();
             location.href = '/login';
         }

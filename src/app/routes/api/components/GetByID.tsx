@@ -9,12 +9,11 @@ import UIError from '@app/components/UIError';
 import { getListItemById } from '@lib/publicApi/app/lists/getListItemById';
 import { getMapItemById } from '@lib/publicApi/app/maps/getMapItemById';
 import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
-import { Checkbox, Loader } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import { Result } from '@app/routes/api/components/Result';
-import { ApiError } from '@lib/http/apiError';
-import type { Result as HttpResult } from '@root/types/api/publicApi/Http';
-import { ListItem } from '@root/types/api/publicApi/Lists';
-import { MapItem } from '@root/types/api/publicApi/Maps';
+import type { ApiError } from '@lib/http/apiError';
+import type { ListItem } from '@root/types/api/publicApi/Lists';
+import type { MapItem } from '@root/types/api/publicApi/Maps';
 
 interface Props {
     versionName: string;
@@ -97,8 +96,6 @@ export function GetByID({ versionName }: Props) {
                         label="Value only"
                     />
                 </div>
-
-                {isFetching && <Loader size={20} />}
             </div>
 
             {id && data && (

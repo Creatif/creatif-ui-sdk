@@ -1,7 +1,7 @@
 import CreateNew from '@app/uiComponents/button/CreateNew';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/NothingFound.module.css';
+import styles from '@app/uiComponents/lists/css/NothingFound.module.css';
 
 interface Props {
     createNewPath?: string;

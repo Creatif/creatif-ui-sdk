@@ -4,7 +4,7 @@ import contentContainerStyles from '@app/uiComponents/css/ContentContainer.modul
 import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
+import styles from '@app/uiComponents/lists/css/ListTable.module.css';
 import { Button, Loader } from '@mantine/core';
 import React, { useRef } from 'react';
 import UIError from '@app/components/UIError';

@@ -3,7 +3,7 @@
 import styles from '@app/routes/api/css/apiBase.module.css';
 import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
 import { StructureSelect } from '@app/routes/api/components/StructureSelect';
-import { Loader, Checkbox, Button } from '@mantine/core';
+import { Checkbox, Button, Loader } from '@mantine/core';
 import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
@@ -24,12 +24,9 @@ export function GetListItemsByName({ versionName }: Props) {
     const [isError, setIsError] = useState(false);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
-
     const { isFetching, data } = useQuery(
-        ['get_list_items_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly, versionName],
+        ['get_list_items_by_name', structureData, id, selectedLocale, isValueOnly, versionName],
         async () => {
-            if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
             if (structureData && id) {
@@ -51,17 +48,12 @@ export function GetListItemsByName({ versionName }: Props) {
             }
         },
         {
-            enabled: Boolean(id && structureData && submitQueryEnabled),
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: -1,
             retry: -1,
             onError() {
                 setIsError(true);
-                setSubmitQueryEnabled(false);
-            },
-            onSuccess() {
-                setSubmitQueryEnabled(false);
             },
         },
     );
@@ -84,9 +76,16 @@ export function GetListItemsByName({ versionName }: Props) {
                     onSubmit={(env) => {
                         env.preventDefault();
                         env.stopPropagation();
-                        setSubmitQueryEnabled(true);
                     }}>
-                    <ComboboxIDSelect toSelect="name" structureData={structureData} onSelected={(id) => setId(id)} />
+                    <ComboboxIDSelect
+                        versionName={versionName}
+                        toSelect="name"
+                        structureData={structureData}
+                        onSelected={(id) => {
+                            console.log(id);
+                            setId(id);
+                        }}
+                    />
                     <LocaleSelect onSelected={setSelectedLocale} />
                     <StructureSelect
                         structureToShow="list"
@@ -101,17 +100,12 @@ export function GetListItemsByName({ versionName }: Props) {
                         checked={isValueOnly}
                         onChange={(env) => {
                             setIsValueOnly(env.target.checked);
-                            setSubmitQueryEnabled(true);
                         }}
                         label="Value only"
                     />
 
-                    <Button type="submit" className={styles.findButton} variant="outline">
-                        Find
-                    </Button>
+                    {isFetching && <Loader />}
                 </form>
-
-                {isFetching && <Loader size={20} />}
             </div>
 
             {id && structureData && data && (

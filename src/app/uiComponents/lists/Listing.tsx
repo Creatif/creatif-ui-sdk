@@ -10,7 +10,7 @@ import DraggableList from '@app/uiComponents/shared/listView/DraggableList';
 import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
+import styles from '@app/uiComponents/lists/css/ListTable.module.css';
 import { Button, Checkbox, Loader } from '@mantine/core';
 import type { MouseEvent } from 'react';
 import React, { useCallback, useRef, useState } from 'react';

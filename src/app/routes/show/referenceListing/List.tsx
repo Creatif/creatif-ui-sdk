@@ -7,7 +7,7 @@ import ActionSection from '@app/uiComponents/shared/ActionSection';
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/uiComponents/lists/list/css/ListTable.module.css';
+import styles from '@app/uiComponents/lists/css/ListTable.module.css';
 import { Button, Loader } from '@mantine/core';
 import CenteredError from '@app/components/CenteredError';
 import Item from '@app/routes/show/referenceListing/Item';

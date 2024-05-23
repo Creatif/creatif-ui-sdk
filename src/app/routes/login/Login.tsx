@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { LoginBlueprint } from '@root/types/api/auth';
 import login from '@lib/api/auth/login';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import UIError from '@app/components/UIError';
 import { useNavigate } from 'react-router-dom';
 import type { TryResult } from '@root/types/shared';
@@ -29,6 +29,7 @@ export function Login({ config }: Props) {
     const [enableProjectExistsCheck, setEnableProjectExistsCheck] = useState(false);
     const [createProjectError, setCreateProjectError] = useState(false);
     const navigate = useNavigate();
+    const adminCheckRef = useRef(false);
 
     const {
         isFetching: isAdminExistsFetching,
@@ -61,8 +62,15 @@ export function Login({ config }: Props) {
     } = useMutation<unknown, ApiError, LoginBlueprint>((data) => login(data));
 
     useEffect(() => {
+        if (adminCheckRef.current) return;
+
         if (!isAdminExistsFetching && adminExistsData && !adminExistsData.result && !adminExistsError) {
             navigate('/');
+            return;
+        }
+
+        if (!isAdminExistsFetching && adminExistsData) {
+            adminCheckRef.current = true;
         }
     }, [isAdminExistsFetching, adminExistsData, adminExistsError]);
 
@@ -106,7 +114,7 @@ export function Login({ config }: Props) {
 
     const isProcessing = isLoginLoading || isFetching || isAdminExistsFetching;
     const loginDisabled = Boolean(
-        loginError || createProjectError || (projectError && projectError.status !== 404) || adminExistsError,
+        createProjectError || (projectError && projectError.status !== 404) || adminExistsError,
     );
 
     return (
@@ -141,6 +149,7 @@ export function Login({ config }: Props) {
                             />
 
                             {loginDisabled && <UIError title="Cannot login at this moment. Please, try again later." />}
+                            {loginError && <UIError title="Username or email are invalid." />}
 
                             <div className={shared.button}>
                                 <Button disabled={loginDisabled} loading={isProcessing} type="submit">

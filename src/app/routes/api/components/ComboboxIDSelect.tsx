@@ -20,11 +20,9 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
         onDropdownClose: () => combobox.resetSelectedOption(),
     });
 
-    const [forceRequery, setForceRequery] = useState(false);
     const [search, setSearch] = useState('');
     const [searchCriteria, setSearchCriteria] = useState('');
     const [debounced] = useDebouncedValue(search, 500);
-    const [data, setData] = useState<{ label: string; value: string }[]>([]);
 
     const savedDataRef = useRef<ListItem<unknown>[]>();
 
@@ -32,12 +30,9 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
 
     useEffect(() => {
         if (!debounced) {
-            setForceRequery(true);
             setSearchCriteria('');
             return;
         }
-
-        setForceRequery(false);
 
         const newData = [];
         for (const d of data) {
@@ -47,11 +42,6 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
             }
         }
 
-        if (newData.length !== 0) {
-            setData(newData);
-            return;
-        }
-
         setSearchCriteria(debounced);
     }, [debounced]);
 
@@ -59,11 +49,10 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
         ? 'An error occurred while trying to fetch a list of items. Please, try again later.'
         : undefined;
 
-    const { isFetching: areListsFetching } = useQuery(
-        ['paginate_list_items', structureData, searchCriteria, forceRequery, versionName],
+    const { isFetching: areListsFetching, data: listData } = useQuery(
+        ['paginate_list_items', structureData, searchCriteria, searchCriteria, versionName],
         async () => {
             if (!structureData) return;
-            if (!forceRequery) return;
 
             const { result, error } = await paginateListItems({
                 versionName: versionName,
@@ -84,31 +73,22 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
         {
             enabled: structureData && structureData.type === 'list',
             keepPreviousData: true,
-            retry: -1,
-            staleTime: -1,
+            retry: 3,
+            staleTime: Infinity,
             refetchOnWindowFocus: false,
             onError() {
                 setIsError(true);
             },
-            onSuccess(data) {
-                if (data && data.result) {
-                    const d = data.result.map((item) => ({
-                        value: item.itemId,
-                        label: `${item.itemName} (${item.locale})`,
-                    }));
-                    setData(d);
-                }
-            },
         },
     );
 
-    const { isFetching: areMapsFetching } = useQuery(
-        ['paginate_map_items', structureData, searchCriteria, forceRequery],
+    const { isFetching: areMapsFetching, data: mapData } = useQuery(
+        ['paginate_map_items', structureData, searchCriteria, searchCriteria, versionName],
         async () => {
             if (!structureData) return;
-            if (!forceRequery) return;
 
             const { result, error } = await paginateMapItems({
+                versionName: versionName,
                 structureName: structureData.name,
                 page: 1,
                 groups: [],
@@ -125,14 +105,12 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
         },
         {
             enabled: structureData && structureData.type === 'map',
+            keepPreviousData: true,
+            retry: 3,
+            staleTime: Infinity,
+            refetchOnWindowFocus: false,
             onError() {
                 setIsError(true);
-            },
-            onSuccess(data) {
-                if (data && data.result) {
-                    const d = data.result.map((item) => ({ value: item.itemId, label: item.itemName }));
-                    setData(d);
-                }
             },
         },
     );
@@ -142,11 +120,16 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
             setSearchCriteria('');
             setSearch('');
             onSelected('');
-            setForceRequery(true);
         }
     }, [structureData]);
 
     const isFetching = areMapsFetching || areListsFetching;
+    let data: { label: string; value: string }[] = [];
+    if (structureData?.type === 'list' && listData?.result) {
+        data = listData.result.map((item) => ({ value: item.itemId, label: item.itemName }));
+    } else if (structureData?.type === 'map' && mapData?.result) {
+        data = mapData.result.map((item) => ({ value: item.itemId, label: item.itemName }));
+    }
 
     const options = data.map((item) => (
         <Combobox.Option
