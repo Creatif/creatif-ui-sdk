@@ -9,6 +9,7 @@ import type { ApiError } from '@lib/http/apiError';
 import type { TryResult } from '@root/types/shared';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Loading from '@app/components/Loading';
 
 export default function CreateAdmin() {
     const navigate = useNavigate();
@@ -34,6 +35,10 @@ export default function CreateAdmin() {
     return (
         <div className={styles.root}>
             <div className={styles.centerRoot}>
+                <Loading isLoading={isAdminExistsFetching} />
+
+                {adminExistsError && <UIError title="Something went wrong. Please, try again later." />}
+
                 {!isAdminExistsFetching && adminExistsData && !adminExistsData.result && (
                     <div className={styles.root}>
                         <AdminWizard />

@@ -19,6 +19,7 @@ import { getProject } from '@lib/api/project/getProject';
 import type { CreatifApp } from '@root/types/shell/shell';
 import type { Project } from '@root/types/api/project';
 import createProject from '@lib/api/project/createProject';
+import adminExists from '@lib/api/auth/adminExists';
 
 interface Props {
     config: CreatifApp;
@@ -27,6 +28,18 @@ interface Props {
 export function Login({ config }: Props) {
     const [enableProjectExistsCheck, setEnableProjectExistsCheck] = useState(false);
     const [createProjectError, setCreateProjectError] = useState(false);
+    const navigate = useNavigate();
+
+    const {
+        isFetching: isAdminExistsFetching,
+        data: adminExistsData,
+        error: adminExistsError,
+    } = useQuery<unknown, ApiError, TryResult<boolean>>('admin_exists', adminExists, {
+        refetchOnWindowFocus: false,
+        keepPreviousData: false,
+        staleTime: -1,
+        retry: 3,
+    });
 
     const {
         isFetching,
@@ -46,6 +59,12 @@ export function Login({ config }: Props) {
         isSuccess: isLoginSuccess,
         mutate: mutateLogin,
     } = useMutation<unknown, ApiError, LoginBlueprint>((data) => login(data));
+
+    useEffect(() => {
+        if (!isAdminExistsFetching && adminExistsData && !adminExistsData.result && !adminExistsError) {
+            navigate('/');
+        }
+    }, [isAdminExistsFetching, adminExistsData, adminExistsError]);
 
     useEffect(() => {
         if (isLoginSuccess) {
@@ -85,7 +104,10 @@ export function Login({ config }: Props) {
         formState: { errors },
     } = methods;
 
-    const isProcessing = isLoginLoading || isFetching;
+    const isProcessing = isLoginLoading || isFetching || isAdminExistsFetching;
+    const loginDisabled = Boolean(
+        loginError || createProjectError || (projectError && projectError.status !== 404) || adminExistsError,
+    );
 
     return (
         <div className={styles.root}>
@@ -101,6 +123,7 @@ export function Login({ config }: Props) {
                                 });
                             })}>
                             <TextInput
+                                disabled={loginDisabled}
                                 error={getFirstError(errors, 'email')}
                                 {...register('email', {
                                     required: 'Email is required',
@@ -108,6 +131,7 @@ export function Login({ config }: Props) {
                                 label="Email"
                             />
                             <TextInput
+                                disabled={loginDisabled}
                                 type="password"
                                 error={getFirstError(errors, 'password')}
                                 {...register('password', {
@@ -116,12 +140,10 @@ export function Login({ config }: Props) {
                                 label="Password"
                             />
 
-                            {(loginError || createProjectError || (projectError && projectError.status !== 404)) && (
-                                <UIError title="Cannot login at this moment" />
-                            )}
+                            {loginDisabled && <UIError title="Cannot login at this moment. Please, try again later." />}
 
                             <div className={shared.button}>
-                                <Button loading={isProcessing} type="submit">
+                                <Button disabled={loginDisabled} loading={isProcessing} type="submit">
                                     Login
                                 </Button>
                             </div>
