@@ -3,7 +3,7 @@
 import styles from '@app/routes/api/css/apiBase.module.css';
 import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
 import { StructureSelect } from '@app/routes/api/components/StructureSelect';
-import { Loader, Checkbox, Button } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
@@ -25,8 +25,6 @@ export function GetMapItemByName({ versionName }: Props) {
     const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
-
     let errorMessage = '';
     if (isError && isError === 'notFound') {
         errorMessage = 'Item is not found';
@@ -34,10 +32,9 @@ export function GetMapItemByName({ versionName }: Props) {
         errorMessage = 'Something went wrong. Please try again later.';
     }
 
-    const { isFetching, data } = useQuery(
-        ['get_map_item_by_name', structureData, id, selectedLocale, submitQueryEnabled, isValueOnly, versionName],
+    const { data } = useQuery(
+        ['get_map_item_by_name', structureData, id, selectedLocale, isValueOnly, versionName],
         async () => {
-            if (!submitQueryEnabled) return;
             if (!id || !structureData) return;
 
             if (structureData && id) {
@@ -59,7 +56,6 @@ export function GetMapItemByName({ versionName }: Props) {
             }
         },
         {
-            enabled: Boolean(id && structureData && submitQueryEnabled),
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: -1,
@@ -70,12 +66,6 @@ export function GetMapItemByName({ versionName }: Props) {
                 } else {
                     setIsError('generalError');
                 }
-
-                setSubmitQueryEnabled(false);
-            },
-            onSuccess() {
-                setIsError(undefined);
-                setSubmitQueryEnabled(false);
             },
         },
     );
@@ -96,9 +86,13 @@ export function GetMapItemByName({ versionName }: Props) {
                     onSubmit={(env) => {
                         env.preventDefault();
                         env.stopPropagation();
-                        setSubmitQueryEnabled(true);
                     }}>
-                    <ComboboxIDSelect toSelect="name" structureData={structureData} onSelected={(id) => setId(id)} />
+                    <ComboboxIDSelect
+                        versionName={versionName}
+                        toSelect="name"
+                        structureData={structureData}
+                        onSelected={(id) => setId(id)}
+                    />
                     <LocaleSelect onSelected={setSelectedLocale} />
                     <StructureSelect
                         structureToShow="map"
@@ -113,17 +107,10 @@ export function GetMapItemByName({ versionName }: Props) {
                         checked={isValueOnly}
                         onChange={(env) => {
                             setIsValueOnly(env.target.checked);
-                            setSubmitQueryEnabled(true);
                         }}
                         label="Value only"
                     />
-
-                    <Button type="submit" className={styles.findButton} variant="outline">
-                        Find
-                    </Button>
                 </form>
-
-                {isFetching && <Loader size={20} />}
             </div>
 
             {id && structureData && data && (

@@ -25,6 +25,7 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
     const [debounced] = useDebouncedValue(search, 500);
 
     const savedDataRef = useRef<ListItem<unknown>[]>();
+    const initialFetchRef = useRef(false);
 
     const [isError, setIsError] = useState(false);
 
@@ -64,6 +65,8 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
                 search: searchCriteria,
                 locales: [],
             });
+
+            initialFetchRef.current = true;
 
             if (error) throw error;
 
@@ -138,7 +141,13 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
                 if (!toSelect) onSelected(item.value);
                 if (toSelect === 'name' && savedDataRef.current) {
                     const found = savedDataRef.current.find((t) => t.itemId === item.value);
-                    if (found) onSelected(found.itemName);
+
+                    if (found) {
+                        onSelected(found.itemName);
+                        return;
+                    }
+
+                    onSelected(item.label);
                 }
 
                 combobox.closeDropdown();
@@ -159,7 +168,7 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
             <Combobox.Target>
                 <TextInput
                     error={error}
-                    leftSection={isFetching && <Loader size={14} />}
+                    leftSection={isFetching && !initialFetchRef.current && <Loader size={14} />}
                     rightSection={
                         <IconX
                             onClick={() => {
@@ -182,7 +191,13 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
                 />
             </Combobox.Target>
 
-            <Combobox.Dropdown>
+            <Combobox.Dropdown
+                styles={{
+                    dropdown: {
+                        maxHeight: '30vh',
+                        overflowY: 'scroll',
+                    },
+                }}>
                 <Combobox.Options>
                     {options.length === 0 ? <Combobox.Empty>Nothing found</Combobox.Empty> : options}
                 </Combobox.Options>

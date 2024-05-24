@@ -24,7 +24,7 @@ export function GetListItemsByName({ versionName }: Props) {
     const [isError, setIsError] = useState(false);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const { isFetching, data } = useQuery(
+    const { data } = useQuery(
         ['get_list_items_by_name', structureData, id, selectedLocale, isValueOnly, versionName],
         async () => {
             if (!id || !structureData) return;
@@ -82,7 +82,6 @@ export function GetListItemsByName({ versionName }: Props) {
                         toSelect="name"
                         structureData={structureData}
                         onSelected={(id) => {
-                            console.log(id);
                             setId(id);
                         }}
                     />
@@ -103,8 +102,6 @@ export function GetListItemsByName({ versionName }: Props) {
                         }}
                         label="Value only"
                     />
-
-                    {isFetching && <Loader />}
                 </form>
             </div>
 
