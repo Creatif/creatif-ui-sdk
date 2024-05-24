@@ -51,6 +51,7 @@ export function GetMapItemByName({ versionName }: Props) {
                 if (error) throw error;
 
                 if (result) {
+                    setIsError(undefined);
                     return result;
                 }
             }
@@ -91,7 +92,9 @@ export function GetMapItemByName({ versionName }: Props) {
                         versionName={versionName}
                         toSelect="name"
                         structureData={structureData}
-                        onSelected={(id) => setId(id)}
+                        onSelected={(id) => {
+                            setId(id);
+                        }}
                     />
                     <LocaleSelect onSelected={setSelectedLocale} />
                     <StructureSelect

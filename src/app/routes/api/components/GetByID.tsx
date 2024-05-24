@@ -25,7 +25,7 @@ export function GetByID({ versionName }: Props) {
 
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const { isFetching, data, error } = useQuery<ListItem<unknown> | MapItem<unknown> | undefined, ApiError>(
+    const { data, error } = useQuery<ListItem<unknown> | MapItem<unknown> | undefined, ApiError>(
         ['get_item_by_id', structureData, id, isValueOnly, versionName],
         async () => {
             if (!id || !structureData) return;

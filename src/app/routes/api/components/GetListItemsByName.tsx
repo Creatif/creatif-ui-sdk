@@ -43,6 +43,7 @@ export function GetListItemsByName({ versionName }: Props) {
                 if (error) throw error;
 
                 if (result) {
+                    setIsError(false);
                     return result;
                 }
             }

@@ -3,7 +3,7 @@
 import styles from '@app/routes/api/css/apiBase.module.css';
 import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
 import { StructureSelect } from '@app/routes/api/components/StructureSelect';
-import { Checkbox, Button } from '@mantine/core';
+import { Checkbox, Button, TextInput } from '@mantine/core';
 import { useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { useQuery } from 'react-query';
@@ -26,6 +26,7 @@ export function PaginateLists({ versionName }: Props) {
     const [selectedDirection, setSelectedDirection] = useState<OrderDirection>('desc');
     const [sortField, setSortField] = useState<OrderBy>('created_at');
     const [groups, setGroups] = useState<string[]>([]);
+    const [search, setSearch] = useState('');
 
     const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
@@ -40,7 +41,15 @@ export function PaginateLists({ versionName }: Props) {
     }
 
     const { isFetching, data } = useQuery(
-        ['paginate_public_api_lists', structureData, selectedLocale, submitQueryEnabled, isValueOnly, versionName],
+        [
+            'paginate_public_api_lists',
+            structureData,
+            selectedLocale,
+            submitQueryEnabled,
+            isValueOnly,
+            versionName,
+            search,
+        ],
         async () => {
             if (!submitQueryEnabled) return;
             if (!structureData) return;
@@ -50,7 +59,7 @@ export function PaginateLists({ versionName }: Props) {
                     versionName: versionName,
                     structureName: structureData.name,
                     page: 1,
-                    search: '',
+                    search: search,
                     orderBy: sortField,
                     orderDirection: selectedDirection,
                     locales: [selectedLocale],
@@ -101,6 +110,13 @@ export function PaginateLists({ versionName }: Props) {
                             structureToShow="list"
                             onSelected={(name, structureType) => {
                                 setStructureData({ name: name, type: structureType });
+                            }}
+                        />
+                        <TextInput
+                            description="Search"
+                            placeholder="Search"
+                            onChange={(e) => {
+                                setSearch(e.target.value);
                             }}
                         />
                         <LocaleSelect onSelected={setSelectedLocale} />

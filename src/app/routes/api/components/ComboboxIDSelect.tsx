@@ -139,12 +139,14 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
             onClick={() => {
                 setSearch(item.label);
                 if (!toSelect) onSelected(item.value);
-                if (toSelect === 'name' && savedDataRef.current) {
-                    const found = savedDataRef.current.find((t) => t.itemId === item.value);
+                if (toSelect === 'name') {
+                    if (savedDataRef.current) {
+                        const found = savedDataRef.current.find((t) => t.itemId === item.value);
 
-                    if (found) {
-                        onSelected(found.itemName);
-                        return;
+                        if (found) {
+                            onSelected(found.itemName);
+                            return;
+                        }
                     }
 
                     onSelected(item.label);
