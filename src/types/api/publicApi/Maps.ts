@@ -43,4 +43,5 @@ export interface PaginateMapItems {
     orderDirection: OrderDirection;
     locales: string[];
     groups: string[];
+    options?: Options;
 }

@@ -6,7 +6,7 @@ import { parseQuery } from '@lib/publicApi/app/parseQuery';
 import type { GetListItemByID, GetListItemsByName, PaginateListItems } from '@root/types/api/publicApi/Lists';
 import Copy from '@app/components/Copy';
 import { Runtime } from '@lib/publicApi/lib/runtime';
-import type { GetMapItemByID, GetMapItemByName } from '@root/types/api/publicApi/Maps';
+import type { GetMapItemByID, GetMapItemByName, PaginateMapItems } from '@root/types/api/publicApi/Maps';
 import { queryConstructor } from '@lib/publicApi/lib/queryConstructor';
 
 function constructUrl(
@@ -46,13 +46,25 @@ function constructUrl(
         )}`;
     }
 
+    if (type === 'paginateMaps') {
+        const b = blueprint as PaginateMapItems;
+        return `${Runtime.instance.baseUrl()}${Routes.GET_MAP_ITEMS}/${b.structureName}${queryConstructor(
+            1,
+            b.groups,
+            b.orderBy,
+            b.orderDirection,
+            b.search,
+            b.locales,
+        )}`;
+    }
+
     throw new Error(`Cannot construct URL with type ${type} and blueprint ${JSON.stringify(blueprint)}`);
 }
 
 interface Props {
     type: string;
     versionName: string;
-    blueprint: GetListItemByID | GetListItemsByName | GetMapItemByName | PaginateListItems;
+    blueprint: GetListItemByID | GetListItemsByName | GetMapItemByName | PaginateListItems | PaginateMapItems;
 }
 
 export function Curl({ blueprint, type, versionName }: Props) {
@@ -73,7 +85,7 @@ export function Curl({ blueprint, type, versionName }: Props) {
                     }}>
                     curl
                 </span>{' '}
-                {versionHeader} "{url}"
+                {versionHeader} &quot;{url}&quot;
             </p>
 
             <div className={styles.curlCopyIcon}>

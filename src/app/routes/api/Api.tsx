@@ -11,6 +11,7 @@ import { GetListItemsByName } from '@app/routes/api/components/GetListItemsByNam
 import { GetMapItemByName } from '@app/routes/api/components/GetMapItemByName';
 import { PaginateLists } from '@app/routes/api/components/PaginateLists';
 import { useSearchParams } from 'react-router-dom';
+import { PaginateMaps } from '@app/routes/api/components/PaginateMaps';
 
 const httpCalls = [
     {
@@ -28,6 +29,10 @@ const httpCalls = [
     {
         title: 'Paginate lists',
         id: 'paginateLists',
+    },
+    {
+        title: 'Paginate maps',
+        id: 'paginateMaps',
     },
 ];
 
@@ -72,6 +77,12 @@ export default function Api() {
                 {controlledAccordionValue === item.id && item.id === 'paginateLists' && (
                     <Accordion.Panel>
                         <PaginateLists versionName={versionId} />
+                    </Accordion.Panel>
+                )}
+
+                {controlledAccordionValue === item.id && item.id === 'paginateMaps' && (
+                    <Accordion.Panel>
+                        <PaginateMaps versionName={versionId} />
                     </Accordion.Panel>
                 )}
             </Accordion.Item>

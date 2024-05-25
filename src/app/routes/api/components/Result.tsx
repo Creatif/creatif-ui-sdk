@@ -3,14 +3,20 @@ import { Tabs } from '@mantine/core';
 // @ts-ignore
 import { Curl } from '@app/routes/api/components/Curl';
 import type { GetListItemByID, GetListItemsByName, PaginateListItems } from '@root/types/api/publicApi/Lists';
-import type { GetMapItemByID } from '@root/types/api/publicApi/Maps';
+import type { GetMapItemByID, PaginateMapItems } from '@root/types/api/publicApi/Maps';
 import JSONPretty from 'react-json-pretty';
 
 interface Props {
     data: object;
     versionName: string;
-    curlBlueprint: GetListItemByID | GetListItemsByName | GetMapItemByID | PaginateListItems;
-    curlType: 'getListItemsByName' | 'getListItemById' | 'getMapItemById' | 'getMapItemByName' | 'paginateLists';
+    curlBlueprint: GetListItemByID | GetListItemsByName | GetMapItemByID | PaginateListItems | PaginateMapItems;
+    curlType:
+        | 'getListItemsByName'
+        | 'getListItemById'
+        | 'getMapItemById'
+        | 'getMapItemByName'
+        | 'paginateLists'
+        | 'paginateMaps';
 }
 export function Result({ data, curlBlueprint, curlType, versionName }: Props) {
     return (
