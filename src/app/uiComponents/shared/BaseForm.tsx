@@ -106,7 +106,7 @@ export default function BaseForm<T extends FieldValues>({
                 childId: item.childId,
                 parentStructureId: item.parentStructureId,
                 childStructureId: item.childStructureId,
-                structureType: structureType,
+                structureType: item.parentType,
                 structureName: item.parentId,
                 variableId: item.parentId,
             })),

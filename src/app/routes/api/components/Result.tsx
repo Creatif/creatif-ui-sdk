@@ -1,30 +1,18 @@
 import { Tabs } from '@mantine/core';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import styles from '@app/routes/api/css/apiBase.module.css';
-import JSON from '@app/uiComponents/external/Json';
 import { Curl } from '@app/routes/api/components/Curl';
-import type { GetListItemByID, GetListItemsByName } from '@root/types/api/publicApi/Lists';
+import type { GetListItemByID, GetListItemsByName, PaginateListItems } from '@root/types/api/publicApi/Lists';
 import type { GetMapItemByID } from '@root/types/api/publicApi/Maps';
-import { useEffect, useState } from 'react';
+import JSONPretty from 'react-json-pretty';
 
 interface Props {
     data: object;
-    curlBlueprint: GetListItemByID | GetListItemsByName | GetMapItemByID;
-    curlType: 'getListItemsByName' | 'getListItemById' | 'getMapItemById' | 'getMapItemByName';
+    versionName: string;
+    curlBlueprint: GetListItemByID | GetListItemsByName | GetMapItemByID | PaginateListItems;
+    curlType: 'getListItemsByName' | 'getListItemById' | 'getMapItemById' | 'getMapItemByName' | 'paginateLists';
 }
-export function Result({ data, curlBlueprint, curlType }: Props) {
-    const [reRenderJson, setReRenderJson] = useState(true);
-
-    useEffect(() => {
-        if (data) {
-            setReRenderJson(false);
-            setTimeout(() => {
-                setReRenderJson(true);
-            }, 50);
-        }
-    }, [data]);
-
+export function Result({ data, curlBlueprint, curlType, versionName }: Props) {
     return (
         <Tabs variant="outline" defaultValue="rawResponse">
             <Tabs.List>
@@ -33,15 +21,24 @@ export function Result({ data, curlBlueprint, curlType }: Props) {
             </Tabs.List>
 
             <Tabs.Panel value="rawResponse">
-                {reRenderJson && (
-                    <div className={styles.jsonData}>
-                        <JSON value={data} />
-                    </div>
-                )}
+                <JSONPretty
+                    id="json-pretty"
+                    data={data}
+                    style={{
+                        color: 'var(--mantine-color-gray-7)',
+                        fontWeight: '500',
+                    }}
+                    space={6}
+                    mainStyle="padding: 1rem"
+                    keyStyle="display: inline-block; margin-bottom: 0.5rem; color: var(--mantine-color-gray-7); font-weight: normal"
+                    valueStyle="color: var(--mantine-color-blue-7) !important; font-weight: normal"
+                    booleanStyle="color: var(--mantine-color-red-7) !important; font-weight: normal"
+                    stringStyle="color: var(--mantine-color-green-8) !important; font-weight: normal"
+                />
             </Tabs.Panel>
 
             <Tabs.Panel value="curl">
-                <Curl type={curlType} blueprint={curlBlueprint} />
+                <Curl type={curlType} blueprint={curlBlueprint} versionName={versionName} />
             </Tabs.Panel>
         </Tabs>
     );

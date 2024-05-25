@@ -19,6 +19,7 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
                 value: blueprint.values.value ? JSON.stringify(blueprint.values.value) : null,
                 metadata: blueprint.values.metadata ? JSON.stringify(blueprint.values.metadata) : null,
             },
+            references: blueprint.references,
         },
     );
 }

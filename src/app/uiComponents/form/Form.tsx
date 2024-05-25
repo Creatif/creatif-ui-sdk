@@ -228,6 +228,7 @@ export default function Form<T extends FieldValues, Value = unknown, Metadata = 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
 
                     const isReferenceStoreLocked = referenceStore.getState().locked;
+
                     removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
                     let fields = ['name', 'value', 'metadata'];

@@ -120,6 +120,7 @@ export function GetMapItemByName({ versionName }: Props) {
                 <div className={styles.viewSection}>
                     <Result
                         data={data}
+                        versionName={versionName}
                         curlBlueprint={{
                             name: id,
                             locale: selectedLocale,

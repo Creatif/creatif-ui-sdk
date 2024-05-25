@@ -1,3 +1,5 @@
+import type { Options } from '@root/types/api/publicApi/Shared';
+
 export function queryConstructor(
     page = 1,
     groups: string[] = [],
@@ -5,6 +7,7 @@ export function queryConstructor(
     direction = 'desc',
     search = '',
     locales: string[] = [],
+    options?: Options,
 ) {
     let base = `?page=${page}&orderBy=${orderBy}&direction=${direction}&search=${search}`;
 
@@ -24,6 +27,12 @@ export function queryConstructor(
         }
 
         base += '&locales=' + newLocales.join(',');
+    }
+
+    if (options) {
+        const valueOnly = options.valueOnly;
+
+        base += `&options=valueOnly:${valueOnly ? 'true' : 'false'}`;
     }
 
     return base;

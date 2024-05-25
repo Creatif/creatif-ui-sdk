@@ -102,6 +102,7 @@ export function GetByID({ versionName }: Props) {
                 <div className={styles.viewSection}>
                     <Result
                         data={data}
+                        versionName={versionName}
                         curlBlueprint={{
                             id: id,
                             options: {

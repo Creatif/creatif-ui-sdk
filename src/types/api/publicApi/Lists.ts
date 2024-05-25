@@ -43,4 +43,6 @@ export interface PaginateListItems {
     orderDirection: OrderDirection;
     locales: string[];
     groups: string[];
+
+    options?: Options;
 }

@@ -4,7 +4,7 @@ import styles from '@app/routes/api/css/apiBase.module.css';
 import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
 import { StructureSelect } from '@app/routes/api/components/StructureSelect';
 import { Checkbox, Button, TextInput } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { useQuery } from 'react-query';
 import UIError from '@app/components/UIError';
@@ -33,6 +33,8 @@ export function PaginateLists({ versionName }: Props) {
 
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
 
+    console.log(submitQueryEnabled);
+
     let errorMessage = '';
     if (isError && isError === 'notFound') {
         errorMessage = 'Item is not found';
@@ -51,7 +53,6 @@ export function PaginateLists({ versionName }: Props) {
             search,
         ],
         async () => {
-            if (!submitQueryEnabled) return;
             if (!structureData) return;
 
             if (structureData) {
@@ -64,6 +65,9 @@ export function PaginateLists({ versionName }: Props) {
                     orderDirection: selectedDirection,
                     locales: [selectedLocale],
                     groups: groups,
+                    options: {
+                        valueOnly: isValueOnly,
+                    },
                 });
 
                 if (error) throw error;
@@ -74,10 +78,10 @@ export function PaginateLists({ versionName }: Props) {
             }
         },
         {
-            enabled: Boolean(structureData && submitQueryEnabled),
+            enabled: submitQueryEnabled,
             refetchOnWindowFocus: false,
             keepPreviousData: true,
-            staleTime: -1,
+            staleTime: Infinity,
             retry: -1,
             onError(error: CreatifError) {
                 if (error.status === 404) {
@@ -86,10 +90,6 @@ export function PaginateLists({ versionName }: Props) {
                     setIsError('generalError');
                 }
 
-                setSubmitQueryEnabled(false);
-            },
-            onSuccess() {
-                setIsError(undefined);
                 setSubmitQueryEnabled(false);
             },
         },
@@ -129,7 +129,6 @@ export function PaginateLists({ versionName }: Props) {
                             checked={isValueOnly}
                             onChange={(env) => {
                                 setIsValueOnly(env.target.checked);
-                                setSubmitQueryEnabled(true);
                             }}
                             label="Value only"
                         />
@@ -154,15 +153,20 @@ export function PaginateLists({ versionName }: Props) {
                 <div className={styles.viewSection}>
                     <Result
                         data={data}
+                        versionName={versionName}
                         curlBlueprint={{
-                            name: structureData.name,
-                            locale: selectedLocale,
+                            page: 1,
                             structureName: structureData.name,
+                            locales: [selectedLocale],
+                            orderDirection: selectedDirection,
+                            orderBy: sortField,
+                            groups: groups,
+                            search: search,
                             options: {
                                 valueOnly: isValueOnly,
                             },
                         }}
-                        curlType="getMapItemByName"
+                        curlType="paginateLists"
                     />
                 </div>
             )}

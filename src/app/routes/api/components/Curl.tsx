@@ -3,12 +3,16 @@ import { Routes } from '@lib/publicApi/lib/http/routes';
 // @ts-ignore
 import styles from '@app/routes/api/css/apiBase.module.css';
 import { parseQuery } from '@lib/publicApi/app/parseQuery';
-import type { GetListItemByID, GetListItemsByName } from '@root/types/api/publicApi/Lists';
+import type { GetListItemByID, GetListItemsByName, PaginateListItems } from '@root/types/api/publicApi/Lists';
 import Copy from '@app/components/Copy';
 import { Runtime } from '@lib/publicApi/lib/runtime';
 import type { GetMapItemByID, GetMapItemByName } from '@root/types/api/publicApi/Maps';
+import { queryConstructor } from '@lib/publicApi/lib/queryConstructor';
 
-function constructUrl(type: string, blueprint: GetListItemByID | GetListItemsByName | GetMapItemByID) {
+function constructUrl(
+    type: string,
+    blueprint: GetListItemByID | GetListItemsByName | GetMapItemByID | PaginateListItems,
+) {
     if (type === 'getListItemById' || type === 'getMapItemById') {
         const b = blueprint as GetListItemByID;
         return `${Runtime.instance.baseUrl()}${Routes.GET_LIST_ITEM_BY_ID}/${b.id}${parseQuery(b.options, undefined)}`;
@@ -30,18 +34,35 @@ function constructUrl(type: string, blueprint: GetListItemByID | GetListItemsByN
         )}`;
     }
 
+    if (type === 'paginateLists') {
+        const b = blueprint as PaginateListItems;
+        return `${Runtime.instance.baseUrl()}${Routes.GET_LIST_ITEMS}/${b.structureName}${queryConstructor(
+            1,
+            b.groups,
+            b.orderBy,
+            b.orderDirection,
+            b.search,
+            b.locales,
+        )}`;
+    }
+
     throw new Error(`Cannot construct URL with type ${type} and blueprint ${JSON.stringify(blueprint)}`);
 }
 
 interface Props {
     type: string;
-    blueprint: GetListItemByID | GetListItemsByName | GetMapItemByName;
+    versionName: string;
+    blueprint: GetListItemByID | GetListItemsByName | GetMapItemByName | PaginateListItems;
 }
 
-export function Curl({ blueprint, type }: Props) {
+export function Curl({ blueprint, type, versionName }: Props) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const url = constructUrl(type, blueprint);
+    let versionHeader = '';
+    if (versionName) {
+        versionHeader = `-H "Creatif-Version: ${versionName}"`;
+    }
 
     return (
         <div className={styles.curl}>
@@ -52,13 +73,13 @@ export function Curl({ blueprint, type }: Props) {
                     }}>
                     curl
                 </span>{' '}
-                {url}
+                {versionHeader} "{url}"
             </p>
 
             <div className={styles.curlCopyIcon}>
                 <Copy
                     onClick={() => {
-                        navigator.clipboard.writeText(`curl ${url}`);
+                        navigator.clipboard.writeText(`curl ${versionHeader} ${url}`);
                     }}
                 />
             </div>

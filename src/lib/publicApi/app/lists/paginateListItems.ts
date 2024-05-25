@@ -15,6 +15,7 @@ export async function paginateListItems<Value>(blueprint: PaginateListItems): Pr
             blueprint.orderDirection,
             blueprint.search,
             blueprint.locales,
+            blueprint.options,
         )}`,
         null,
         {
