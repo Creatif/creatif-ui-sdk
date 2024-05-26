@@ -13,6 +13,7 @@ import type {
     UseFormUnregister,
     UseFormWatch,
     UseFormStateReturn,
+    UseFormRegister,
 } from 'react-hook-form';
 import { Button, Group } from '@mantine/core';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
@@ -58,6 +59,7 @@ interface Props<T extends FieldValues> {
             setError: UseFormSetError<T>;
             reset: UseFormReset<T>;
             resetField: UseFormResetField<T>;
+            register: UseFormRegister<T>;
             unregister: UseFormUnregister<T>;
             watch: UseFormWatch<T>;
             trigger: UseFormTrigger<T>;
@@ -128,6 +130,7 @@ export default function BaseForm<T extends FieldValues>({
         setFocus,
         reset,
         resetField,
+        register,
         unregister,
         watch,
         trigger,
@@ -154,6 +157,7 @@ export default function BaseForm<T extends FieldValues>({
                             setFocus: setFocus,
                             setError: setError,
                             reset: reset,
+                            register: register,
                             resetField: resetField,
                             unregister: unregister,
                             watch: watch,

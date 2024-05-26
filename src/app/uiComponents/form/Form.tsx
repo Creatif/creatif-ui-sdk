@@ -23,6 +23,7 @@ import type {
     UseFormUnregister,
     UseFormWatch,
     UseFormStateReturn,
+    UseFormRegister,
 } from 'react-hook-form';
 import BaseForm, { type ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
@@ -57,6 +58,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
             setError: UseFormSetError<T>;
             reset: UseFormReset<T>;
             resetField: UseFormResetField<T>;
+            register: UseFormRegister<T>;
             unregister: UseFormUnregister<T>;
             watch: UseFormWatch<T>;
             trigger: UseFormTrigger<T>;
