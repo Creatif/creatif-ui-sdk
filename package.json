@@ -1,7 +1,7 @@
 {
-    "name": "creatif-api-sdk",
+    "name": "creatif-ui-sdk",
     "version": "0.0.1",
-    "description": "API SDK for Creatif",
+    "description": "UI SDK to create Creatif CMS",
     "license": "MIT",
     "type": "module",
     "repository": {
@@ -9,11 +9,11 @@
     },
     "main": "build/index.js",
     "keywords": [
-        "timer",
-        "interval"
+        "cms",
+        "creatif"
     ],
     "author": {
-        "email": "marioskrlec222@gmail.com",
+        "email": "marioskrlec222@prton.me",
         "name": "Mario Škrlec"
     },
     "scripts": {
@@ -25,9 +25,7 @@
         "preview": "vite preview"
     },
     "files": [
-        "build",
-        "index.d.ts",
-        "types.d.ts"
+        "build"
     ],
     "devDependencies": {
         "@babel/preset-env": "7.22.7",
@@ -64,7 +62,6 @@
         "@mantine/hooks": "^7.2.2",
         "@mantine/notifications": "^7.2.2",
         "@tabler/icons-react": "^2.42.0",
-        "@zerodevx/svelte-json-view": "^1.0.9",
         "classnames": "^2.3.2",
         "clsx": "^2.0.0",
         "date-fns": "^2.30.0",
