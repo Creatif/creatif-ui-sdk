@@ -51,6 +51,12 @@
     gap: 0.3rem;
 }
 
+.actionIconOverride {
+    background-color: var(--mantine-color-gray-0);
+    border: 1px solid var(--mantine-color-gray-2);
+    transition: background-color 0.4s;
+}
+
 .actionIconOverrideDisabled {
     background-color: var(--mantine-color-gray-0);
     border: 1px solid var(--mantine-color-gray-2);

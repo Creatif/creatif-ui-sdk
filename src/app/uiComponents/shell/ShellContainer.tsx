@@ -35,7 +35,7 @@ export default function ShellContainer({ options }: Props) {
 
     return (
         <>
-            {runtimeCreated && <ShellApp options={options} />}
+            {runtimeCreated && <ShellApp config={options} />}
             {runtimeFailed && <CenteredError title="Failed to initiate project. Please, try again later" />}
         </>
     );

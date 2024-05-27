@@ -6,16 +6,30 @@
 }
 
 .header {
-    color: var(--mantine-color-gray-8);
     line-height: 1.5rem;
     border-bottom: 1px solid var(--mantine-color-gray-2);
 
     padding: 0 0 0.5rem 0;
 }
 
+.light {
+    color: var(--mantine-color-gray-8);
+}
+
+.lightRed {
+    color: var(--mantine-color-red-7);
+}
+
+.dark {
+    color: var(--mantine-color-gray-0);
+}
+
+.darkRed {
+    color: var(--mantine-color-gray-0);
+}
+
 .message {
     display: flex;
     align-items: center;
     gap: 1rem;
-    color: var(--mantine-color-red-7);
 }

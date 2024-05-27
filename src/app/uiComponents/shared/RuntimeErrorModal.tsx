@@ -38,7 +38,7 @@ export default function RuntimeErrorModal({ open, error }: Props) {
                 closeOnEscape={false}
                 onClose={() => {}}
                 centered>
-                <p
+                <div
                     style={{
                         margin: '1rem 0 1rem 0',
                         padding: '1rem',
@@ -46,7 +46,7 @@ export default function RuntimeErrorModal({ open, error }: Props) {
                         letterSpacing: '0.5px',
                     }}>
                     {error && error.message}
-                </p>
+                </div>
 
                 <p
                     style={{

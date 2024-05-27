@@ -29,6 +29,11 @@ import { EditLocaleWrapperModal } from '@app/routes/show/modals/EditLocaleWrappe
 import { EditGroupsWrapperModal } from '@app/routes/show/modals/EditGroupsWrapperModal';
 import { DeleteItemWrapperModal } from '@app/routes/show/modals/DeleteItemWrapperModal';
 import { Runtime } from '@app/systems/runtime/Runtime';
+import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
+
+interface Props {
+    validationMessages: string[] | null;
+}
 
 function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
@@ -77,7 +82,7 @@ function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boo
     );
 }
 
-export default function Item() {
+export default function Item({ validationMessages }: Props) {
     const { structureId, itemId, structureType } = useParams();
     const { isFetching, data } = useQueryVariable(
         structureId,
@@ -248,6 +253,8 @@ export default function Item() {
                     onClose={() => setIsEditGroupsOpen(false)}
                 />
             )}
+
+            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
         </>
     );
 }

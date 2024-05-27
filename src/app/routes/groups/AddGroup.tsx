@@ -18,8 +18,14 @@ import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
 import type { InternalGroup } from '@app/routes/groups/components/MultiSelectNoDropdown';
 import { MultiSelectNoDropdown } from '@app/routes/groups/components/MultiSelectNoDropdown';
+import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
+import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
 
-export default function AddGroup() {
+interface Props {
+    validationMessages: string[] | null;
+}
+
+export default function AddGroup({ validationMessages }: Props) {
     const methods = useForm<{ groups: InternalGroup[] }>({
         defaultValues: {
             groups: [],
@@ -97,6 +103,8 @@ export default function AddGroup() {
                     </FormProvider>
                 )}
             </div>
+
+            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
         </div>
     );
 }

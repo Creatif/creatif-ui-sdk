@@ -12,6 +12,7 @@ import { GetMapItemByName } from '@app/routes/api/components/GetMapItemByName';
 import { PaginateLists } from '@app/routes/api/components/PaginateLists';
 import { useSearchParams } from 'react-router-dom';
 import { PaginateMaps } from '@app/routes/api/components/PaginateMaps';
+import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
 
 const httpCalls = [
     {
@@ -36,7 +37,11 @@ const httpCalls = [
     },
 ];
 
-export default function Api() {
+interface Props {
+    validationMessages: string[] | null;
+}
+
+export default function Api({ validationMessages }: Props) {
     const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
     const [params, setParams] = useSearchParams();
     const versionId = params.get('version');
@@ -109,6 +114,8 @@ export default function Api() {
                     {items}
                 </Accordion>
             )}
+
+            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
         </div>
     );
 }

@@ -32,6 +32,11 @@ import gridStyles from '@app/uiComponents/lists/css/listGrid.module.css';
 import { Item as GridItem } from '@app/uiComponents/lists/gridItem/Item';
 import classNames from 'classnames';
 import type { ApiError } from '@lib/http/apiError';
+import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
+
+interface Props {
+    validationMessages: string[] | null;
+}
 
 export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
     page: number;
@@ -63,7 +68,7 @@ function resolveListing<Value, Metadata>(
     return [];
 }
 
-export default function Listing<Value, Metadata>() {
+export default function Listing<Value, Metadata>({ validationMessages }: Props) {
     const { queryParams, setParam } = useSearchQuery();
     const { structureId, structureType } = useParams();
     const structureItem = getProjectMetadataStore()
@@ -364,6 +369,8 @@ export default function Listing<Value, Metadata>() {
                     }}
                 />
             )}
+
+            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
         </>
     );
 }
