@@ -24,6 +24,7 @@ export default function TruncateModal({ open, onClose, onConfirm, structureName 
                     },
                 }}
                 opened={Boolean(open)}
+                size="lg"
                 title={<IconAlertCircle color="var(--mantine-color-red-5)" size={24} />}
                 onClose={onClose}
                 centered>
@@ -73,7 +74,7 @@ export default function TruncateModal({ open, onClose, onConfirm, structureName 
                         }}
                         onClick={() => onConfirm()}
                         color="red">
-                        Delete
+                        Truncate
                     </Button>
                 </div>
             </Modal>

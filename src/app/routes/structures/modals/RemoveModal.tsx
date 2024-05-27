@@ -23,12 +23,13 @@ export default function RemoveModal({ open, onClose, onConfirm, structureName }:
                         backgroundColor: 'var(--mantine-color-red-1)',
                     },
                 }}
+                size="lg"
                 opened={Boolean(open)}
                 title={<IconAlertCircle color="var(--mantine-color-red-5)" size={24} />}
                 onClose={onClose}
                 centered>
                 <h1 className={styles.header}>
-                    You are about to truncate <span className={styles.boldHighlight}>{structureName}</span>
+                    You are about to delete <span className={styles.boldHighlight}>{structureName}</span>
                 </h1>
                 <p className={styles.text}>
                     Remove this structure will remove all items in it <span className={styles.boldHighlight}>and</span>

@@ -9,22 +9,22 @@ import { IconCheck, IconCircleX, IconEraser, IconTrash } from '@tabler/icons-rea
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { StructureType } from '@root/types/shell/shell';
 import { ActionIcon, Tooltip } from '@mantine/core';
-import DeleteModal from '@app/uiComponents/shared/modals/DeleteModal';
 import TruncateModal from '@app/routes/structures/modals/TruncateModal';
 import { useMutation } from 'react-query';
-import { ApiError } from '@lib/http/apiError';
-import { publish } from '@lib/api/publishing/publish';
+import type { ApiError } from '@lib/http/apiError';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { truncateStructure } from '@lib/api/structures/truncateStructure';
 import useNotification from '@app/systems/notifications/useNotification';
 import RemoveModal from '@app/routes/structures/modals/RemoveModal';
+import { removeStructure } from '@lib/api/structures/removeStructure';
 
 interface Props {
     item: ListStructure | MapStructure;
     structureType: StructureType;
+    onStructureRemoved: () => void;
 }
 
-function GridItem({ item, structureType }: Props) {
+function GridItem({ item, structureType, onStructureRemoved }: Props) {
     const ref = useRef<HTMLDivElement>(null);
     const store = getProjectMetadataStore();
     const existsInConfig = store.getState().existsInConfig(item.id, structureType);
@@ -53,16 +53,18 @@ function GridItem({ item, structureType }: Props) {
         {
             onError() {
                 error('Failed truncating structure', 'Please, try again later.');
+                setOpenTruncateModal(false);
             },
             onSuccess() {
                 success('Success', 'Structure has been successfully truncated.');
+                setOpenTruncateModal(false);
             },
         },
     );
 
     const { isLoading: isRemoveLoading, mutate: remove } = useMutation<unknown, ApiError, void>(
         () =>
-            truncateStructure({
+            removeStructure({
                 projectId: Runtime.instance.currentProjectCache.getProject().id,
                 id: item.id,
                 type: structureType,
@@ -70,9 +72,12 @@ function GridItem({ item, structureType }: Props) {
         {
             onError() {
                 error('Failed removing structure', 'Please, try again later.');
+                setOpenDeleteModal(false);
             },
             onSuccess() {
                 success('Success', 'Structure has been successfully removed.');
+                setOpenDeleteModal(false);
+                onStructureRemoved();
             },
         },
     );

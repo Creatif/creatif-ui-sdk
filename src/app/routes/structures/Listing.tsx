@@ -20,14 +20,14 @@ import ActionSection from '@app/routes/structures/ActionSection';
 import type { StructureType } from '@root/types/shell/shell';
 import useSearchQuery from '@app/routes/structures/hooks/useSearchQuery';
 
-export interface PaginationDataWithPage extends ListStructure {
+export interface PaginationDataWithPage extends ListStructure, MapStructure {
     page: number;
 }
 
 function resolveListing<Value>(
     structureType: StructureType,
-    mapPages: StructurePaginationResult<Value>[] | undefined,
-    listPages: StructurePaginationResult<Value>[] | undefined,
+    mapPages: StructurePaginationResult<MapStructure>[] | undefined,
+    listPages: StructurePaginationResult<ListStructure>[] | undefined,
     currentPage: number,
 ): PaginationDataWithPage[] {
     if (structureType === 'map' && mapPages && mapPages.length > 0) {
@@ -89,7 +89,7 @@ export function Listing({ structureType }: Props) {
         enabled: structureType === 'list',
     });
 
-    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, isFetching } = {
+    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, isFetching, invalidateQuery } = {
         data: resolveListing(structureType, mapData?.pages, listData?.pages, pageRef.current),
         error: structureType === 'list' ? listError : mapError,
         isFetching: structureType === 'list' ? isListFetching : isMapFetching,
@@ -142,7 +142,14 @@ export function Listing({ structureType }: Props) {
                         <div className={gridStyles.row}>
                             <>
                                 {data.map((item) => (
-                                    <GridItem structureType={structureType} key={item.id} item={item} />
+                                    <GridItem
+                                        structureType={structureType}
+                                        key={item.id}
+                                        item={item}
+                                        onStructureRemoved={() => {
+                                            invalidateQuery();
+                                        }}
+                                    />
                                 ))}
                             </>
                         </div>
