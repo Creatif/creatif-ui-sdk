@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
 import type { LoginBlueprint } from '@root/types/api/auth';
 import login from '@lib/api/auth/login';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import UIError from '@app/components/UIError';
 import { useNavigate } from 'react-router-dom';
 import type { TryResult } from '@root/types/shared';
@@ -20,6 +20,8 @@ import type { CreatifApp } from '@root/types/shell/shell';
 import type { Project } from '@root/types/api/project';
 import createProject from '@lib/api/project/createProject';
 import adminExists from '@lib/api/auth/adminExists';
+import { validateConfig } from '@app/setupUtil';
+import { ValidationMessages } from '@app/uiComponents/configValidation/ValidationMessages';
 
 interface Props {
     config: CreatifApp;
@@ -30,6 +32,18 @@ export function Login({ config }: Props) {
     const [createProjectError, setCreateProjectError] = useState(false);
     const navigate = useNavigate();
     const adminCheckRef = useRef(false);
+    const [validationMessages, setValidationMessages] = useState<string[] | null>(null);
+
+    useEffect(() => {
+        const messages = validateConfig(config);
+
+        if (messages.length !== 0) {
+            setValidationMessages(messages);
+            return;
+        }
+
+        setValidationMessages(null);
+    }, [config]);
 
     const {
         isFetching: isAdminExistsFetching,
@@ -118,48 +132,63 @@ export function Login({ config }: Props) {
     );
 
     return (
-        <div className={styles.root}>
-            <div className={styles.centerRoot}>
-                <div className={shared.root}>
-                    <FormProvider {...methods}>
-                        <form
-                            className={shared.form}
-                            onSubmit={handleSubmit((data) => {
-                                mutateLogin({
-                                    email: data.email,
-                                    password: data.password,
-                                });
-                            })}>
-                            <TextInput
-                                disabled={loginDisabled}
-                                error={getFirstError(errors, 'email')}
-                                {...register('email', {
-                                    required: 'Email is required',
-                                })}
-                                label="Email"
-                            />
-                            <TextInput
-                                disabled={loginDisabled}
-                                type="password"
-                                error={getFirstError(errors, 'password')}
-                                {...register('password', {
-                                    required: 'Password is required',
-                                })}
-                                label="Password"
-                            />
-
-                            {loginDisabled && <UIError title="Cannot login at this moment. Please, try again later." />}
-                            {loginError && <UIError title="Username or email are invalid." />}
-
-                            <div className={shared.button}>
-                                <Button disabled={loginDisabled} loading={isProcessing} type="submit">
-                                    Login
-                                </Button>
-                            </div>
-                        </form>
-                    </FormProvider>
+        <>
+            {validationMessages && (
+                <div className={styles.root}>
+                    <div className={styles.centerRoot}>
+                        <div className={shared.root}>
+                            <ValidationMessages messages={validationMessages} />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+            {!validationMessages && (
+                <div className={styles.root}>
+                    <div className={styles.centerRoot}>
+                        <div className={shared.root}>
+                            <FormProvider {...methods}>
+                                <form
+                                    className={shared.form}
+                                    onSubmit={handleSubmit((data) => {
+                                        mutateLogin({
+                                            email: data.email,
+                                            password: data.password,
+                                        });
+                                    })}>
+                                    <TextInput
+                                        disabled={loginDisabled}
+                                        error={getFirstError(errors, 'email')}
+                                        {...register('email', {
+                                            required: 'Email is required',
+                                        })}
+                                        label="Email"
+                                    />
+                                    <TextInput
+                                        disabled={loginDisabled}
+                                        type="password"
+                                        error={getFirstError(errors, 'password')}
+                                        {...register('password', {
+                                            required: 'Password is required',
+                                        })}
+                                        label="Password"
+                                    />
+
+                                    {loginDisabled && (
+                                        <UIError title="Cannot login at this moment. Please, try again later." />
+                                    )}
+                                    {loginError && <UIError title="Username or email are invalid." />}
+
+                                    <div className={shared.button}>
+                                        <Button disabled={loginDisabled} loading={isProcessing} type="submit">
+                                            Login
+                                        </Button>
+                                    </div>
+                                </form>
+                            </FormProvider>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
