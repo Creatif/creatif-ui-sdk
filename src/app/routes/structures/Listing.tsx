@@ -24,7 +24,7 @@ export interface PaginationDataWithPage extends ListStructure, MapStructure {
     page: number;
 }
 
-function resolveListing<Value>(
+function resolveListing(
     structureType: StructureType,
     mapPages: StructurePaginationResult<MapStructure>[] | undefined,
     listPages: StructurePaginationResult<ListStructure>[] | undefined,

@@ -34,7 +34,6 @@ export default function DraggableList<Value, Metadata>({
     structureType,
     renderItems,
     onRearrange,
-    sortingDirection = 'desc',
 }: Props<Value, Metadata>) {
     const [list, setList] = useState<PaginationDataWithPage<Value, Metadata>[]>(data);
     const [hoveredId, setHoveredId] = useState<string>('');

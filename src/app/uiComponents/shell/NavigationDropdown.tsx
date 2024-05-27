@@ -41,24 +41,24 @@ export function NavigationDropdown({ topItem, dropdownItems }: Props) {
 
                 <ul>
                     {dropdownItems.map((item, i) => (
-                            <li key={i}>
-                                <NavLink
-                                    to={item.to}
-                                    className={({ isActive }) => {
-                                        if (isActive)
-                                            return classNames(
-                                                styles.appMenuButton,
-                                                styles.appMenuDropdownButton,
-                                                styles.active,
-                                            );
+                        <li key={i}>
+                            <NavLink
+                                to={item.to}
+                                className={({ isActive }) => {
+                                    if (isActive)
+                                        return classNames(
+                                            styles.appMenuButton,
+                                            styles.appMenuDropdownButton,
+                                            styles.active,
+                                        );
 
-                                        return classNames(styles.appMenuButton, styles.appMenuDropdownButton);
-                                    }}>
-                                    {item.icon ? item.icon : undefined}
-                                    {item.text}
-                                </NavLink>
-                            </li>
-                        ))}
+                                    return classNames(styles.appMenuButton, styles.appMenuDropdownButton);
+                                }}>
+                                {item.icon ? item.icon : undefined}
+                                {item.text}
+                            </NavLink>
+                        </li>
+                    ))}
                 </ul>
             </li>
         </ul>

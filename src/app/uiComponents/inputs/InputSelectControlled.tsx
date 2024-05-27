@@ -12,11 +12,7 @@ interface Props extends SelectProps {
 }
 
 export function InputSelectControlled({ data, name, validation, ...rest }: Props) {
-    const {
-        control,
-        getValues,
-        formState: { errors },
-    } = useFormContext();
+    const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string | null>(getValues(name));
 
     return (

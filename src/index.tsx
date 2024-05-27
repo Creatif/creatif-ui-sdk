@@ -27,3 +27,4 @@ export { InputText } from '@root/app/uiComponents/inputs/InputText';
 export { InputTextarea } from '@root/app/uiComponents/inputs/InputTextarea';
 export { InputTextareaControlled } from '@root/app/uiComponents/inputs/InputTextareaControlled';
 export { InputTextControlled } from '@app/uiComponents/inputs/InputTextControlled';
+export { Form } from '@app/uiComponents/form/Form';

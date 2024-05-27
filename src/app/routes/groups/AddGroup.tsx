@@ -18,7 +18,6 @@ import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
 import type { InternalGroup } from '@app/routes/groups/components/MultiSelectNoDropdown';
 import { MultiSelectNoDropdown } from '@app/routes/groups/components/MultiSelectNoDropdown';
-import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
 
 interface Props {

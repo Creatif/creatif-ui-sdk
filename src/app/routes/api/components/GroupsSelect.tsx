@@ -1,7 +1,7 @@
 import { useGetGroups } from '@app/routes/groups/hooks/useGetGroups';
 import type { Group } from '@root/types/api/groups';
 import type { TryResult } from '@root/types/shared';
-import type { ComboboxItem} from '@mantine/core';
+import type { ComboboxItem } from '@mantine/core';
 import { MultiSelect } from '@mantine/core';
 import { useState } from 'react';
 

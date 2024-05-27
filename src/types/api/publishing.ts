@@ -1,4 +1,4 @@
-import { StructureType } from '@root/types/shell/shell';
+import type { StructureType } from '@root/types/shell/shell';
 
 export interface PublishBlueprint {
     projectId: string;

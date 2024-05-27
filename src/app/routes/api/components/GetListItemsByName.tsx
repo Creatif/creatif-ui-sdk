@@ -3,7 +3,7 @@
 import styles from '@app/routes/api/css/apiBase.module.css';
 import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
 import { StructureSelect } from '@app/routes/api/components/StructureSelect';
-import { Checkbox, Button, Loader } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import { ComboboxIDSelect } from '@app/routes/api/components/ComboboxIDSelect';
 import { useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';

@@ -1,6 +1,6 @@
 import { Grid } from '@mantine/core';
 import { InputText } from '../../src/app/uiComponents/inputs/InputText';
-import Form from '../../src/app/uiComponents/form/Form';
+import { Form } from '../../src/app/uiComponents/form/Form';
 export default function DeckForm() {
     return (
         <Form<{

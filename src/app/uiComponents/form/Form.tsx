@@ -77,7 +77,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
     form?: HTMLAttributes<HTMLFormElement>;
 }
 
-export default function Form<T extends FieldValues, Value = unknown, Metadata = unknown>({
+export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>({
     formProps,
     bindings,
     inputs,
