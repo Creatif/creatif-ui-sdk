@@ -17,11 +17,6 @@ export default function App() {
                         structureName: 'Decks',
                         form: <DeckForm />,
                     },
-                    {
-                        structureType: 'list',
-                        structureName: 'Languages',
-                        form: <LanguageForm />,
-                    },
                 ],
             }}
         />

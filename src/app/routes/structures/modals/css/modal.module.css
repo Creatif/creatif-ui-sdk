@@ -1,0 +1,39 @@
+.text {
+    color: var(--mantine-color-gray-9);
+    line-height: 1.8rem;
+    margin-top: 0.8rem;
+}
+
+.header {
+    color: var(--mantine-color-gray-7);
+    line-height: 1.4rem;
+    margin-top: 3rem;
+    font-weight: bolder;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+
+    margin-top: 3rem;
+}
+
+.informationParagraph {
+    line-height: 1.6rem;
+    font-size: 0.9rem;
+    color: var(--mantine-color-gray-9);
+    margin: 0 0 2rem 0;
+    padding: 0 0 0 1rem;
+
+    border-left: 4px solid var(--mantine-color-gray-2);
+}
+
+.boldHighlight {
+    font-weight: bold;
+}
+
+.structureNameInput {
+    margin-top: 1rem;
+}

@@ -6,6 +6,7 @@ import { IconAlertCircle } from '@tabler/icons-react';
 interface Props {
     open: boolean;
     message: string;
+    title?: string;
     onClose: () => void;
     onDelete: () => void;
 }

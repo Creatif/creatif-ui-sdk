@@ -51,10 +51,9 @@
     gap: 0.3rem;
 }
 
-.actionIconOverride {
+.actionIconOverrideDisabled {
     background-color: var(--mantine-color-gray-0);
     border: 1px solid var(--mantine-color-gray-2);
-    transition: background-color 0.4s;
 }
 
 .actionIconOverride:hover {
@@ -65,6 +64,11 @@
     background-color: var(--mantine-color-red-0);
     border: 1px solid var(--mantine-color-red-2);
     transition: background-color 0.4s;
+}
+
+.actionIconOverrideDisabled {
+    background-color: var(--mantine-color-gray-0);
+    border: 1px solid var(--mantine-color-gray-2);
 }
 
 .actionIconDeleteOverride:hover {
