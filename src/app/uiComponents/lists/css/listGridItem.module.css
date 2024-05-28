@@ -20,6 +20,8 @@
 
 .nameRowTitle {
     line-height: 1.3rem;
+    font-size: 0.9rem;
+    color: var(--mantine-color-gray-9);
 }
 
 .container:hover {

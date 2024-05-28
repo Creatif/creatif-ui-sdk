@@ -84,7 +84,7 @@ function GridItem({ item, structureType, onStructureRemoved }: Props) {
 
     return (
         <div ref={ref} className={classNames(styles.container, styles.pointerContainer)}>
-            <h2>{item.name}</h2>
+            <h2 className={styles.nameRowTitle}>{item.name}</h2>
 
             <div>
                 {!existsInConfig && <IconCircleX color="var(--mantine-color-red-7)" size={18} />}
