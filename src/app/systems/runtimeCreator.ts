@@ -2,13 +2,14 @@ import LocalesCache from '@lib/storage/localesCache';
 import type { ApiError } from '@lib/http/apiError';
 import { getSupportedLocales } from '@lib/api/project/getSupportedLocales';
 import type { StructureType } from '@root/types/shell/shell';
-import { createProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
+import { createProjectMetadataStore, getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import CurrentProjectCache from '@lib/storage/currentProjectCache';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { tryHttp } from '@lib/http/tryHttp';
 import type { StructureMetadata, Project } from '@root/types/api/project';
 import { app } from '@lib/http/fetchInstance';
+import { meta } from '@typescript-eslint/parser/_ts4.3/dist';
 
 function removeAppCache(projectId: string) {
     const lsKeys = Object.keys(localStorage);
@@ -100,4 +101,31 @@ export async function createRuntime(
 
     const { error: metadataStoreError } = await createStructureMetadataStore(projectId, config);
     if (metadataStoreError) return metadataStoreError;
+}
+
+export async function updateRuntime(
+    projectId: string,
+    config: { name: string; type: StructureType }[],
+): Promise<ApiError | undefined> {
+    removeAppCache(projectId);
+    const store = getProjectMetadataStore();
+
+    const { cache: projectCache, error: projectError } = await writeCurrentProjectCache(projectId);
+    if (projectError) return projectError;
+
+    const { result, error: metadataError } = await tryHttp<StructureMetadata>(
+        app(),
+        'post',
+        `/project/metadata/${projectId}`,
+        {
+            config: config,
+        },
+    );
+
+    if (metadataError) metadataError;
+
+    if (projectCache && result) {
+        Runtime.instance.updateProjectCache(projectCache);
+        store.getState().replaceMetadata(result.metadata, result.diff, result.structures);
+    }
 }
