@@ -4,7 +4,6 @@ import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectM
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import type { StructureDiff } from '@root/types/api/project';
-import { meta } from '@typescript-eslint/parser/_ts4.3/dist';
 
 export interface IncomingStructureItem {
     id: string;
@@ -118,14 +117,12 @@ export function createProjectMetadataStore(
             diff: StructureDiff,
             incomingStructureItems: IncomingStructureItem[],
         ) {
-            set((state) => {
-                return {
-                    ...state,
-                    metadata: metadata,
-                    diff: diff,
-                    structureItems: createStructureItems(incomingStructureItems),
-                };
-            });
+            set((state) => ({
+                ...state,
+                metadata: metadata,
+                diff: diff,
+                structureItems: createStructureItems(incomingStructureItems),
+            }));
         },
     }));
 

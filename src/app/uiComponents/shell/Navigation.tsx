@@ -12,7 +12,6 @@ import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { NavigationDropdown } from '@app/uiComponents/shell/NavigationDropdown';
 import { Runtime } from '@app/systems/runtime/Runtime';
-import type { StructureDiff } from '@root/types/api/project';
 
 interface Props {
     logo?: React.ReactNode;

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import { CreatifApp } from '@root/types/shell/shell';
-import { updateRuntime } from '@app/systems/runtimeCreator';
+import type { CreatifApp } from '@root/types/shell/shell';
 
 interface Props {
     projectId: string;

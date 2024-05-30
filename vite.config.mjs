@@ -6,7 +6,7 @@ import dts from 'vite-plugin-dts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import { libInjectCss } from 'vite-plugin-lib-inject-css'
+import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -30,7 +30,7 @@ export default defineConfig({
         lib: {
             entry: resolve(__dirname, 'src/index.tsx'),
             fileName: 'index',
-            formats: ['es']
+            formats: ['es'],
         },
         rollupOptions: {
             // make sure to externalize deps that shouldn't be bundled

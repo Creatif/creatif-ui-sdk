@@ -9,7 +9,6 @@ import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { tryHttp } from '@lib/http/tryHttp';
 import type { StructureMetadata, Project } from '@root/types/api/project';
 import { app } from '@lib/http/fetchInstance';
-import { meta } from '@typescript-eslint/parser/_ts4.3/dist';
 
 function removeAppCache(projectId: string) {
     const lsKeys = Object.keys(localStorage);
