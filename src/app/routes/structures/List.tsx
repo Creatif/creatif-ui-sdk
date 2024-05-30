@@ -8,7 +8,7 @@ interface Props {
 export default function List({ validationMessages }: Props) {
     return (
         <>
-            <Listing structureType="map" />
+            <Listing structureType="list" />
             {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
         </>
     );

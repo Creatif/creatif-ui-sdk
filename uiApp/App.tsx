@@ -20,6 +20,16 @@ export default function App() {
                         structureName: 'Languages',
                         form: <LanguageForm />,
                     },
+                    {
+                        structureType: 'list',
+                        structureName: 'Shit',
+                        form: <LanguageForm />,
+                    },
+                    {
+                        structureType: 'list',
+                        structureName: 'Another',
+                        form: <LanguageForm />,
+                    },
                 ],
             }}
         />

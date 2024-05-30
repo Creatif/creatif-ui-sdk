@@ -4,6 +4,7 @@ import type { ProjectMetadata, Structure } from '@lib/api/project/types/ProjectM
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import type { StructureDiff } from '@root/types/api/project';
+import { meta } from '@typescript-eslint/parser/_ts4.3/dist';
 
 export interface IncomingStructureItem {
     id: string;
@@ -38,6 +39,11 @@ interface OptionsStore {
     getStructureItemByName: (name: string, type: StructureType) => StructureItem | undefined;
     structureItems: StructureItem[];
     existsInConfig: (id: string, structureType: StructureType) => boolean;
+    replaceMetadata: (
+        metadata: ProjectMetadata,
+        diff: StructureDiff,
+        incomingStructureItems: IncomingStructureItem[],
+    ) => void;
 }
 
 let store: UseBoundStore<StoreApi<OptionsStore>> | undefined = undefined;
@@ -80,7 +86,7 @@ export function createProjectMetadataStore(
         localStorage.setItem(key, JSON.stringify(metadata));
     }
 
-    store = create<OptionsStore>((_, get) => ({
+    store = create<OptionsStore>((set, get) => ({
         metadata: metadata,
         diff: diff,
         existsInConfig: (id: string, structureType: StructureType) => {
@@ -107,6 +113,20 @@ export function createProjectMetadataStore(
         getStructureItemByID: (id: string) => get().structureItems.find((t) => t.id === id),
         getStructureItemByName: (name: string, type: StructureType) =>
             get().structureItems.find((t) => t.name === name && t.structureType === type),
+        replaceMetadata(
+            metadata: ProjectMetadata,
+            diff: StructureDiff,
+            incomingStructureItems: IncomingStructureItem[],
+        ) {
+            set((state) => {
+                return {
+                    ...state,
+                    metadata: metadata,
+                    diff: diff,
+                    structureItems: createStructureItems(incomingStructureItems),
+                };
+            });
+        },
     }));
 
     return store;

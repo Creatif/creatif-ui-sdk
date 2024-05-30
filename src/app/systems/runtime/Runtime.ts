@@ -6,13 +6,17 @@ export class Runtime {
     public static instance: Runtime;
 
     constructor(
-        public readonly currentProjectCache: CurrentProjectCache,
+        public currentProjectCache: CurrentProjectCache,
         public readonly currentLocaleStorage: CurrentLocaleStorage,
         public readonly localesCache: LocalesCache,
     ) {}
 
     rootPath() {
         return `/dashboard/${this.currentProjectCache.getProject().id}`;
+    }
+
+    updateProjectCache(projectCache: CurrentProjectCache) {
+        this.currentProjectCache = projectCache;
     }
 
     static init(runtime: Runtime) {

@@ -5,6 +5,7 @@ import { createRuntime } from '@app/systems/runtimeCreator';
 import { ShellApp } from '@app/uiComponents/shell/ShellApp';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CenteredError from '@app/components/CenteredError';
+import { RuntimeDiff } from '@app/uiComponents/shell/RuntimeDiff';
 
 interface Props {
     options: CreatifApp;
@@ -35,6 +36,7 @@ export default function ShellContainer({ options }: Props) {
 
     return (
         <>
+            {runtimeCreated && projectId && <RuntimeDiff projectId={projectId} config={options} />}
             {runtimeCreated && <ShellApp config={options} />}
             {runtimeFailed && <CenteredError title="Failed to initiate project. Please, try again later" />}
         </>

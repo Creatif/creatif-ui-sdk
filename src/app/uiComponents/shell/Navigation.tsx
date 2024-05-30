@@ -22,6 +22,7 @@ interface Props {
 export default function Navigation({ navItems, logo }: Props) {
     const projectName = Runtime.instance.currentProjectCache.getProject().name;
     const store = getProjectMetadataStore();
+    const structures = store.getState().structureItems;
 
     return (
         <div className={styles.navigationGrid}>
@@ -44,24 +45,25 @@ export default function Navigation({ navItems, logo }: Props) {
             </div>
 
             <nav className={styles.root}>
-                {navItems.map((item, index) => {
-                    const structures = store.getState().structureItems;
-                    const structureItem = structures.find((t) => t.name === item.structureName);
+                {structures.map((item, index) => {
+                    const navItem = navItems.find(
+                        (t) => t.structureType === item.structureType && t.structureName === item.name,
+                    );
 
                     return (
                         <React.Fragment key={index}>
-                            {structureItem && (
+                            {item && navItem && (
                                 <NavLink
                                     className={({ isActive }) => {
                                         if (isActive) return classNames(styles.navItem, styles.active);
 
                                         return styles.navItem;
                                     }}
-                                    to={`${structureItem.navigationListPath}/${structureItem.id}`}>
-                                    {!item.menuIcon && <NavigationIcon type={item.structureType} />}
-                                    {item.menuIcon && <span className={styles.navItemIcon}>{item.menuIcon}</span>}
+                                    to={`${item.navigationListPath}/${item.id}`}>
+                                    {!navItem.menuIcon && <NavigationIcon type={item.structureType} />}
+                                    {navItem.menuIcon && <span className={styles.navItemIcon}>{navItem.menuIcon}</span>}
                                     <span className={styles.navItemText}>
-                                        {item.menuText ? item.menuText : item.structureName}
+                                        {navItem.menuText ? navItem.menuText : navItem.structureName}
                                     </span>
                                 </NavLink>
                             )}
