@@ -1,0 +1,15 @@
+services:
+  app:
+    container_name: "app"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: no
+    stdin_open: true
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 5173:5173
+    expose:
+      - 5173
