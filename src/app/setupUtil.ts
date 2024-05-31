@@ -7,8 +7,18 @@ export function validateConfig(app: CreatifApp): string[] {
         return messages;
     }
 
+    if (typeof app.projectName !== 'string' || !app.projectName) {
+        messages.push('Invalid project name. Project name must be a string');
+        return messages;
+    }
+
     if (!Array.isArray(app.items)) {
-        messages.push('App config does not have the request \'config.items\'. It must be an array of of structures.');
+        messages.push('App config does not have \'config.items\'. It must be an array of of structures.');
+        return messages;
+    }
+
+    if (app.items.length === 0) {
+        messages.push('App config \'config.items\' is empty. It must be an array of of structures.');
         return messages;
     }
 
