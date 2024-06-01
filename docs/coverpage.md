@@ -1,4 +1,4 @@
-# docsify-themeable
+# Creatif CMS
 
 > Open source headless CMS for clients and developers [docsify.js](https://docsify.js.org)
 
