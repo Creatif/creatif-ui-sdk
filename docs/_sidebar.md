@@ -1,3 +1,4 @@
+- [Why another headless CMS](why.md)
 - [Concepts](concept)
 - [Get started](installation)
 - [Tutorial](tutorial)
