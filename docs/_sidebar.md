@@ -1,3 +1,3 @@
 - [Concepts](concept)
-- [Tutorial](tutorial)
 - [Get started](installation)
+- [Tutorial](tutorial)
