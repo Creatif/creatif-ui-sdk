@@ -9,5 +9,6 @@ interface Props extends TextareaProps {
 }
 export function InputTextarea({ name, options, ...rest }: Props) {
     const { register } = useFormContext();
+
     return <Textarea error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }
