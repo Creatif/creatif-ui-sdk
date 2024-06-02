@@ -2,7 +2,7 @@ import { InputCheckbox, InputNumberControlled } from '../../../../src';
 import { useFormContext } from 'react-hook-form';
 import css from '../css/root.module.css';
 
-export function ApartmentInfo() {
+export function ApartmentForm() {
     const { watch } = useFormContext();
     const apartmentBalcony = watch('apartmentBalcony');
 

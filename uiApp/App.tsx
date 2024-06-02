@@ -1,7 +1,7 @@
 import React from 'react';
 import { CreatifProvider } from '../src/CreatifProvider';
 import { PropertyForm } from './forms/realEstate/PropertyForm';
-import { OwnerForm } from './forms/realEstate/OwnerForm';
+import { AccountForm } from './forms/realEstate/AccountForm';
 
 export default function App() {
     return (
@@ -18,7 +18,7 @@ export default function App() {
                     {
                         structureType: 'map',
                         structureName: 'Accounts',
-                        form: <OwnerForm />,
+                        form: <AccountForm />,
                     },
                 ],
             }}

@@ -2,7 +2,7 @@ import { InputCheckbox, InputNumberControlled, InputTextarea } from '../../../..
 import { useFormContext } from 'react-hook-form';
 import css from '../css/root.module.css';
 
-export function HouseInfo() {
+export function HouseForm() {
     const { watch } = useFormContext();
 
     const backYard = watch('houseBackYard');
@@ -26,7 +26,8 @@ export function HouseInfo() {
                 <div>
                     <InputNumberControlled
                         name="houseSize"
-                        label="Size (in meters squared)"
+                        label="Size"
+                        description="In meters squared"
                         validation={{
                             required: 'Size is required',
                         }}
@@ -36,7 +37,8 @@ export function HouseInfo() {
                 <div>
                     <InputNumberControlled
                         name="houseLocalPrice"
-                        label="Local price (in meters squared)"
+                        label="Local price"
+                        description="Per meters squared"
                         validation={{
                             required: 'Local price is required',
                         }}

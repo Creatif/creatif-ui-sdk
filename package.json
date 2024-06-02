@@ -1,6 +1,6 @@
 {
     "name": "creatif-ui-sdk",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "UI SDK to create Creatif CMS",
     "license": "MIT",
     "type": "module",
@@ -80,6 +80,7 @@
     },
     "peerDependencies": {
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "react-hook-form": "^7.48.2"
     }
 }
