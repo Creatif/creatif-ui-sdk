@@ -36,6 +36,15 @@ export default defineConfig({
             // make sure to externalize deps that shouldn't be bundled
             // into your library
             external: ['react', 'react-dom'],
+            treeshake: {
+                moduleSideEffects: (id) => {
+                    if (id.includes('creatif-ui-sdk/src/index.tsx')) {
+                        return 'no-treeshake';
+                    }
+
+                    return true;
+                },
+            },
             output: {
                 // Provide global variables to use in the UMD build
                 // for externalized deps
