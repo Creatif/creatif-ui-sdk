@@ -48,7 +48,7 @@
         name: "Creatif CMS",
         repo: "https://github.com/jhildenbiddle/docsify-themeable",
         coverpage: "coverpage.md",
-        homepage: "README.md",
+        homepage: "concept.md",
         // homepage   : 'https://raw.githubusercontent.com/jhildenbiddle/docsify-themeable/master/README.md',
         loadSidebar: "sidebar.md",
         auto2top: true,
@@ -57,9 +57,31 @@
 
         // 5. docsify-themeable
         themeable: {
-            // readyTransition : false,
-            // responsiveTables: false
-        }
+            readyTransition : false,
+            responsiveTables: false
+        },
+        plugins: [
+            // Restores initial <title>
+            function persistTitle(hook, vm) {
+                var titleElm = document.querySelector('title');
+                var rootTitle = titleElm && titleElm.textContent;
+                var pageTitlePrefix = window.$docsify.name
+                    ? window.$docsify.name + ' - '
+                    : '';
+
+                if (rootTitle) {
+                    hook.doneEach(function () {
+                        var currentTitle = titleElm.textContent;
+                        var isRoot = !/\/[a-z]/.test(location.hash);
+                        var newTitle = isRoot
+                            ? rootTitle
+                            : pageTitlePrefix + currentTitle;
+
+                        titleElm.textContent = newTitle;
+                    });
+                }
+            }
+        ]
     };
 </script>
 

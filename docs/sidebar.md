@@ -1,4 +1,3 @@
-- [Introduction](introduction) <!-- markdownlint-disable-line first-line-heading -->
-- [Installation](installation)
+- [Concepts](concept)
 - [Tutorial](tutorial)
-- [Why another headless CMS](why-another-headless-cms)
+- [Get started](installation)

@@ -1,6 +1,6 @@
 # Creatif CMS
 
-> Open source headless CMS for clients and developers [docsify.js](https://docsify.js.org)
+> Open source headless CMS for developers [docsify.js](https://docsify.js.org)
 
 [Get Started](installation)
 [Tutorial](tutorial)
