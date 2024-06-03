@@ -5,7 +5,8 @@ export function RuntimeConfigFailModal() {
         <RuntimeErrorModal
             open={true}
             error={{
-                message: 'Creatif configuration failed to update. This is definitely a bug. Try refreshing the page. If that doesn\'t help, try logging out and then loggin back in.',
+                message:
+                    'Creatif configuration failed to update. This is definitely a bug. Try refreshing the page. If that doesn\'t help, try logging out and then loggin back in.',
             }}
         />
     );

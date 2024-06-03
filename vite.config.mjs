@@ -21,7 +21,7 @@ export default defineConfig({
         watch: {
             include: ['src/**', 'uiApp/**'],
             exclude: ['node_modules/**', 'dist/**'],
-        }
+        },
     },
     resolve: {
         alias: {

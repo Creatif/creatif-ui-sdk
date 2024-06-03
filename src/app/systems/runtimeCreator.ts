@@ -83,22 +83,20 @@ async function writeCurrentProjectCache(projectId: string): Promise<{ cache?: Cu
     return { cache: currentProject };
 }
 
-async function writeRuntimeConfigCache(config: ExtractedConfig[]): Promise<{ cache?: CurrentConfigCache; error?: ApiError }> {
+async function writeRuntimeConfigCache(
+    config: ExtractedConfig[],
+): Promise<{ cache?: CurrentConfigCache; error?: ApiError }> {
     if (!CurrentConfigCache.isLoaded()) {
-        return {cache: new CurrentConfigCache(config)};
+        return { cache: new CurrentConfigCache(config) };
     }
 
-    return {cache: CurrentConfigCache.createInstanceWithExistingCache()};
+    return { cache: CurrentConfigCache.createInstanceWithExistingCache() };
 }
 
-
-export async function createRuntime(
-    projectId: string,
-    config: ExtractedConfig[],
-): Promise<ApiError | undefined> {
+export async function createRuntime(projectId: string, config: ExtractedConfig[]): Promise<ApiError | undefined> {
     removeAppCache(projectId);
 
-    const {cache: configCache} = await writeRuntimeConfigCache(config);
+    const { cache: configCache } = await writeRuntimeConfigCache(config);
     const { cache: projectCache, error: projectError } = await writeCurrentProjectCache(projectId);
     if (projectError) return projectError;
 
@@ -109,7 +107,10 @@ export async function createRuntime(
         Runtime.init(new Runtime(projectCache, new CurrentLocaleStorage('eng'), localesCache, configCache));
     }
 
-    const { error: metadataStoreError } = await createStructureMetadataStore(projectId, config.map(t => ({name: t.structureName, type: t.structureType})));
+    const { error: metadataStoreError } = await createStructureMetadataStore(
+        projectId,
+        config.map((t) => ({ name: t.structureName, type: t.structureType })),
+    );
     if (metadataStoreError) return metadataStoreError;
 }
 

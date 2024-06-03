@@ -1,7 +1,7 @@
 import type CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import type LocalesCache from '@lib/storage/localesCache';
 import type CurrentProjectCache from '@lib/storage/currentProjectCache';
-import CurrentConfigCache from '@lib/storage/currentConfigCache';
+import type CurrentConfigCache from '@lib/storage/currentConfigCache';
 
 export class Runtime {
     public static instance: Runtime;

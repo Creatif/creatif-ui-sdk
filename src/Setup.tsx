@@ -12,8 +12,6 @@ interface Props {
 }
 
 export function Setup({ app }: Props) {
-    console.log(app);
-
     return (
         <>
             <Routes>

@@ -1,14 +1,14 @@
-import type { ExtractedConfig, Project } from '@root/types/api/project';
+import type { ExtractedConfig } from '@root/types/api/project';
 
 export default class CurrentConfigCache {
-    private readonly config: ExtractedConfig[];
+    private config: ExtractedConfig[];
     private static readonly key = 'creatif-config-cache';
-    constructor(project: ExtractedConfig[]) {
-        this.config = project;
+    constructor(config: ExtractedConfig[]) {
+        this.config = config;
 
-        localStorage.setItem(CurrentConfigCache.key, JSON.stringify(project));
+        localStorage.setItem(CurrentConfigCache.key, JSON.stringify(config));
 
-        this.config = project;
+        this.config = config;
     }
 
     static isLoaded() {
@@ -21,5 +21,10 @@ export default class CurrentConfigCache {
     }
     getCachedConfig() {
         return this.config;
+    }
+
+    updateConfig(config: ExtractedConfig[]) {
+        localStorage.setItem(CurrentConfigCache.key, JSON.stringify(config));
+        this.config = config;
     }
 }
