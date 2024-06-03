@@ -10,7 +10,7 @@ installed.
 After you install docker, you can install Creatif with
 
 ````javascript
-npm create creatif-app@1.0.9
+npm create creatif-app@1.0.11
 ````
 
 This installation script will ask you to create the app directory and weather you
