@@ -21,8 +21,8 @@ but, all things considered, if you don't like Creatif, I think PocketBase is the
 
 For myself, I wanted something powerful. Something that will make you think that the search
 is over and that you don't have to use another CMS ever again. One CMS to rule them all.
-**A CMS so powerful that you can create other CMSs with it**. I'm still not there but I hope this a is good enough of a start to get
-there. 
+**A CMS so powerful that you can create other CMSs with it**. I'm still not there but 
+I hope this a is good enough of a start to get there.
 
 
 
