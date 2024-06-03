@@ -55,6 +55,10 @@
         "typescript": "5.1.6",
         "vite-plugin-css-injected-by-js": "^3.5.1",
         "vite": "^5.1.1",
+<<<<<<< Updated upstream
+=======
+        "vite-plugin-css-injected-by-js": "^3.5.1",
+>>>>>>> Stashed changes
         "vite-plugin-dts": "^3.6.4"
     },
     "dependencies": {
