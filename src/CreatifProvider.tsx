@@ -1,6 +1,6 @@
 import { createTheme, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import type { CreatifApp } from '@root/types/shell/shell';
 import type { PropsWithChildren } from 'react';

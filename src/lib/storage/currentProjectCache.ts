@@ -23,11 +23,3 @@ export default class CurrentProjectCache {
         return this.project;
     }
 }
-
-export function createProjectCache(project: Project): CurrentProjectCache {
-    if (!CurrentProjectCache.isLoaded()) {
-        return new CurrentProjectCache(project);
-    }
-
-    return CurrentProjectCache.createInstanceWithExistingCache();
-}

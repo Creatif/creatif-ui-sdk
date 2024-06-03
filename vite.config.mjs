@@ -7,10 +7,6 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-<<<<<<< Updated upstream
-=======
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
->>>>>>> Stashed changes
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,6 +17,12 @@ export default defineConfig({
             insertTypesEntry: true,
         }),
     ],
+    server: {
+        watch: {
+            include: ['src/**', 'uiApp/**'],
+            exclude: ['node_modules/**', 'dist/**'],
+        }
+    },
     resolve: {
         alias: {
             '@app': join(__dirname, 'src/app'),

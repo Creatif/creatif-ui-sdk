@@ -22,6 +22,6 @@
             "@root/*": ["./*"]
         }
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "uiApp/**/*"],
     "exclude": ["node_modules", "build"]
 }
