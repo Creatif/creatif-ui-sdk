@@ -3,20 +3,26 @@ import { fileURLToPath } from 'url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react(),
-        libInjectCss(),
+        cssInjectedByJsPlugin(),
         dts({
             insertTypesEntry: true,
         }),
     ],
+    server: {
+        watch: {
+            include: ['src/**', 'uiApp/**'],
+            exclude: ['node_modules/**', 'build/**'],
+        },
+    },
     resolve: {
         alias: {
             '@app': join(__dirname, 'src/app'),
@@ -36,6 +42,15 @@ export default defineConfig({
             // make sure to externalize deps that shouldn't be bundled
             // into your library
             external: ['react', 'react-dom'],
+            treeshake: {
+                moduleSideEffects: (id) => {
+                    if (id.includes('creatif-ui-sdk/src/index.tsx')) {
+                        return 'no-treeshake';
+                    }
+
+                    return true;
+                },
+            },
             output: {
                 // Provide global variables to use in the UMD build
                 // for externalized deps

@@ -5,11 +5,6 @@ export interface CreateProjectBlueprint {
     name: string;
 }
 
-export interface GetStructureMetadataBlueprint {
-    projectId: string;
-    config: { name: string; type: StructureType }[];
-}
-
 export interface StructureDiff {
     lists: { id: string; name: string; shortId: string }[];
     maps: { id: string; name: string; shortId: string }[];
@@ -26,4 +21,9 @@ export interface Project {
     name: string;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface ExtractedConfig {
+    structureType: StructureType;
+    structureName: string;
 }

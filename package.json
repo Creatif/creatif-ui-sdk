@@ -1,6 +1,6 @@
 {
     "name": "creatif-ui-sdk",
-    "version": "0.0.1",
+    "version": "0.0.8",
     "description": "UI SDK to create Creatif CMS",
     "license": "MIT",
     "type": "module",
@@ -53,9 +53,9 @@
         "terser": "^5.27.0",
         "ts-node": "^10.9.1",
         "typescript": "5.1.6",
+        "vite-plugin-css-injected-by-js": "^3.5.1",
         "vite": "^5.1.1",
-        "vite-plugin-dts": "^3.6.4",
-        "vite-plugin-lib-inject-css": "^2.1.1"
+        "vite-plugin-dts": "^3.6.4"
     },
     "dependencies": {
         "@mantine/core": "^7.2.2",

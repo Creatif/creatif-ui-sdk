@@ -9,6 +9,7 @@ services:
         stdin_open: true
         volumes:
             - ./src:/app/src
+            - ./uiApp:/app/uiApp
         ports:
             - 5173:5173
         expose:
