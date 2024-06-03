@@ -20,7 +20,7 @@ export default defineConfig({
     server: {
         watch: {
             include: ['src/**', 'uiApp/**'],
-            exclude: ['node_modules/**', 'dist/**'],
+            exclude: ['node_modules/**', 'build/**'],
         },
     },
     resolve: {
