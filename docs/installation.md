@@ -1,11 +1,15 @@
 # Getting started
 
-#### Requirements
+> CAUTION
+> 
+> Creatif is still deep in alpha stage. Some features might not work as expected.
+
+# Requirements
 
 To install Creatif, you will have to have [Docker](https://docs.docker.com/engine/install/) 
 installed.
 
-#### Installation
+# Installation
 
 After you install docker, you can install Creatif with
 
@@ -25,9 +29,13 @@ docker compose up
 Creatif ships with its own backend so this might take a while but this is the only
 thing that you have to do to start using Creatif.
 
+If you decide to not create Creatif with a starter project, a runtime error will be
+thrown. This is because Creatif cannot be used without configuration. Head over to
+[Tutorial](tutorial) to learn and setup Creatif with a starter project.
+
 > NOTE
 > 
 > Creatif comes with its own backend that is written in Go. This backend will probably 
-> start after Creatif is all setup so if you start the frontend and the backend throws an error,
-> its probably because its still building. Wait a couple of seconds and it should work.
-> Creatif runs on localhost:5173 and the backend is no localhost:3002
+> start after Creatif frontend is all set up so if you start the frontend and the backend throws an error,
+> its probably because it's still building. Wait a couple of seconds and it should work.
+> Creatif runs on *localhost:5173* and the backend is no *localhost:3002*
