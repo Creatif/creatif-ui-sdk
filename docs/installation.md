@@ -22,8 +22,12 @@ run
 docker compose up
 ````
 
+Creatif ships with its own backend so this might take a while but this is the only
+thing that you have to do to start using Creatif.
+
 > NOTE
 > 
 > Creatif comes with its own backend that is written in Go. This backend will probably 
-> start after Creatifs is all setup so if you start. Creatif runs on localhost:5173 and the
-> backend is no localhost:3002
+> start after Creatif is all setup so if you start the frontend and the backend throws an error,
+> its probably because its still building. Wait a couple of seconds and it should work.
+> Creatif runs on localhost:5173 and the backend is no localhost:3002
