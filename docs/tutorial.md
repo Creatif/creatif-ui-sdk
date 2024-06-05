@@ -651,7 +651,7 @@ export function PropertyForm() {
 
             landSize: number | null;
             hasConstructionPermit: number | null;
-            
+
             finalNote: Delta | null;
         }>
             bindings={{
@@ -684,24 +684,30 @@ export function PropertyForm() {
 
                     hasConstructionPermit: null,
                     landSize: null,
-                    
+
                     finalNote: null,
                 },
             }}
-            inputs={(submitButton, { watch, inputReference }) => {
+            inputs={(submitButton, { watch, inputReference, inputLocale }) => {
                 const propertyType = watch('propertyType');
 
                 return (
                     <>
-                        {inputReference({
-                            structureName: 'Accounts',
-                            name: 'accounts',
-                            structureType: 'map',
-                            label: 'Account',
-                            validation: {
-                                required: 'Selecting an owner is required',
-                            },
-                        })}
+                        <div>
+                            {inputReference({
+                                structureName: 'Accounts',
+                                name: 'accounts',
+                                structureType: 'map',
+                                label: 'Account',
+                                validation: {
+                                    required: 'Selecting an owner is required',
+                                },
+                            })}
+                        </div>
+
+                        <div className={css.spacing}>
+                            {inputLocale()}
+                        </div>
 
                         <div>
                             <div className={css.fieldGrid}>
@@ -794,7 +800,7 @@ export default function App() {
                 projectName: 'project',
                 items: [
                     {
-                        structureType: 'map',
+                        structureType: 'list',
                         structureName: 'Properties',
                         form: <PropertyForm />,
                     },
@@ -807,5 +813,23 @@ export default function App() {
             }}
         />
     );
+}
 ````
+
+# Let's examine what we created
+
+We created four components: `ApartmentForm.tsx`, `HouseForm.tsx`, `StudioForm.tsx` and
+`LandForm.tsx`. These four components are just abstraction components. I created them
+simply because I didn't want to create one a massive form that would be hard to follow
+so don't mind them. The only special thing is the `useCreatifFormContext`. This is simply 
+an export of `useFormContext` from `react-hook-form` and the only reason that it exists is
+because, if you would install `react-hook-form` locally and use its functions, it would not
+now that it is inside its own context and would return null since the context is created from
+another package (that is within Creatif itself). 
+
+
+
+
+
+
 
