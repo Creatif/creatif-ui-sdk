@@ -250,11 +250,14 @@ Practically, you can imagine the reason behind this feature. There can be only o
 one client or whatever represents an Account. What that account "has" or "can do" can be represented with other
 structures. In this tutorial, you will see how one account (one person) can sell/rent multiple properties. 
 
-Lastly, we have the `InputText` component. What form will not be complete without form components?
+We now have the `InputText` component. What form will not be complete without form components?
 Under the hood, Creatif uses the awesome [Mantine UI library](https://mantine.dev/). Mantine provides a wide
 range of beautiful components and Creatif implements most of them. If you need a textarea, Creatif exports it
 as `InputTextarea`. If you need a slider component, Creatif exports it as `InputSliderControlled`. You can see
 the full list of components that Creatif exports in the [UI components](ui-components) section. 
+
+Lastly, we have our `submitButton` component. This component is provided for you and is required in every Creatif 
+form that you create.
 
 These components are nothing special. Since Creatif uses Mantine UI, it was important to keep the form components uniform
 with its UI, therefor Creatif implements more components that you will ever need (but will also implement more in the future).
@@ -654,9 +657,6 @@ export function PropertyForm() {
 
             finalNote: Delta | null;
         }>
-            bindings={{
-                name: (values) => `${values.address}-${values.city}-${values.postalCode}`,
-            }}
             formProps={{
                 defaultValues: {
                     address: '',
@@ -687,6 +687,9 @@ export function PropertyForm() {
 
                     finalNote: null,
                 },
+            }}
+            bindings={{
+                name: (values) => `${values.address}-${values.city}-${values.postalCode}`,
             }}
             inputs={(submitButton, { watch, inputReference, inputLocale }) => {
                 const propertyType = watch('propertyType');
@@ -821,15 +824,42 @@ export default function App() {
 We created four components: `ApartmentForm.tsx`, `HouseForm.tsx`, `StudioForm.tsx` and
 `LandForm.tsx`. These four components are just abstraction components. I created them
 simply because I didn't want to create one a massive form that would be hard to follow
-so don't mind them. The only special thing is the `useCreatifFormContext`. This is simply 
+so don't mind them. 
+
+The only special thing is the `useCreatifFormContext`. This is simply 
 an export of `useFormContext` from `react-hook-form` and the only reason that it exists is
 because, if you would install `react-hook-form` locally and use its functions, it would not
 now that it is inside its own context and would return null since the context is created from
-another package (that is within Creatif itself). 
+another package (within Creatif itself). 
 
+You would also notice that `PropertyForm.tsx` is a `list` structure. List structure is
+a type of structure that allows you to create multiple entries with the same name but with different
+locale. If you create an entry that has the same locale and name, an error would be raised. 
 
+This means that, when you publish your API, you can have multiple equivalent entries but with different
+locales. For example, if you are real estate renting agency that operates in France and Germany, 
+you could have the same property listed in French and German. 
 
+# Locale
 
+In `PropertyForm.tsx`, there is an `inputLocale` property. This is a function that renders
+a `Select` component to select a locale. Every structure entry has a locale associated with it. 
+The default locale is `eng`. But if you render the `inputLocale()` function, you will be able to 
+choose the locale specifically for this structure entry. 
 
+# RichTextEditor
 
+If you remember, we said that `InputText` export is nothing more but an input property that works with
+`react-hook-form` so there is nothing special that Creatif does with it. The only reason it is exported is
+to make the UI feel uniform since Creatif is created with Mantine. 
+
+This means that you can create your own form components by just hooking it up with `react-hook-form`. 
+Since Creatif does not ship with a rich text editor, we can use any rich text editor out there. 
+For this example, I choose [Quill](https://quilljs.com/). If you look at the code of `RichTextEditor`, 
+it might seem daunting at first but none of the code is Creatif specific so you don't really have to understand it. 
+All I did is hook up Quill to work with `react-hook-form`.
+
+This can be done with any component you want, no matter how complicated it is. 
+
+# inputReference()
 
