@@ -20,8 +20,8 @@ interface Props {
 
 export default function Navigation({ navItems, logo }: Props) {
     const projectName = Runtime.instance.currentProjectCache.getProject().name;
-    const store = getProjectMetadataStore();
-    const structures = store.getState().structureItems;
+    const useMetadataStore = getProjectMetadataStore();
+    const structures = useMetadataStore((state) => state.structureItems);
 
     return (
         <div className={styles.navigationGrid}>

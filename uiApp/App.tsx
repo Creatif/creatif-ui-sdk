@@ -1,34 +1,24 @@
 import React from 'react';
 import { CreatifProvider } from '../src/CreatifProvider';
-import LanguageForm from './forms/LanguageForm';
-import DeckForm from './forms/DeckForm';
+import { PropertyForm } from './forms/realEstate/PropertyForm';
+import { AccountForm } from './forms/realEstate/AccountForm';
 
 export default function App() {
     return (
         <CreatifProvider
             app={{
-                logo: 'Real Estate manager',
+                logo: 'Real Estate Manager',
                 projectName: 'project',
                 items: [
                     {
                         structureType: 'map',
-                        structureName: 'Decks',
-                        form: <DeckForm />,
+                        structureName: 'Properties',
+                        form: <PropertyForm />,
                     },
                     {
-                        structureType: 'list',
-                        structureName: 'Languages',
-                        form: <LanguageForm />,
-                    },
-                    {
-                        structureType: 'list',
-                        structureName: 'Shit',
-                        form: <LanguageForm />,
-                    },
-                    {
-                        structureType: 'list',
-                        structureName: 'Another',
-                        form: <LanguageForm />,
+                        structureType: 'map',
+                        structureName: 'Accounts',
+                        form: <AccountForm />,
                     },
                 ],
             }}

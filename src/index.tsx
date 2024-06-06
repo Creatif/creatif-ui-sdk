@@ -28,3 +28,10 @@ export { InputTextarea } from '@root/app/uiComponents/inputs/InputTextarea';
 export { InputTextareaControlled } from '@root/app/uiComponents/inputs/InputTextareaControlled';
 export { InputTextControlled } from '@app/uiComponents/inputs/InputTextControlled';
 export { Form } from '@app/uiComponents/form/Form';
+
+export { Controller as CreatifController } from 'react-hook-form';
+export { useFormContext as useCreatifFormContext } from 'react-hook-form';
+export { useController as useCreatifController } from 'react-hook-form';
+export { useWatch as useCreatifWatch } from 'react-hook-form';
+export { useFormState as useCreatifFormState } from 'react-hook-form';
+export { useFieldArray as useCreatifFieldArray } from 'react-hook-form';

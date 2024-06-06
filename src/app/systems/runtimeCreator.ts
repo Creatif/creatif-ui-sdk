@@ -7,8 +7,9 @@ import CurrentProjectCache from '@lib/storage/currentProjectCache';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CurrentLocaleStorage from '@lib/storage/currentLocaleStorage';
 import { tryHttp } from '@lib/http/tryHttp';
-import type { StructureMetadata, Project } from '@root/types/api/project';
+import type { StructureMetadata, Project, ExtractedConfig } from '@root/types/api/project';
 import { app } from '@lib/http/fetchInstance';
+import CurrentConfigCache from '@lib/storage/currentConfigCache';
 
 function removeAppCache(projectId: string) {
     const lsKeys = Object.keys(localStorage);
@@ -82,23 +83,34 @@ async function writeCurrentProjectCache(projectId: string): Promise<{ cache?: Cu
     return { cache: currentProject };
 }
 
-export async function createRuntime(
-    projectId: string,
-    config: { name: string; type: StructureType }[],
-): Promise<ApiError | undefined> {
+async function writeRuntimeConfigCache(
+    config: ExtractedConfig[],
+): Promise<{ cache?: CurrentConfigCache; error?: ApiError }> {
+    if (!CurrentConfigCache.isLoaded()) {
+        return { cache: new CurrentConfigCache(config) };
+    }
+
+    return { cache: CurrentConfigCache.createInstanceWithExistingCache() };
+}
+
+export async function createRuntime(projectId: string, config: ExtractedConfig[]): Promise<ApiError | undefined> {
     removeAppCache(projectId);
 
+    const { cache: configCache } = await writeRuntimeConfigCache(config);
     const { cache: projectCache, error: projectError } = await writeCurrentProjectCache(projectId);
     if (projectError) return projectError;
 
     const { cache: localesCache, error: localesError } = await writeLocalesToCache();
     if (localesError) return localesError;
 
-    if (projectCache && localesCache) {
-        Runtime.init(new Runtime(projectCache, new CurrentLocaleStorage('eng'), localesCache));
+    if (projectCache && localesCache && configCache) {
+        Runtime.init(new Runtime(projectCache, new CurrentLocaleStorage('eng'), localesCache, configCache));
     }
 
-    const { error: metadataStoreError } = await createStructureMetadataStore(projectId, config);
+    const { error: metadataStoreError } = await createStructureMetadataStore(
+        projectId,
+        config.map((t) => ({ name: t.structureName, type: t.structureType })),
+    );
     if (metadataStoreError) return metadataStoreError;
 }
 
