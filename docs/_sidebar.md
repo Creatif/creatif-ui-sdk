@@ -2,3 +2,5 @@
 - [Concepts](concept)
 - [Get started](installation)
 - [Tutorial](tutorial)
+- [Locales](locales)
+- [UI components](ui-components)

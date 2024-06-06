@@ -12,11 +12,6 @@ export default function App() {
                 items: [
                     {
                         structureType: 'map',
-                        structureName: 'Properties',
-                        form: <PropertyForm />,
-                    },
-                    {
-                        structureType: 'map',
                         structureName: 'Accounts',
                         form: <AccountForm />,
                     },

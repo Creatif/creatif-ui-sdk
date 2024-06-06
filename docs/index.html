@@ -42,10 +42,17 @@
         auto2top: true,
         coverpage: true,
         loadSidebar: true,
+        subMaxLevel: 2,
+        copyCode: {
+            buttonText: 'Copy to clipboard',
+            errorText: 'An error occurred while trying to copy your code. Please, try again later.',
+            successText: 'Copied',
+        },
     };
 </script>
 
 <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+<script src="https://unpkg.com/docsify-copy-code"></script>
 
 <!-- <script src="https://unpkg.com/docsify-copy-code"></script> -->
 <!-- <script src="https://unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
