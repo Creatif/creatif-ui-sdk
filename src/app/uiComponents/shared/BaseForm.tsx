@@ -69,7 +69,7 @@ interface Props<T extends FieldValues> {
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
-            inputReference: (props: ReferenceInputProps) => React.ReactNode;
+            inputConnection: (props: ReferenceInputProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
@@ -171,7 +171,7 @@ export default function BaseForm<T extends FieldValues>({
                                 <InputGroups store={useSpecialFields} {...props} />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
-                            inputReference: (props: ReferenceInputProps) => (
+                            inputConnection: (props: ReferenceInputProps) => (
                                 <InputReference {...props} store={referenceStore} parentStructureItem={structureItem} />
                             ),
                         },

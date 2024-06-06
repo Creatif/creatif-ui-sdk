@@ -68,7 +68,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
             inputLocale: (props?: InputLocaleProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
-            inputReference: (props: ReferenceInputProps) => React.ReactNode;
+            inputConnection: (props: ReferenceInputProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
@@ -160,8 +160,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -220,8 +220,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -316,7 +316,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}

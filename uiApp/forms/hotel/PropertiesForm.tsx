@@ -27,7 +27,7 @@ export function PropertiesForm() {
                     restaurantNumOfStars: 0,
                 },
             }}
-            inputs={(submitButton, { inputReference, watch }) => {
+            inputs={(submitButton, { inputConnection, watch }) => {
                 const hasRestaurant = watch('hasRestaurant');
 
                 return (
@@ -90,7 +90,7 @@ export function PropertiesForm() {
                             )}
 
                             <Grid.Col span={6}>
-                                {inputReference({
+                                {inputConnection({
                                     name: 'manager',
                                     structureName: 'Managers',
                                     structureType: 'map',
@@ -98,7 +98,7 @@ export function PropertiesForm() {
                             </Grid.Col>
 
                             <Grid.Col span={6}>
-                                {inputReference({
+                                {inputConnection({
                                     name: 'region',
                                     structureName: 'Regions',
                                     structureType: 'map',
@@ -106,7 +106,7 @@ export function PropertiesForm() {
                             </Grid.Col>
 
                             <Grid.Col span={6}>
-                                {inputReference({
+                                {inputConnection({
                                     name: 'category',
                                     structureName: 'Categories',
                                     structureType: 'map',

@@ -17,7 +17,7 @@ export function RegionsForm() {
                     priority: 'Medium',
                 },
             }}
-            inputs={(submitButton, { inputReference, inputGroups }) => (
+            inputs={(submitButton, { inputConnection, inputGroups }) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>
@@ -41,7 +41,7 @@ export function RegionsForm() {
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputReference({
+                            {inputConnection({
                                 name: 'manager',
                                 structureName: 'Managers',
                                 structureType: 'map',
