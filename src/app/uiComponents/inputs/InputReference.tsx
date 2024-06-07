@@ -17,7 +17,7 @@ interface Props {
     parentStructureItem: StructureItem;
     structureType: StructureType;
     label?: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     store: UseBoundStore<StoreApi<ReferencesStore>>;
 }
 export function InputReference({
@@ -25,7 +25,7 @@ export function InputReference({
     structureName,
     structureType,
     label,
-    validation,
+    options,
     name,
     store,
 }: Props) {
@@ -71,7 +71,7 @@ export function InputReference({
             {!isEqualStructureNameError && internalStructureItem && (
                 <Controller
                     control={control}
-                    rules={validation}
+                    rules={options}
                     render={({ field: { onChange } }) => (
                         <ReferenceSearchInput
                             inputError={useFirstError(name)}

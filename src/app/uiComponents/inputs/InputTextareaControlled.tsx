@@ -6,17 +6,17 @@ import type { TextareaProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form';
 interface Props extends TextareaProps {
     name: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string) => void;
 }
-export function InputTextareaControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputTextareaControlled({ name, options, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string>(getValues(name));
 
     return (
         <Controller
             name={name}
-            rules={validation}
+            rules={options}
             control={control}
             render={({ field: { onChange } }) => (
                 <Textarea

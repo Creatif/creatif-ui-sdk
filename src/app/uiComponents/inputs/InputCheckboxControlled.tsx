@@ -7,21 +7,21 @@ import type { RegisterOptions } from 'react-hook-form';
 interface Props extends CheckboxProps {
     name: string;
     onInputChange?: (value: boolean) => void;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     options?: RegisterOptions;
 }
-export function InputCheckboxControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputCheckboxControlled({ name, onInputChange, options, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [checked, setChecked] = useState(getValues(name));
 
     return (
         <Controller
-            rules={validation}
+            rules={options}
             control={control}
             name={name}
             render={({ field: { onChange: onChange } }) => (
                 <Checkbox
-                    defaultChecked={checked}
+                    checked={checked}
+                    value={checked}
                     error={useFirstError(name)}
                     onChange={(event) => {
                         onChange(event.currentTarget.checked);

@@ -48,7 +48,7 @@ import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     bindings: Bindings<T>;
-    formProps: UseFormProps<T>;
+    formProps?: UseFormProps<T>;
     inputs: (
         submitButton: React.ReactNode,
         actions: {

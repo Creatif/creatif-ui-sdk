@@ -10,9 +10,9 @@ import type { RegisterOptions } from 'react-hook-form';
 interface Props extends SliderProps {
     name: string;
     onInputChange?: (value: number) => void;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export function InputSliderControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputSliderControlled({ name, options, onInputChange, ...rest }: Props) {
     const { control, getValues, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState<number | undefined>(getValues(name));
     const error = useFirstError(name);
@@ -24,7 +24,7 @@ export function InputSliderControlled({ name, validation, onInputChange, ...rest
     return (
         <>
             <Controller
-                rules={validation}
+                rules={options}
                 control={control}
                 name={name}
                 render={({ field: { onChange } }) => (

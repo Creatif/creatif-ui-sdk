@@ -10,7 +10,7 @@ import { groupsField } from '@app/uiComponents/form/bindings/bindingResolver';
 import type { Group } from '@root/types/api/groups';
 export interface InputGroupsProps extends MultiSelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
 function createOptions(groups: Group[]) {
@@ -20,7 +20,7 @@ function createOptions(groups: Group[]) {
     }));
 }
 
-export function InputGroups({ validation, store }: InputGroupsProps) {
+export function InputGroups({ options, store }: InputGroupsProps) {
     const { control, setValue: setFormValue, setError } = useFormContext();
     const [value, setValue] = useState<string[]>([]);
     const { isFetching, data: groups, error: groupsError } = useGetGroups();
@@ -60,7 +60,7 @@ export function InputGroups({ validation, store }: InputGroupsProps) {
         <Controller
             control={control}
             name={name}
-            rules={validation}
+            rules={options}
             render={({ field: { onChange } }) => (
                 <MultiSelect
                     description="If no groups are given, current groups will be removed."

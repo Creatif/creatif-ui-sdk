@@ -47,7 +47,7 @@ interface Props<T extends FieldValues> {
     structureItem: StructureItem;
     useSpecialFields: UseBoundStore<StoreApi<SpecialFieldsStore>>;
     structureType: string;
-    formProps: UseFormProps<T>;
+    formProps?: UseFormProps<T>;
     isUpdate: boolean;
     referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
     inputs: (
@@ -90,6 +90,7 @@ export default function BaseForm<T extends FieldValues>({
     const setLocale = useSpecialFields((state) => state.setLocale);
     const setGroups = useSpecialFields((state) => state.setGroups);
     const setBehaviour = useSpecialFields((state) => state.setBehaviour);
+    formProps = formProps || {};
 
     const assignReferences = referenceStore((state) => state.assign);
 
