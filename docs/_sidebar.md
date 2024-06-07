@@ -3,4 +3,7 @@
 - [Get started](installation)
 - [Tutorial](tutorial)
 - [Locales](locales)
+- [Using groups](using-groups)
 - [UI components](ui-components)
+- [Using the UI](using-the-ui)
+- [Using API SDK](using-api-sdk)

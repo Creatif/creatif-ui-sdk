@@ -691,13 +691,13 @@ export function PropertyForm() {
             bindings={{
                 name: (values) => `${values.address}-${values.city}-${values.postalCode}`,
             }}
-            inputs={(submitButton, { watch, inputReference, inputLocale }) => {
+            inputs={(submitButton, { watch, inputConnection, inputLocale }) => {
                 const propertyType = watch('propertyType');
 
                 return (
                     <>
                         <div>
-                            {inputReference({
+                            {inputConnection({
                                 structureName: 'Accounts',
                                 name: 'accounts',
                                 structureType: 'map',
@@ -861,5 +861,69 @@ All I did is hook up Quill to work with `react-hook-form`.
 
 This can be done with any component you want, no matter how complicated it is. 
 
-# inputReference()
+# inputConnection()
 
+This part is a little bit tricky but is also a very important one. 
+
+After you create an Account, which represent a property owner, you have to link that
+Account to a Property. You do that with `inputConnection()`.
+
+````tsx
+{inputConnection({
+    structureName: 'Accounts',
+    name: 'accounts',
+    structureType: 'map',
+    label: 'Account',
+    validation: {
+        required: 'Selecting an account is required',
+    },
+})}
+````
+
+`inputConnection()` is a function that renders an input with which you can connect
+a structure entry with another structure entry. After the connection is made, Account will
+become the parent of the Property. 
+
+> NOTE
+> 
+> After you publish, these entries will be available in the public API as 
+> 'connections'. More on publishing and using the public API later on.
+
+Properties `structureName`, `name` and `structureType` are required. The rest are there
+for the actual input. 
+
+In our example, this field is required but if you remove the validation, it won't be.
+
+# Try it out
+
+Try creating a couple of accounts and properties. It should be intuitive how to do that but if you
+are having trouble using the UI, visit [Using the UI section](using-the-ui) for a more
+detailed explanations on how to use the UI.
+
+# Publishing
+
+In the upper right corner, you will see a `Publish` button. After you click on it, 
+you will be on the versioning screen. 
+
+![Publish button](_images/tutorial_publish_button.png 'Publish button')
+
+Creatif support infinite versions. That means that you can toggle between versions freely
+and create version for different environments.
+
+Go ahead and create you first version. This version will not be enabled by default. You have
+to enable it manually. Click on the `Enable` button.
+
+![Creating a version](_images/tutorial_publish_version.gif 'Creating a version')
+
+Your version is now live and accessible to the outside world. In the left corer, click
+on the `API` button. On this screen, you can explore your public API. Using the API is explained
+in separate section [Using API SDK](using-api-sdk)
+
+# What next?
+
+I would advise you to just start playing around. Most of the features are pretty intuitive and
+easy to use. If you have any trouble, use this documentation to find out how a particular feature works.
+
+- [Using the UI](using-the-ui)
+- [Using groups](using-groups)
+- [Using API SDK](using-api-sdk)
