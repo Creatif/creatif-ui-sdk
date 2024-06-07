@@ -14,7 +14,7 @@ export default function DeckForm() {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputReference }) => (
+            inputs={(submitButton, { inputConnection }) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>
@@ -28,7 +28,7 @@ export default function DeckForm() {
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputReference({
+                            {inputConnection({
                                 name: 'language',
                                 structureName: 'Languages',
                                 structureType: 'list',

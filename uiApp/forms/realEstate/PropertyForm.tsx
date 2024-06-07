@@ -67,12 +67,12 @@ export function PropertyForm() {
                     landSize: null,
                 },
             }}
-            inputs={(submitButton, { watch, inputReference }) => {
+            inputs={(submitButton, { watch, inputConnection }) => {
                 const propertyType = watch('propertyType');
 
                 return (
                     <>
-                        {inputReference({
+                        {inputConnection({
                             structureName: 'Accounts',
                             name: 'accounts',
                             structureType: 'map',
