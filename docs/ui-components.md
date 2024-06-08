@@ -310,14 +310,14 @@ If you would like to use some other regex, provide a `pattern` option and it wil
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends DateInputProps {
     name: string;
     format?: string;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (date: string) => void;
 }
-````
+```
 
 `InputDateControlled` is an abstraction around [Mantine date component](https://mantine.dev/dates/getting-started/). It is
 only an implementation of what is possible with this Mantine component and might not have all the features you want.
@@ -330,13 +330,13 @@ all props that this component accepts.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends ChipProps {
     name: string;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (checked: boolean) => void;
 }
-````
+```
 
 `InputChipControlled` is an abstraction around [Chip](https://mantine.dev/core/chip/) Mantine component.
 Any props that it uses, you can use with `InputChipControlled`.
@@ -345,13 +345,13 @@ Any props that it uses, you can use with `InputChipControlled`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends PinInputProps {
     name: string;
     onInputChange?: (value: string) => void;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-````
+```
 
 `InputPinControlled` is an abstraction around [PinInput](https://mantine.dev/core/pin-input/) Mantine component.
 Any props that it uses, you can use with `InputPinControlled`.
@@ -360,13 +360,13 @@ Any props that it uses, you can use with `InputPinControlled`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends RangeSliderProps {
     name: string;
     onInputChange?: (value: [number, number]) => void;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-````
+```
 
 `InputRangeSliderControlled` is an abstraction around [RangeSlider](https://mantine.dev/core/slider/) Mantine component.
 Any props that it uses, you can use with `InputRangeSliderControlled`.
@@ -375,13 +375,13 @@ Any props that it uses, you can use with `InputRangeSliderControlled`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends SliderProps {
     name: string;
     onInputChange?: (value: number) => void;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-````
+```
 
 `InputSliderControlled` is an abstraction around [Slider](https://mantine.dev/core/slider/) Mantine component.
 Any props that it uses, you can use with `InputSliderControlled`.
@@ -390,12 +390,12 @@ Any props that it uses, you can use with `InputSliderControlled`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends RatingProps {
     name: string;
     onInputChange?: (value: number) => void;
 }
-````
+```
 
 `InputRatingControlled` is an abstraction around [Rating](https://mantine.dev/core/rating/) Mantine component.
 Any props that it uses, you can use with `InputRatingControlled`.
@@ -404,7 +404,7 @@ Any props that it uses, you can use with `InputRatingControlled`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends SegmentedControlProps {
     name: string;
     onInputChange?: (value: string) => void;
@@ -416,7 +416,7 @@ export interface SegmentedControlItem {
     label: React.ReactNode;
     disabled?: boolean;
 }
-````
+```
 
 `InputSegmentedControlControlled` is an abstraction around [Rating](https://mantine.dev/core/segmented-control/) Mantine component.
 Any props that it uses, you can use with `InputSegmentedControlControlled`.
@@ -425,13 +425,13 @@ Any props that it uses, you can use with `InputSegmentedControlControlled`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends SelectProps {
     name: string;
     data: string[] | { value: string; label: string }[];
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-````
+```
 
 `InputSelectControlled` is an abstraction around [Select](https://mantine.dev/core/select/) Mantine component.
 Any props that it uses, you can use with `InputSelectControlled`.
@@ -443,12 +443,12 @@ very powerful. If you need additional functionality, use can create one yourself
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends SwitchProps {
     name: string;
     options?: RegisterOptions;
 }
-````
+```
 
 `InputSwitch` is an abstraction around [Switch](https://mantine.dev/core/switch/) Mantine component.
 Any props that it uses, you can use with `InputSwitch`.
@@ -457,21 +457,16 @@ Any props that it uses, you can use with `InputSwitch`.
 
 `RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
 
-````ts
+```ts
 interface Props extends SwitchProps {
     name: string;
     onInputChange?: (value: boolean) => void;
     validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     options?: RegisterOptions;
 }
-````
+```
 
 `InputSwitchControlled` is an abstraction around [Switch](https://mantine.dev/core/switch/) Mantine component.
 Any props that it uses, you can use with `InputSwitchControlled`.
 
 # Special Creatif components
-
-
-
-
-

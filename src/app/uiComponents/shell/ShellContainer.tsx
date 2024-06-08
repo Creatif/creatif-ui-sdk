@@ -6,7 +6,6 @@ import { ShellApp } from '@app/uiComponents/shell/ShellApp';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CenteredError from '@app/components/CenteredError';
 import { RuntimeDiff } from '@app/uiComponents/shell/RuntimeDiff';
-import { RuntimeConfigFailModal } from '@app/uiComponents/shared/RuntimeConfigFailModal';
 
 interface Props {
     options: CreatifApp;
@@ -18,7 +17,6 @@ export default function ShellContainer({ options }: Props) {
 
     const [runtimeCreated, setRuntimeCreated] = useState(false);
     const [runtimeFailed, setRuntimeFailed] = useState(false);
-    const [runtimeUpdateFailed, setRuntimeUpdateFailed] = useState(false);
 
     useEffect(() => {
         if (projectId && !Runtime.instance) {
@@ -38,16 +36,7 @@ export default function ShellContainer({ options }: Props) {
 
     return (
         <>
-            {runtimeCreated && projectId && (
-                <RuntimeDiff
-                    onRuntimeUpdateFail={() => {
-                        setRuntimeUpdateFailed(true);
-                    }}
-                    projectId={projectId}
-                    config={options}
-                />
-            )}
-            {runtimeUpdateFailed && <RuntimeConfigFailModal />}
+            {runtimeCreated && projectId && <RuntimeDiff projectId={projectId} config={options} />}
             {runtimeCreated && <ShellApp config={options} />}
             {runtimeFailed && <CenteredError title="Failed to initiate project. Please, try again later" />}
         </>

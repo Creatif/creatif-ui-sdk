@@ -1,6 +1,7 @@
 import React from 'react';
 import { CreatifProvider } from '../src/CreatifProvider';
-import { AllFieldsForm } from './forms/AllFieldsForm';
+import { PropertyForm } from './forms/realEstate/PropertyForm';
+import { AccountForm } from './forms/realEstate/AccountForm';
 
 export default function App() {
     return (
@@ -10,9 +11,14 @@ export default function App() {
                 projectName: 'project',
                 items: [
                     {
-                        structureType: 'map',
+                        structureType: 'list',
                         structureName: 'Properties',
-                        form: <AllFieldsForm />,
+                        form: <PropertyForm />,
+                    },
+                    {
+                        structureType: 'map',
+                        structureName: 'Account',
+                        form: <AccountForm />,
                     },
                 ],
             }}
