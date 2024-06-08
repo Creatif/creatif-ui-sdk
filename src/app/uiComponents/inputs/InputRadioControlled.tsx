@@ -20,7 +20,7 @@ export function InputRadioControlled({ name, options, onInputChange, ...rest }: 
             name={name}
             render={({ field: { onChange: onChange } }) => (
                 <Radio
-                    checked={checked}
+                    value={checked}
                     error={useFirstError(name)}
                     onChange={(event) => {
                         onChange(event.currentTarget.checked);

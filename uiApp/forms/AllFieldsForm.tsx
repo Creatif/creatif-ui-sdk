@@ -99,7 +99,7 @@ export function AllFieldsForm() {
                         </div>
 
                         <div>
-                            <InputRadioControlled name="radioControlled" placeholder="radio controlled" label="Radio controlled" />
+                            <InputRadioControlled name="radioControlled" placeholder="radio controlled" label="Radio controlled" onInputChange={console.log} />
                         </div>
 
                         <div>

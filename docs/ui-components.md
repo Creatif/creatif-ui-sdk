@@ -199,6 +199,38 @@ interface Props extends CheckboxProps {
 `InputCheckboxControlled` is an abstraction around [Checkbox](https://mantine.dev/core/checkbox/) Mantine component.
 Any props that it uses, you can use with `InputCheckboxControlled`.
 
+# InputRadio
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends RadioProps {
+    name: string;
+    options?: RegisterOptions;
+}
+````
+
+`InputRadio` is an abstraction around [Radio](https://mantine.dev/core/radio/) Mantine component.
+Any props that it uses, you can use with `InputRadio`.
+
+# InputRadioControlled
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends RadioProps {
+    name: string;
+    options?: RegisterOptions;
+    onInputChange?: (value: boolean) => void;
+}
+````
+
+`InputRadioControlled` is an abstraction around [Radio](https://mantine.dev/core/radio/) Mantine component.
+Any props that it uses, you can use with `InputRadioControlled`.
+
+# InputNumberControlled
+
+
 
 
 
