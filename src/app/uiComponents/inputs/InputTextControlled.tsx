@@ -6,10 +6,10 @@ import type { RegisterOptions } from 'react-hook-form';
 
 interface Props extends TextInputProps {
     name: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string) => void;
 }
-export function InputTextControlled({ name, validation, onInputChange, ...rest }: Props) {
+export function InputTextControlled({ name, options, onInputChange, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string>(getValues(name));
 
@@ -17,7 +17,7 @@ export function InputTextControlled({ name, validation, onInputChange, ...rest }
         <Controller
             control={control}
             name={name}
-            rules={validation}
+            rules={options}
             render={({ field: { onChange } }) => (
                 <InputText
                     value={value}

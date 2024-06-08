@@ -9,14 +9,14 @@ import type { RegisterOptions, FieldValues, FormState } from 'react-hook-form';
 // @ts-ignore
 interface Props extends CheckboxGroupProps {
     name: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string[]) => void;
     component?: (data: { value: string[]; formState: FormState<FieldValues> }) => React.ReactNode;
     children?: ReactNode;
 }
 export function InputCheckboxGroupControlled({
     name,
-    validation,
+    options,
     onInputChange,
     defaultValue,
     children,
@@ -51,7 +51,7 @@ export function InputCheckboxGroupControlled({
                 </Checkbox.Group>
             )}
             name={name}
-            rules={validation}
+            rules={options}
         />
     );
 }

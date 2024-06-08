@@ -10,7 +10,7 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import { localeField } from '@app/uiComponents/form/bindings/bindingResolver';
 export interface InputLocaleProps extends SelectProps {
     store: UseBoundStore<StoreApi<SpecialFieldsStore>>;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 function createOptions(locales: Locale[]) {
     return locales.map((item) => ({
@@ -18,7 +18,7 @@ function createOptions(locales: Locale[]) {
         value: item.alpha,
     }));
 }
-export function InputLocale({ store, validation, ...rest }: InputLocaleProps) {
+export function InputLocale({ store, options, ...rest }: InputLocaleProps) {
     const { control, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState(store.getState().locale || Runtime.instance.currentLocaleStorage.getLocale());
     const locales: Locale[] = Runtime.instance.localesCache.getLocales() || [];
@@ -36,11 +36,11 @@ export function InputLocale({ store, validation, ...rest }: InputLocaleProps) {
             control={control}
             name={name}
             rules={
-                !validation
+                !options
                     ? {
                           required: 'Locale field is required.',
                       }
-                    : validation
+                    : options
             }
             render={({ field: { onChange } }) => (
                 <Select

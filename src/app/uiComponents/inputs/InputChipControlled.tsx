@@ -11,17 +11,17 @@ import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 interface Props extends ChipProps {
     name: string;
     format?: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (checked: boolean) => void;
 }
-export function InputChipControlled({ name, validation, onInputChange, children, ...rest }: Props & PropsWithChildren) {
+export function InputChipControlled({ name, options, onInputChange, children, ...rest }: Props & PropsWithChildren) {
     const { control, getValues } = useFormContext();
     const [checked, setChecked] = useState<boolean | undefined>(getValues(name));
     const err = useFirstError(name);
 
     return (
         <Controller
-            rules={validation}
+            rules={options}
             control={control}
             name={name}
             render={({ field: { onChange: onChange } }) => (

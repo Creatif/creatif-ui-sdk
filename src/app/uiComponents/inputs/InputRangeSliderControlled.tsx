@@ -10,7 +10,7 @@ import type { RegisterOptions } from 'react-hook-form';
 interface Props extends RangeSliderProps {
     name: string;
     onInputChange?: (value: [number, number]) => void;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
 function resolveDefaultValue(
@@ -31,7 +31,7 @@ function resolveDefaultValue(
 
     return [0, 0];
 }
-export function InputRangeSliderControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
+export function InputRangeSliderControlled({ name, options, onInputChange, defaultValue, ...rest }: Props) {
     const { control, getValues, setValue: setFormValue } = useFormContext();
     const [value, setValue] = useState<[number, number] | undefined>(
         resolveDefaultValue(defaultValue, getValues(name)),
@@ -45,7 +45,7 @@ export function InputRangeSliderControlled({ name, validation, onInputChange, de
     return (
         <>
             <Controller
-                rules={validation}
+                rules={options}
                 control={control}
                 name={name}
                 render={({ field: { onChange } }) => (

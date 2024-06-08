@@ -9,14 +9,14 @@ import type { RegisterOptions, FieldValues, FormState } from 'react-hook-form';
 // @ts-ignore
 interface Props extends SwitchGroupProps {
     name: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (value: string[]) => void;
     component?: (data: { value: string[]; formState: FormState<FieldValues> }) => React.ReactNode;
     children?: ReactNode;
 }
 export function InputSwitchGroupControlled({
     name,
-    validation,
+    options,
     onInputChange,
     children,
     component,
@@ -50,7 +50,7 @@ export function InputSwitchGroupControlled({
                 </Switch.Group>
             )}
             name={name}
-            rules={validation}
+            rules={options}
         />
     );
 }

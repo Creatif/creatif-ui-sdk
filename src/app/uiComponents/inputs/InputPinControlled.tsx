@@ -10,16 +10,16 @@ import type { RegisterOptions } from 'react-hook-form';
 interface Props extends PinInputProps {
     name: string;
     onInputChange?: (value: string) => void;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
-export function InputPinControlled({ name, validation, onInputChange, defaultValue, ...rest }: Props) {
+export function InputPinControlled({ name, options, onInputChange, defaultValue, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string | undefined>(defaultValue || getValues(name));
     const error = useFirstError(name);
     return (
         <>
             <Controller
-                rules={validation}
+                rules={options}
                 control={control}
                 name={name}
                 render={({ field: { onChange } }) => (
