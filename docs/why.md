@@ -4,12 +4,12 @@ In my career, I worked with many CMSs, from Strapi to CraftCMS and none of them 
 easy for me and for my clients. I could understand the learning curve for developers to learn
 how a new tool works but I could not understand that for clients. Clients should just be able
 to install something and intuitively "know" how something, particular for their industry, works.
-It should have a "look and feel" of a custom application specifically created for them. 
-Too many CMS systems force us developers to tell *no* to our clients when they ask for a new feature
+It should have a "look and feel" of a custom application specifically created for them.
+Too many CMS systems force us developers to tell _no_ to our clients when they ask for a new feature
 because this feature is not possible in the CMS that you are using. This can create tension between
 you and your client because they need a feature that you cannot deliver. Sure, you can contact support
 of the CMS that you are possibly paying thousands of dollars a month, asking for a new feature but
-you are at their mercy. 
+you are at their mercy.
 
 Before starting to work on Creatif, I did an investigation into headless CMS ecosystem and
 there are a lot of them and almost every one of them has some kind of learning curve for clients
@@ -27,13 +27,11 @@ but, all things considered, if you don't like Creatif, I think PocketBase is the
 
 For myself, I wanted something powerful. Something that will make you think that the search
 is over and that you don't have to use another CMS ever again. A CMS that will never make you tell
-your clients that something is just not possible. One CMS to rule them all. 
-**A CMS so powerful that you can create other CMSs with it**. I'm still not there but 
+your clients that something is just not possible. One CMS to rule them all.
+**A CMS so powerful that you can create other CMSs with it**. I'm still not there but
 I hope this a is good enough of a start to get there.
 
 P.S.
 
 Yes, I know saying "One CMS to rule them all" is a little over the top and currently, Creatif is not there yet
 but the possibility exists. Done right, this project will, at least, make your life a lot easier.
-
-

@@ -1,61 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no"
-    />
-    <meta
-        name="description"
-        content="A demonstration of docsify-themable: a delightfully simple theme system for docsify.js"
-    />
-    <title>Creatif CMS</title>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no" />
+        <meta
+            name="description"
+            content="A demonstration of docsify-themable: a delightfully simple theme system for docsify.js" />
+        <title>Creatif CMS</title>
 
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.min.css">
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.min.css" />
 
-    <style>
-        .cover-main {
-            color: black;
-        }
-
-        #creatif-cms a span {
-            color: coral;
-            font-weight: bold;
-        }
-
-        @media screen and (min-width: 1120px) {
-            .content {
-                max-width: 50%;
+        <style>
+            .cover-main {
+                color: black;
             }
-        }
-    </style>
-</head>
 
-<body>
-<div id="app"></div>
+            #creatif-cms a span {
+                color: coral;
+                font-weight: bold;
+            }
 
-<script>
-    // Docsify configuration
-    window.$docsify = {
-        auto2top: true,
-        coverpage: true,
-        loadSidebar: true,
-        subMaxLevel: 2,
-        copyCode: {
-            buttonText: 'Copy to clipboard',
-            errorText: 'An error occurred while trying to copy your code. Please, try again later.',
-            successText: 'Copied',
-        },
-    };
-</script>
+            @media screen and (min-width: 1120px) {
+                .content {
+                    max-width: 50%;
+                }
+            }
+        </style>
+    </head>
 
-<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-<script src="https://unpkg.com/docsify-copy-code"></script>
+    <body>
+        <div id="app"></div>
 
-<!-- <script src="https://unpkg.com/docsify-copy-code"></script> -->
-<!-- <script src="https://unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
-<!-- <script src="https://unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script> -->
-</body>
+        <script>
+            // Docsify configuration
+            window.$docsify = {
+                auto2top: true,
+                coverpage: true,
+                loadSidebar: true,
+                subMaxLevel: 2,
+                copyCode: {
+                    buttonText: 'Copy to clipboard',
+                    errorText: 'An error occurred while trying to copy your code. Please, try again later.',
+                    successText: 'Copied',
+                },
+            };
+        </script>
+
+        <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+        <script src="https://unpkg.com/docsify-copy-code"></script>
+
+        <!-- <script src="https://unpkg.com/docsify-copy-code"></script> -->
+        <!-- <script src="https://unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
+        <!-- <script src="https://unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script> -->
+    </body>
 </html>

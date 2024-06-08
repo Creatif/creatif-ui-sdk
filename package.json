@@ -1,6 +1,6 @@
 {
     "name": "creatif-ui-sdk",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "description": "UI SDK to create Creatif CMS",
     "license": "MIT",
     "type": "module",
@@ -13,7 +13,7 @@
         "creatif"
     ],
     "author": {
-        "email": "marioskrlec222@prton.me",
+        "email": "marioskrlec222@proton.me",
         "name": "Mario Škrlec"
     },
     "scripts": {

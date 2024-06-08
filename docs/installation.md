@@ -1,30 +1,30 @@
 # Getting started
 
 > CAUTION
-> 
+>
 > Creatif is still deep in alpha stage. Some features might not work as expected.
 
 # Requirements
 
-To install Creatif, you will have to have [Docker](https://docs.docker.com/engine/install/) 
+To install Creatif, you will have to have [Docker](https://docs.docker.com/engine/install/)
 installed.
 
 # Installation (easy)
 
 After you install docker, you can install Creatif with
 
-````javascript
+```javascript
 npm create creatif-app
-````
+```
 
 This installation script will ask you to create the app directory and weather you
 want to install a starter project. Starter project is part of [Tutorial](tutorial)
 but you can set it up if you want. After that, `cd` into you app directory and
-run 
+run
 
-````javascript
+```javascript
 docker compose up
-````
+```
 
 Creatif ships with its own backend so this might take a while but this is the only
 thing that you have to do to start using Creatif.
@@ -34,45 +34,44 @@ thrown. This is because Creatif cannot be used without configuration. Head over 
 [Tutorial](tutorial) to learn and setup Creatif with a starter project.
 
 > NOTE
-> 
-> Creatif comes with its own backend that is written in Go. This backend will probably 
+>
+> Creatif comes with its own backend that is written in Go. This backend will probably
 > start after Creatif frontend is all set up so if you start the frontend and the backend throws an error,
 > its probably because it's still building. Wait a couple of seconds and it should work.
-> Creatif runs on *localhost:5173* and the backend is on *localhost:3002*
-> 
+> Creatif runs on _localhost:5173_ and the backend is on _localhost:3002_
 
 # Installation (less easy)
 
-You can also set up what `creatif-app` sets up for you. Creatif has a backend and a frontend. 
-First, open up two tabs in the terminal of your choice. 
+You can also set up what `creatif-app` sets up for you. Creatif has a backend and a frontend.
+First, open up two tabs in the terminal of your choice.
 
 In the first tab, set up backend with
 
-`````shell
+```shell
 git clone git@github.com:Creatif/creatif-backend.git
 cd creatif-backend
 docker-compose up
-`````
+```
 
 or, shorthand
 
-`````shell
+```shell
 git clone git@github.com:Creatif/creatif-backend.git && cd creatif-backend && docker-compose up
-`````
+```
 
 In the second tab, set up frontend with
 
-`````shell
+```shell
 git clone git@github.com:Creatif/creatif-ui-sdk.git
 cd creatif-backend
 docker-compose up
-`````
+```
 
 or, shorthand
 
-`````shell
+```shell
 git clone git@github.com:Creatif/creatif-ui-sdk.git && cd creatif-backend && docker-compose up
-`````
+```
 
 Since I am personally working on the fronted, to make my life easier, I setted up a testing app
 under the `uiApp` directory and this directory is excluded from the final build. You will only see it
@@ -84,7 +83,4 @@ basic Vite project setted up to create a javascript library. Nothing more, nothi
 
 If you want to set up your own testing environment, create a new directory in the root directory and create
 the standard `index.tsx` that you can find in `uiApp` directory. Then, just modify `index.html` to point
-to that file and it should work. Of course, be sure to set up Creatif properly. 
-
-
-
+to that file and it should work. Of course, be sure to set up Creatif properly.

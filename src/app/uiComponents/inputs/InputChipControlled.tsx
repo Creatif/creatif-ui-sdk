@@ -10,7 +10,6 @@ import type { PropsWithChildren } from 'react';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 interface Props extends ChipProps {
     name: string;
-    format?: string;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (checked: boolean) => void;
 }

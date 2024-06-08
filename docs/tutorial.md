@@ -1,29 +1,29 @@
 # Tutorial
 
 > NOTE
-> 
+>
 > If you setted up Creatif with a starter project, everything in this
 > tutorial is already setup. It is still better for you to follow this
 > tutorial to familiarize yourself with the concepts of Creatif.
-> 
-> If you decided to not set up a starter project, you will 
+>
+> If you decided to not set up a starter project, you will
 > get a configuration error. This is normal
-> since you don't have any structures yet. After you set up the first 
-> structure, the error will disappear and you be able to login. 
+> since you don't have any structures yet. After you set up the first
+> structure, the error will disappear and you be able to login.
 
 In this tutorial, you will create a simple CMS for real estate agency. It will
-consist of two structures: Accounts and Properties. Account will be an owner of the 
+consist of two structures: Accounts and Properties. Account will be an owner of the
 property and Property will be the real estate that the owner sells or rents.
 
 For now, we will just set up the project. How and why it works this way and other
-Creatif concepts will be explained later. 
+Creatif concepts will be explained later.
 
 # Setting up Accounts form
 
 Let's create the Accounts form. Create a file named `AccountForm.tsx` and copy/paste this
 code into it.
 
-`````tsx
+```tsx
 import { Form, InputText } from 'creatif-ui-sdk';
 import css from './css/root.module.css';
 
@@ -108,12 +108,12 @@ export function AccountForm() {
         />
     );
 }
-`````
+```
 
-We also need to create CSS for this form. Create a new `css` directory with a 
+We also need to create CSS for this form. Create a new `css` directory with a
 file called `root.module.css` and copy/paste the code below:
 
-`````css
+```css
 .fieldGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -146,12 +146,12 @@ file called `root.module.css` and copy/paste the code below:
 
     margin-top: 3rem;
 }
-`````
+```
 
 The last step is creating our app and configuration for the app. Create the `App.tsx`
 and copy/paste this code:
 
-`````tsx
+```tsx
 import React from 'react';
 import { CreatifProvider } from 'creatif-ui-sdk';
 import { AccountForm } from './AccountForm';
@@ -173,7 +173,7 @@ export default function App() {
         />
     );
 }
-`````
+```
 
 If you haven't already, head to `http://localhost:5173` and set up the admin user
 and login. You should see something like this.
@@ -182,26 +182,26 @@ After login, you should be able to see this image
 
 ![Nesting navbar](_images/tutorial_account_form_created.png 'Accounts form')
 
-Go ahead and create a new account. Using it should be intuitive. 
+Go ahead and create a new account. Using it should be intuitive.
 
 # Let's examine what we created
 
 If you look at the `AccountForm.tsx`, you would notice that we import `InputText` and `Form`
-components from `creatif-ui-sdk` package. This package **is** Creatif. Creatif allows you to 
+components from `creatif-ui-sdk` package. This package **is** Creatif. Creatif allows you to
 create any form you want. When you are ready to save the form, Creatif saves it for you. The form
 can contain 'everything UI'. You can use modals, sidebars, progress components, wizards... Basically any form
 component that you can imagine and any form experience. As long as you tell Creatif how your form looks like trough form fields,
 everything is possible. This creates a unique experience for you and your clients since you don't
-have to tell them 'No, we cannot make this feature since our ***insert CMS of your choice*** does not support it'.
+have to tell them 'No, we cannot make this feature since our **_insert CMS of your choice_** does not support it'.
 
 The `Form` component is the component that tracks your form. It is a wrapper around [useForm](https://react-hook-form.com/docs/useform)
 at it tracks if this structure needs to be created or updated.
 Every new structure must use the Form component. Under the hood, Creatif uses `react-hook-form`
-and it would be good to familiarize yourself with it, but for basic usage, it is ok to use this documentation. 
+and it would be good to familiarize yourself with it, but for basic usage, it is ok to use this documentation.
 
 `Form` is a generic component. In our example above, we specified the type for our form:
 
-`````tsx
+```tsx
 <Form<{
     name: string;
     lastName: string;
@@ -209,54 +209,54 @@ and it would be good to familiarize yourself with it, but for basic usage, it is
     city: string;
     postalCode: string;
 }>
-`````
+```
 
-In our example, we inlined it but you can create an interface if you wish. 
+In our example, we inlined it but you can create an interface if you wish.
 
-Next, you can see the `formProps` property. 
+Next, you can see the `formProps` property.
 
-`````tsx
+```tsx
 formProps={{
     defaultValues: {
-        name: '', 
+        name: '',
         lastName: '',
         address: '',
         city: '',
         postalCode: '',
     },
 }}
-`````
+```
 
 `formProps` accepts all arguments that `useForm` hook from [react-hook-form](https://react-hook-form.com/docs/useform)
 accepts. Remember, `Form` is just a wrapper around `useForm` but Creatif also uses it to track weather to create
-or update this structure (in our example, an Account). 
+or update this structure (in our example, an Account).
 
-Next, there is the `bindings` prop. This prop is not part or `react-hook-form` but a special Creatif prop. 
-Since every *map* or *list* structure must have a *name* field, `bindings` prop tells us what fields should we use
-to name our structure. In case of a *map*, the *name* must be unique.
+Next, there is the `bindings` prop. This prop is not part or `react-hook-form` but a special Creatif prop.
+Since every _map_ or _list_ structure must have a _name_ field, `bindings` prop tells us what fields should we use
+to name our structure. In case of a _map_, the _name_ must be unique.
 
 > NOTE
-> 
+>
 > Remember, maps and list structures in Creatif are similar to data structures in any programming language.
 > If you use a map in a programming language, a key must be unique. If you assign a value to a key that already
 > exists, that value would overwrite the previous value. Creatif will give you an error if you try to create/update
-> a map item with a name that already exists. 
-> 
+> a map item with a name that already exists.
+>
 > In case of list structures in Creatif, they are unique only if you have a name and locale that are equal.
 > If you try to create a list item with name and locale that already exists, form will result in an error.
 > But if you wish to create a list item with the same name but different locale, you can.
 
 Practically, you can imagine the reason behind this feature. There can be only one Account in the system; one person;
 one client or whatever represents an Account. What that account "has" or "can do" can be represented with other
-structures. In this tutorial, you will see how one account (one person) can sell/rent multiple properties. 
+structures. In this tutorial, you will see how one account (one person) can sell/rent multiple properties.
 
 We now have the `InputText` component. What form will not be complete without form components?
 Under the hood, Creatif uses the awesome [Mantine UI library](https://mantine.dev/). Mantine provides a wide
 range of beautiful components and Creatif implements most of them. If you need a textarea, Creatif exports it
 as `InputTextarea`. If you need a slider component, Creatif exports it as `InputSliderControlled`. You can see
-the full list of components that Creatif exports in the [UI components](ui-components) section. 
+the full list of components that Creatif exports in the [UI components](ui-components) section.
 
-Lastly, we have our `submitButton` component. This component is provided for you and is required in every Creatif 
+Lastly, we have our `submitButton` component. This component is provided for you and is required in every Creatif
 form that you create.
 
 These components are nothing special. Since Creatif uses Mantine UI, it was important to keep the form components uniform
@@ -265,7 +265,7 @@ But you are not limited to using only these components. As I said, these compone
 around `react-hook-form` and you can easily create your own. In fact, here is the entire source code form `InputText`
 component:
 
-````tsx
+```tsx
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import { TextInput } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
@@ -282,8 +282,7 @@ export function InputText({ name, options, ...rest }: Props) {
 
     return <TextInput error={useFirstError(name)} {...register(name, options)} {...rest} />;
 }
-
-````
+```
 
 Nothing special. This is exactly what you would do If you were to create an abstraction around a text
 input for your forms. Because of that, you are not limited to using Creatif components. You can use any UI
@@ -299,11 +298,11 @@ break it down into multiple components right away so we don't get bogged down in
 and go straight to how Creatif works. For now, follow along and just create these components. After we make
 everything work, I will explain what is going on.
 
-Create a directory called `components`. We are going to create five components in this directory. 
+Create a directory called `components`. We are going to create five components in this directory.
 
-Create a file named `ApartmentForm.tsx` and put it into the `components` directory. 
+Create a file named `ApartmentForm.tsx` and put it into the `components` directory.
 
-`````tsx
+```tsx
 import { InputCheckbox, InputNumberControlled } from 'creatif-ui-sdk';
 import { useCreatifFormContext } from 'creatif-ui-sdk';
 import css from '../css/root.module.css';
@@ -368,11 +367,11 @@ export function ApartmentForm() {
         </div>
     );
 }
-`````
+```
 
-Create a file named `HouseForm.tsx` and put it in the `components` directory. 
+Create a file named `HouseForm.tsx` and put it in the `components` directory.
 
-`````tsx
+```tsx
 import { InputCheckbox, InputNumberControlled, InputTextarea } from 'creatif-ui-sdk';
 import { useCreatifFormContext } from 'creatif-ui-sdk';
 import css from '../css/root.module.css';
@@ -466,11 +465,11 @@ export function HouseForm() {
         </div>
     );
 }
-`````
+```
 
 Create a component named `StudioForm.tsx` and put it into `components` directory.
 
-````tsx
+```tsx
 import { InputNumberControlled } from 'creatif-ui-sdk';
 import css from '../css/root.module.css';
 
@@ -503,11 +502,11 @@ export function StudioForm() {
         </div>
     );
 }
-````
+```
 
 Create a component named `LandForm.tsx` and put it into `components` directory.
 
-````tsx
+```tsx
 import { InputCheckbox, InputNumberControlled } from 'creatif-ui-sdk';
 import css from '../css/root.module.css';
 
@@ -534,34 +533,32 @@ export function LandForm() {
         </div>
     );
 }
-````
+```
 
 Create a component named `RichTextEditor.tsx` and put it into `components` directory.
 
-````tsx
-import {useEffect, useRef, useTransition} from 'react';
+```tsx
+import { useEffect, useRef, useTransition } from 'react';
 import Quill from 'quill';
-import type {QuillOptions} from 'quill';
+import type { QuillOptions } from 'quill';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import type { Delta } from 'quill/core';
-import {useCreatifFormContext, useCreatifController} from "creatif-ui-sdk";
+import { useCreatifFormContext, useCreatifController } from 'creatif-ui-sdk';
 
 interface Props {
     name: string;
     placeholder?: string;
 }
 
-export function RichTextEditor({name, placeholder}: Props) {
-    const {control, setValue, getValues} = useCreatifFormContext();
+export function RichTextEditor({ name, placeholder }: Props) {
+    const { control, setValue, getValues } = useCreatifFormContext();
     const containerRef = useRef();
     const deltaRef = useRef<typeof Delta>(Quill.import('delta'));
     const quillRef = useRef<Quill>(null);
     const [_, setTransition] = useTransition();
 
-    const {
-        field,
-    } = useCreatifController({
+    const { field } = useCreatifController({
         name,
         control,
     });
@@ -574,7 +571,7 @@ export function RichTextEditor({name, placeholder}: Props) {
                     toolbar: true,
                 },
                 placeholder: placeholder,
-                theme: 'snow'
+                theme: 'snow',
             };
 
             const quill = new Quill(containerRef.current, options);
@@ -596,27 +593,32 @@ export function RichTextEditor({name, placeholder}: Props) {
         }
     }, []);
 
-    return <div>
-        <label style={{
-            display: 'block',
-            fontSize: '0.9rem',
-            fontWeight: 500,
-            marginBottom: '0.5rem',
-        }}>Account note</label>
-        <div ref={containerRef} />
-    </div>;
+    return (
+        <div>
+            <label
+                style={{
+                    display: 'block',
+                    fontSize: '0.9rem',
+                    fontWeight: 500,
+                    marginBottom: '0.5rem',
+                }}>
+                Account note
+            </label>
+            <div ref={containerRef} />
+        </div>
+    );
 }
-````
+```
 
 After you created all of these components, create `PropertyForm.tsx` and put it into the `src` directory
-where `AccountForm.tsx` is. 
+where `AccountForm.tsx` is.
 
 > NOTE
-> 
-> Just to note that so far, we have been putting components into `components` directory but 
+>
+> Just to note that so far, we have been putting components into `components` directory but
 > the `PropertyForm.tsx` does not go into that directory but in the `src` directory.
 
-````tsx
+```tsx
 import { Form, InputText, InputSelectControlled, InputTextarea } from 'creatif-ui-sdk';
 import { HouseForm } from './components/HouseForm';
 import { ApartmentForm } from './components/ApartmentForm';
@@ -708,9 +710,7 @@ export function PropertyForm() {
                             })}
                         </div>
 
-                        <div className={css.spacing}>
-                            {inputLocale()}
-                        </div>
+                        <div className={css.spacing}>{inputLocale()}</div>
 
                         <div>
                             <div className={css.fieldGrid}>
@@ -784,12 +784,12 @@ export function PropertyForm() {
         />
     );
 }
-````
+```
 
 All we have to do now is update the configuration. Add the property form configuration into
 `App.tsx`. It should look like this
 
-````tsx
+```tsx
 import React from 'react';
 import { CreatifProvider } from 'creatif-ui-sdk';
 import { PropertyForm } from './PropertyForm';
@@ -817,80 +817,82 @@ export default function App() {
         />
     );
 }
-````
+```
 
 # Let's examine what we created
 
 We created four components: `ApartmentForm.tsx`, `HouseForm.tsx`, `StudioForm.tsx` and
 `LandForm.tsx`. These four components are just abstraction components. I created them
 simply because I didn't want to create one a massive form that would be hard to follow
-so don't mind them. 
+so don't mind them.
 
-The only special thing is the `useCreatifFormContext`. This is simply 
+The only special thing is the `useCreatifFormContext`. This is simply
 an export of `useFormContext` from `react-hook-form` and the only reason that it exists is
 because, if you would install `react-hook-form` locally and use its functions, it would not
 now that it is inside its own context and would return null since the context is created from
-another package (within Creatif itself). 
+another package (within Creatif itself).
 
 You would also notice that `PropertyForm.tsx` is a `list` structure. List structure is
 a type of structure that allows you to create multiple entries with the same name but with different
-locale. If you create an entry that has the same locale and name, an error would be raised. 
+locale. If you create an entry that has the same locale and name, an error would be raised.
 
 This means that, when you publish your API, you can have multiple equivalent entries but with different
-locales. For example, if you are real estate renting agency that operates in France and Germany, 
-you could have the same property listed in French and German. 
+locales. For example, if you are real estate renting agency that operates in France and Germany,
+you could have the same property listed in French and German.
 
 # Locale
 
 In `PropertyForm.tsx`, there is an `inputLocale` property. This is a function that renders
-a `Select` component to select a locale. Every structure entry has a locale associated with it. 
-The default locale is `eng`. But if you render the `inputLocale()` function, you will be able to 
-choose the locale specifically for this structure entry. 
+a `Select` component to select a locale. Every structure entry has a locale associated with it.
+The default locale is `eng`. But if you render the `inputLocale()` function, you will be able to
+choose the locale specifically for this structure entry.
 
 # RichTextEditor
 
 If you remember, we said that `InputText` export is nothing more but an input property that works with
 `react-hook-form` so there is nothing special that Creatif does with it. The only reason it is exported is
-to make the UI feel uniform since Creatif is created with Mantine. 
+to make the UI feel uniform since Creatif is created with Mantine.
 
-This means that you can create your own form components by just hooking it up with `react-hook-form`. 
-Since Creatif does not ship with a rich text editor, we can use any rich text editor out there. 
-For this example, I choose [Quill](https://quilljs.com/). If you look at the code of `RichTextEditor`, 
-it might seem daunting at first but none of the code is Creatif specific so you don't really have to understand it. 
+This means that you can create your own form components by just hooking it up with `react-hook-form`.
+Since Creatif does not ship with a rich text editor, we can use any rich text editor out there.
+For this example, I choose [Quill](https://quilljs.com/). If you look at the code of `RichTextEditor`,
+it might seem daunting at first but none of the code is Creatif specific so you don't really have to understand it.
 All I did is hook up Quill to work with `react-hook-form`.
 
-This can be done with any component you want, no matter how complicated it is. 
+This can be done with any component you want, no matter how complicated it is.
 
 # inputConnection()
 
-This part is a little bit tricky but is also a very important one. 
+This part is a little bit tricky but is also a very important one.
 
 After you create an Account, which represent a property owner, you have to link that
 Account to a Property. You do that with `inputConnection()`.
 
-````tsx
-{inputConnection({
-    structureName: 'Accounts',
-    name: 'accounts',
-    structureType: 'map',
-    label: 'Account',
-    validation: {
-        required: 'Selecting an account is required',
-    },
-})}
-````
+```tsx
+{
+    inputConnection({
+        structureName: 'Accounts',
+        name: 'accounts',
+        structureType: 'map',
+        label: 'Account',
+        validation: {
+            required: 'Selecting an account is required',
+        },
+    });
+}
+```
 
 `inputConnection()` is a function that renders an input with which you can connect
 a structure entry with another structure entry. After the connection is made, Account will
-become the parent of the Property. 
+become the parent of the Property.
 
 > NOTE
-> 
-> After you publish, these entries will be available in the public API as 
+>
+> After you publish, these entries will be available in the public API as
 > 'connections'. More on publishing and using the public API later on.
 
 Properties `structureName`, `name` and `structureType` are required. The rest are there
-for the actual input. 
+for the actual input.
 
 In our example, this field is required but if you remove the validation, it won't be.
 
@@ -902,8 +904,8 @@ detailed explanations on how to use the UI.
 
 # Publishing
 
-In the upper right corner, you will see a `Publish` button. After you click on it, 
-you will be on the versioning screen. 
+In the upper right corner, you will see a `Publish` button. After you click on it,
+you will be on the versioning screen.
 
 ![Publish button](_images/tutorial_publish_button.png 'Publish button')
 
@@ -924,6 +926,6 @@ in separate section [Using API SDK](using-api-sdk)
 I would advise you to just start playing around. Most of the features are pretty intuitive and
 easy to use. If you have any trouble, use this documentation to find out how a particular feature works.
 
-- [Using the UI](using-the-ui)
-- [Using groups](using-groups)
-- [Using API SDK](using-api-sdk)
+-   [Using the UI](using-the-ui)
+-   [Using groups](using-groups)
+-   [Using API SDK](using-api-sdk)

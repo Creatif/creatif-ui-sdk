@@ -17,11 +17,11 @@ function isSegmentedControlItem(value: unknown): value is SegmentedControlItem {
 interface Props extends SegmentedControlProps {
     name: string;
     onInputChange?: (value: string) => void;
-    data: string[];
+    data: string[] | SegmentedControlItem[];
 }
 export function InputSegmentedControlControlled({ name, onInputChange, data, ...rest }: Props) {
     if (data.length === 0)
-        throw new Error('\'data\' cannot be an empty array. It must be a string[] or SegmentedControlItem');
+        throw new Error("'data' cannot be an empty array. It must be a string[] or SegmentedControlItem");
 
     const { control, getValues, setValue: setFormValue } = useFormContext();
 
