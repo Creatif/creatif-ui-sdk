@@ -141,5 +141,65 @@ interface Props extends TextInputProps {
 `InputTextControlled` is an abstraction around [TextInput](https://mantine.dev/core/text-input/) Mantine component.
 Any props that it uses, you can use with `InputTextControlled`.
 
+# InputTextarea
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends TextareaProps {
+    name: string;
+    options?: RegisterOptions;
+}
+````
+
+`InputTextarea` is an abstraction around [Textarea](https://mantine.dev/core/textarea/) Mantine component.
+Any props that it uses, you can use with `InputTextarea`.
+
+# InputTextareaControlled
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends TextareaProps {
+    name: string;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (value: string) => void;
+}
+````
+
+`InputTextareaControlled` is an abstraction around [Textarea](https://mantine.dev/core/textarea/) Mantine component.
+Any props that it uses, you can use with `InputTextareaControlled`.
+
+# InputCheckbox
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends CheckboxProps {
+    name: string;
+    options?: RegisterOptions;
+}
+````
+
+`InputCheckbox` is an abstraction around [Checkbox](https://mantine.dev/core/checkbox/) Mantine component.
+Any props that it uses, you can use with `InputCheckbox`.
+
+# InputCheckboxControlled
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends CheckboxProps {
+    name: string;
+    options?: RegisterOptions;
+    onInputChange?: (value: boolean) => void;
+}
+````
+
+`InputCheckboxControlled` is an abstraction around [Checkbox](https://mantine.dev/core/checkbox/) Mantine component.
+Any props that it uses, you can use with `InputCheckboxControlled`.
+
+
+
 
 
