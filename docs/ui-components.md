@@ -104,6 +104,12 @@ allow you to use `onInputChange()` function prop with which you can listen for i
 Note that it might be better and maintainable to use [watch](https://react-hook-form.com/docs/useform/watch)
 or [useWatch](https://react-hook-form.com/docs/usewatch) provided by `react-hook-form`.
 
+> IMPORTANT
+> 
+> Registering an `onChange` event on a controlled component will raise an error
+> since an `onChange` event is already registered. Use `onInputChange()` prop to subscribe
+> to changes from `onChange` event.
+
 The following is a list of all components that you can use that are exported from Creatif.
 
 # InputText
@@ -119,6 +125,21 @@ interface Props extends TextInputProps {
 
 `InputText` is an abstraction around [TextInput](https://mantine.dev/core/text-input/) Mantine component. 
 Any props that it uses, you can use with `InputText`.
+
+# InputTextControlled
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends TextInputProps {
+    name: string;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (value: string) => void;
+}
+````
+
+`InputTextControlled` is an abstraction around [TextInput](https://mantine.dev/core/text-input/) Mantine component.
+Any props that it uses, you can use with `InputTextControlled`.
 
 
 
