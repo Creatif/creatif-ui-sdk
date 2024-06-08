@@ -230,6 +230,77 @@ Any props that it uses, you can use with `InputRadioControlled`.
 
 # InputNumberControlled
 
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+```ts
+interface Props extends NumberInputProps {
+    name: string;
+    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    onInputChange?: (checked: string | number) => void;
+}
+```
+
+`InputNumber` is an abstraction around [NumberInput](https://mantine.dev/core/number-input/) Mantine component.
+Any props that it uses, you can use with `InputNumber`.
+
+# InputEmail
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends TextInputProps {
+    name: string;
+    options?: RegisterOptions;
+}
+````
+
+`InputEmail` is an abstraction around `InputText` provided by Creatif. It provides a basic
+pattern matching to validate an email. This is the regex:
+
+````regexp
+/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+````
+
+If you would like to use some other regex, provide a `pattern` option and it will use it.
+
+````tsx
+<InputEmail name="email" options={{
+    pattern: {
+        value: /my-pattern/,
+        message: 'Value is invalid'
+    }
+}}
+````
+
+# InputEmailControlled
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+````ts
+interface Props extends TextInputProps {
+    name: string;
+    options?: RegisterOptions;
+    onInputChange?: (value: string) => void;
+}
+````
+
+`InputEmailControlled` is an abstraction around `InputText` provided by Creatif. It provides a basic
+pattern matching to validate an email. This is the regex:
+
+````regexp
+/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+````
+
+If you would like to use some other regex, provide a `pattern` option and it will use it.
+
+````tsx
+<InputEmail name="email" options={{
+    pattern: {
+        value: /my-pattern/,
+        message: 'Value is invalid'
+    }
+}}
+````
 
 
 
