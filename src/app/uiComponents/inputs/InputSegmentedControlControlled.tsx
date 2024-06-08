@@ -21,7 +21,7 @@ interface Props extends SegmentedControlProps {
 }
 export function InputSegmentedControlControlled({ name, onInputChange, data, ...rest }: Props) {
     if (data.length === 0)
-        throw new Error("'data' cannot be an empty array. It must be a string[] or SegmentedControlItem");
+        throw new Error('\'data\' cannot be an empty array. It must be a string[] or SegmentedControlItem');
 
     const { control, getValues, setValue: setFormValue } = useFormContext();
 
