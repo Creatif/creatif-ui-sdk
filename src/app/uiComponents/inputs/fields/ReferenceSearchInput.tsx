@@ -108,6 +108,22 @@ export default function ReferenceSearchInput({
     }, [page]);
 
     useEffect(() => {
+        if (!debouncedValue) {
+            searchAndCreateOptions(referenceStructureItem.id, referenceStructureItem.structureType, '', page).then(
+                ({ options, error }) => {
+                    if (error) {
+                        setInternalError(error);
+                    }
+
+                    if (options) {
+                        setSearchedOptions(options);
+                    }
+
+                    setIsSearching(false);
+                },
+            );
+        }
+
         if (debouncedValue && !selectedRef.current) {
             setIsSearching(true);
             searchAndCreateOptions(

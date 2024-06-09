@@ -35,7 +35,6 @@ export function Login({ config }: Props) {
     const [validationMessages, setValidationMessages] = useState<string[] | null>(null);
 
     useEffect(() => {
-        console.log(config);
         const messages = validateConfig(config);
 
         if (messages.length !== 0) {

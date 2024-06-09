@@ -470,3 +470,20 @@ interface Props extends SwitchProps {
 Any props that it uses, you can use with `InputSwitchControlled`.
 
 # Special Creatif components
+
+# inputReference()
+
+`inputReference()` allows you to make a connection between two structure entries. It accepts
+the following interface
+
+````ts
+interface ReferenceInputProps {
+    name: string;
+    structureName: string;
+    structureType: StructureType;
+    label?: string;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+}
+
+type StructureType = 'list' | 'map';
+````

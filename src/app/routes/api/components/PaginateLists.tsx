@@ -33,8 +33,6 @@ export function PaginateLists({ versionName }: Props) {
 
     const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
 
-    console.log(submitQueryEnabled);
-
     let errorMessage = '';
     if (isError && isError === 'notFound') {
         errorMessage = 'Item is not found';

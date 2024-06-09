@@ -77,7 +77,7 @@ export function PropertyForm() {
                             name: 'accounts',
                             structureType: 'map',
                             label: 'Account',
-                            validation: {
+                            options: {
                                 required: 'Selecting an owner is required',
                             },
                         })}

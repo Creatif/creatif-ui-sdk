@@ -40,7 +40,7 @@ export interface ReferenceInputProps {
     structureName: string;
     structureType: StructureType;
     label?: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
 interface Props<T extends FieldValues> {

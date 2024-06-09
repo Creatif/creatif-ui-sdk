@@ -17,7 +17,7 @@ export default function App() {
                     },
                     {
                         structureType: 'map',
-                        structureName: 'Account',
+                        structureName: 'Accounts',
                         form: <AccountForm />,
                     },
                 ],

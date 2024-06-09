@@ -25,6 +25,7 @@ export async function searchAndCreateOptions(
             page: page,
             orderBy: 'created_at',
             projectId: Runtime.instance.currentProjectCache.getProject().id,
+            fields: ['value'],
         });
 
         if (result) {
@@ -66,7 +67,9 @@ export async function searchAndCreateOptions(
             search: search,
             name: structureId,
             limit: 100,
+            orderBy: 'created_at',
             page: page,
+            fields: ['value'],
             projectId: Runtime.instance.currentProjectCache.getProject().id,
         });
 

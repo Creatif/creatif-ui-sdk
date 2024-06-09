@@ -94,7 +94,6 @@ export function PaginateMaps({ versionName }: Props) {
                 setSubmitQueryEnabled(false);
             },
             onSuccess() {
-                console.log('sjkfdasljfdčsaf');
                 setIsError(undefined);
                 setSubmitQueryEnabled(false);
             },
