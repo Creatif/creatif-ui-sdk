@@ -43,6 +43,14 @@ export interface ReferenceInputProps {
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
+export interface LocaleWrapperProps {
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+}
+
+export interface GroupsWrapperProps {
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+}
+
 interface Props<T extends FieldValues> {
     structureItem: StructureItem;
     useSpecialFields: UseBoundStore<StoreApi<SpecialFieldsStore>>;
@@ -165,10 +173,10 @@ export default function BaseForm<T extends FieldValues>({
                             formState: formState,
                             getFieldState: getFieldState,
                             defaultValues: getValues(),
-                            inputLocale: (props?: InputLocaleProps) => (
+                            inputLocale: (props?: LocaleWrapperProps) => (
                                 <InputLocale {...props} store={useSpecialFields} />
                             ),
-                            inputGroups: (props?: InputGroupsProps) => (
+                            inputGroups: (props?: GroupsWrapperProps) => (
                                 <InputGroups store={useSpecialFields} {...props} />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,

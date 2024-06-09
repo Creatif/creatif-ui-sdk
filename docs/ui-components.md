@@ -471,12 +471,46 @@ Any props that it uses, you can use with `InputSwitchControlled`.
 
 # Special Creatif components
 
-# inputReference()
+Creatif injects its features trough special function components. Those are `inputConnection`, `inputLocale` and
+`inputGroups`. Find out more about locales in a [dedicated section](locales) and about [groups](using-groups)
+
+````tsx
+import { Form } from 'creatif-ui-sdk';
+
+export function MyForm() {
+    return (
+        <Form>
+            inputs={(submitButton, {inputConnection, inputLocale, inputGroups }) => {
+                return (
+                    <>
+                        {inputConnection({
+                            structureName: 'Accounts',
+                            name: 'accounts',
+                            structureType: 'map',
+                            label: 'Account',
+                            options: {
+                                required: 'Selecting an account is required',
+                            },
+                        })}
+
+                        {inputLocale()}
+
+                        {inputGroups()}
+                    </>
+                );
+            }}
+        />
+    );
+}
+
+````
+
+# inputConnection()
 
 `inputReference()` allows you to make a connection between two structure entries. It accepts
 the following interface
 
-````ts
+```ts
 interface ReferenceInputProps {
     name: string;
     structureName: string;
@@ -486,4 +520,44 @@ interface ReferenceInputProps {
 }
 
 type StructureType = 'list' | 'map';
+```
+
+This function renders a dropdown component with which you can choose a structure entry to connect.
+
+> IMPORTANT
+> 
+> For now, this component does not work with `useArrayFields()` function from `react-hook-form`.
+
+It accepts the same options from `react-hook-form` as any other dropdown. 
+
+# inputLocale()
+
+This function renders a dropdown of all available locales. It accepts the following interface:
+
+````ts
+interface LocaleWrapperProps {
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+}
 ````
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+You can find out more about locales in a [dedicated section](locales). 
+
+# inputGroups()
+
+This function renders a dropdown with all groups that are created. Selected groups are highlighted with a checkmark.
+It accepts the following interface:
+
+````ts
+interface GroupsWrapperProps {
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+}
+````
+
+`RegisterOptions` type is provided by [react-hook-form](https://react-hook-form.com/ts#RegisterOptions)
+
+You can find out more about groups in a [dedicated section](using-groups)
+
+
+ 

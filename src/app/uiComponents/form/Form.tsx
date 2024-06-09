@@ -25,11 +25,13 @@ import type {
     UseFormStateReturn,
     UseFormRegister,
 } from 'react-hook-form';
-import BaseForm, { type ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
+import BaseForm, type {
+    GroupsWrapperProps,
+    LocaleWrapperProps,
+    type ReferenceInputProps,
+} from '@app/uiComponents/shared/BaseForm';
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
-import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
-import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { useQueryClient } from 'react-query';
 import type { UpdateListItemResult } from '@root/types/api/list';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
@@ -65,8 +67,8 @@ interface Props<T extends FieldValues, Value, Metadata> {
             getFieldState: UseFormGetFieldState<T>;
             formState: UseFormStateReturn<T>;
             defaultValues: T;
-            inputLocale: (props?: InputLocaleProps) => React.ReactNode;
-            inputGroups: (props?: InputGroupsProps) => React.ReactNode;
+            inputLocale: (props?: LocaleWrapperProps) => React.ReactNode;
+            inputGroups: (props?: GroupsWrapperProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
             inputConnection: (props: ReferenceInputProps) => React.ReactNode;
         },

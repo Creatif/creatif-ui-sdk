@@ -372,8 +372,7 @@ export function ApartmentForm() {
 Create a file named `HouseForm.tsx` and put it in the `components` directory.
 
 ```tsx
-import { InputCheckbox, InputNumberControlled, InputTextarea } from 'creatif-ui-sdk';
-import { useCreatifFormContext } from 'creatif-ui-sdk';
+import { InputCheckbox, InputNumberControlled, InputTextarea, useCreatifFormContext } from 'creatif-ui-sdk';
 import css from '../css/root.module.css';
 
 export function HouseForm() {
