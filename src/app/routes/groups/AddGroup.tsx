@@ -34,7 +34,7 @@ export default function AddGroup({ validationMessages }: Props) {
     const { success } = useNotification();
 
     const [isFormDirty, setIsFormDirty] = useState(false);
-    const { isFetching, data, error } = useGetGroups<TryResult<Group[]>>();
+    const { isFetching, data, error, invalidateQuery } = useGetGroups<TryResult<Group[]>>();
 
     const {
         isLoading,
@@ -46,12 +46,16 @@ export default function AddGroup({ validationMessages }: Props) {
     useEffect(() => {
         if (!isLoading && !addGroupsError && isSuccess) {
             success('Groups saved', 'Your groups save been successfully saved.');
+            methods.reset();
+            invalidateQuery();
             setIsFormDirty(false);
         }
     }, [isLoading, isSuccess]);
 
     const loadError = error ? 'Groups failed to load. Please, try again later.' : undefined;
     const saveError = addGroupsError ? 'Groups failed to save. Please, try again later.' : undefined;
+
+    const isDisabled = isLoading || isFetching || !isFormDirty;
 
     return (
         <div className={classNames(contentContainerStyles.root, styles.root)}>
@@ -94,7 +98,7 @@ export default function AddGroup({ validationMessages }: Props) {
                                 style={{
                                     alignSelf: 'flex-end',
                                 }}>
-                                <Button disabled={isLoading || isFetching || !isFormDirty} type="submit">
+                                <Button disabled={isDisabled} type="submit">
                                     Add
                                 </Button>
                             </div>

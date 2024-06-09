@@ -25,11 +25,9 @@ import type {
     UseFormStateReturn,
     UseFormRegister,
 } from 'react-hook-form';
-import BaseForm, type {
-    GroupsWrapperProps,
-    LocaleWrapperProps,
-    type ReferenceInputProps,
-} from '@app/uiComponents/shared/BaseForm';
+import type { GroupsWrapperProps, LocaleWrapperProps, ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
+import BaseForm from '@app/uiComponents/shared/BaseForm';
+
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { useQueryClient } from 'react-query';
@@ -162,8 +160,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -222,8 +220,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -318,7 +316,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}

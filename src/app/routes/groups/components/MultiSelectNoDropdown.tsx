@@ -2,7 +2,7 @@
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
 import { Combobox, Loader, Pill, PillsInput, useCombobox } from '@mantine/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { Group, SingleGroupBlueprint } from '@root/types/api/groups';
 
@@ -31,10 +31,13 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
         },
     });
 
-    const removedRef = useRef<InternalGroup[]>([]);
-    const [value, setValue] = useState<InternalGroup[]>(
-        currentValues.map((item) => ({ type: 'current', name: item.name, id: item.id })),
+    const currValues = useMemo<InternalGroup[]>(
+        () => currentValues.map((item) => ({ type: 'current', name: item.name, id: item.id })),
+        [currentValues],
     );
+
+    const removedRef = useRef<InternalGroup[]>([]);
+    const [value, setValue] = useState<InternalGroup[]>(currValues);
     const [search, setSearch] = useState('');
     const createdTickRef = useRef(false);
 
@@ -70,8 +73,6 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
             ];
 
             setFormValue(name, finalProduct);
-
-            onDirty?.();
         }
     }, [value]);
 
@@ -106,6 +107,7 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
         }
 
         setValue(resolved);
+        onDirty?.();
     };
 
     const renderedValues = value.map((item) => (
@@ -118,6 +120,7 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
         if (!createdTickRef.current) {
             combobox.closeDropdown();
             createdTickRef.current = true;
+            onDirty?.();
         }
     }, []);
 
