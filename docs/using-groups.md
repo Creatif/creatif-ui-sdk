@@ -2,40 +2,37 @@
 
 Groups are a way of groups entries with similar properties. In our tutorial, we created a property with the `PropertyForm`.
 This form included a property type field. You can include create three groups: Rent and Sell. Depending on this properties
-type, assign one of the groups or both of them. You can filter these properties in the *Filters* side section and
+type, assign one of the groups or both of them. You can filter these properties in the _Filters_ side section and
 using the public API.
 
-Let's see it in action in our tutorial example. 
+Let's see it in action in our tutorial example.
 
 > NOTE
-> 
+>
 > This example requires that you followed and setted up the [Tutorial](tutorial) application. It also requires
-> that you create a single Account structure entry. If you haven't already, please do so. 
+> that you create a single Account structure entry. If you haven't already, please do so.
 
 Let's add the `inputGroups()` render function and render it in our `PropertyForm`. Find the `inputs` prop on your form
 and make the `inputGroups()` render function available.
 
-````tsx
+```tsx
 // notice that we added inputGroups alongside inputLocale()
 inputs={(submitButton, { watch, inputConnection, inputLocale, inputGroups }) => {
-````
+```
 
 Render the group in your form right below the `inputLocale()`.
 
-````tsx
-<div className={css.spacing}>
-    {inputGroups()}
-</div>
-````
+```tsx
+<div className={css.spacing}>{inputGroups()}</div>
+```
 
-This now renders the groups dropdown. 
+This now renders the groups dropdown.
 
 ![Groups dropdown](_images/groups_section_dropdown.png 'Groups dropdown')
 
 This is how our `PropertyForm` looks like now.
 
-````tsx
-
+```tsx
 import { Form, InputText, InputSelectControlled, InputTextarea } from 'creatif-ui-sdk';
 import { HouseForm } from './components/HouseForm';
 import { ApartmentForm } from './components/ApartmentForm';
@@ -127,13 +124,9 @@ export function PropertyForm() {
                             })}
                         </div>
 
-                        <div className={css.spacing}>
-                            {inputLocale()}
-                        </div>
+                        <div className={css.spacing}>{inputLocale()}</div>
 
-                        <div className={css.spacing}>
-                            {inputGroups()}
-                        </div>
+                        <div className={css.spacing}>{inputGroups()}</div>
 
                         <div>
                             <div className={css.fieldGrid}>
@@ -207,8 +200,7 @@ export function PropertyForm() {
         />
     );
 }
-````
+```
 
 But if you try to select a group, nothing happens. That is because we haven't selected any groups. Click on the `API`
-section in the navigation on the right and create two groups: *Rent* and *Sell*.
-
+section in the navigation on the right and create two groups: _Rent_ and _Sell_.
