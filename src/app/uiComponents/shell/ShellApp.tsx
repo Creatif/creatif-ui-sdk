@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { CreatifApp } from '@root/types/shell/shell';
-import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
 import { NoMatchRedirect } from '@app/uiComponents/shell/NoMatchRedirect';
 
 const AddGroup = React.lazy(() => import('@app/routes/groups/AddGroup'));
@@ -31,7 +30,7 @@ export function ShellApp({ config }: Props) {
                         path="groups"
                         element={
                             <Suspense fallback={null}>
-                                <AddGroup validationMessages={null} />
+                                <AddGroup />
                             </Suspense>
                         }
                     />
@@ -45,7 +44,7 @@ export function ShellApp({ config }: Props) {
                                     path="publishing"
                                     element={
                                         <Suspense>
-                                            <PublishingMain validationMessages={null} />
+                                            <PublishingMain />
                                         </Suspense>
                                     }
                                 />
@@ -53,7 +52,7 @@ export function ShellApp({ config }: Props) {
                                     path="api"
                                     element={
                                         <Suspense>
-                                            <Api validationMessages={null} />
+                                            <Api />
                                         </Suspense>
                                     }
                                 />
@@ -61,7 +60,7 @@ export function ShellApp({ config }: Props) {
                                     path="structures/maps"
                                     element={
                                         <Suspense>
-                                            <Map validationMessages={null} />
+                                            <Map />
                                         </Suspense>
                                     }
                                 />
@@ -69,7 +68,7 @@ export function ShellApp({ config }: Props) {
                                     path="structures/lists"
                                     element={
                                         <Suspense>
-                                            <List validationMessages={null} />
+                                            <List />
                                         </Suspense>
                                     }
                                 />
@@ -85,7 +84,7 @@ export function ShellApp({ config }: Props) {
                                             path={item.listPath}
                                             element={
                                                 <Suspense>
-                                                    <Listing validationMessages={null} />
+                                                    <Listing />
                                                 </Suspense>
                                             }
                                         />
@@ -94,7 +93,7 @@ export function ShellApp({ config }: Props) {
                                             path={item.showPath}
                                             element={
                                                 <Suspense>
-                                                    <ShowItem validationMessages={null} />
+                                                    <ShowItem />
                                                 </Suspense>
                                             }
                                         />
@@ -112,7 +111,7 @@ export function ShellApp({ config }: Props) {
                                             path={item.listPath}
                                             element={
                                                 <Suspense>
-                                                    <Listing validationMessages={null} />
+                                                    <Listing />
                                                 </Suspense>
                                             }
                                         />
@@ -121,7 +120,7 @@ export function ShellApp({ config }: Props) {
                                             path={item.showPath}
                                             element={
                                                 <Suspense>
-                                                    <ShowItem validationMessages={null} />
+                                                    <ShowItem />
                                                 </Suspense>
                                             }
                                         />
