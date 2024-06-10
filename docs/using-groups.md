@@ -207,7 +207,7 @@ section in the navigation on the right and create two groups: _Rent_ and _Sell_.
 
 ![Add groups](_images/using_groups_add_groups.gif 'Add groups')
 
-After you do that, add those groups in the `Properties` structure entry. 
+After you do that, add those groups in the `Properties` structure entry.
 
 ![Add groups](_images/using_groups_add_groups_property_form.gif 'Add groups')
 
@@ -219,6 +219,5 @@ them in the specific item screen but that is explained in detail in the [Using U
 
 Useful references:
 
-- [Using UI](using-the-ui.md)
-- [Using API SDK](using-api-sdk.md)
-
+-   [Using UI](using-the-ui.md)
+-   [Using API SDK](using-api-sdk.md)
