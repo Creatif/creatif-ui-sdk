@@ -8,12 +8,14 @@
 .header {
     line-height: 1.5rem;
     border-bottom: 1px solid var(--mantine-color-gray-2);
+    background-color: var(--mantine-color-red-7);
+    border-radius: 6px;
 
-    padding: 0 0 0.5rem 0;
+    padding: 1rem;
 }
 
 .light {
-    color: var(--mantine-color-gray-8);
+    color: var(--mantine-color-gray-0);
 }
 
 .lightRed {
@@ -32,4 +34,5 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    line-height: 1.4rem;
 }

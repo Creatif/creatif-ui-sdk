@@ -37,7 +37,7 @@ export function Setup({ app }: Props) {
             </Routes>
 
             <Routes>
-                <Route path="/dashboard/:projectId/*" element={<ShellContainer options={app} />} />
+                <Route path="/dashboard/:projectId/*" element={<ShellContainer config={app} />} />
             </Routes>
         </>
     );
