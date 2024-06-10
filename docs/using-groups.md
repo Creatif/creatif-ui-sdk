@@ -204,3 +204,21 @@ export function PropertyForm() {
 
 But if you try to select a group, nothing happens. That is because we haven't selected any groups. Click on the `API`
 section in the navigation on the right and create two groups: _Rent_ and _Sell_.
+
+![Add groups](_images/using_groups_add_groups.gif 'Add groups')
+
+After you do that, add those groups in the `Properties` structure entry. 
+
+![Add groups](_images/using_groups_add_groups_property_form.gif 'Add groups')
+
+Maximum number of groups that you can create is 200 but you can add as many as you want to any structure.
+For example, if you had created 200 groups, you can add all of them to `Properties` form.
+
+Also notice that, after you create a Properties entry, those groups are highlighted in the listing. You can also change
+them in the specific item screen but that is explained in detail in the [Using UI](using-the-ui) section.
+
+Useful references:
+
+- [Using UI](using-the-ui.md)
+- [Using API SDK](using-api-sdk.md)
+

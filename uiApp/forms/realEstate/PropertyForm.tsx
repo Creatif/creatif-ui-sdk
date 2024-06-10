@@ -67,7 +67,7 @@ export function PropertyForm() {
                     landSize: null,
                 },
             }}
-            inputs={(submitButton, { watch, inputConnection }) => {
+            inputs={(submitButton, { watch, inputConnection, inputLocale, inputGroups }) => {
                 const propertyType = watch('propertyType');
 
                 return (
@@ -81,6 +81,14 @@ export function PropertyForm() {
                                 required: 'Selecting an owner is required',
                             },
                         })}
+
+                        <div className={css.spacing}>
+                            {inputLocale()}
+                        </div>
+
+                        <div className={css.spacing}>
+                            {inputGroups()}
+                        </div>
 
                         <div>
                             <div className={css.fieldGrid}>
