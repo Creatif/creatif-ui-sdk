@@ -10,11 +10,6 @@ export default function App() {
                 projectName: 'project',
                 items: [
                     {
-                        structureType: 'map',
-                        structureName: 'Account',
-                        form: <AccountForm />
-                    },
-                    {
                         structureType: 'list',
                         structureName: 'Property',
                         form: <PropertyForm />

@@ -71,7 +71,7 @@ for you when something is ready for deletion.
 
 After you removed a structure, you have two possibilities: truncate the structure or remove it.
 
-# Truncating a structure
+# Truncating and deleting a structure
 
 Truncating a structure will remove all the structure entries but not the structure
 itself. This means that the structure will still exist and you can use it again by adding
