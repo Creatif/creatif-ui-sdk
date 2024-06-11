@@ -6,7 +6,21 @@ import { AccountForm } from './forms/realEstate/AccountForm';
 export default function App() {
     return (
         <CreatifProvider
-            app={{}}
+            app={{
+                projectName: 'project',
+                items: [
+                    {
+                        structureType: 'map',
+                        structureName: 'Account',
+                        form: <AccountForm />
+                    },
+                    {
+                        structureType: 'list',
+                        structureName: 'Property',
+                        form: <PropertyForm />
+                    }
+                ]
+            }}
         />
     );
 }

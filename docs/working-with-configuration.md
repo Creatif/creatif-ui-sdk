@@ -52,3 +52,4 @@ a configuration error is raised. It might look something like this
 ![Configuration runtime error](_images/configuration_runtime_error.png 'Configuration runtime error')
 
 After you resolve all error, the error modal should disappear.
+

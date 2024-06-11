@@ -27,7 +27,7 @@ export default function ShellContainer({ config }: Props) {
 
     useEffect(() => {
         setValidationMessages([]);
-        const messages = validateConfig(config);
+        const messages = validateConfig(config, validatedConfig?.projectName);
 
         if (messages.length !== 0) {
             setValidationMessages(messages);

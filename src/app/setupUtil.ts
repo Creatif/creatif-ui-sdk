@@ -1,7 +1,13 @@
 import type { CreatifApp } from '@root/types/shell/shell';
 
-export function validateConfig(app: CreatifApp): string[] {
+export function validateConfig(app: CreatifApp, projectName: string | undefined): string[] {
     const messages: string[] = [];
+
+    if (typeof projectName === 'string' && app.projectName !== projectName) {
+        messages.push('Once created, project name cannot be changed');
+        return messages;
+    }
+
     if (!app) {
         messages.push('App config does not exist. Your application cannot be created without configuration.');
         return messages;
@@ -21,27 +27,27 @@ export function validateConfig(app: CreatifApp): string[] {
     }
 
     if (!Array.isArray(app.items)) {
-        messages.push('App config does not have \'config.items\'. It must be an array of of structures.');
+        messages.push("App config does not have 'config.items'. It must be an array of of structures.");
         return messages;
     }
 
     if (app.items.length === 0) {
-        messages.push('App config \'config.items\' is empty. It must be an array of of structures.');
+        messages.push("App config 'config.items' is empty. It must be an array of of structures.");
         return messages;
     }
 
     const structures = [];
     for (const item of app.items) {
         if (item.menuText && typeof item.menuText !== 'string') {
-            messages.push('Config item \'config.item.menuText\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.menuText' is invalid. It must be a string.");
         }
 
         if (typeof item.structureName !== 'string' || !item.structureName) {
-            messages.push('Config item \'config.item.structureName\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.structureName' is invalid. It must be a string.");
         }
 
         if (typeof item.structureType !== 'string' || !item.structureType) {
-            messages.push('Config item \'config.item.structureType\' is invalid. It must be a string.');
+            messages.push("Config item 'config.item.structureType' is invalid. It must be a string.");
         }
 
         structures.push({
@@ -50,7 +56,7 @@ export function validateConfig(app: CreatifApp): string[] {
         });
 
         if (!item.form) {
-            ('Config item \'config.item.form\' is invalid. It must be a valid React component.');
+            ("Config item 'config.item.form' is invalid. It must be a valid React component.");
         }
     }
 
