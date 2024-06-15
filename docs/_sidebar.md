@@ -1,5 +1,5 @@
 -   [Why another headless CMS](why.md)
--   [Concepts](concept)
+-   [Concepts](concepts)
 -   [Get started](installation)
 -   [Tutorial](tutorial)
 -   [Locales](locales)

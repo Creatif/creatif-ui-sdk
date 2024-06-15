@@ -1,7 +1,7 @@
 Creatif is a UI focused CMS that allows you to create your data entries using UI components powered
 by React and [react-hook-form](https://react-hook-form.com/)
 
-To find out more, checkout [Concepts](concept).
+To find out more, checkout [Concepts](concepts).
 
 To set up Creatif, checkout [Getting started](installation).
 
