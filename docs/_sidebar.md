@@ -6,5 +6,5 @@
 -   [Using groups](using-groups)
 -   [UI components](ui-components)
 -   [Using the UI](using-the-ui)
--   [Using API SDK](using-api-sdk)
 -   [Working with configuration](working-with-configuration)
+-   [Using API SDK](using-api-sdk)
