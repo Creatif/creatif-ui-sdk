@@ -7,4 +7,4 @@ To set up Creatif, checkout [Getting started](https://creatif.github.io/creatif-
 
 To learn how to use Creatif, checkout [Tutorial](https://creatif.github.io/creatif-ui-sdk/#/tutorial)
 
-Visit the [documentation](https://creatif.github.io/creatif-ui-sdk/#/)
+For more, visit the [documentation](https://creatif.github.io/creatif-ui-sdk/#/)
