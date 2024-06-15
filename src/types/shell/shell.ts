@@ -9,10 +9,8 @@ export interface CreatifApp {
 export interface AppShellItem {
     menuText?: string;
     menuIcon?: React.ReactNode;
-
     structureName: string;
     structureType: StructureType;
-
     form: React.ReactNode;
 }
 

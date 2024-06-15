@@ -28,7 +28,7 @@ export default function Navigation({ navItems, logo }: Props) {
             {logo && <div className={styles.logo}>{logo}</div>}
 
             <div className={styles.project}>
-                <Link to="/" className={styles.projectLogo}>
+                <Link to={Runtime.instance.rootPath()} className={styles.projectLogo}>
                     {projectName.substring(0, 2).toUpperCase()}
                 </Link>
 

@@ -6,23 +6,45 @@ import { ShellApp } from '@app/uiComponents/shell/ShellApp';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import CenteredError from '@app/components/CenteredError';
 import { RuntimeDiff } from '@app/uiComponents/shell/RuntimeDiff';
+import { validateConfig } from '@app/setupUtil';
+import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
 
 interface Props {
-    options: CreatifApp;
+    config: CreatifApp;
 }
 
-export default function ShellContainer({ options }: Props) {
+export default function ShellContainer({ config }: Props) {
     const params = useParams();
     const projectId = params.projectId;
 
+    const [validationMessages, setValidationMessages] = useState<string[] | null>([]);
     const [runtimeCreated, setRuntimeCreated] = useState(false);
     const [runtimeFailed, setRuntimeFailed] = useState(false);
 
+    // the app will always use validated config in the background
+    // even if the current config is invalid
+    const [validatedConfig, setValidatedConfig] = useState<CreatifApp>();
+
     useEffect(() => {
+        setValidationMessages([]);
+        const messages = validateConfig(config, validatedConfig?.projectName);
+
+        if (messages.length !== 0) {
+            setValidationMessages(messages);
+            return;
+        }
+
+        setValidationMessages(null);
+        setValidatedConfig(config);
+    }, [config]);
+
+    useEffect(() => {
+        if (!validatedConfig) return;
+
         if (projectId && !Runtime.instance) {
             createRuntime(
                 projectId,
-                options.items.map((t) => ({ structureName: t.structureName, structureType: t.structureType })),
+                validatedConfig.items.map((t) => ({ structureName: t.structureName, structureType: t.structureType })),
             ).then((error) => {
                 if (error) {
                     setRuntimeFailed(true);
@@ -32,13 +54,18 @@ export default function ShellContainer({ options }: Props) {
                 setRuntimeCreated(true);
             });
         }
-    }, [projectId]);
+    }, [projectId, validatedConfig]);
 
     return (
         <>
-            {runtimeCreated && projectId && <RuntimeDiff projectId={projectId} config={options} />}
-            {runtimeCreated && <ShellApp config={options} />}
-            {runtimeFailed && <CenteredError title="Failed to initiate project. Please, try again later" />}
+            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
+            {validatedConfig && runtimeCreated && projectId && (
+                <RuntimeDiff projectId={projectId} config={validatedConfig} />
+            )}
+            {validatedConfig && runtimeCreated && <ShellApp config={validatedConfig} />}
+            {validatedConfig && runtimeFailed && (
+                <CenteredError title="Failed to initiate project. Please, try again later" />
+            )}
         </>
     );
 }

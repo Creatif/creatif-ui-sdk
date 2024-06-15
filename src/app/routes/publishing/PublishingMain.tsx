@@ -4,13 +4,8 @@ import styles from '@app/routes/publishing/css/publishingMain.module.css';
 import { PublishForm } from '@app/routes/publishing/PublishForm';
 import { VersionList } from '@app/routes/publishing/VersionList';
 import { useState } from 'react';
-import { RuntimeValidationModal } from '@app/uiComponents/shared/RuntimeValidationModal';
 
-interface Props {
-    validationMessages: string[] | null;
-}
-
-export default function PublishingMain({ validationMessages }: Props) {
+export default function PublishingMain() {
     const [listLength, setListLength] = useState(-1);
 
     return (
@@ -20,8 +15,6 @@ export default function PublishingMain({ validationMessages }: Props) {
             <PublishForm listLength={listLength} />
 
             <VersionList onListLength={(l) => setListLength(l)} />
-
-            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
         </div>
     );
 }

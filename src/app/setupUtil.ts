@@ -1,10 +1,24 @@
 import type { CreatifApp } from '@root/types/shell/shell';
 
-export function validateConfig(app: CreatifApp): string[] {
+export function validateConfig(app: CreatifApp, projectName: string | undefined): string[] {
     const messages: string[] = [];
+
+    if (typeof projectName === 'string' && app.projectName !== projectName) {
+        messages.push('Once created, project name cannot be changed');
+        return messages;
+    }
+
     if (!app) {
         messages.push('App config does not exist. Your application cannot be created without configuration.');
         return messages;
+    }
+
+    if (typeof app !== 'object') {
+        messages.push('App config must be an object.');
+    }
+
+    if (Object.keys(app).length === 0) {
+        messages.push('Empty configuration provided. Your application cannot be created without configuration.');
     }
 
     if (typeof app.projectName !== 'string' || !app.projectName) {
