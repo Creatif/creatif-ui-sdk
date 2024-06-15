@@ -2,65 +2,65 @@
 
 # Installation
 
-````shell
+```shell
 npm install creatif-js-sdk@0.0.4
-````
+```
 
 # Setup
 
 After you publish a version in Creatif UI, go to _API_ screen, copy the project ID and initialize
 the SDK:
 
-````javascript
+```javascript
 import {initialize} from 'creatif-js-sdk';
 
 initialize({
     projectId: <your project ID>
 });
-````
+```
 
 There is also an optional `baseUrl` argument with which you can set your own production base URL. `baseUrl`
-defaults to `http://localhost:3002` for local development. The base url *must* be in this format:
+defaults to `http://localhost:3002` for local development. The base url _must_ be in this format:
 
-````javascript
+```javascript
 import {initialize} from 'creatif-js-sdk';
 
 initialize({
     projectId: <your project ID>,
     baseUrl: 'https://mydomain.com'
 });
-````
+```
 
 # Usage
 
 SDK has eight functions:
 
-- getVersions()
-- getListItemById()
-- getListItemsByName()
-- getMapItemByName()
-- getMapItemById()
-- paginateMapItems()
-- paginateListItems()
+-   getVersions()
+-   getListItemById()
+-   getListItemsByName()
+-   getMapItemByName()
+-   getMapItemById()
+-   paginateMapItems()
+-   paginateListItems()
 
 Provided examples will be in Typescript. If you are using vanilla JS, the usage is the same only without the types.
 
 Every function returns a `Result` type which is a generic
 
-````ts
+```ts
 interface Result<Response> {
     result?: Response;
     error?: CreatifError;
 }
-````
+```
 
-````ts
+```ts
 export interface CreatifError {
     call: ErrorCalls;
     messages: Record<string, string>;
     status: number;
 }
-````
+```
 
 The API will never throw an error. The `Result` type contains the error, if any and you should check if an
 error exists. If you are using a third-party library that expects an error to be thrown (such as react-query),
@@ -75,11 +75,11 @@ Returns an array of versions.
 
 Signature:
 
-````ts
-function getVersions(): Promise<Result<Version[]>>
-````
+```ts
+function getVersions(): Promise<Result<Version[]>>;
+```
 
-````ts
+```ts
 export interface Version {
     id: string;
     name: string;
@@ -90,17 +90,15 @@ export interface Version {
     createdAt: string;
     updatedAt: string | null;
 }
-````
+```
 
 ### Usage
 
-````ts
-import {initialize, getVersions} from 'creatif-js-sdk';
+```ts
+import { initialize, getVersions } from 'creatif-js-sdk';
 
-getVersions().then(({result, error}) => {
-    
-})
-````
+getVersions().then(({ result, error }) => {});
+```
 
 ## getListItemById()
 
@@ -108,11 +106,11 @@ Returns a single list item.
 
 Signature:
 
-````ts
-function getListItemById<Value>(blueprint: GetListItemByID): Promise<Result<ListItem<Value>>>
-````
+```ts
+function getListItemById<Value>(blueprint: GetListItemByID): Promise<Result<ListItem<Value>>>;
+```
 
-````ts
+```ts
 export interface ListItem<Value> {
     structureId: string;
     structureShortId: string;
@@ -132,17 +130,17 @@ export interface ListItem<Value> {
     createdAt: string;
     updatedAt: string | null;
 }
-````
+```
 
 Request blueprint:
 
-````ts
+```ts
 interface GetListItemByID {
     id: string;
     options?: Options;
     versionName?: string;
 }
-````
+```
 
 ```ts
 interface Options {
@@ -154,15 +152,13 @@ When provided, `valueOnly` will return only the value of the structure entry.
 
 ### Usage
 
-````ts
-import {initialize, getListItemById} from 'creatif-js-sdk';
+```ts
+import { initialize, getListItemById } from 'creatif-js-sdk';
 
 getListItemById({
     id: '<list item id>',
-}).then(({result, error}) => {
-    
-})
-````
+}).then(({ result, error }) => {});
+```
 
 ## getMapItemById()
 
@@ -170,11 +166,11 @@ Returns a single map item.
 
 Signature:
 
-````ts
-function getMapItemById<Value>(blueprint: GetMapItemByID): Promise<Result<ListItem<Value>>>
-````
+```ts
+function getMapItemById<Value>(blueprint: GetMapItemByID): Promise<Result<ListItem<Value>>>;
+```
 
-````ts
+```ts
 export interface MapItem<Value> {
     structureId: string;
     structureShortId: string;
@@ -194,17 +190,17 @@ export interface MapItem<Value> {
     createdAt: string;
     updatedAt: string | null;
 }
-````
+```
 
 Request blueprint:
 
-````ts
+```ts
 interface GetMapItemByID {
     id: string;
     options?: Options;
     versionName?: string;
 }
-````
+```
 
 ```ts
 interface Options {
@@ -216,15 +212,13 @@ When provided, `valueOnly` will return only the value of the structure entry.
 
 ### Usage
 
-````ts
-import {initialize, getListItemById} from 'creatif-js-sdk';
+```ts
+import { initialize, getListItemById } from 'creatif-js-sdk';
 
 getListItemById({
     id: '<list item id>',
-}).then(({result, error}) => {
-    
-})
-````
+}).then(({ result, error }) => {});
+```
 
 ## getListItemsByName()
 
@@ -232,13 +226,13 @@ Returns an array of items.
 
 Signature:
 
-````ts
-function getListItemsByName<Value>(blueprint: GetListItemsByName): Promise<Result<ListItem<Value>[]>>
-````
+```ts
+function getListItemsByName<Value>(blueprint: GetListItemsByName): Promise<Result<ListItem<Value>[]>>;
+```
 
 Request blueprint:
 
-````ts
+```ts
 export interface GetListItemsByName {
     structureName: string;
     name: string;
@@ -246,7 +240,7 @@ export interface GetListItemsByName {
     options?: Options;
     versionName?: string;
 }
-````
+```
 
 ```ts
 interface Options {
@@ -258,15 +252,13 @@ When provided, `valueOnly` will return only the value of the structure entry.
 
 ### Usage
 
-````ts
-import {initialize, getListItemsByName} from 'creatif-js-sdk';
+```ts
+import { initialize, getListItemsByName } from 'creatif-js-sdk';
 
 getListItemsByName({
     id: '<list item id>',
-}).then(({result, error}) => {
-
-})
-````
+}).then(({ result, error }) => {});
+```
 
 ## getMapItemByName()
 
@@ -274,13 +266,13 @@ Returns a single map item.
 
 Signature:
 
-````ts
-function getMapItemByName<Value>(blueprint: GetMapItemByName): Promise<Result<MapItem<Value>>>
-````
+```ts
+function getMapItemByName<Value>(blueprint: GetMapItemByName): Promise<Result<MapItem<Value>>>;
+```
 
 Request blueprint:
 
-````ts
+```ts
 interface GetMapItemByName {
     versionName?: string;
     structureName: string;
@@ -288,7 +280,7 @@ interface GetMapItemByName {
     locale: string;
     options?: Options;
 }
-````
+```
 
 ```ts
 interface Options {
@@ -300,15 +292,13 @@ When provided, `valueOnly` will return only the value of the structure entry.
 
 ### Usage
 
-````ts
-import {initialize, getMapItemByName} from 'creatif-js-sdk';
+```ts
+import { initialize, getMapItemByName } from 'creatif-js-sdk';
 
 getMapItemByName({
     id: '<list item id>',
-}).then(({result, error}) => {
-
-})
-````
+}).then(({ result, error }) => {});
+```
 
 # Pagination
 
@@ -317,7 +307,7 @@ only have a different name. Request parameters for one of them, you can use in b
 
 Request signature for `paginateMapItems` is
 
-````ts
+```ts
 interface PaginateMapItems {
     structureName: string;
     page: number;
@@ -329,11 +319,11 @@ interface PaginateMapItems {
     groups?: string[];
     options?: Options;
 }
-````
+```
 
 and for a list
 
-````ts
+```ts
 export interface PaginateListItems {
     structureName: string;
     page: number;
@@ -345,21 +335,19 @@ export interface PaginateListItems {
     groups?: string[];
     options?: Options;
 }
-````
+```
 
 The only required parameters are `structureName` and `page`.
 
 ### Usage
 
-````ts
-import {initialize, paginateMapItems} from 'creatif-js-sdk';
+```ts
+import { initialize, paginateMapItems } from 'creatif-js-sdk';
 
 getMapItemByName({
     structureName: '<your structure name>',
     page: 1,
-}).then(({result, error}) => {
-    
-})
-````
+}).then(({ result, error }) => {});
+```
 
 Usage for `paginateListItems` is the same.

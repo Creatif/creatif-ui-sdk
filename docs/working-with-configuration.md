@@ -54,20 +54,20 @@ a configuration error is raised. It might look something like this
 After you resolve all errors, the error modal should disappear.
 
 > VERY IMPORTANT
-> 
+>
 > Once chosen and created, project name **cannot** be changed. Project is created
 > after first login. For now, Creatif does not support multiple projects.
 
 Updating, removing or adding new structures will automatically update the UI but removed
 structure will not be deleted. You have to delete them manually. Creatif does not decide
-for you when something is ready for deletion. 
+for you when something is ready for deletion.
 
 > NOTE
-> 
+>
 > If you published your API, none of the API versions are affected by deleting, adding or removing
 > structures or structure entries. When you publish an API version, this version
 > becomes a point in time snapshot and is not affected by changing anything in the UI.
-> To find out more, checkout [Using API SDK](using-api-sdk). 
+> To find out more, checkout [Using API SDK](using-api-sdk).
 
 After you removed a structure, you have two possibilities: truncate the structure or remove it.
 
@@ -76,7 +76,7 @@ After you removed a structure, you have two possibilities: truncate the structur
 Truncating a structure will remove all the structure entries but not the structure
 itself. This means that the structure will still exist and you can use it again by adding
 it back to configuration, but it will have not data. Just to reiterate, this does not affect
-already published API versions. 
+already published API versions.
 
 Before you can truncate, you have to remove the structure from configuration. If you don't do that,
 the UI will not allow you to delete or remove a structure.
@@ -88,9 +88,5 @@ click the truncate button.
 
 As you can see, the structure, after truncating does not have any data but its the same structure.
 If you do the same as in the image but instead of truncating, you delete, the entire structure along with the
-data will be deleted but if you add the structure back to configuration, the structure will be 
+data will be deleted but if you add the structure back to configuration, the structure will be
 created again. Both, truncating and deleting looks the same in the UI but the difference is very important.
-
-
-
-

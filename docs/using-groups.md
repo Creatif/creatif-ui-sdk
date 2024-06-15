@@ -218,7 +218,7 @@ Also notice that, after you create a Properties entry, those groups are highligh
 them in the specific item screen but that is explained in detail in the [Using UI](using-the-ui) section.
 
 You can filter by groups (and many other parameters) in the filters drawer component. While on listing,
-click the _Filters_ button to open the drawer. Find the _Groups_ section and choose 
+click the _Filters_ button to open the drawer. Find the _Groups_ section and choose
 one or more groups. You will see that the listing is updated based on chosen groups.
 
 ![Group filters](_images/using_groups_group_filters.gif 'Group filters')
