@@ -1,5 +1,5 @@
-import { Combobox, useCombobox, TextInput, Loader, ScrollArea } from '@mantine/core';
-import React, { useEffect, useRef, useState } from 'react';
+import { Combobox, useCombobox, TextInput, Loader, Tooltip } from '@mantine/core';
+import React, { useEffect, useRef, useState, useTransition } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
@@ -9,6 +9,7 @@ import type { ReferenceStoreItem } from '@app/systems/stores/inputReferencesStor
 import { queryItemById, searchAndCreateOptions } from '@app/uiComponents/inputs/fields/searchHelper';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { IntersectionObserverOption } from '@app/uiComponents/inputs/fields/IntersectionObserverOption';
+import { IconX } from '@tabler/icons-react';
 
 export interface ReferenceSearchInputOption {
     label: string;
@@ -39,6 +40,8 @@ export default function ReferenceSearchInput({
     const [searchedOptions, setSearchedOptions] = useState<ReferenceSearchInputOption[]>([]);
     const [debouncedValue] = useDebouncedValue(search, 300);
     const [internalError, setInternalError] = useState<ApiError | undefined>();
+    const componentMountedRef = useRef(true);
+    const [_, runTransition] = useTransition();
 
     const scrollAreaViewportRef = useRef<HTMLDivElement | null>(null);
 
@@ -91,9 +94,15 @@ export default function ReferenceSearchInput({
 
     useEffect(() => {
         setIsSearching(true);
+        componentMountedRef.current = false;
 
-        searchAndCreateOptions(referenceStructureItem.id, referenceStructureItem.structureType, '', page).then(
-            ({ options, error }) => {
+        runTransition(() => {
+            searchAndCreateOptions(
+                referenceStructureItem.id,
+                referenceStructureItem.structureType,
+                debouncedValue || '',
+                page,
+            ).then(({ options, error }) => {
                 if (error) {
                     setInternalError(error);
                 }
@@ -103,14 +112,38 @@ export default function ReferenceSearchInput({
                 }
 
                 setIsSearching(false);
-            },
-        );
+            });
+        });
     }, [page]);
 
     useEffect(() => {
-        if (!debouncedValue) {
-            searchAndCreateOptions(referenceStructureItem.id, referenceStructureItem.structureType, '', page).then(
-                ({ options, error }) => {
+        if (!debouncedValue && !componentMountedRef.current) {
+            runTransition(() => {
+                searchAndCreateOptions(referenceStructureItem.id, referenceStructureItem.structureType, '', page).then(
+                    ({ options, error }) => {
+                        if (error) {
+                            setInternalError(error);
+                        }
+
+                        if (options) {
+                            setSearchedOptions(options);
+                        }
+
+                        setIsSearching(false);
+                    },
+                );
+            });
+        }
+
+        if (debouncedValue && !selectedRef.current && !componentMountedRef.current) {
+            setIsSearching(true);
+            runTransition(() => {
+                searchAndCreateOptions(
+                    referenceStructureItem.id,
+                    referenceStructureItem.structureType,
+                    debouncedValue,
+                    page,
+                ).then(({ options, error }) => {
                     if (error) {
                         setInternalError(error);
                     }
@@ -120,27 +153,7 @@ export default function ReferenceSearchInput({
                     }
 
                     setIsSearching(false);
-                },
-            );
-        }
-
-        if (debouncedValue && !selectedRef.current) {
-            setIsSearching(true);
-            searchAndCreateOptions(
-                referenceStructureItem.id,
-                referenceStructureItem.structureType,
-                debouncedValue,
-                page,
-            ).then(({ options, error }) => {
-                if (error) {
-                    setInternalError(error);
-                }
-
-                if (options) {
-                    setSearchedOptions(options);
-                }
-
-                setIsSearching(false);
+                });
             });
         }
     }, [debouncedValue]);
@@ -153,7 +166,9 @@ export default function ReferenceSearchInput({
                 <IntersectionObserverOption
                     isFinal={searchedOptions.length % 100 !== 0}
                     rootElem={scrollAreaViewportRef.current}
-                    onIntersected={() => setPage((p) => p + 1)}
+                    onIntersected={() => {
+                        setPage((page) => page + 1);
+                    }}
                 />
             )}
         </Combobox.Option>
@@ -174,6 +189,20 @@ export default function ReferenceSearchInput({
                 }}>
                 <Combobox.Target>
                     <TextInput
+                        leftSection={
+                            <Tooltip label="Clear selection">
+                                <IconX
+                                    onClick={() => {
+                                        setSearch('');
+                                        setPage(1);
+                                        onOptionSelected(undefined);
+                                    }}
+                                    className={styles.clearSelection}
+                                    size={12}
+                                    color="var(--mantine-color-gray-4)"
+                                />
+                            </Tooltip>
+                        }
                         label={label}
                         error={inputError}
                         styles={{
@@ -209,12 +238,10 @@ export default function ReferenceSearchInput({
                 )}
 
                 {options && (
-                    <Combobox.Dropdown>
+                    <Combobox.Dropdown ref={scrollAreaViewportRef}>
                         {options.length > 0 && (
                             <Combobox.Options mah={200} style={{ overflowY: 'auto' }}>
-                                <ScrollArea.Autosize viewportRef={scrollAreaViewportRef} mah={50} type="scroll">
-                                    {options}
-                                </ScrollArea.Autosize>
+                                {options}
                             </Combobox.Options>
                         )}
 

@@ -114,7 +114,10 @@ export function InputReference({
                                     }
 
                                     addReference(ref as ReferenceStoreItem);
+                                    return;
                                 }
+
+                                onChange(undefined);
                             }}
                             label={label ? label : structureName}
                         />

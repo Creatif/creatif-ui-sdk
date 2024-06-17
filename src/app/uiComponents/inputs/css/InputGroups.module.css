@@ -22,3 +22,7 @@
 .labelError {
     color: var(--mantine-color-red-7);
 }
+
+.clearSelection {
+    cursor: pointer;
+}

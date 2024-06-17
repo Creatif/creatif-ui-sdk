@@ -33,6 +33,9 @@ export default function DeckForm() {
                                 structureName: 'Languages',
                                 structureType: 'list',
                                 label: 'Language',
+                                options: {
+                                    required: 'Language is required',
+                                }
                             })}
                         </Grid.Col>
                     </Grid>
