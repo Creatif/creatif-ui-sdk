@@ -77,7 +77,7 @@ Since I am personally working on the fronted, to make my life easier, I setted u
 under the `uiApp` directory and this directory is excluded from the final build. You will only see it
 if you clone the frontend in this way. Files and code in this directory will almost always change when I push
 new features or bugs fixes for `creatif-ui-sdk` package so don't rely on it. If you choose to set up
-this why, you will probably get an app that I am currently using to test new features. This app might me ugly,
+this why, you will probably get an app that I am currently using to test new features. This app might be ugly,
 have bugs or straight up be completely broken, so don't rely on it. But all things aside, this is just a
 basic Vite project setted up to create a javascript library. Nothing more, nothing less.
 

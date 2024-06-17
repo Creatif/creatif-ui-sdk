@@ -3,17 +3,18 @@
 > NOTE
 >
 > If you setted up Creatif with a starter project, everything in this
-> tutorial is already setup. It is still better for you to follow this
+> tutorial is already working. It is still better for you to follow this
 > tutorial to familiarize yourself with the concepts of Creatif.
 >
 > If you decided to not set up a starter project, you will
 > get a configuration error. This is normal
 > since you don't have any structures yet. After you set up the first
-> structure, the error will disappear and you be able to login.
+> structure, the error will disappear and you be able to log in.
 
-In this tutorial, you will create a simple CMS for real estate agency. It will
-consist of two structures: Accounts and Properties. Account will be an owner of the
-property and Property will be the real estate that the owner sells or rents.
+In this tutorial, you will create a simple CMS for a real estate agency. It will
+consist of two structures: _Accounts_ and _Properties_. Account will be an owner of the
+property and Property will be the real estate that the owner sells or rents, like a house
+or an apartment.
 
 For now, we will just set up the project. How and why it works this way and other
 Creatif concepts will be explained later.
@@ -148,7 +149,7 @@ file called `root.module.css` and copy/paste the code below:
 }
 ```
 
-The last step is creating our app and configuration for the app. Create the `App.tsx`
+The last step is creating the configuration for the app. Create the `App.tsx`
 and copy/paste this code:
 
 ```tsx
@@ -176,13 +177,12 @@ export default function App() {
 ```
 
 If you haven't already, head to `http://localhost:5173` and set up the admin user
-and login. You should see something like this.
-
-After login, you should be able to see this image
+and login. You should see something like this:
 
 ![Nesting navbar](_images/tutorial_account_form_created.png 'Accounts form')
 
-Go ahead and create a new account. Using it should be intuitive.
+Even without going into the specifics, you can start using your app. Creatif is (hopefully) intuitive
+enough to just be used out of the box.
 
 # Let's examine what we created
 
@@ -195,7 +195,7 @@ everything is possible. This creates a unique experience for you and your client
 have to tell them 'No, we cannot make this feature since our **_insert CMS of your choice_** does not support it'.
 
 The `Form` component is the component that tracks your form. It is a wrapper around [useForm](https://react-hook-form.com/docs/useform)
-at it tracks if this structure needs to be created or updated.
+and it tracks if this structure needs to be created or updated.
 Every new structure must use the Form component. Under the hood, Creatif uses `react-hook-form`
 and it would be good to familiarize yourself with it, but for basic usage, it is ok to use this documentation.
 
@@ -211,7 +211,7 @@ and it would be good to familiarize yourself with it, but for basic usage, it is
 }>
 ```
 
-In our example, we inlined it but you can create an interface if you wish.
+We inlined it but you can create an interface if you wish.
 
 Next, you can see the `formProps` property.
 
@@ -231,18 +231,18 @@ formProps={{
 accepts. Remember, `Form` is just a wrapper around `useForm` but Creatif also uses it to track weather to create
 or update this structure (in our example, an Account).
 
-Next, there is the `bindings` prop. This prop is not part or `react-hook-form` but a special Creatif prop.
+Next, there is the `bindings` prop. This prop is not part of `react-hook-form` but a special Creatif prop.
 Since every _map_ or _list_ structure must have a _name_ field, `bindings` prop tells us what fields should we use
 to name our structure. In case of a _map_, the _name_ must be unique.
 
 > NOTE
 >
-> Remember, maps and list structures in Creatif are similar to data structures in any programming language.
+> Remember, _maps_ and _list_ structures in Creatif are similar to data structures in any programming language.
 > If you use a map in a programming language, a key must be unique. If you assign a value to a key that already
 > exists, that value would overwrite the previous value. Creatif will give you an error if you try to create/update
 > a map item with a name that already exists.
 >
-> In case of list structures in Creatif, they are unique only if you have a name and locale that are equal.
+> In case of _list_ structure, they are unique only if you have a name and locale that are equal.
 > If you try to create a list item with name and locale that already exists, form will result in an error.
 > But if you wish to create a list item with the same name but different locale, you can.
 
@@ -285,7 +285,11 @@ export function InputText({ name, options, ...rest }: Props) {
 ```
 
 Nothing special. This is exactly what you would do If you were to create an abstraction around a text
-input for your forms. Because of that, you are not limited to using Creatif components. You can use any UI
+input for your forms. You might not use `useFormContext` inside the component but make another abstraction around
+it to be able to switch to some other form library in the future, but since Creatif is tightly coupled with `react-hook-form`,
+this was acceptable for me. 
+
+You are not limited to using Creatif components. You can use any UI
 library or any exotic component that you can think of. All you need to do is wire it up with `react-hook-form`
 and it will just work. There is a little gotcha, however but we will talk about custom components more in
 [Custom components]() section.
