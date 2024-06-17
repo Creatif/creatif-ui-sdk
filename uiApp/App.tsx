@@ -11,8 +11,13 @@ export default function App() {
                 items: [
                     {
                         structureType: 'list',
-                        structureName: 'Property',
+                        structureName: 'Properties',
                         form: <PropertyForm />
+                    },
+                    {
+                        structureType: 'map',
+                        structureName: 'Accounts',
+                        form: <AccountForm />
                     }
                 ]
             }}
