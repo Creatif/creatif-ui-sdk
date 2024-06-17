@@ -53,7 +53,19 @@ export default function useUpdateVariable(
                         `Item for structure '${listName}' and item '${itemName}' has been updated.`,
                     );
                 },
-                onError: () => {
+                onError: (error) => {
+                    if (error && error.error && error.error.data.groups) {
+                        errorNotification('Groups invalid', error.error.data.groups);
+
+                        return;
+                    }
+
+                    if (error && error.error && error.error.data.maximumGroups) {
+                        errorNotification('Groups invalid', error.error.data.maximumGroups);
+
+                        return;
+                    }
+
                     errorNotification(
                         'Something went wrong.',
                         'Item could not be updated at this time. Please, try again later.',
