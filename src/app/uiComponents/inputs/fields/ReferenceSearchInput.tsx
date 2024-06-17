@@ -41,6 +41,7 @@ export default function ReferenceSearchInput({
     const [debouncedValue] = useDebouncedValue(search, 300);
     const [internalError, setInternalError] = useState<ApiError | undefined>();
     const componentMountedRef = useRef(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, runTransition] = useTransition();
 
     const scrollAreaViewportRef = useRef<HTMLDivElement | null>(null);

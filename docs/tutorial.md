@@ -287,7 +287,7 @@ export function InputText({ name, options, ...rest }: Props) {
 Nothing special. This is exactly what you would do If you were to create an abstraction around a text
 input for your forms. You might not use `useFormContext` inside the component but make another abstraction around
 it to be able to switch to some other form library in the future, but since Creatif is tightly coupled with `react-hook-form`,
-this was acceptable for me. 
+this was acceptable for me.
 
 You are not limited to using Creatif components. You can use any UI
 library or any exotic component that you can think of. All you need to do is wire it up with `react-hook-form`
