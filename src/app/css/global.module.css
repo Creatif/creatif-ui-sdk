@@ -1,3 +1,7 @@
+:root {
+    --app-font-family: 'Barlow', var(--mantine-font-family), sans-serif;
+}
+
 .center {
     position: absolute;
     top: 50%;
@@ -6,6 +10,6 @@
 }
 
 body {
-    font-family: 'Barlow', var(--mantine-font-family), sans-serif;
+    font-family: var(--app-font-family);
     font-size: 16px;
 }

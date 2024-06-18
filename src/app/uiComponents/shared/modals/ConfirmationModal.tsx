@@ -17,11 +17,17 @@ export default function ConfirmationModal({ open, message, header, onClose, onCo
                 opened={Boolean(open)}
                 styles={{
                     header: {
-                        backgroundColor: 'var(--mantine-color-gray-1)',
+                        backgroundColor: 'var(--mantine-color-red-9)',
                     },
                 }}
-                title={<IconInfoCircle color="var(--mantine-color-gray-5)" size={24} />}
+                title={<IconInfoCircle color="var(--mantine-color-white)" size={24} />}
                 onClose={onClose}
+                closeButtonProps={{
+                    style: {
+                        color: 'white',
+                        backgroundColor: 'var(--mantine-color-red-9)',
+                    },
+                }}
                 centered>
                 <h1 className={styles.header}>{header}</h1>
                 <p className={styles.text}>{message}</p>

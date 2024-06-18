@@ -1,7 +1,6 @@
 .root {
     display: grid;
     grid-template-columns: 240px 1fr;
-    font-family: var(--mantine-font-family);
 
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
