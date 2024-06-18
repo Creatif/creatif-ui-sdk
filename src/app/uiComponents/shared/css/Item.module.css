@@ -11,11 +11,11 @@
         border 0.3s;
 
     text-decoration: none;
-    box-shadow: rgba(0, 0, 0, 0.08) 0 1px 3px;
+    border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
 }
 
 .item:hover {
-    box-shadow: rgba(0, 0, 0, 0.08) 0 4px 12px;
+    border: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-7));
 }
 
 .item:hover .dragAndDropIcon {
@@ -93,7 +93,7 @@
     gap: 0.5rem;
     font-size: 0.9rem;
 
-    color: var(--mantine-color-gray-7);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     border-right: 2px solid var(--mantine-color-gray-4);
     padding-right: 1.1rem;
 }
@@ -111,7 +111,7 @@
 }
 
 .nameRowTitle {
-    color: var(--mantine-color-gray-8);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     font-weight: 600;
     line-height: 1.5rem;
 }
@@ -139,7 +139,7 @@
 
     margin-top: 0.5rem;
 
-    color: var(--mantine-color-gray-7);
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-5));
 }
 
 .behaviour {
