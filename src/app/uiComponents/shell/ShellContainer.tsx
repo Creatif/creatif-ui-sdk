@@ -58,7 +58,9 @@ export default function ShellContainer({ config }: Props) {
 
     return (
         <>
-            {validationMessages && <RuntimeValidationModal validationMessages={validationMessages} />}
+            {validationMessages && validationMessages?.length !== 0 && (
+                <RuntimeValidationModal validationMessages={validationMessages} />
+            )}
             {validatedConfig && runtimeCreated && projectId && (
                 <RuntimeDiff projectId={projectId} config={validatedConfig} />
             )}
