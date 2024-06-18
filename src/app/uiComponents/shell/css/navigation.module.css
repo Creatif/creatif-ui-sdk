@@ -22,9 +22,9 @@
 .navigationGrid {
     min-height: 100vh;
     padding: 1rem;
-    border-right: 1px solid var(--mantine-color-indigo-1);
+    border-right: 1px solid light-dark(var(--mantine-color-white), var(--mantine-color-gray-7));
 
-    background-color: var(--mantine-color-indigo-0);
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
 
 .innerFlex {
@@ -43,7 +43,7 @@
     text-decoration: none;
     font-size: 0.9rem;
     text-align: left;
-    color: var(--mantine-color-gray-7);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
 
     padding: 0.5rem 0.5rem 0.5rem 0;
     border-radius: 0.2rem;
@@ -61,12 +61,13 @@
 }
 
 .root a.active {
-    color: var(--mantine-color-indigo-9);
+    color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-white));
+
     font-weight: 600;
 }
 
 .root a.active .navItemIcon {
-    color: var(--mantine-color-indigo-9);
+    color: light-dark(var(--mantine-color-blue-9), var(--mantine-color-blue-9));
 }
 
 .root a.active .navigationIcon {
@@ -86,15 +87,18 @@
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
+
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
 }
 
 .projectLogo {
-    background-color: var(--mantine-color-gray-9);
     color: white;
     padding: 0.8rem;
     border-radius: 4px;
     text-decoration: none;
     cursor: pointer;
+
+    background-color: black;
 }
 
 .projectName {
@@ -154,16 +158,17 @@
     cursor: pointer;
     background-color: transparent;
     color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-white));
     text-decoration: none;
 }
 
 .appMenu a.active {
-    color: var(--mantine-color-indigo-9);
+    color: light-dark(var(--mantine-color-blue-9), var(--mantine-color-blue-5));
     font-weight: 600;
 }
 
 .appMenu a.active .navItemIcon {
-    color: var(--mantine-color-indigo-9);
+    color: light-dark(var(--mantine-color-blue-9), var(--mantine-color-blue-5));
 }
 
 .appMenuDropdown {
@@ -186,6 +191,10 @@
 
 .appMenuDropdownClose ul {
     display: none;
+}
+
+.logoutIcon {
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
 }
 
 .appMenuDropdownButton {

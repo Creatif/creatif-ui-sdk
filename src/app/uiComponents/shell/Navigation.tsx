@@ -144,7 +144,7 @@ export default function Navigation({ navItems, logo }: Props) {
                     }}
                     className={styles.appMenuButton}>
                     <IconLogout
-                        color="var(--mantine-color-gray-7)"
+                        className={styles.logoutIcon}
                         style={{
                             alignSelf: 'flex-start',
                         }}
