@@ -9,15 +9,11 @@
 
 .sortTitle {
     font-size: 0.7rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
 }
 
 .disabledTitle {
-    color: var(--mantine-color-gray-5);
-}
-
-.disabledTitle {
-    color: var(--mantine-color-gray-5);
+    color: light-dark(var(--mantine-color-red-5), var(--mantine-color-gray-7));
 }
 
 .column {
@@ -26,7 +22,7 @@
     justify-content: flex-start;
     align-content: center;
     gap: 0.5rem;
-    color: var(--mantine-color-gray-6);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
     margin: 0.5rem 0 1rem 0;
 }
 
@@ -38,7 +34,7 @@
 .behaviourReset {
     font-size: 0.7rem;
     margin-left: 1rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-red-2));
     font-weight: 500;
 
     cursor: pointer;
@@ -56,6 +52,14 @@
     cursor: pointer;
 }
 
+.selectedSort {
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
+}
+
+.unselectedSort {
+    color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-9));
+}
+
 .selectedRow {
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 }

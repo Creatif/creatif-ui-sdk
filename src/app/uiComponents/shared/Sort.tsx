@@ -71,13 +71,7 @@ export default function Sort({
                             onClick={() => onSortSelected('created_at')}>
                             <IconCheck
                                 size={20}
-                                style={{
-                                    color: `${
-                                        selectedSort === 'created_at'
-                                            ? 'var(--mantine-color-gray-9)'
-                                            : 'var(--mantine-color-gray-4)'
-                                    }`,
-                                }}
+                                className={selectedSort === 'created_at' ? styles.selectedSort : styles.unselectedSort}
                             />
                             <span>Date created</span>
                         </div>
@@ -92,13 +86,7 @@ export default function Sort({
                             onClick={() => onSortSelected('updated_at')}>
                             <IconCheck
                                 size={20}
-                                style={{
-                                    color: `${
-                                        selectedSort === 'updated_at'
-                                            ? 'var(--mantine-color-gray-9)'
-                                            : 'var(--mantine-color-gray-4)'
-                                    }`,
-                                }}
+                                className={selectedSort === 'updated_at' ? styles.selectedSort : styles.unselectedSort}
                             />
                             <span>Date updated</span>
                         </div>
@@ -113,13 +101,7 @@ export default function Sort({
                             onClick={() => onSortSelected('index')}>
                             <IconCheck
                                 size={20}
-                                style={{
-                                    color: `${
-                                        selectedSort === 'index'
-                                            ? 'var(--mantine-color-gray-9)'
-                                            : 'var(--mantine-color-gray-4)'
-                                    }`,
-                                }}
+                                className={selectedSort === 'index' ? styles.selectedSort : styles.unselectedSort}
                             />
                             <span>Index</span>
                         </div>
