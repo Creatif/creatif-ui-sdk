@@ -5,9 +5,17 @@
     gap: 0.3rem;
 }
 
+.groupPill {
+    background-color: light-dark(var(--mantine-color-blue-2), var(--mantine-color-blue-8));
+}
+
 .popoverTarget {
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-6);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
+}
+
+.popoverTargetPill {
+    background-color: light-dark(var(--mantine-color-blue-2), var(--mantine-color-blue-8));
 }
 
 .popoverTarget:hover {

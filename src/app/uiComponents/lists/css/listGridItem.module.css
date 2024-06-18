@@ -4,14 +4,14 @@
     align-items: center;
     gap: 0.5rem;
 
-    border-bottom: 1px solid var(--mantine-color-indigo-0);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+
 
     padding: 1rem 0 1rem 0;
     margin-bottom: 0.8rem;
-    border-radius: 4px;
 
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 
     transition:
         transform 0.3s,
@@ -21,7 +21,7 @@
 .nameRowTitle {
     line-height: 1.3rem;
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 }
 
 .container:hover {

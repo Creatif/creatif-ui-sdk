@@ -180,15 +180,7 @@ function GridItem<Value, Metadata>({
 
             <div className={styles.actionRow}>
                 {structureItem && (
-                    <Tooltip
-                        styles={{
-                            tooltip: {
-                                backgroundColor: 'white',
-                                border: '1px solid var(--mantine-color-gray-2)',
-                                color: 'var(--mantine-color-gray-9)',
-                            },
-                        }}
-                        label="Edit">
+                    <Tooltip label="Edit">
                         <ActionIcon
                             classNames={{
                                 root: styles.actionIconOverride,
@@ -202,15 +194,7 @@ function GridItem<Value, Metadata>({
                     </Tooltip>
                 )}
 
-                <Tooltip
-                    styles={{
-                        tooltip: {
-                            backgroundColor: 'white',
-                            border: '1px solid var(--mantine-color-gray-2)',
-                            color: 'var(--mantine-color-gray-9)',
-                        },
-                    }}
-                    label="Change locale">
+                <Tooltip label="Change locale">
                     <ActionIcon
                         variant="filled"
                         classNames={{
@@ -226,15 +210,7 @@ function GridItem<Value, Metadata>({
                     </ActionIcon>
                 </Tooltip>
 
-                <Tooltip
-                    styles={{
-                        tooltip: {
-                            backgroundColor: 'white',
-                            border: '1px solid var(--mantine-color-gray-2)',
-                            color: 'var(--mantine-color-gray-9)',
-                        },
-                    }}
-                    label="Change groups">
+                <Tooltip label="Change groups">
                     <ActionIcon
                         variant="filled"
                         classNames={{
@@ -250,15 +226,7 @@ function GridItem<Value, Metadata>({
                     </ActionIcon>
                 </Tooltip>
 
-                <Tooltip
-                    styles={{
-                        tooltip: {
-                            backgroundColor: 'white',
-                            border: '1px solid var(--mantine-color-gray-2)',
-                            color: 'var(--mantine-color-gray-9)',
-                        },
-                    }}
-                    label="View item">
+                <Tooltip label="View item">
                     <ActionIcon
                         component={Link}
                         to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}`}
@@ -271,15 +239,7 @@ function GridItem<Value, Metadata>({
                     </ActionIcon>
                 </Tooltip>
 
-                <Tooltip
-                    styles={{
-                        tooltip: {
-                            backgroundColor: 'white',
-                            border: '1px solid var(--mantine-color-gray-2)',
-                            color: 'var(--mantine-color-gray-9)',
-                        },
-                    }}
-                    label="Delete item">
+                <Tooltip label="Delete item">
                     <ActionIcon
                         variant="filled"
                         classNames={{

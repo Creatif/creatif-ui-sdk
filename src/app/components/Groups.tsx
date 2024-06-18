@@ -27,10 +27,10 @@ function GroupsPopover({ groups }: Props) {
                         <div className={styles.groupsList}>
                             {groups.map((item, i) => (
                                 <Pill
+                                    className={styles.popoverTargetPill}
                                     key={i}
                                     styles={{
                                         root: {
-                                            backgroundColor: 'var(--mantine-color-blue-0)',
                                             margin: '0.2rem 0.2rem 0.2rem 0',
                                         },
                                         label: { cursor: 'pointer' },
@@ -50,12 +50,7 @@ export default function Groups({ groups }: Props) {
     return (
         <div className={styles.groups}>
             {groups.slice(0, 3).map((item) => (
-                <Pill
-                    key={item}
-                    styles={{
-                        root: { backgroundColor: 'var(--mantine-color-blue-0)' },
-                        label: { cursor: 'pointer' },
-                    }}>
+                <Pill key={item} className={styles.groupPill}>
                     {item}
                 </Pill>
             ))}
