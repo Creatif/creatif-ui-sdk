@@ -20,10 +20,10 @@
 
     margin-bottom: 2rem;
 
-    background-color: var(--mantine-color-gray-0);
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-9));
     padding: 1rem 1rem 1rem 0.5rem;
     border-radius: 8px;
-    border: 1px solid var(--mantine-color-gray-2);
+    border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7))
 }
 
 .root {

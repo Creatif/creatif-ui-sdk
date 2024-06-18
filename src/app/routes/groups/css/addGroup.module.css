@@ -8,7 +8,7 @@
 .info {
     width: 50%;
     line-height: 1.5rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2))
 }
 
 .info .important {
@@ -22,7 +22,8 @@
     margin: 2rem 0 0.5rem 0;
     padding: 1rem;
     border-radius: 4px;
-    background-color: var(--mantine-color-yellow-0);
+    background-color: light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-9));
+    color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
 
 .formWrapper {

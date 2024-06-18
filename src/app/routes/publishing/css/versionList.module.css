@@ -7,7 +7,7 @@
     display: grid;
     grid-template-columns: 150px 100px 1fr 1fr;
     gap: 1rem;
-    border-bottom: 1px solid var(--mantine-color-indigo-0);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
 
     padding: 1rem 0 1rem 0;
     margin-bottom: 0.8rem;
@@ -15,7 +15,7 @@
     font-weight: bolder;
 
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-blue-9), var(--mantine-color-gray-2));
 
     transition:
         transform 0.3s,
@@ -24,7 +24,7 @@
 
 .gridRoot .column {
     font-size: 0.8rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
     font-weight: bolder;
 }
 
@@ -39,14 +39,14 @@
     align-items: center;
     gap: 1rem;
 
-    border-bottom: 1px solid var(--mantine-color-indigo-0);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 
     padding: 1rem 0 1rem 0;
     margin-bottom: 0.8rem;
     border-radius: 4px;
 
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 
     transition:
         transform 0.3s,
@@ -85,6 +85,6 @@
 
 .listEmpty p {
     margin-top: 1rem;
-    color: var(--mantine-color-gray-6);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
     font-size: 0.9rem;
 }
