@@ -1,7 +1,6 @@
 .root {
-    background-color: white;
-
-    border-bottom: 1px solid var(--mantine-color-indigo-1);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
 
 .paddingSection {
@@ -19,7 +18,7 @@
 .heading {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--mantine-color-gray-9);
+    color: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
     margin-bottom: 1rem;
 }
 
@@ -36,4 +35,10 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+}
+
+.filterButton {
+    background-color: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+    border: 1px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-8));
+    color: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
 }

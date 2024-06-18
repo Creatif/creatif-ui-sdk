@@ -91,13 +91,12 @@ export default function ActionSection({
                         <Button
                             onClick={() => setIsDrawerOpened(true)}
                             size="md"
-                            color="black"
+                            className={styles.filterButton}
                             variant="white"
                             leftSection={<IconAdjustments size={20} />}
                             style={{
                                 fontWeight: '200',
                                 fontSize: '0.8rem',
-                                border: '1px dashed var(--mantine-color-gray-4)',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 gap: '10rem',

@@ -1,6 +1,5 @@
 .header {
     width: 100%;
-    background-color: white;
     border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
