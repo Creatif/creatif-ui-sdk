@@ -1,11 +1,11 @@
 .text {
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     line-height: 1.8rem;
     margin-top: 0.8rem;
 }
 
 .header {
-    color: var(--mantine-color-gray-7);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     line-height: 1.4rem;
     margin-top: 3rem;
     font-weight: bolder;
@@ -24,9 +24,24 @@
 .informationParagraph {
     line-height: 1.6rem;
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     margin: 0 0 2rem 0;
     padding: 0 0 0 1rem;
 
-    border-left: 4px solid var(--mantine-color-gray-2);
+    border-left: 4px solid light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-8));
+}
+
+.dangerTitle {
+    background-color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-8));
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
+}
+
+.alertIcon {
+    background-color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-8));
+    color: light-dark(var(--mantine-color-white), var(--mantine-color-white));
+}
+
+.closeIcon {
+    background-color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-8));
+    color: light-dark(var(--mantine-color-white), var(--mantine-color-white));
 }

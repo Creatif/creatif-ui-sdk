@@ -14,13 +14,14 @@ export default function DeleteModal({ open, message, onClose, onDelete }: Props)
     return (
         <>
             <Modal
-                styles={{
-                    header: {
-                        backgroundColor: 'var(--mantine-color-red-1)',
-                    },
+                classNames={{
+                    header: styles.dangerTitle,
                 }}
                 opened={Boolean(open)}
-                title={<IconAlertCircle color="var(--mantine-color-red-5)" size={24} />}
+                title={<IconAlertCircle className={styles.alertIcon} size={24} />}
+                closeButtonProps={{
+                    className: styles.closeIcon,
+                }}
                 onClose={onClose}
                 centered>
                 <h1 className={styles.header}>You are about to delete an item</h1>
