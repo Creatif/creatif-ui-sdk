@@ -43,7 +43,7 @@ const theme = createTheme({
 export function CreatifProvider({ app }: Props & PropsWithChildren) {
     return (
         <MantineProvider theme={theme}>
-            <ColorSchemeScript localStorageKey="creatif-theme" />
+            <ColorSchemeScript defaultColorScheme="auto" forceColorScheme="dark" />
             <Notifications limit={5} />
 
             <QueryClientProvider client={queryClient}>

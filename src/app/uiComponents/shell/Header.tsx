@@ -11,6 +11,7 @@ import { PublishButton } from '@app/uiComponents/shell/PublishButton';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import { Simulate } from 'react-dom/test-utils';
 import toggle = Simulate.toggle;
+import { ThemeChange } from '@app/uiComponents/shell/ThemeChange';
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];
 
@@ -21,10 +22,6 @@ function localesToSelectOptions(data: Locale[] | undefined) {
 }
 export default function Header() {
     const { info } = useNotification();
-    const { setColorScheme } = useMantineColorScheme({
-        keepTransitions: true,
-    });
-    const [themeToggle, setThemeToggle] = useState(true);
 
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
     const [currentLocale, setCurrentLocale] = useState<string>(Runtime.instance.currentLocaleStorage.getLocale());
@@ -74,15 +71,7 @@ export default function Header() {
 
                     <PublishButton />
 
-                    <ActionIcon
-                        onClick={() => {
-                            setThemeToggle((toggle) => !toggle);
-                            if (themeToggle) setColorScheme('light');
-                            if (!themeToggle) setColorScheme('dark');
-                        }}>
-                        {themeToggle && <IconSun size={16} />}
-                        {!themeToggle && <IconMoon size={16} />}
-                    </ActionIcon>
+                    <ThemeChange />
                 </div>
             </div>
 

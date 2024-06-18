@@ -14,9 +14,9 @@
 }
 
 .actionRoot {
-    width: 360px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    width: 440px;
+    display: flex;
+    justify-content: center;
     gap: 1rem;
 }
 

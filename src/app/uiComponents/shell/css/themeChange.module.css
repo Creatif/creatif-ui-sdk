@@ -1,0 +1,8 @@
+.button {
+    background-color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
+    margin-top: 3px;
+}
+
+.icon {
+    color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
+}
