@@ -1,6 +1,6 @@
 import useNotification from '@app/systems/notifications/useNotification';
 import SupportedLocalesModal from '@app/uiComponents/shell/SupportedLocalesModal';
-import { type ComboboxItem, Select } from '@mantine/core';
+import { ActionIcon, type ComboboxItem, Select, useMantineColorScheme } from '@mantine/core';
 import { useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -8,6 +8,9 @@ import styles from './css/header.module.css';
 import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { PublishButton } from '@app/uiComponents/shell/PublishButton';
+import { IconMoon, IconSun } from '@tabler/icons-react';
+import { Simulate } from 'react-dom/test-utils';
+import toggle = Simulate.toggle;
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];
 
@@ -18,6 +21,10 @@ function localesToSelectOptions(data: Locale[] | undefined) {
 }
 export default function Header() {
     const { info } = useNotification();
+    const { setColorScheme } = useMantineColorScheme({
+        keepTransitions: true,
+    });
+    const [themeToggle, setThemeToggle] = useState(true);
 
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
     const [currentLocale, setCurrentLocale] = useState<string>(Runtime.instance.currentLocaleStorage.getLocale());
@@ -66,6 +73,16 @@ export default function Header() {
                     </div>
 
                     <PublishButton />
+
+                    <ActionIcon
+                        onClick={() => {
+                            setThemeToggle((toggle) => !toggle);
+                            if (themeToggle) setColorScheme('light');
+                            if (!themeToggle) setColorScheme('dark');
+                        }}>
+                        {themeToggle && <IconSun size={16} />}
+                        {!themeToggle && <IconMoon size={16} />}
+                    </ActionIcon>
                 </div>
             </div>
 

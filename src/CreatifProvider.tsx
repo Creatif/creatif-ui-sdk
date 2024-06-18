@@ -1,4 +1,4 @@
-import { createTheme, MantineProvider } from '@mantine/core';
+import { ColorSchemeScript, createTheme, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -43,6 +43,7 @@ const theme = createTheme({
 export function CreatifProvider({ app }: Props & PropsWithChildren) {
     return (
         <MantineProvider theme={theme}>
+            <ColorSchemeScript localStorageKey="creatif-theme" />
             <Notifications limit={5} />
 
             <QueryClientProvider client={queryClient}>

@@ -2,6 +2,7 @@
     width: 100%;
     background-color: white;
     border-bottom: 1px solid var(--mantine-color-indigo-1);
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
 
 .contentWrapper {
@@ -22,7 +23,7 @@
 
 .supportedLocalesAction {
     display: block;
-    color: var(--mantine-primary-color-filled);
+    color: light-dark(var(--mantine-primary-color-filled), var(--mantine-color-blue-3));
     font-size: 0.8rem;
     margin-top: 0.4rem;
     cursor: pointer;
