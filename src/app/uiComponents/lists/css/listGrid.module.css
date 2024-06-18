@@ -38,14 +38,14 @@
     gap: 0.5rem;
     padding: 1rem 0 1rem 0;
 
-    border-bottom: 1px solid var(--mantine-color-gray-2);
-    background-color: white;
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
     z-index: 10;
 }
 
 .root .column {
     font-size: 0.8rem;
-    color: var(--mantine-color-gray-9);
+    color: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-white));
     font-weight: bolder;
 }
 
