@@ -8,7 +8,7 @@
 .info {
     width: 50%;
     line-height: 1.5rem;
-    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2))
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 }
 
 .info .important {
