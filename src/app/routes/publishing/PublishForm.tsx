@@ -18,6 +18,7 @@ interface Props {
 export function PublishForm({ listLength }: Props) {
     const queryClient = useQueryClient();
     const methods = useForm({
+        mode: 'onChange',
         defaultValues: {
             versionName: '',
         },

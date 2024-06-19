@@ -39,11 +39,10 @@
     align-items: center;
     gap: 1rem;
 
-    border-bottom: 1px solid light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
 
     padding: 1rem 0 1rem 0;
     margin-bottom: 0.8rem;
-    border-radius: 4px;
 
     font-size: 0.9rem;
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
