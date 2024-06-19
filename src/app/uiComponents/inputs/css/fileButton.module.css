@@ -1,0 +1,12 @@
+.loadedFileText {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
+
+    margin-bottom: 0.5rem;
+}
+
+.clearIcon {
+    cursor: pointer;
+}

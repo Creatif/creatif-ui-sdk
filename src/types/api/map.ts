@@ -31,6 +31,7 @@ export interface AddToMapBlueprint {
     projectId: string;
     variable: AddToMapVariable;
     references?: Reference[];
+    imagePaths: string[];
 }
 
 export interface PaginateMapBlueprint {
@@ -97,6 +98,7 @@ export interface UpdateMapVariableBlueprint {
     fields?: string[];
     values: UpdateMapItemVariableBlueprint;
     references: UpdateMapVariableReferenceBlueprint[];
+    imagePaths: string[];
 }
 
 export interface UpdateMapItemResult<Value = unknown, Metadata = unknown> {

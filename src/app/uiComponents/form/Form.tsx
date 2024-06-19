@@ -25,7 +25,12 @@ import type {
     UseFormStateReturn,
     UseFormRegister,
 } from 'react-hook-form';
-import type { GroupsWrapperProps, LocaleWrapperProps, ReferenceInputProps } from '@app/uiComponents/shared/BaseForm';
+import type {
+    InputGroupsFieldProps,
+    InputImageFieldProps,
+    InputLocaleFieldProps,
+    InputReferenceFieldProps,
+} from '@app/uiComponents/shared/BaseForm';
 import BaseForm from '@app/uiComponents/shared/BaseForm';
 
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
@@ -45,6 +50,7 @@ import { createSpecialFields } from '@app/systems/stores/specialFields';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { resolveBindings } from '@app/uiComponents/form/bindings/bindingResolver';
 import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
+import { createImagePathsStore } from '@app/systems/stores/imagePaths';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     bindings: Bindings<T>;
@@ -65,10 +71,11 @@ interface Props<T extends FieldValues, Value, Metadata> {
             getFieldState: UseFormGetFieldState<T>;
             formState: UseFormStateReturn<T>;
             defaultValues: T;
-            inputLocale: (props?: LocaleWrapperProps) => React.ReactNode;
-            inputGroups: (props?: GroupsWrapperProps) => React.ReactNode;
+            inputImage: (props: InputImageFieldProps) => React.ReactNode;
+            inputLocale: (props?: InputLocaleFieldProps) => React.ReactNode;
+            inputGroups: (props?: InputGroupsFieldProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
-            inputConnection: (props: ReferenceInputProps) => React.ReactNode;
+            inputConnection: (props: InputReferenceFieldProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
@@ -98,6 +105,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
     const isUpdateRoute = location.pathname.includes('/update/');
 
     const referenceStore = useMemo(() => createInputReferenceStore(), []);
+    const imagePathsStore = useMemo(() => createImagePathsStore(), []);
 
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
@@ -160,11 +168,12 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
+
                     deleteBindings(result.value);
                     removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
 
@@ -188,6 +197,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                             name: item.name,
                             variableId: item.variableId,
                         })) as Reference[],
+                        imagePaths: imagePathsStore.getState().paths,
                     });
 
                     setIsSaving(false);
@@ -220,8 +230,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -266,6 +276,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                                   variableId: item.variableId,
                               })) as UpdateMapVariableReferenceBlueprint[])
                             : [],
+                        imagePaths: imagePathsStore.getState().paths,
                     });
 
                     setIsSaving(false);
@@ -316,7 +327,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     color="red"
                     title="beforeSubmit() error">
                     {
-                        'Return value of \'beforeSave\' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned'
+                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
                     }
                 </Alert>
             )}
@@ -368,6 +379,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         formProps={formProps}
                         isUpdate={isUpdate}
                         inputs={inputs}
+                        imagePathsStore={imagePathsStore}
                         referenceStore={referenceStore}
                         onSubmit={onInternalSubmit}
                         isSaving={isSaving}

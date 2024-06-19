@@ -20,6 +20,7 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
                 metadata: blueprint.values.metadata ? JSON.stringify(blueprint.values.metadata) : null,
             },
             references: blueprint.references,
+            imagePaths: blueprint.imagePaths,
         },
     );
 }

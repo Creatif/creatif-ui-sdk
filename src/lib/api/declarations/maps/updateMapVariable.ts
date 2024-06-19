@@ -21,6 +21,7 @@ export async function updateMapVariable(blueprint: UpdateMapVariableBlueprint) {
                 metadata: blueprint.values.metadata ? JSON.stringify(blueprint.values.metadata) : null,
             },
             references: blueprint.references,
+            imagePaths: blueprint.imagePaths,
         },
     );
 }

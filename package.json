@@ -19,7 +19,7 @@
     "scripts": {
         "dev": "vite --host 0.0.0.0 --mode development",
         "build-only": "vite build",
-        "build": "--noEmit && npm run pretty && npm run es-lint && vite build --mode production",
+        "build": "npm run pretty && npm run es-lint && vite build --mode production",
         "pretty": "prettier --loglevel='warn' --log-level='error' --write .",
         "es-lint": "eslint --fix .",
         "preview": "vite preview",

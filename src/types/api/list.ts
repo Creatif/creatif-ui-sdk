@@ -77,6 +77,7 @@ export interface AddToListBlueprint<Value = unknown, Metadata = unknown> {
     variable: AppendingVariableBlueprint<Value, Metadata>;
     projectId: string;
     references: Reference[];
+    imagePaths: string[];
 }
 export interface UpdateListItemBlueprint {
     name: string;
@@ -85,6 +86,7 @@ export interface UpdateListItemBlueprint {
     fields?: string[];
     values: UpdateListItemVariableBlueprint;
     references: UpdateMapVariableReferenceBlueprint[];
+    imagePaths: string[];
 }
 
 export interface UpdateMapVariableReferenceBlueprint {

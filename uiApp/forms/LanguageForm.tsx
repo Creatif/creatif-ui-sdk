@@ -15,7 +15,7 @@ export default function LanguageForm() {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputLocale, inputGroups, inputBehaviour }) => (
+            inputs={(submitButton, { inputLocale, inputGroups, inputBehaviour, inputImage }) => (
                 <>
                     <Grid>
                         <Grid.Col span={6}>
@@ -26,6 +26,12 @@ export default function LanguageForm() {
                                     required: 'Language name is required',
                                 }}
                             />
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            {inputImage({
+                                name: 'uploadedImage',
+                            })}
                         </Grid.Col>
 
                         <Grid.Col span={6}>{inputGroups()}</Grid.Col>

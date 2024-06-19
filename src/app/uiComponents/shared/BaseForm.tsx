@@ -16,6 +16,7 @@ import type {
     UseFormRegister,
 } from 'react-hook-form';
 import { Button, Group } from '@mantine/core';
+import type { ButtonProps, FileButtonProps } from '@mantine/core';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import { InputLocale } from '@app/uiComponents/inputs/InputLocale';
 import type { BaseSyntheticEvent } from 'react';
@@ -34,8 +35,10 @@ import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { FileUploadButton } from '@app/uiComponents/inputs/FileUploadButton';
+import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
 
-export interface ReferenceInputProps {
+export interface InputReferenceFieldProps {
     name: string;
     structureName: string;
     structureType: StructureType;
@@ -43,11 +46,20 @@ export interface ReferenceInputProps {
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
-export interface LocaleWrapperProps {
+export interface InputImageFieldProps {
+    name: string;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    fileButtonProps?: FileButtonProps;
+    buttonProps?: ButtonProps;
+    buttonText?: string;
+    onUploaded?: (file: File | null) => void;
+}
+
+export interface InputLocaleFieldProps {
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
-export interface GroupsWrapperProps {
+export interface InputGroupsFieldProps {
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
@@ -58,6 +70,7 @@ interface Props<T extends FieldValues> {
     formProps?: UseFormProps<T>;
     isUpdate: boolean;
     referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
+    imagePathsStore: UseBoundStore<StoreApi<ImagePathsStoreData>>;
     inputs: (
         submitButton: React.ReactNode,
         actions: {
@@ -74,10 +87,11 @@ interface Props<T extends FieldValues> {
             getFieldState: UseFormGetFieldState<T>;
             formState: UseFormStateReturn<T>;
             defaultValues: T;
-            inputLocale: (props?: InputLocaleProps) => React.ReactNode;
-            inputGroups: (props?: InputGroupsProps) => React.ReactNode;
+            inputImage: (props: InputImageFieldProps) => React.ReactNode;
+            inputLocale: (props?: InputLocaleFieldProps) => React.ReactNode;
+            inputGroups: (props?: InputGroupsFieldProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
-            inputConnection: (props: ReferenceInputProps) => React.ReactNode;
+            inputConnection: (props: InputReferenceFieldProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
@@ -88,6 +102,7 @@ export default function BaseForm<T extends FieldValues>({
     structureItem,
     formProps,
     referenceStore,
+    imagePathsStore,
     useSpecialFields,
     inputs,
     isUpdate,
@@ -173,14 +188,17 @@ export default function BaseForm<T extends FieldValues>({
                             formState: formState,
                             getFieldState: getFieldState,
                             defaultValues: getValues(),
-                            inputLocale: (props?: LocaleWrapperProps) => (
+                            inputImage: (props: InputImageFieldProps) => (
+                                <FileUploadButton store={imagePathsStore} {...props} />
+                            ),
+                            inputLocale: (props?: InputLocaleFieldProps) => (
                                 <InputLocale {...props} store={useSpecialFields} />
                             ),
-                            inputGroups: (props?: GroupsWrapperProps) => (
+                            inputGroups: (props?: InputGroupsFieldProps) => (
                                 <InputGroups store={useSpecialFields} {...props} />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
-                            inputConnection: (props: ReferenceInputProps) => (
+                            inputConnection: (props: InputReferenceFieldProps) => (
                                 <InputReference {...props} store={referenceStore} parentStructureItem={structureItem} />
                             ),
                         },
