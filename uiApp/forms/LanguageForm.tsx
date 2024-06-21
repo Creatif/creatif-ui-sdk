@@ -30,7 +30,37 @@ export default function LanguageForm() {
 
                         <Grid.Col span={6}>
                             {inputImage({
-                                name: 'uploadedImage',
+                                name: 'file1',
+                            })}
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            {inputImage({
+                                name: 'file2',
+                            })}
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            {inputImage({
+                                name: 'file3',
+                            })}
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            {inputImage({
+                                name: 'file4',
+                            })}
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            {inputImage({
+                                name: 'file5',
+                            })}
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            {inputImage({
+                                name: 'file6',
                             })}
                         </Grid.Col>
 

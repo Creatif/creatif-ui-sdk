@@ -2,7 +2,7 @@ import type { ButtonProps, FileButtonProps } from '@mantine/core';
 import { Button, FileButton } from '@mantine/core';
 import type { ImagePathsStore } from '@app/systems/stores/imagePaths';
 import type { RegisterOptions } from 'react-hook-form';
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useCallback, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -27,9 +27,21 @@ export function FileUploadButton({
     store,
     buttonText = 'Upload file',
 }: Props) {
+    const { setValue } = useFormContext();
     const [isCreatingBase64, setIsCreatingBase64] = useState(false);
-    const [currentlyLoadedFile, setCurrentlyLoadedFile] = useState<File | null>(null);
+    const [currentlyLoadedFile, setCurrentlyLoadedFile] = useState<string | null>(null);
     const resetRef = useRef<() => void>(null);
+    const uploadWorkerRef = useRef<Worker | null>(null);
+
+    useEffect(() => {
+        uploadWorkerRef.current = new Worker(new URL('http://localhost:5173/uploadWorker'), { type: 'module' });
+
+        uploadWorkerRef.current.onmessage = (e) => {
+            setValue(name, e.data);
+            setIsCreatingBase64(false);
+            store.getState().addPath(name);
+        };
+    }, []);
 
     useEffect(() => () => store.getState().removePath(name), []);
 
@@ -68,22 +80,16 @@ export function FileUploadButton({
                     resetRef={resetRef}
                     name={name}
                     onChange={(file) => {
-                        setCurrentlyLoadedFile(file);
+                        if (!file) {
+                            onChange(undefined);
+                            onUploaded?.(null);
+                            store.getState().removePath(name);
+                            return;
+                        }
+
+                        setCurrentlyLoadedFile(file.name);
                         setIsCreatingBase64(true);
-                        createBase64Image(file)
-                            .then((base64Image) => {
-                                onChange(base64Image);
-                                onUploaded?.(file);
-                                store.getState().addPath(name);
-                            })
-                            .catch(() => {
-                                onChange(undefined);
-                                onUploaded?.(null);
-                                store.getState().removePath(name);
-                            })
-                            .finally(() => {
-                                setIsCreatingBase64(false);
-                            });
+                        uploadWorkerRef.current?.postMessage(file);
                     }}>
                     {(props) => (
                         <>
@@ -98,7 +104,7 @@ export function FileUploadButton({
                                         }}
                                         className={css.clearIcon}
                                     />
-                                    {currentlyLoadedFile.name}
+                                    {currentlyLoadedFile}
                                 </p>
                             )}
                             <Button loading={isCreatingBase64} {...{ ...props, ...buttonProps }}>
