@@ -21,6 +21,7 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
             },
             references: blueprint.references,
             imagePaths: blueprint.imagePaths,
+            updatedPaths: blueprint.updatedPaths,
         },
     );
 }

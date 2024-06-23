@@ -3,8 +3,16 @@
     justify-content: flex-start;
     gap: 0.5rem;
     align-items: center;
+    align-content: center;
 
     margin-bottom: 0.5rem;
+}
+
+.clippedLoadedContent {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
 }
 
 .clearIcon {

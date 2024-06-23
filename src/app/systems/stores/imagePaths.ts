@@ -1,8 +1,11 @@
-import { create, StoreApi, UseBoundStore } from 'zustand';
+import type { StoreApi, UseBoundStore } from 'zustand';
+import { create } from 'zustand';
 
 export interface ImagePathsStoreData {
     paths: string[];
-    addPath: (path: string) => void;
+    updatedPaths: string[];
+    addPath: (path: string) => string | undefined;
+    addUpdatedPath: (path: string) => string | undefined;
     removePath: (toRemove: string) => void;
 }
 
@@ -11,13 +14,24 @@ export type ImagePathsStore = UseBoundStore<StoreApi<ImagePathsStoreData>>;
 export function createImagePathsStore() {
     return create<ImagePathsStoreData>((set, get) => ({
         paths: [],
+        updatedPaths: [],
+        addUpdatedPath(path: string) {
+            const current = get();
+            if (current.updatedPaths.includes(path)) {
+                return 'File path exists';
+            }
+
+            current.updatedPaths.push(path);
+            set((current) => ({ ...current }));
+        },
         addPath(path: string) {
             const current = get();
-            if (current.paths.includes(path)) return;
+            if (current.paths.includes(path)) {
+                return 'File path exists';
+            }
 
             current.paths.push(path);
-
-            return { ...current };
+            set((current) => ({ ...current }));
         },
         removePath(toRemove: string) {
             const current = get();

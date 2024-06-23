@@ -87,6 +87,7 @@ export interface UpdateListItemBlueprint {
     values: UpdateListItemVariableBlueprint;
     references: UpdateMapVariableReferenceBlueprint[];
     imagePaths: string[];
+    updatedPaths: string[];
 }
 
 export interface UpdateMapVariableReferenceBlueprint {
