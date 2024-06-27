@@ -20,7 +20,7 @@ import type { ButtonProps, FileButtonProps } from '@mantine/core';
 import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import { InputLocale } from '@app/uiComponents/inputs/InputLocale';
 import type { BaseSyntheticEvent } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import type { GetVariableResponse } from '@root/types/api/variable';
 import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
@@ -52,7 +52,7 @@ export interface InputImageFieldProps {
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
     buttonText?: string;
-    onUploaded?: (file: File | null) => void;
+    onUploaded?: (base64: string) => void;
 }
 
 export interface InputLocaleFieldProps {
@@ -163,6 +163,11 @@ export default function BaseForm<T extends FieldValues>({
 
     const isLoading = formState.isLoading;
 
+    const inputImage = useCallback(
+        (props: InputImageFieldProps) => <FileUploadButton store={imagePathsStore} {...props} />,
+        [],
+    );
+
     return (
         <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -188,9 +193,7 @@ export default function BaseForm<T extends FieldValues>({
                             formState: formState,
                             getFieldState: getFieldState,
                             defaultValues: getValues(),
-                            inputImage: (props: InputImageFieldProps) => (
-                                <FileUploadButton store={imagePathsStore} {...props} />
-                            ),
+                            inputImage: inputImage,
                             inputLocale: (props?: InputLocaleFieldProps) => (
                                 <InputLocale {...props} store={useSpecialFields} />
                             ),

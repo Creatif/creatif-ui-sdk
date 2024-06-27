@@ -1,6 +1,7 @@
 import { Grid } from '@mantine/core';
 import { InputText } from '../../src/app/uiComponents/inputs/InputText';
 import { Form } from '../../src/app/uiComponents/form/Form';
+import { Image } from './Image';
 
 export default function LanguageForm() {
     return (
@@ -29,39 +30,28 @@ export default function LanguageForm() {
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputImage({
-                                name: 'file1',
-                            })}
+                            <Image name='file1' inputImage={inputImage} />
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputImage({
-                                name: 'file2',
-                            })}
+                            <Image name='file2' inputImage={inputImage} />
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputImage({
-                                name: 'file3',
-                            })}
+                            <Image name='file3' inputImage={inputImage} />
+
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputImage({
-                                name: 'file4',
-                            })}
+                            <Image name='file4' inputImage={inputImage} />
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputImage({
-                                name: 'file5',
-                            })}
+                            <Image name='file5' inputImage={inputImage} />
                         </Grid.Col>
 
                         <Grid.Col span={6}>
-                            {inputImage({
-                                name: 'file6',
-                            })}
+                            <Image name='file6' inputImage={inputImage} />
                         </Grid.Col>
 
                         <Grid.Col span={6}>{inputGroups()}</Grid.Col>

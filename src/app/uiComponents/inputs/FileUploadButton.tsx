@@ -18,7 +18,7 @@ interface Props {
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
     buttonText?: string;
-    onUploaded?: (file: File | null) => void;
+    onUploaded?: (base64: string) => void;
 }
 
 export function FileUploadButton({
@@ -39,12 +39,21 @@ export function FileUploadButton({
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        uploadWorkerRef.current = new Worker(new URL(`${import.meta.env.VITE_HOST}/uploadWorker`), { type: 'module' });
+        uploadWorkerRef.current = new Worker(new URL(`${import.meta.env.VITE_FRONTEND_HOST}/uploadWorker`), {
+            type: 'module',
+        });
+
         uploadWorkerRef.current.onmessage = (e) => {
             setIsCreatingBase64(false);
 
             if (e.data.isUpdate) {
                 setValue(name, e.data.image);
+                onUploaded?.(e.data.image.split(',')[1]);
+                const error = store.getState().addUpdatedPath(name);
+                if (error) {
+                    setFilePathError(error);
+                }
+
                 return;
             } else if (!e.data.isUpdate) {
                 const error = store.getState().addUpdatedPath(name);
@@ -54,6 +63,7 @@ export function FileUploadButton({
             }
 
             setValue(name, e.data);
+            onUploaded?.(e.data.replace(/#.*;/, ';'));
         };
 
         const currentValue = getValues(name);
@@ -62,7 +72,7 @@ export function FileUploadButton({
             uploadWorkerRef.current?.postMessage(currentValue);
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            setCurrentlyLoadedFile(`${import.meta.env.VITE_HOST}${currentValue}`);
+            setCurrentlyLoadedFile(`${import.meta.env.VITE_API_HOST}${currentValue}`);
         }
     }, []);
 
@@ -115,7 +125,6 @@ export function FileUploadButton({
                         onChange={(file) => {
                             if (!file) {
                                 onChange(undefined);
-                                onUploaded?.(null);
                                 store.getState().removePath(name);
                                 return;
                             }

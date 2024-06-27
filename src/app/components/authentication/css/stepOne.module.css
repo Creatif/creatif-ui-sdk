@@ -19,7 +19,7 @@
 }
 
 .paragraph {
-    color: var(--mantine-color-gray-7);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     line-height: 1.5rem;
     margin-bottom: 3rem;
 }
