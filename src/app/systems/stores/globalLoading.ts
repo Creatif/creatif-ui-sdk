@@ -5,7 +5,6 @@ export interface GlobalLoadingStoreData {
     loaders: number;
     addLoader: () => void;
     removeLoader: () => void;
-    isLoading: () => boolean;
 }
 
 export type GlobalLoadingStore = UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
@@ -18,10 +17,6 @@ export function createGlobalLoadingStore() {
         },
         removeLoader() {
             set((current) => ({ ...current, loaders: current.loaders - 1 }));
-        },
-        isLoading() {
-            console.log(get().loaders);
-            return get().loaders !== 0;
         },
     }));
 }

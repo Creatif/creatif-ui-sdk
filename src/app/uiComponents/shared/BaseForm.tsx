@@ -15,15 +15,12 @@ import type {
     UseFormStateReturn,
     UseFormRegister,
 } from 'react-hook-form';
-import { Button, Group } from '@mantine/core';
 import type { ButtonProps, FileButtonProps } from '@mantine/core';
-import type { InputLocaleProps } from '@app/uiComponents/inputs/InputLocale';
 import { InputLocale } from '@app/uiComponents/inputs/InputLocale';
 import type { BaseSyntheticEvent } from 'react';
 import React, { useCallback } from 'react';
 import type { SpecialFieldsStore } from '@app/systems/stores/specialFields';
 import type { GetVariableResponse } from '@root/types/api/variable';
-import type { InputGroupsProps } from '@app/uiComponents/inputs/InputGroups';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
 import { InputBehaviour } from '@app/uiComponents/inputs/InputBehaviour';
 import type { QueriedListItem } from '@root/types/api/list';
@@ -37,7 +34,7 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { FileUploadButton } from '@app/uiComponents/inputs/FileUploadButton';
 import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
-import { GlobalLoadingStoreData } from '@app/systems/stores/globalLoading';
+import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import { SubmitButton } from '@app/uiComponents/form/SubmitButton';
 
 export interface InputReferenceFieldProps {
@@ -73,7 +70,7 @@ interface Props<T extends FieldValues> {
     isUpdate: boolean;
     referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
     imagePathsStore: UseBoundStore<StoreApi<ImagePathsStoreData>>;
-    globalLoadingStore: UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
+    globalLoadingStore: GlobalLoadingStore;
     inputs: (
         submitButton: React.ReactNode,
         actions: {

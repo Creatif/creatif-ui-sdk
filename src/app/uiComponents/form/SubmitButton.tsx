@@ -1,12 +1,11 @@
 import { Button, Group } from '@mantine/core';
 import React from 'react';
-import type { StoreApi, UseBoundStore } from 'zustand';
-import type { GlobalLoadingStoreData } from '@app/systems/stores/globalLoading';
+import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 
 interface Props {
     isUpdate: boolean;
     isSaving: boolean;
-    globalLoadingStore: UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
+    globalLoadingStore: GlobalLoadingStore;
 }
 
 export function SubmitButton({ isUpdate, isSaving, globalLoadingStore }: Props) {

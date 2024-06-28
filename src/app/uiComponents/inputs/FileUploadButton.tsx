@@ -13,8 +13,7 @@ import Copy from '@app/components/Copy';
 import type { UploadedImage } from '@root/types/api/images';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import UIError from '@app/components/UIError';
-import type { StoreApi, UseBoundStore } from 'zustand';
-import type { GlobalLoadingStoreData } from '@app/systems/stores/globalLoading';
+import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 
 interface Props {
     name: string;
@@ -23,7 +22,7 @@ interface Props {
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
     buttonText?: string;
-    globalLoadingStore: UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
+    globalLoadingStore: GlobalLoadingStore;
     onUploaded?: (base64: string) => void;
 }
 
