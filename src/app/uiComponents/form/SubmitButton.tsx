@@ -11,6 +11,8 @@ interface Props {
 export function SubmitButton({ isUpdate, isSaving, globalLoadingStore }: Props) {
     const loaders = globalLoadingStore((current) => current.loaders);
 
+    console.log(loaders);
+
     return (
         <Group justify="end">
             <Button loaderProps={{ size: 14 }} loading={isSaving || loaders !== 0} type="submit">

@@ -117,6 +117,7 @@ export function FileUploadButton({
                             }
 
                             setCurrentlyLoadedFile(file.name);
+                            globalLoadingStore.getState().addLoader();
                             setIsCreatingBase64(true);
                             uploadWorkerRef.current?.postMessage(file);
                         }}>
