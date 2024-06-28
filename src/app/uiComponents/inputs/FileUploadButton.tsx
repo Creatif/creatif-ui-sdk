@@ -1,15 +1,18 @@
 import type { ButtonProps, FileButtonProps } from '@mantine/core';
-import { Button, CopyButton, FileButton } from '@mantine/core';
+import { Button, FileButton } from '@mantine/core';
 import type { ImagePathsStore } from '@app/systems/stores/imagePaths';
 import type { RegisterOptions } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import css from '@app/uiComponents/inputs/css/fileButton.module.css';
 import { IconX } from '@tabler/icons-react';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import Copy from '@app/components/Copy';
+import type { UploadedImage } from '@root/types/api/images';
+import { Runtime } from '@app/systems/runtime/Runtime';
+import UIError from '@app/components/UIError';
 
 interface Props {
     name: string;
@@ -35,6 +38,8 @@ export function FileUploadButton({
     const resetRef = useRef<() => void>(null);
     const uploadWorkerRef = useRef<Worker | null>(null);
     const [filePathError, setFilePathError] = useState<string | undefined>();
+    const updateRef = useRef(false);
+    const [fileProcessError, setFileProcessError] = useState(false);
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -46,33 +51,38 @@ export function FileUploadButton({
         uploadWorkerRef.current.onmessage = (e) => {
             setIsCreatingBase64(false);
 
-            if (e.data.isUpdate) {
-                setValue(name, e.data.image);
-                onUploaded?.(e.data.image.split(',')[1]);
-                const error = store.getState().addUpdatedPath(name);
-                if (error) {
-                    setFilePathError(error);
-                }
-
+            if (e.data.result.error) {
+                setFileProcessError(true);
                 return;
-            } else if (!e.data.isUpdate) {
-                const error = store.getState().addUpdatedPath(name);
-                if (error) {
-                    setFilePathError(error);
-                }
             }
 
-            setValue(name, e.data);
-            onUploaded?.(e.data.replace(/#.*;/, ';'));
+            if (e.data.isUpdate) {
+                const currentUploadedImage: UploadedImage = getValues(name) as UploadedImage;
+                onUploaded?.(`data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`);
+                setValue(name, e.data.result.result);
+
+                return;
+            }
+
+            setValue(name, e.data.result.result);
+            onUploaded?.(e.data.result.result.replace(/#.*;/, ';'));
         };
 
-        const currentValue = getValues(name);
+        const currentValue: UploadedImage = getValues(name) as UploadedImage;
         if (currentValue) {
+            // mark that this is in a update form
+            updateRef.current = true;
             setIsCreatingBase64(true);
-            uploadWorkerRef.current?.postMessage(currentValue);
+            uploadWorkerRef.current?.postMessage(
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                `${import.meta.env.VITE_API_HOST}/api/v1/images/image/${
+                    Runtime.instance.currentProjectCache.getProject().id
+                }/${currentValue.id}`,
+            );
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            setCurrentlyLoadedFile(`${import.meta.env.VITE_API_HOST}${currentValue}`);
+            setCurrentlyLoadedFile(currentValue.id);
         }
     }, []);
 
@@ -84,34 +94,6 @@ export function FileUploadButton({
     }, [name]);
 
     useEffect(() => () => store.getState().removePath(name), []);
-
-    const createBase64Image = useCallback(
-        (file: File | null): Promise<string | undefined> =>
-            new Promise((resolve, reject) => {
-                if (!file) {
-                    reject(undefined);
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.readAsArrayBuffer(file);
-
-                reader.onloadend = async () => {
-                    const arr = new Uint8Array(reader.result as ArrayBuffer);
-                    const str = arr.reduce((data, byte) => data + String.fromCharCode(byte), '');
-
-                    const split = file.name.split('.');
-                    let data = `data:${file.type}`;
-                    if (split.length > 1) {
-                        data = `data:${file.type}#${split[split.length - 1]}`;
-                    }
-
-                    const base64 = btoa(str);
-                    resolve(`${data};base64,${base64}`);
-                };
-            }),
-        [],
-    );
 
     return (
         <>
@@ -168,6 +150,8 @@ export function FileUploadButton({
                     </FileButton>
                 )}
             />
+
+            {fileProcessError && <UIError title="You file could no be processed" />}
 
             {filePathError && (
                 <RuntimeErrorModal

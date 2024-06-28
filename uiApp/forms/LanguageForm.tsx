@@ -1,7 +1,8 @@
-import { Grid } from '@mantine/core';
 import { InputText } from '../../src/app/uiComponents/inputs/InputText';
 import { Form } from '../../src/app/uiComponents/form/Form';
 import { Image } from './Image';
+import {Grid} from '../../src/app/layouts/Grid';
+import { Cell } from '../../src/app/layouts/Cell';
 
 export default function LanguageForm() {
     return (
@@ -18,8 +19,8 @@ export default function LanguageForm() {
             }}
             inputs={(submitButton, { inputLocale, inputGroups, inputBehaviour, inputImage }) => (
                 <>
-                    <Grid>
-                        <Grid.Col span={6}>
+                    <Grid gap="24px">
+                        <Cell span="span 12">
                             <InputText
                                 label="Language name"
                                 name="name"
@@ -27,36 +28,35 @@ export default function LanguageForm() {
                                     required: 'Language name is required',
                                 }}
                             />
-                        </Grid.Col>
+                        </Cell>
 
-                        <Grid.Col span={6}>
+                        <Cell>
                             <Image name='file1' inputImage={inputImage} />
-                        </Grid.Col>
+                        </Cell>
 
-                        <Grid.Col span={6}>
+                        <Cell>
                             <Image name='file2' inputImage={inputImage} />
-                        </Grid.Col>
+                        </Cell>
 
-                        <Grid.Col span={6}>
+                        <Cell>
                             <Image name='file3' inputImage={inputImage} />
+                        </Cell>
 
-                        </Grid.Col>
-
-                        <Grid.Col span={6}>
+                        <Cell>
                             <Image name='file4' inputImage={inputImage} />
-                        </Grid.Col>
+                        </Cell>
 
-                        <Grid.Col span={6}>
+                        <Cell>
                             <Image name='file5' inputImage={inputImage} />
-                        </Grid.Col>
+                        </Cell>
 
-                        <Grid.Col span={6}>
+                        <Cell>
                             <Image name='file6' inputImage={inputImage} />
-                        </Grid.Col>
+                        </Cell>
 
-                        <Grid.Col span={6}>{inputGroups()}</Grid.Col>
-                        <Grid.Col span={6}>{inputLocale()}</Grid.Col>
-                        <Grid.Col span={6}>{inputBehaviour()}</Grid.Col>
+                        <Cell span="span 12">{inputGroups()}</Cell>
+                        <Cell span="span 12">{inputLocale()}</Cell>
+                        <Cell span="span 12">{inputBehaviour()}</Cell>
                     </Grid>
 
                     {submitButton}

@@ -8,12 +8,10 @@ interface Props {
 
 export function Image({inputImage, name}: Props) {
     const [image, setImage] = useState('');
-    return <div style={{
-        width: '200px',
-        height: '200px',
-    }}>
+    return <div>
         {image && <img src={image} style={{
-            width: '200px',
+            objectFit: 'contain',
+            width: '100%',
             height: '200px',
         }} />}
         {inputImage({
