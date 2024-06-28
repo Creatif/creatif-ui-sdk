@@ -51,6 +51,7 @@ import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { resolveBindings } from '@app/uiComponents/form/bindings/bindingResolver';
 import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
 import { createImagePathsStore } from '@app/systems/stores/imagePaths';
+import { createGlobalLoadingStore } from '@app/systems/stores/globalLoading';
 
 interface Props<T extends FieldValues, Value, Metadata> {
     bindings: Bindings<T>;
@@ -106,6 +107,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
 
     const referenceStore = useMemo(() => createInputReferenceStore(), []);
     const imagePathsStore = useMemo(() => createImagePathsStore(), []);
+    const globalLoadingStore = useMemo(() => createGlobalLoadingStore(), []);
 
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
@@ -380,6 +382,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         formProps={formProps}
                         isUpdate={isUpdate}
                         inputs={inputs}
+                        globalLoadingStore={globalLoadingStore}
                         imagePathsStore={imagePathsStore}
                         referenceStore={referenceStore}
                         onSubmit={onInternalSubmit}

@@ -13,6 +13,8 @@ import Copy from '@app/components/Copy';
 import type { UploadedImage } from '@root/types/api/images';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import UIError from '@app/components/UIError';
+import type { StoreApi, UseBoundStore } from 'zustand';
+import type { GlobalLoadingStoreData } from '@app/systems/stores/globalLoading';
 
 interface Props {
     name: string;
@@ -21,6 +23,7 @@ interface Props {
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
     buttonText?: string;
+    globalLoadingStore: UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
     onUploaded?: (base64: string) => void;
 }
 
@@ -28,6 +31,7 @@ export function FileUploadButton({
     name,
     fileButtonProps,
     buttonProps,
+    globalLoadingStore,
     onUploaded,
     store,
     buttonText = 'Upload file',
@@ -50,6 +54,7 @@ export function FileUploadButton({
 
         uploadWorkerRef.current.onmessage = (e) => {
             setIsCreatingBase64(false);
+            globalLoadingStore.getState().removeLoader();
 
             if (e.data.result.error) {
                 setFileProcessError(true);
@@ -70,6 +75,7 @@ export function FileUploadButton({
 
         const currentValue: UploadedImage = getValues(name) as UploadedImage;
         if (currentValue) {
+            globalLoadingStore.getState().addLoader();
             // mark that this is in a update form
             updateRef.current = true;
             setIsCreatingBase64(true);

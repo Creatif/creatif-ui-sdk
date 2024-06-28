@@ -37,6 +37,8 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { FileUploadButton } from '@app/uiComponents/inputs/FileUploadButton';
 import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
+import { GlobalLoadingStoreData } from '@app/systems/stores/globalLoading';
+import { SubmitButton } from '@app/uiComponents/form/SubmitButton';
 
 export interface InputReferenceFieldProps {
     name: string;
@@ -71,6 +73,7 @@ interface Props<T extends FieldValues> {
     isUpdate: boolean;
     referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
     imagePathsStore: UseBoundStore<StoreApi<ImagePathsStoreData>>;
+    globalLoadingStore: UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
     inputs: (
         submitButton: React.ReactNode,
         actions: {
@@ -105,6 +108,7 @@ export default function BaseForm<T extends FieldValues>({
     imagePathsStore,
     useSpecialFields,
     inputs,
+    globalLoadingStore,
     isUpdate,
     onSubmit,
     isSaving,
@@ -164,7 +168,9 @@ export default function BaseForm<T extends FieldValues>({
     const isLoading = formState.isLoading;
 
     const inputImage = useCallback(
-        (props: InputImageFieldProps) => <FileUploadButton store={imagePathsStore} {...props} />,
+        (props: InputImageFieldProps) => (
+            <FileUploadButton globalLoadingStore={globalLoadingStore} store={imagePathsStore} {...props} />
+        ),
         [],
     );
 
@@ -173,12 +179,11 @@ export default function BaseForm<T extends FieldValues>({
             <form onSubmit={methods.handleSubmit(onSubmit)}>
                 {!isLoading &&
                     inputs(
-                        <Group justify="end">
-                            <Button loaderProps={{ size: 14 }} loading={isSaving} type="submit">
-                                {isUpdate && 'Update'}
-                                {!isUpdate && 'Create'}
-                            </Button>
-                        </Group>,
+                        <SubmitButton
+                            isSaving={isSaving}
+                            isUpdate={isUpdate}
+                            globalLoadingStore={globalLoadingStore}
+                        />,
                         {
                             setValue: setValue,
                             getValues: getValues,
