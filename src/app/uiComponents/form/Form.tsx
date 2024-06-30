@@ -279,7 +279,6 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                               })) as UpdateMapVariableReferenceBlueprint[])
                             : [],
                         imagePaths: imagePathsStore.getState().paths,
-                        updatedPaths: imagePathsStore.getState().updatedPaths,
                     });
 
                     setIsSaving(false);

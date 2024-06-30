@@ -6,6 +6,7 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
     if (Array.isArray(blueprint.fields) && blueprint.fields.length !== 0) {
         fields = blueprint.fields.join('|');
     }
+
     return tryHttp<UpdateListItemResult>(
         declarations(),
         'post',
@@ -21,7 +22,6 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
             },
             references: blueprint.references,
             imagePaths: blueprint.imagePaths,
-            updatedPaths: blueprint.updatedPaths,
         },
     );
 }

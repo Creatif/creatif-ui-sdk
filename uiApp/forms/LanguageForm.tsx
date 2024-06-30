@@ -30,30 +30,6 @@ export default function LanguageForm() {
                             />
                         </Cell>
 
-                        <Cell>
-                            <Image name='file1' inputImage={inputImage} />
-                        </Cell>
-
-                        <Cell>
-                            <Image name='file2' inputImage={inputImage} />
-                        </Cell>
-
-                        <Cell>
-                            <Image name='file3' inputImage={inputImage} />
-                        </Cell>
-
-                        <Cell>
-                            <Image name='file4' inputImage={inputImage} />
-                        </Cell>
-
-                        <Cell>
-                            <Image name='file5' inputImage={inputImage} />
-                        </Cell>
-
-                        <Cell>
-                            <Image name='file6' inputImage={inputImage} />
-                        </Cell>
-
                         <Cell span="span 12">{inputGroups()}</Cell>
                         <Cell span="span 12">{inputLocale()}</Cell>
                         <Cell span="span 12">{inputBehaviour()}</Cell>

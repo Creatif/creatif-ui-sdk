@@ -63,7 +63,10 @@ export function FileUploadButton({
             if (e.data.isUpdate) {
                 const currentUploadedImage: UploadedImage = getValues(name) as UploadedImage;
                 onUploaded?.(`data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`);
-                setValue(name, e.data.result.result);
+                setValue(
+                    name,
+                    `data:${currentUploadedImage.mimeType}#${currentUploadedImage.extension};base64,${e.data.result.result}`,
+                );
 
                 return;
             }
