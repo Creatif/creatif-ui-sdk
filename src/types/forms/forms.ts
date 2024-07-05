@@ -20,7 +20,7 @@ export type BehaviourBinding<T> = (values: T) => Behaviour;
 export type LocaleBinding<T> = (values: T) => string;
 export type GroupBinding<T> = (values: T) => string[];
 
-export type AfterSaveFn<T> = (result: unknown, e: BaseSyntheticEvent | undefined) => void;
+export type AfterSaveFn = (result: unknown, e: BaseSyntheticEvent | undefined) => void;
 
 export type BeforeSaveReturnType = { value: unknown; metadata: unknown };
 export type BeforeSaveFn<T> = (values: T, e: BaseSyntheticEvent | undefined) => BeforeSaveReturnType;

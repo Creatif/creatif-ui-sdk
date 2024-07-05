@@ -1,5 +1,6 @@
 import { InputImageFieldProps } from '../../src/app/uiComponents/shared/BaseForm';
 import React, { useState } from 'react';
+import { Control } from 'react-hook-form';
 
 interface Props {
     inputImage: (props: InputImageFieldProps) => React.ReactNode;

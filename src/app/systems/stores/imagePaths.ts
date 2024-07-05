@@ -32,8 +32,6 @@ export function createImagePathsStore() {
                 }
             }
 
-            console.log('New paths: ', newPaths);
-
             set((current) => ({ ...current, paths: newPaths }));
         },
         replacePath(old: string, newValue: string) {
@@ -43,8 +41,6 @@ export function createImagePathsStore() {
                     currentPaths[i] = newValue;
                 }
             }
-
-            console.log('Replaced paths: ', currentPaths);
 
             set((current) => ({ ...current, paths: currentPaths }));
         },

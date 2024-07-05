@@ -14,6 +14,7 @@ import type { UploadedImage } from '@root/types/api/images';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import UIError from '@app/components/UIError';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
+import { useWorker } from '@app/uiComponents/inputs/fileUpload/useWorker';
 
 interface Props {
     name: string;
@@ -35,51 +36,45 @@ export function FileUploadButton({
     store,
     buttonText = 'Upload file',
 }: Props) {
-    const { setValue, getValues } = useFormContext();
+    const { setValue, getValues, control } = useFormContext();
     const [isCreatingBase64, setIsCreatingBase64] = useState(false);
     const [currentlyLoadedFile, setCurrentlyLoadedFile] = useState<string | null>(null);
     const resetRef = useRef<() => void>(null);
-    const uploadWorkerRef = useRef<Worker | null>(null);
     const [filePathError, setFilePathError] = useState<string | undefined>();
     const updateRef = useRef(false);
     const [fileProcessError, setFileProcessError] = useState(false);
     const oldNameRef = useRef<string>(name);
 
+    const { registerWorker, workerHandler } = useWorker('uploadWorker', (e) => {
+        setIsCreatingBase64(false);
+        globalLoadingStore.getState().removeLoader();
+
+        if (e.data.result.error) {
+            setFileProcessError(true);
+            return;
+        }
+
+        if (e.data.isUpdate) {
+            const currentUploadedImage: UploadedImage = getValues(name) as UploadedImage;
+            onUploaded?.(`data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`);
+            setValue(
+                oldNameRef.current,
+                `data:${currentUploadedImage.mimeType}#${currentUploadedImage.extension};base64,${e.data.result.result}`,
+            );
+
+            return;
+        }
+
+        setValue(oldNameRef.current, e.data.result.result);
+        onUploaded?.(e.data.result.result.replace(/#.*;/, ';'));
+    });
+
     const onDestroy = useCallback(() => {
-        console.log('destroying: ', oldNameRef.current);
         store.getState().removePath(oldNameRef.current);
     }, [name]);
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        uploadWorkerRef.current = new Worker(new URL(`${import.meta.env.VITE_FRONTEND_HOST}/uploadWorker`), {
-            type: 'module',
-        });
-
-        uploadWorkerRef.current.onmessage = (e) => {
-            setIsCreatingBase64(false);
-            globalLoadingStore.getState().removeLoader();
-
-            if (e.data.result.error) {
-                setFileProcessError(true);
-                return;
-            }
-
-            if (e.data.isUpdate) {
-                const currentUploadedImage: UploadedImage = getValues(name) as UploadedImage;
-                onUploaded?.(`data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`);
-                setValue(
-                    name,
-                    `data:${currentUploadedImage.mimeType}#${currentUploadedImage.extension};base64,${e.data.result.result}`,
-                );
-
-                return;
-            }
-
-            setValue(name, e.data.result.result);
-            onUploaded?.(e.data.result.result.replace(/#.*;/, ';'));
-        };
+        registerWorker();
 
         const currentValue: UploadedImage = getValues(name) as UploadedImage;
         if (currentValue) {
@@ -87,7 +82,7 @@ export function FileUploadButton({
             // mark that this is in a update form
             updateRef.current = true;
             setIsCreatingBase64(true);
-            uploadWorkerRef.current?.postMessage(
+            workerHandler.postMessage(
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 `${import.meta.env.VITE_API_HOST}/api/v1/images/image/${
@@ -101,9 +96,7 @@ export function FileUploadButton({
     }, []);
 
     useEffect(() => {
-        console.log('name change ', name);
         if (oldNameRef.current !== name) {
-            console.log('Replace called for ', oldNameRef.current, name);
             store.getState().replacePath(oldNameRef.current, name);
             oldNameRef.current = name;
 
@@ -122,6 +115,7 @@ export function FileUploadButton({
         <>
             <Controller
                 name={name}
+                control={control}
                 render={({ field: { onChange } }) => (
                     <FileButton
                         {...fileButtonProps}
@@ -137,7 +131,7 @@ export function FileUploadButton({
                             setCurrentlyLoadedFile(file.name);
                             globalLoadingStore.getState().addLoader();
                             setIsCreatingBase64(true);
-                            uploadWorkerRef.current?.postMessage(file);
+                            workerHandler.postMessage(file);
                         }}>
                         {(props) => (
                             <>
@@ -148,7 +142,7 @@ export function FileUploadButton({
                                             onClick={() => {
                                                 setCurrentlyLoadedFile(null);
                                                 resetRef.current?.();
-                                                setValue(name, '');
+                                                setValue(oldNameRef.current, '');
                                                 store.getState().removePath(name);
                                             }}
                                             className={css.clearIcon}

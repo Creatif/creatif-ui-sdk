@@ -10,7 +10,7 @@ export interface GlobalLoadingStoreData {
 export type GlobalLoadingStore = UseBoundStore<StoreApi<GlobalLoadingStoreData>>;
 
 export function createGlobalLoadingStore() {
-    return create<GlobalLoadingStoreData>((set, get) => ({
+    return create<GlobalLoadingStoreData>((set) => ({
         loaders: 0,
         addLoader() {
             set((current) => ({ ...current, loaders: current.loaders + 1 }));
