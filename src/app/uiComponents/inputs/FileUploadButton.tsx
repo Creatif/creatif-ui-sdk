@@ -3,7 +3,7 @@ import { Button, FileButton } from '@mantine/core';
 import type { ImagePathsStore } from '@app/systems/stores/imagePaths';
 import type { RegisterOptions } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import css from '@app/uiComponents/inputs/css/fileButton.module.css';
@@ -43,6 +43,12 @@ export function FileUploadButton({
     const [filePathError, setFilePathError] = useState<string | undefined>();
     const updateRef = useRef(false);
     const [fileProcessError, setFileProcessError] = useState(false);
+    const oldNameRef = useRef<string>(name);
+
+    const onDestroy = useCallback(() => {
+        console.log('destroying: ', oldNameRef.current);
+        store.getState().removePath(oldNameRef.current);
+    }, [name]);
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -95,13 +101,22 @@ export function FileUploadButton({
     }, []);
 
     useEffect(() => {
+        console.log('name change ', name);
+        if (oldNameRef.current !== name) {
+            console.log('Replace called for ', oldNameRef.current, name);
+            store.getState().replacePath(oldNameRef.current, name);
+            oldNameRef.current = name;
+
+            return;
+        }
+
         const error = store.getState().addPath(name);
         if (error) {
             setFilePathError(error);
         }
     }, [name]);
 
-    useEffect(() => () => store.getState().removePath(name), []);
+    useEffect(() => onDestroy, []);
 
     return (
         <>

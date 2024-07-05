@@ -4,6 +4,7 @@ import { create } from 'zustand';
 export interface ImagePathsStoreData {
     paths: string[];
     addPath: (path: string) => string | undefined;
+    replacePath: (oldValue: string, newValue: string) => void;
     removePath: (toRemove: string) => void;
 }
 
@@ -23,11 +24,29 @@ export function createImagePathsStore() {
         },
         removePath(toRemove: string) {
             const current = get();
-            const idx = current.paths.findIndex((path) => path === toRemove);
-            if (idx !== -1) {
-                current.paths.splice(idx, 1);
-                set((current) => ({ ...current }));
+            const newPaths: string[] = [];
+            //console.log('Current: ', toRemove, current.paths);
+            for (const curr of current.paths) {
+                if (curr !== toRemove) {
+                    newPaths.push(curr);
+                }
             }
+
+            console.log('New paths: ', newPaths);
+
+            set((current) => ({ ...current, paths: newPaths }));
+        },
+        replacePath(old: string, newValue: string) {
+            const currentPaths = [...get().paths];
+            for (let i = 0; i < currentPaths.length; i++) {
+                if (currentPaths[i] === old) {
+                    currentPaths[i] = newValue;
+                }
+            }
+
+            console.log('Replaced paths: ', currentPaths);
+
+            set((current) => ({ ...current, paths: currentPaths }));
         },
         clear() {
             set((current) => ({ ...current, paths: [] }));

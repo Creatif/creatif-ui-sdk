@@ -3,6 +3,7 @@ import { Form } from '../../src/app/uiComponents/form/Form';
 import { Image } from './Image';
 import {Grid} from '../../src/app/layouts/Grid';
 import { Cell } from '../../src/app/layouts/Cell';
+import { AddImages } from './AddImages';
 
 export default function LanguageForm() {
     return (
@@ -28,6 +29,10 @@ export default function LanguageForm() {
                                     required: 'Language name is required',
                                 }}
                             />
+                        </Cell>
+
+                        <Cell span="span 12">
+                            <AddImages inputImage={inputImage} />
                         </Cell>
 
                         <Cell span="span 12">{inputGroups()}</Cell>
