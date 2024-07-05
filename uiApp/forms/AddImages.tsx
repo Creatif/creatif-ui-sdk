@@ -1,8 +1,9 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Image } from './Image';
-import { InputImageFieldProps } from '../../src/app/uiComponents/shared/BaseForm';
+import { InputImageFieldProps } from '../../src/app/uiComponents/form/BaseForm';
 import React from 'react';
 import { Button } from '@mantine/core';
+import { File } from '../../src/app/uiComponents/inputs/fileUpload/File';
 
 interface Props {
     inputImage: (props: InputImageFieldProps) => React.ReactNode;
@@ -23,7 +24,7 @@ export function AddImages({inputImage}: Props) {
                 return <div key={field.id} style={{
                     marginBottom: '16px'
                 }}>
-                    <Image inputImage={inputImage} name={`files.${index}.name`} />
+                    <File inputImage={inputImage} name={`files.${index}.name`} />
                     <Button variant="light" onClick={() => {
                         remove(index);
                     }}>Remove</Button>

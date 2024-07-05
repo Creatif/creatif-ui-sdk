@@ -47,11 +47,20 @@ export interface InputReferenceFieldProps {
 
 export interface InputImageFieldProps {
     name: string;
-    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
     buttonText?: string;
-    onUploaded?: (base64: string) => void;
+    showFileName?: boolean;
+    allowedSize?: {
+        size: number;
+        message?: string;
+    };
+    allowedDimensions?: {
+        width: number;
+        height: number;
+        message?: string;
+    };
+    onUploaded?: (base64: string, name: string, size: number, clearUploaded: () => void) => void;
 }
 
 export interface InputLocaleFieldProps {

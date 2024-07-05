@@ -4,6 +4,7 @@ import { Image } from './Image';
 import {Grid} from '../../src/app/layouts/Grid';
 import { Cell } from '../../src/app/layouts/Cell';
 import { AddImages } from './AddImages';
+import { File } from '../../src/app/uiComponents/inputs/fileUpload/File';
 
 export default function LanguageForm() {
     return (
@@ -32,7 +33,11 @@ export default function LanguageForm() {
                         </Cell>
 
                         <Cell span="span 12">
-                            <AddImages inputImage={inputImage} />
+                            <File name="file1" inputImage={inputImage} />
+                        </Cell>
+
+                        <Cell span="span 12">
+                            <File name="file2" inputImage={inputImage} />
                         </Cell>
 
                         <Cell span="span 12">{inputGroups()}</Cell>

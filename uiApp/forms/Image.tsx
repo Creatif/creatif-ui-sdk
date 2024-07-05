@@ -1,4 +1,4 @@
-import { InputImageFieldProps } from '../../src/app/uiComponents/shared/BaseForm';
+import { InputImageFieldProps } from '../../src/app/uiComponents/form/BaseForm';
 import React, { useState } from 'react';
 import { Control } from 'react-hook-form';
 

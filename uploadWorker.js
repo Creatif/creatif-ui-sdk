@@ -31,6 +31,8 @@ onmessage = (e) => {
         }
 
         result.result = `${data};base64,${btoa(str)}`;
+        result.name = file.name;
+        result.size = file.size;
         postMessage({
             isUpdate: false,
             result: result,
