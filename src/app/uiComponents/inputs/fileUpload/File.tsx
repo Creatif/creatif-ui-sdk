@@ -11,9 +11,24 @@ interface Props {
     name: string;
     label?: string;
     description?: string;
+    validation?: {
+        allowedSize?: {
+            size: number;
+            message?: string;
+        };
+        allowedDimensions?: {
+            width: number;
+            height: number;
+            message?: string;
+        };
+        required?: {
+            value: boolean;
+            message?: string;
+        };
+    };
 }
 
-export function File({ inputFile, name, label, description }: Props) {
+export function File({ inputFile, name, label, description, validation }: Props) {
     const [file, setFile] = useState('');
     const [fileName, setFileName] = useState('');
     const [type, setType] = useState('');
@@ -104,6 +119,7 @@ export function File({ inputFile, name, label, description }: Props) {
                     {inputFile({
                         name: name,
                         showFileName: false,
+                        validation: validation,
                         buttonText: 'Upload from computer',
                         onUploaded(base64: string, name: string, size: number, type: string, clearUploaded) {
                             setFile(base64);

@@ -14,6 +14,7 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import UIError from '@app/components/UIError';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import { useWorker } from '@app/uiComponents/inputs/fileUpload/useWorker';
+import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 
 interface Props {
     name: string;
@@ -23,14 +24,20 @@ interface Props {
     buttonProps?: ButtonProps;
     buttonText?: string;
     globalLoadingStore: GlobalLoadingStore;
-    allowedSize?: {
-        size: number;
-        message?: string;
-    };
-    allowedDimensions?: {
-        width: number;
-        height: number;
-        message?: string;
+    validation?: {
+        allowedSize?: {
+            size: number;
+            message?: string;
+        };
+        allowedDimensions?: {
+            width: number;
+            height: number;
+            message?: string;
+        };
+        required?: {
+            value: boolean;
+            message?: string;
+        };
     };
     onUploaded?: (base64: string, name: string, size: number, type: string, clearUploaded: () => void) => void;
 }
@@ -44,8 +51,7 @@ export function FileUploadButton({
     store,
     buttonText = 'Upload file',
     showFileName = true,
-    allowedDimensions,
-    allowedSize,
+    validation,
 }: Props) {
     const { setValue, getValues, control } = useFormContext();
     const [isCreatingBase64, setIsCreatingBase64] = useState(false);
@@ -56,6 +62,8 @@ export function FileUploadButton({
     const [fileProcessError, setFileProcessError] = useState(false);
     const oldNameRef = useRef<string>(name);
     const [error, setError] = useState('');
+
+    const requiredError = useFirstError(name);
 
     const onClear = useCallback(() => {
         setCurrentlyLoadedFile(null);
@@ -151,6 +159,18 @@ export function FileUploadButton({
         <>
             <Controller
                 name={name}
+                rules={{
+                    validate: (value) => {
+                        if (validation?.required && validation.required.value) {
+                            if (!value)
+                                return validation.required.message
+                                    ? validation.required.message
+                                    : `${name} is required.`;
+                        }
+
+                        return undefined;
+                    },
+                }}
                 control={control}
                 render={({ field: { onChange } }) => (
                     <FileButton
@@ -166,6 +186,8 @@ export function FileUploadButton({
 
                             setError('');
                             globalLoadingStore.getState().addLoader();
+                            const allowedSize = validation?.allowedSize;
+                            const allowedDimensions = validation?.allowedDimensions;
 
                             if (allowedSize && file.size > allowedSize.size) {
                                 globalLoadingStore.getState().removeLoader();
@@ -267,6 +289,17 @@ export function FileUploadButton({
                         lineHeight: '1.2rem',
                     }}>
                     {error}
+                </span>
+            )}
+
+            {requiredError && (
+                <span
+                    style={{
+                        fontSize: '13px',
+                        color: 'var(--mantine-color-red-6)',
+                        lineHeight: '1.2rem',
+                    }}>
+                    {requiredError}
                 </span>
             )}
 

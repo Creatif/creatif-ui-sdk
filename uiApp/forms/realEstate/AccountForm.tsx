@@ -1,6 +1,9 @@
 import { Form } from '../../../src/app/uiComponents/form/Form';
 import css from './css/root.module.css';
 import { InputText } from '../../../src';
+import { Grid } from '../../../src/app/layouts/Grid';
+import { Cell } from '../../../src/app/layouts/Cell';
+import { File } from '../../../src/app/uiComponents/inputs/fileUpload/File';
 export function AccountForm() {
     return (
         <Form<{
@@ -22,10 +25,10 @@ export function AccountForm() {
                     postalCode: '',
                 },
             }}
-            inputs={(submitButton) => (
+            inputs={(submitButton, {inputFile}) => (
                 <>
-                    <div className={css.fieldGrid}>
-                        <div>
+                    <Grid>
+                        <Cell span="span 12">
                             <InputText
                                 label="Name"
                                 name="name"
@@ -33,9 +36,9 @@ export function AccountForm() {
                                     required: 'Name is required',
                                 }}
                             />
-                        </div>
+                        </Cell>
 
-                        <div>
+                        <Cell span="span 12">
                             <InputText
                                 label="Last name"
                                 name="lastName"
@@ -43,9 +46,9 @@ export function AccountForm() {
                                     required: 'Last name is required',
                                 }}
                             />
-                        </div>
+                        </Cell>
 
-                        <div>
+                        <Cell span="span 3">
                             <InputText
                                 label="Address"
                                 name="address"
@@ -53,9 +56,9 @@ export function AccountForm() {
                                     required: 'Address is required',
                                 }}
                             />
-                        </div>
+                        </Cell>
 
-                        <div>
+                        <Cell span="span 3">
                             <InputText
                                 label="City"
                                 name="city"
@@ -63,9 +66,9 @@ export function AccountForm() {
                                     required: 'City is required',
                                 }}
                             />
-                        </div>
+                        </Cell>
 
-                        <div>
+                        <Cell span="span 3">
                             <InputText
                                 label="Postal code"
                                 name="postalCode"
@@ -73,8 +76,12 @@ export function AccountForm() {
                                     required: 'City is required',
                                 }}
                             />
-                        </div>
-                    </div>
+                        </Cell>
+
+                        <Cell span="span 12">
+                            <File label="Profile image" inputFile={inputFile} name="profileImage" />
+                        </Cell>
+                    </Grid>
 
                     <div className={css.submitButton}>{submitButton}</div>
                 </>

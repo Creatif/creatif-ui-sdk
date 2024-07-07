@@ -51,14 +51,20 @@ export interface InputFileFieldProps {
     buttonProps?: ButtonProps;
     buttonText?: string;
     showFileName?: boolean;
-    allowedSize?: {
-        size: number;
-        message?: string;
-    };
-    allowedDimensions?: {
-        width: number;
-        height: number;
-        message?: string;
+    validation?: {
+        allowedSize?: {
+            size: number;
+            message?: string;
+        };
+        allowedDimensions?: {
+            width: number;
+            height: number;
+            message?: string;
+        };
+        required?: {
+            value: boolean;
+            message?: string;
+        };
     };
     onUploaded?: (base64: string, name: string, size: number, type: string, clearUploaded: () => void) => void;
 }
