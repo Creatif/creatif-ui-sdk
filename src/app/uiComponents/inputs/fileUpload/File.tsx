@@ -1,35 +1,28 @@
 import React, { useCallback, useRef, useState } from 'react';
-import type { InputImageFieldProps } from '@app/uiComponents/form/BaseForm';
+import type { InputFileFieldProps } from '@app/uiComponents/form/BaseForm';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import css from '@app/uiComponents/inputs/fileUpload/css/file.module.css';
 import Copy from '@app/components/Copy';
-import { IconCloudDownload, IconFiles, IconX } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 
 interface Props {
-    inputImage: (props: InputImageFieldProps) => React.ReactNode;
+    inputFile: (props: InputFileFieldProps) => React.ReactNode;
     name: string;
+    label?: string;
+    description?: string;
 }
 
-function isImage(fileName: string): boolean {
-    const validImages = ['webp', 'avif', 'jpg', 'jpeg', 'svg', 'png'];
-    const lastPart = fileName.split('.')[fileName.length - 1];
-
-    console.log(lastPart);
-    return validImages.includes(lastPart);
-}
-
-export function File({ inputImage, name }: Props) {
+export function File({ inputFile, name, label, description }: Props) {
     const [file, setFile] = useState('');
     const [fileName, setFileName] = useState('');
-    const [size, setSize] = useState<number | undefined>(undefined);
     const clearUploadedRef = useRef<(() => void) | null>(null);
 
     const isImage = useCallback(
         (fileName: string) => {
             if (!fileName) return;
 
-            const validImages = ['webp', 'avif', 'jpg', 'jpeg', 'svg', 'png'];
+            const validImages = ['webp', 'avif', 'jpg', 'jpeg', 'svg', 'png', 'gif'];
             const parts = fileName.split('.');
 
             return validImages.includes(parts[parts.length - 1]);
@@ -39,60 +32,47 @@ export function File({ inputImage, name }: Props) {
 
     return (
         <div className={css.root}>
-            {fileName && (
-                <div className={css.fileName}>
-                    <p className={css.clippedName}>
-                        {fileName && fileName.length > 30 ? `${fileName.substring(0, 30)}...` : fileName}
+            {label && <label className={css.label}>{label}</label>}
+            {description && <p className={css.description}>{description}</p>}
+            <div className={css.main}>
+                {fileName && (
+                    <div className={css.fileName}>
+                        <p className={css.clippedName}>
+                            {fileName && fileName.length > 30 ? `${fileName.substring(0, 30)}...` : fileName}
 
-                        <Copy
+                            <Copy
+                                onClick={() => {
+                                    navigator.clipboard.writeText(fileName);
+                                }}
+                            />
+                        </p>
+
+                        <IconX
                             onClick={() => {
-                                navigator.clipboard.writeText(fileName);
+                                clearUploadedRef.current?.();
+                                setFileName('');
+                                setFile('');
                             }}
+                            size={16}
+                            className={css.clearIcon}
                         />
-                    </p>
-
-                    <IconX
-                        onClick={() => {
-                            clearUploadedRef.current?.();
-                            setFileName('');
-                            setSize(undefined);
-                            setFile('');
-                        }}
-                        size={16}
-                        className={css.clearIcon}
-                    />
-                </div>
-            )}
-
-            <div className={css.uploadSection}>
-                {!fileName && (
-                    <>
-                        <div className={css.dropSection}>
-                            <span>Drag & Drop</span>
-                            <IconCloudDownload className={css.dragDropIcon} />
-                        </div>
-
-                        <p>- or -</p>
-                    </>
+                    </div>
                 )}
 
-                {isImage(fileName) && <img src={file} className={css.image} />}
+                <div className={css.uploadSection}>
+                    {isImage(fileName) && <img src={file} className={css.image} />}
 
-                {inputImage({
-                    name: name,
-                    showFileName: false,
-                    allowedDimensions: {
-                        width: 1800,
-                        height: 1800,
-                    },
-                    buttonText: 'Upload from computer',
-                    onUploaded(base64: string, name: string, size: number, clearUploaded) {
-                        setFile(base64);
-                        setFileName(name);
-                        setSize(size);
-                        clearUploadedRef.current = clearUploaded;
-                    },
-                })}
+                    {inputFile({
+                        name: name,
+                        showFileName: false,
+                        buttonText: 'Upload from computer',
+                        onUploaded(base64: string, name: string, size: number, clearUploaded) {
+                            setFile(base64);
+                            setFileName(name);
+                            clearUploadedRef.current = clearUploaded;
+                        },
+                    })}
+                </div>
             </div>
         </div>
     );

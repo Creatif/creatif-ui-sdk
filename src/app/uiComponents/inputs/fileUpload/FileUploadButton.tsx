@@ -161,12 +161,13 @@ export function FileUploadButton({
                             globalLoadingStore.getState().addLoader();
 
                             if (allowedSize && file.size > allowedSize.size) {
+                                globalLoadingStore.getState().removeLoader();
+
                                 setError(
                                     allowedSize.message
                                         ? allowedSize.message
                                         : `Image size is bigger than allowed size of ${allowedSize.size} bytes`,
                                 );
-                                globalLoadingStore.getState().removeLoader();
                                 return;
                             }
 
@@ -187,6 +188,7 @@ export function FileUploadButton({
                                                 ? allowedDimensions.message
                                                 : `Image width or height is invalid. Uploaded image can have width up to ${allowedDimensions.width}px and height up to ${allowedDimensions.height}px`,
                                         );
+                                        globalLoadingStore.getState().removeLoader();
 
                                         return;
                                     }
@@ -197,7 +199,8 @@ export function FileUploadButton({
                                 };
 
                                 img.onerror = (e) => {
-                                    console.log(e);
+                                    globalLoadingStore.getState().removeLoader();
+
                                     if (typeof e === 'string') {
                                         setError(
                                             `This file could not be checked for dimensions. The underlying error is: ${e}`,

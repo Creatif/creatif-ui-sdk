@@ -1,9 +1,17 @@
 import { notifications } from '@mantine/notifications';
 import { IconAlertTriangle, IconConfetti, IconExclamationCircle, IconInfoCircle } from '@tabler/icons-react';
 import React from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import errStyles from './error.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import infoStyles from './info.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import successStyles from './success.module.css';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import warnStyles from './warn.module.css';
 export default function useNotification() {
     return {

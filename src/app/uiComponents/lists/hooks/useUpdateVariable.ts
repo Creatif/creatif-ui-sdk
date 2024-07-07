@@ -8,6 +8,7 @@ import { updateListItem } from '@lib/api/declarations/lists/updateListItem';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import { updateMapVariable } from '@lib/api/declarations/maps/updateMapVariable';
+import type { UpdateMapItemResult } from '@root/types/api/map';
 
 type Body = {
     fields: string[];
@@ -23,7 +24,7 @@ export default function useUpdateVariable(
     const queryClient = useQueryClient();
 
     return {
-        ...useMutation<TryResult<UpdateListItemResult>, ApiError, Body>(
+        ...useMutation<TryResult<UpdateListItemResult | UpdateMapItemResult>, ApiError, Body>(
             async (body: Body) =>
                 await throwIfHttpFails(() => {
                     if (structureType === 'list') {
@@ -34,6 +35,7 @@ export default function useUpdateVariable(
                             values: body.values,
                             fields: body.fields,
                             references: [],
+                            imagePaths: [],
                         });
                     }
 
@@ -44,6 +46,7 @@ export default function useUpdateVariable(
                         values: body.values,
                         fields: body.fields,
                         references: [],
+                        imagePaths: [],
                     });
                 }),
             {

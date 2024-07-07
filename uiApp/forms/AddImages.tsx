@@ -1,12 +1,12 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Image } from './Image';
-import { InputImageFieldProps } from '../../src/app/uiComponents/form/BaseForm';
+import { InputFileFieldProps } from '../../src/app/uiComponents/form/BaseForm';
 import React from 'react';
 import { Button } from '@mantine/core';
 import { File } from '../../src/app/uiComponents/inputs/fileUpload/File';
 
 interface Props {
-    inputImage: (props: InputImageFieldProps) => React.ReactNode;
+    inputImage: (props: InputFileFieldProps) => React.ReactNode;
 }
 
 export function AddImages({inputImage}: Props) {

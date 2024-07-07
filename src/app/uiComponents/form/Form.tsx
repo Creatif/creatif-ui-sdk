@@ -27,7 +27,7 @@ import type {
 } from 'react-hook-form';
 import type {
     InputGroupsFieldProps,
-    InputImageFieldProps,
+    InputFileFieldProps,
     InputLocaleFieldProps,
     InputReferenceFieldProps,
 } from '@app/uiComponents/form/BaseForm';
@@ -38,7 +38,6 @@ import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { useQueryClient } from 'react-query';
 import type { UpdateListItemResult } from '@root/types/api/list';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
-import type { CreatedVariable } from '@root/types/api/variable';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
 import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
@@ -53,7 +52,7 @@ import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
 import { createImagePathsStore } from '@app/systems/stores/imagePaths';
 import { createGlobalLoadingStore } from '@app/systems/stores/globalLoading';
 
-interface Props<T extends FieldValues, Value, Metadata> {
+interface Props<T extends FieldValues> {
     bindings: Bindings<T>;
     formProps?: UseFormProps<T>;
     inputs: (
@@ -72,7 +71,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
             getFieldState: UseFormGetFieldState<T>;
             formState: UseFormStateReturn<T>;
             defaultValues: T;
-            inputImage: (props: InputImageFieldProps) => React.ReactNode;
+            inputFile: (props: InputFileFieldProps) => React.ReactNode;
             inputLocale: (props?: InputLocaleFieldProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsFieldProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
@@ -81,7 +80,7 @@ interface Props<T extends FieldValues, Value, Metadata> {
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
     beforeFormMount?: (httpData: unknown) => unknown;
-    afterSave?: AfterSaveFn<CreatedVariable<Value, Metadata>>;
+    afterSave?: AfterSaveFn;
     form?: HTMLAttributes<HTMLFormElement>;
 }
 
@@ -90,9 +89,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
     bindings,
     inputs,
     beforeSave,
-    beforeFormMount,
     afterSave,
-}: Props<T, Value, Metadata>) {
+}: Props<T>) {
     const useSpecialFields = createSpecialFields();
     const duplicateFields = useSpecialFields.getState().getDuplicateFields();
 
@@ -170,8 +168,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            "'name' could not be determined",
-                            "'name' is required and you have to create a binding for it that returns a string.",
+                            '\'name\' could not be determined',
+                            '\'name\' is required and you have to create a binding for it that returns a string.',
                         );
                         return;
                     }
@@ -232,8 +230,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            "'name' could not be determined",
-                            "'name' is required and you have to create a binding for it that returns a string.",
+                            '\'name\' could not be determined',
+                            '\'name\' is required and you have to create a binding for it that returns a string.',
                         );
                         return;
                     }
@@ -313,11 +311,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
         [useSpecialFields],
     );
 
-    let currentData = data?.result;
-    if (isUpdate && beforeFormMount && data?.result) {
-        const result = data.result;
-        currentData = beforeFormMount(result);
-    }
+    const currentData = data?.result;
 
     return (
         <div className={contentContainerStyles.root}>
@@ -328,9 +322,10 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     }}
                     color="red"
                     title="beforeSubmit() error">
-                    {
-                        "Return value of 'beforeSave' must be in the form of type: {value: unknown, metadata: unknown}. Something else was returned"
-                    }
+                    <>
+                        Return value of &apos;beforeSave&apos; must be in the form of type:{' '}
+                        {'value: unknown, metadata: unknown'}. Something else was returned
+                    </>
                 </Alert>
             )}
 

@@ -19,7 +19,7 @@ export default function LanguageForm() {
                     name: '',
                 },
             }}
-            inputs={(submitButton, { inputLocale, inputGroups, inputBehaviour, inputImage }) => (
+            inputs={(submitButton, { inputLocale, inputGroups, inputBehaviour, inputFile }) => (
                 <>
                     <Grid gap="24px">
                         <Cell span="span 12">
@@ -33,11 +33,11 @@ export default function LanguageForm() {
                         </Cell>
 
                         <Cell span="span 12">
-                            <File name="file1" inputImage={inputImage} />
+                            <File label="File 1 upload" description="this is a description of file other upload stuff sdlkfjsak f dfčld f jsdf jsjf sk jfsačlf jčlsa fsa jfčsaj fčsaj fčlsak jfčlsa jfs fdčlsa jfsakj fsa jfčlsa jfčlsaj fčsajf sačlf jčlsa f" name="file1" inputFile={inputFile} />
                         </Cell>
 
                         <Cell span="span 12">
-                            <File name="file2" inputImage={inputImage} />
+                            <File label="file 2 upload" description="This is a description of file 1 upload" name="file2" inputFile={inputFile} />
                         </Cell>
 
                         <Cell span="span 12">{inputGroups()}</Cell>

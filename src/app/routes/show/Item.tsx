@@ -30,49 +30,50 @@ import { EditGroupsWrapperModal } from '@app/routes/show/modals/EditGroupsWrappe
 import { DeleteItemWrapperModal } from '@app/routes/show/modals/DeleteItemWrapperModal';
 import { Runtime } from '@app/systems/runtime/Runtime';
 
-function ColumnValue({ values, isInnerRow }: { values: Column[]; isInnerRow: boolean }) {
+function ColumnValue({ values, isInnerRow }: { values: Column[] | Column; isInnerRow: boolean }) {
     const [isInnerExpanded, setIsInnerExpanded] = useState(false);
     const toggleChevron = isInnerExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />;
 
     return (
         <div className={isInnerRow ? styles.columnSpacing : undefined}>
-            {values.map((item, i) => {
-                const isNextInnerColumn = values[i].innerColumn;
+            {Array.isArray(values) &&
+                values.map((item, i) => {
+                    const isNextInnerColumn = values[i].innerColumn;
 
-                return (
-                    <React.Fragment key={i}>
-                        {item.column && (
-                            <div
-                                className={classNames(
-                                    styles.row,
-                                    isNextInnerColumn ? styles.hasExpandableRow : undefined,
-                                )}>
-                                <h2
-                                    onClick={() => {
-                                        if (isNextInnerColumn) {
-                                            setIsInnerExpanded((item) => !item);
-                                        }
-                                    }}
-                                    className={isNextInnerColumn ? styles.expandableHeader : undefined}>
-                                    {item.column} {isNextInnerColumn && toggleChevron}
-                                </h2>
-                                <div className={styles.textValue}>{item.value}</div>
-                            </div>
-                        )}
+                    return (
+                        <React.Fragment key={i}>
+                            {item.column && (
+                                <div
+                                    className={classNames(
+                                        styles.row,
+                                        isNextInnerColumn ? styles.hasExpandableRow : undefined,
+                                    )}>
+                                    <h2
+                                        onClick={() => {
+                                            if (isNextInnerColumn) {
+                                                setIsInnerExpanded((item) => !item);
+                                            }
+                                        }}
+                                        className={isNextInnerColumn ? styles.expandableHeader : undefined}>
+                                        {item.column} {isNextInnerColumn && toggleChevron}
+                                    </h2>
+                                    <div className={styles.textValue}>{item.value}</div>
+                                </div>
+                            )}
 
-                        {item.innerColumn && !Array.isArray(item.innerColumn) && isInnerExpanded && (
-                            <ColumnValue values={item.innerColumn} isInnerRow={true} />
-                        )}
+                            {item.innerColumn && !Array.isArray(item.innerColumn) && isInnerExpanded && (
+                                <ColumnValue values={item.innerColumn} isInnerRow={true} />
+                            )}
 
-                        {item.innerColumn &&
-                            Array.isArray(item.innerColumn) &&
-                            isInnerExpanded &&
-                            item.innerColumn.map((inner, idx) => (
-                                <ColumnValue key={idx} values={inner} isInnerRow={true} />
-                            ))}
-                    </React.Fragment>
-                );
-            })}
+                            {item.innerColumn &&
+                                Array.isArray(item.innerColumn) &&
+                                isInnerExpanded &&
+                                item.innerColumn.map((inner, idx) => (
+                                    <ColumnValue key={idx} values={inner} isInnerRow={true} />
+                                ))}
+                        </React.Fragment>
+                    );
+                })}
         </div>
     );
 }

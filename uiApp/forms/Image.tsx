@@ -1,9 +1,9 @@
-import { InputImageFieldProps } from '../../src/app/uiComponents/form/BaseForm';
+import { InputFileFieldProps } from '../../src/app/uiComponents/form/BaseForm';
 import React, { useState } from 'react';
 import { Control } from 'react-hook-form';
 
 interface Props {
-    inputImage: (props: InputImageFieldProps) => React.ReactNode;
+    inputImage: (props: InputFileFieldProps) => React.ReactNode;
     name: string;
 }
 

@@ -1,6 +1,7 @@
 import type { Behaviour } from '@root/types/api/shared';
 import type { QueryReference } from '@root/types/api/reference';
 import type { StructureType } from '@root/types/shell/shell';
+import type { Group } from '@root/types/api/groups';
 
 export interface CreatedMap {
     id: string;
@@ -106,7 +107,7 @@ export interface UpdateMapItemResult<Value = unknown, Metadata = unknown> {
     name: string;
     locale: string;
     behaviour: Behaviour;
-    groups: string[];
+    groups: Group[];
     metadata: Metadata;
     value: Value;
     createdAt: string;

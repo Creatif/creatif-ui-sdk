@@ -45,7 +45,7 @@ export interface InputReferenceFieldProps {
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
 }
 
-export interface InputImageFieldProps {
+export interface InputFileFieldProps {
     name: string;
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
@@ -96,7 +96,7 @@ interface Props<T extends FieldValues> {
             getFieldState: UseFormGetFieldState<T>;
             formState: UseFormStateReturn<T>;
             defaultValues: T;
-            inputImage: (props: InputImageFieldProps) => React.ReactNode;
+            inputFile: (props: InputFileFieldProps) => React.ReactNode;
             inputLocale: (props?: InputLocaleFieldProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsFieldProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
@@ -173,8 +173,8 @@ export default function BaseForm<T extends FieldValues>({
 
     const isLoading = formState.isLoading;
 
-    const inputImage = useCallback(
-        (props: InputImageFieldProps) => (
+    const inputFile = useCallback(
+        (props: InputFileFieldProps) => (
             <FileUploadButton globalLoadingStore={globalLoadingStore} store={imagePathsStore} {...props} />
         ),
         [],
@@ -204,7 +204,7 @@ export default function BaseForm<T extends FieldValues>({
                             formState: formState,
                             getFieldState: getFieldState,
                             defaultValues: getValues(),
-                            inputImage: inputImage,
+                            inputFile: inputFile,
                             inputLocale: (props?: InputLocaleFieldProps) => (
                                 <InputLocale {...props} store={useSpecialFields} />
                             ),

@@ -11,7 +11,6 @@ export default function NavigationIcon({ type, selected }: Props) {
     return (
         <span className={classNames(styles.navigationIcon, selected ? styles.selectedNavigationIcon : undefined)}>
             {type === 'map' && 'M'}
-            {type === 'variable' && 'V'}
             {type === 'list' && 'L'}
         </span>
     );
