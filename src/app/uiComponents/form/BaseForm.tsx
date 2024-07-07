@@ -60,7 +60,7 @@ export interface InputFileFieldProps {
         height: number;
         message?: string;
     };
-    onUploaded?: (base64: string, name: string, size: number, clearUploaded: () => void) => void;
+    onUploaded?: (base64: string, name: string, size: number, type: string, clearUploaded: () => void) => void;
 }
 
 export interface InputLocaleFieldProps {

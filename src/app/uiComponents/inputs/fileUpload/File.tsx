@@ -4,7 +4,7 @@ import type { InputFileFieldProps } from '@app/uiComponents/form/BaseForm';
 // @ts-ignore
 import css from '@app/uiComponents/inputs/fileUpload/css/file.module.css';
 import Copy from '@app/components/Copy';
-import { IconX } from '@tabler/icons-react';
+import { IconFileText, IconFileTypePdf, IconX } from '@tabler/icons-react';
 
 interface Props {
     inputFile: (props: InputFileFieldProps) => React.ReactNode;
@@ -16,18 +16,53 @@ interface Props {
 export function File({ inputFile, name, label, description }: Props) {
     const [file, setFile] = useState('');
     const [fileName, setFileName] = useState('');
+    const [type, setType] = useState('');
     const clearUploadedRef = useRef<(() => void) | null>(null);
 
     const isImage = useCallback(
-        (fileName: string) => {
-            if (!fileName) return;
+        (type: string) => {
+            if (!type) return;
 
-            const validImages = ['webp', 'avif', 'jpg', 'jpeg', 'svg', 'png', 'gif'];
-            const parts = fileName.split('.');
-
-            return validImages.includes(parts[parts.length - 1]);
+            const validImages = [
+                'image/webp',
+                'image/avif',
+                'image/jpg',
+                'image/jpeg',
+                'image/svg',
+                'image/png',
+                'image/gif',
+            ];
+            return validImages.includes(type);
         },
-        [fileName],
+        [type],
+    );
+
+    const isVideo = useCallback(
+        (type: string) => {
+            if (!type) return;
+
+            return type.includes('video');
+        },
+        [type],
+    );
+
+    const isPdf = useCallback(
+        (type: string) => {
+            if (!type) return;
+
+            return type.includes('pdf');
+        },
+        [type],
+    );
+
+    const isOther = useCallback(
+        (type: string) => {
+            if (!type) return;
+
+            console.log(isPdf(type), isVideo(type), isImage(type));
+            return !isPdf(type) && !isVideo(type) && !isImage(type);
+        },
+        [type],
     );
 
     return (
@@ -52,6 +87,7 @@ export function File({ inputFile, name, label, description }: Props) {
                                 clearUploadedRef.current?.();
                                 setFileName('');
                                 setFile('');
+                                setType('');
                             }}
                             size={16}
                             className={css.clearIcon}
@@ -60,15 +96,19 @@ export function File({ inputFile, name, label, description }: Props) {
                 )}
 
                 <div className={css.uploadSection}>
-                    {isImage(fileName) && <img src={file} className={css.image} />}
+                    {isImage(type) && <img src={file} className={css.image} alt="" />}
+                    {isVideo(type) && <video controls src={file} className={css.image} />}
+                    {isPdf(type) && <IconFileTypePdf size={64} className={css.pdf} />}
+                    {isOther(type) && <IconFileText size={64} className={css.pdf} />}
 
                     {inputFile({
                         name: name,
                         showFileName: false,
                         buttonText: 'Upload from computer',
-                        onUploaded(base64: string, name: string, size: number, clearUploaded) {
+                        onUploaded(base64: string, name: string, size: number, type: string, clearUploaded) {
                             setFile(base64);
                             setFileName(name);
+                            setType(type);
                             clearUploadedRef.current = clearUploaded;
                         },
                     })}

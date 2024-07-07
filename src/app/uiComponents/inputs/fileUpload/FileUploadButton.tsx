@@ -32,7 +32,7 @@ interface Props {
         height: number;
         message?: string;
     };
-    onUploaded?: (base64: string, name: string, size: number, clearUploaded: () => void) => void;
+    onUploaded?: (base64: string, name: string, size: number, type: string, clearUploaded: () => void) => void;
 }
 
 export function FileUploadButton({
@@ -78,7 +78,8 @@ export function FileUploadButton({
             onUploaded?.(
                 `data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`,
                 currentUploadedImage.path,
-                e.data.result.result.length,
+                e.data.result.size,
+                e.data.result.type,
                 onClear,
             );
 
@@ -91,7 +92,13 @@ export function FileUploadButton({
         }
 
         setValue(oldNameRef.current, e.data.result.result);
-        onUploaded?.(e.data.result.result.replace(/#.*;/, ';'), e.data.result.name, e.data.result.size, onClear);
+        onUploaded?.(
+            e.data.result.result.replace(/#.*;/, ';'),
+            e.data.result.name,
+            e.data.result.size,
+            e.data.result.type,
+            onClear,
+        );
     });
 
     const onDestroy = useCallback(() => {

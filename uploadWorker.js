@@ -33,6 +33,8 @@ onmessage = (e) => {
         result.result = `${data};base64,${btoa(str)}`;
         result.name = file.name;
         result.size = file.size;
+        result.type = file.type;
+
         postMessage({
             isUpdate: false,
             result: result,
@@ -77,10 +79,15 @@ async function toBase64(url) {
         const response = await fetch(url, {
             method: 'get',
             credentials: 'include',
+            cache: 'no-cache',
         });
 
         const blob = await response.blob();
+
+        console.log(blob.size, blob.type);
         result.result = await toFileReaderPromise(blob);
+        result.size = blob.size;
+        result.type = blob.type;
 
         return result;
     } catch (e) {
