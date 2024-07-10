@@ -68,6 +68,7 @@ export interface InputFileFieldProps {
             value: boolean;
             message?: string;
         };
+        maxFiles?: number;
     };
     onUploaded?: (attachments: Attachment[]) => void;
 }

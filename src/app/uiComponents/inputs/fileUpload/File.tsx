@@ -7,6 +7,9 @@ import Copy from '@app/components/Copy';
 import { IconFileText, IconFileTypePdf, IconX } from '@tabler/icons-react';
 import type { ButtonProps, FileButtonProps } from '@mantine/core';
 import type { Attachment } from '@root/types/forms/forms';
+import { Grid } from '@app/layouts/Grid';
+import { Cell } from '@app/layouts/Cell';
+import classNames from 'classnames';
 
 interface Props {
     inputFile: (props: InputFileFieldProps) => React.ReactNode;
@@ -29,6 +32,7 @@ interface Props {
             value: boolean;
             message?: string;
         };
+        maxFiles?: number;
     };
 }
 
@@ -89,27 +93,34 @@ export function File({ inputFile, name, label, description, validation, fileButt
                         </div>
                     )}
 
-                    {attachments.map((item, i) => (
-                        <div className={css.fileColumn} key={i}>
-                            <div className={css.fileName}>
-                                <p className={css.clippedName}>
-                                    {item.name && item.name.length > 30
-                                        ? `${item.name.substring(0, 30)}...`
-                                        : item.name}
+                    <Grid gap="24px">
+                        {attachments.map((item, i) => (
+                            <Cell
+                                span={attachments.length === 1 ? 'span 12' : 'span 4'}
+                                cls={[css.fileGridColumn]}
+                                key={i}>
+                                {isImage(item.type) && (
+                                    <img src={item.base64} className={classNames(css.baseFileItem, css.image)} alt="" />
+                                )}
 
-                                    <Copy
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(item.name);
-                                        }}
+                                {isVideo(item.type) && (
+                                    <video
+                                        controls
+                                        src={item.base64}
+                                        className={classNames(css.baseFileItem, css.image)}
                                     />
-                                </p>
-                            </div>
-                            {isImage(item.type) && <img src={item.base64} className={css.image} alt="" />}
-                            {isVideo(item.type) && <video controls src={item.base64} className={css.image} />}
-                            {isPdf(item.type) && <IconFileTypePdf size={64} className={css.pdf} />}
-                            {isOther(item.type) && <IconFileText size={64} className={css.pdf} />}
-                        </div>
-                    ))}
+                                )}
+
+                                {isPdf(item.type) && (
+                                    <IconFileTypePdf size={64} className={classNames(css.baseFileItem, css.pdf)} />
+                                )}
+
+                                {isOther(item.type) && (
+                                    <IconFileText size={64} className={classNames(css.baseFileItem, css.pdf)} />
+                                )}
+                            </Cell>
+                        ))}
+                    </Grid>
 
                     {inputFile({
                         name: name,

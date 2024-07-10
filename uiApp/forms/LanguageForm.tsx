@@ -33,7 +33,7 @@ export default function LanguageForm() {
                         </Cell>
 
                         <Cell span="span 12">
-                            <File fileButtonProps={{
+                            <File display="grid" fileButtonProps={{
                                 multiple: true,
                             }} label="File 1 upload" description="this is a description of file other upload stuff sdlkfjsak f dfčld f jsdf jsjf sk jfsačlf jčlsa fsa jfčsaj fčsaj fčlsak jfčlsa jfs fdčlsa jfsakj fsa jfčlsa jfčlsaj fčsajf sačlf jčlsa f" name="file1" inputFile={inputFile} />
                         </Cell>

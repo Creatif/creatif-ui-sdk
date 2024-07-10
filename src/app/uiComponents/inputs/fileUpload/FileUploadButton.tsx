@@ -38,6 +38,7 @@ interface Props {
             value: boolean;
             message?: string;
         };
+        maxFiles?: number;
     };
     onUploaded?: (attachments: Attachment[]) => void;
 }
@@ -345,6 +346,13 @@ export function FileUploadButton({
 
                             setError('');
                             globalLoadingStore.getState().addLoader();
+
+                            if (Array.isArray(file) && validation?.maxFiles && validation.maxFiles < file.length) {
+                                setError(`Maximum number of files is ${validation.maxFiles}`);
+                                globalLoadingStore.getState().removeLoader();
+                                return;
+                            }
+
                             let isSingleFileUpload = false;
                             let tempFiles: File[] = [];
                             if (!Array.isArray(file)) {
