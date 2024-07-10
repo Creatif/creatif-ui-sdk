@@ -3,8 +3,6 @@ import { tryHttp } from '@lib/http/tryHttp';
 import type { AddToListBlueprint } from '@root/types/api/list';
 
 export async function addToList(blueprint: AddToListBlueprint) {
-    console.log(blueprint.variable.value);
-
     return tryHttp(declarations(), 'put', `/list/add/${blueprint.projectId}`, {
         name: blueprint.name,
         variable: {

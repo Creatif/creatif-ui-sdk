@@ -12,9 +12,9 @@ export default function App() {
                 projectName: 'project',
                 items: [
                     {
-                        structureType: 'map',
-                        structureName: 'Accounts',
-                        form: <AccountForm />
+                        structureType: 'list',
+                        structureName: 'Languages',
+                        form: <LanguageForm />
                     },
                     {
                         structureType: 'list',

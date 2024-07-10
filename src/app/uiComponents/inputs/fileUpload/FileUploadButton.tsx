@@ -15,10 +15,14 @@ import UIError from '@app/components/UIError';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import { useWorker } from '@app/uiComponents/inputs/fileUpload/useWorker';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
+import { getDimensions } from '@app/uiComponents/inputs/fileUpload/getDimensions';
+import type { AllowedFileDimensions, Attachment, ProcessedResult } from '@root/types/forms/forms';
 
 interface Props {
     name: string;
     showFileName?: boolean;
+    clear?: boolean;
+    onCleared?: () => void;
     store: ImagePathsStore;
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
@@ -29,17 +33,13 @@ interface Props {
             size: number;
             message?: string;
         };
-        allowedDimensions?: {
-            width: number;
-            height: number;
-            message?: string;
-        };
+        allowedDimensions?: AllowedFileDimensions;
         required?: {
             value: boolean;
             message?: string;
         };
     };
-    onUploaded?: (base64: string, name: string, size: number, type: string, clearUploaded: () => void) => void;
+    onUploaded?: (attachments: Attachment[]) => void;
 }
 
 export function FileUploadButton({
@@ -52,27 +52,44 @@ export function FileUploadButton({
     buttonText = 'Upload file',
     showFileName = true,
     validation,
+    clear = false,
+    onCleared,
 }: Props) {
     const { setValue, getValues, control } = useFormContext();
     const [isCreatingBase64, setIsCreatingBase64] = useState(false);
-    const [currentlyLoadedFile, setCurrentlyLoadedFile] = useState<File | null>(null);
+    const [currentlyLoadedFile, setCurrentlyLoadedFile] = useState<File | File[] | null>(null);
     const resetRef = useRef<() => void>(null);
     const [filePathError, setFilePathError] = useState<string | undefined>();
     const updateRef = useRef(false);
     const [fileProcessError, setFileProcessError] = useState(false);
     const oldNameRef = useRef<string>(name);
     const [error, setError] = useState('');
+    const [internalClear, setInternalClear] = useState(clear);
 
     const requiredError = useFirstError(name);
 
-    const onClear = useCallback(() => {
-        setCurrentlyLoadedFile(null);
-        resetRef.current?.();
-        setValue(oldNameRef.current, '');
-        store.getState().removePath(name);
-    }, [currentlyLoadedFile]);
+    useEffect(() => {
+        if (!clear && !internalClear) return;
 
-    const { registerWorker, workerHandler } = useWorker('uploadWorker', (e) => {
+        if (clear || internalClear) {
+            resetRef.current?.();
+            const currentlyLoadedValues = getValues(oldNameRef.current);
+
+            if (Array.isArray(currentlyLoadedValues)) {
+                setCurrentlyLoadedFile(null);
+                setValue(oldNameRef.current, []);
+                onCleared?.();
+
+                return;
+            }
+
+            setCurrentlyLoadedFile(null);
+            setValue(oldNameRef.current, '');
+            onCleared?.();
+        }
+    }, [clear, internalClear, onCleared]);
+
+    const { registerWorker, workerHandler } = useWorker('src/singleUploadWorker', (e) => {
         setIsCreatingBase64(false);
         globalLoadingStore.getState().removeLoader();
 
@@ -83,13 +100,15 @@ export function FileUploadButton({
 
         if (e.data.isUpdate) {
             const currentUploadedImage: UploadedImage = getValues(name) as UploadedImage;
-            onUploaded?.(
-                `data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`,
-                currentUploadedImage.path,
-                e.data.result.size,
-                e.data.result.type,
-                onClear,
-            );
+
+            onUploaded?.([
+                {
+                    base64: `data:${currentUploadedImage.mimeType};base64,${e.data.result.result}`,
+                    name: currentUploadedImage.path,
+                    size: e.data.result.size,
+                    type: e.data.result.type,
+                },
+            ]);
 
             setValue(
                 oldNameRef.current,
@@ -100,30 +119,84 @@ export function FileUploadButton({
         }
 
         setValue(oldNameRef.current, e.data.result.result);
-        onUploaded?.(
-            e.data.result.result.replace(/#.*;/, ';'),
-            e.data.result.name,
-            e.data.result.size,
-            e.data.result.type,
-            onClear,
-        );
+        onUploaded?.([
+            {
+                base64: e.data.result.result.replace(/#.*;/, ';'),
+                name: e.data.result.name,
+                size: e.data.result.size,
+                type: e.data.result.type,
+            },
+        ]);
     });
+
+    const { registerWorker: registerMultipleUploads, workerHandler: multipleWorkerHandler } = useWorker(
+        'src/multipleUploadsWorker',
+        (e) => {
+            setIsCreatingBase64(false);
+            globalLoadingStore.getState().removeLoader();
+
+            if (e.data.result.error) {
+                setFileProcessError(true);
+                return;
+            }
+
+            if (e.data.isUpdate) {
+                const currentUploadedImages: UploadedImage[] = getValues(name) as UploadedImage[];
+
+                const results = e.data.result;
+                const attachments: Attachment[] = [];
+                const base64Only: string[] = [];
+                for (const result of results) {
+                    const currentlyUploadedImage = currentUploadedImages.find((img) => img.id === result.id);
+                    if (currentlyUploadedImage) {
+                        base64Only.push(
+                            `data:${currentlyUploadedImage.mimeType}#${currentlyUploadedImage.extension};base64,${result.result}`,
+                        );
+
+                        attachments.push({
+                            base64: `data:${currentlyUploadedImage.mimeType};base64,${result.result}`,
+                            name: currentlyUploadedImage.path,
+                            size: result.size,
+                            type: result.type,
+                        });
+                    }
+                }
+
+                onUploaded?.(attachments);
+
+                setValue(oldNameRef.current, base64Only);
+
+                return;
+            }
+
+            const base64Only = e.data.result.map((item: ProcessedResult) => item.result);
+            setValue(oldNameRef.current, base64Only);
+            const attachments: Attachment[] = e.data.result.map((item: ProcessedResult) => ({
+                base64: item.result.replace(/#.*;/, ';'),
+                name: item.name,
+                size: item.size,
+                type: item.type,
+            }));
+
+            onUploaded?.(attachments);
+        },
+    );
 
     const onDestroy = useCallback(() => {
         store.getState().removePath(oldNameRef.current);
     }, [name]);
 
     const handleAlreadyUploadedImage = useCallback(() => {
-        const currentValue: UploadedImage = getValues(name) as UploadedImage;
-        if (currentValue) {
+        const currentValue: UploadedImage[] | UploadedImage = getValues(name) as UploadedImage | UploadedImage[];
+        if (currentValue && !Array.isArray(currentValue)) {
             globalLoadingStore.getState().addLoader();
-            // mark that this is in a update form
-            updateRef.current = true;
             setIsCreatingBase64(true);
+            updateRef.current = true;
+
             workerHandler.postMessage(
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                `${import.meta.env.VITE_API_HOST}/api/v1/images/image/${
+                `${import.meta.env.VITE_API_HOST}/api/v1/files/file/${
                     Runtime.instance.currentProjectCache.getProject().id
                 }/${currentValue.id}`,
             );
@@ -131,10 +204,96 @@ export function FileUploadButton({
             // @ts-ignore
             setCurrentlyLoadedFile(currentValue.id);
         }
+
+        if (currentValue && Array.isArray(currentValue)) {
+            globalLoadingStore.getState().addLoader();
+            setIsCreatingBase64(true);
+            updateRef.current = true;
+
+            const urls: { id: string; url: string }[] = [];
+            for (const val of currentValue) {
+                urls.push({
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    url: `${import.meta.env.VITE_API_HOST}/api/v1/files/file/${
+                        Runtime.instance.currentProjectCache.getProject().id
+                    }/${val.id}`,
+                    id: val.id,
+                });
+            }
+
+            multipleWorkerHandler.postMessage(urls);
+        }
+    }, []);
+
+    const validateSize = useCallback(
+        (file: File) => {
+            const allowedSize = validation?.allowedSize;
+
+            if (allowedSize && file.size > allowedSize.size) {
+                globalLoadingStore.getState().removeLoader();
+
+                setError(
+                    allowedSize.message
+                        ? allowedSize.message
+                        : `Image size is bigger than allowed size of ${allowedSize.size} bytes`,
+                );
+                return;
+            }
+        },
+        [validation],
+    );
+
+    const validateDimensions = useCallback(
+        async (allowedDimensions: AllowedFileDimensions, file: File) => {
+            const result = await getDimensions(URL.createObjectURL(file));
+            const { dimensions, error } = result;
+
+            if (error && error === 'aborted') {
+                globalLoadingStore.getState().removeLoader();
+                return;
+            }
+
+            if (error) {
+                globalLoadingStore.getState().removeLoader();
+                setError(error);
+                return false;
+            }
+
+            if (
+                (dimensions && dimensions.width > allowedDimensions.width) ||
+                (dimensions && dimensions.height > allowedDimensions.height)
+            ) {
+                setError(
+                    allowedDimensions.message
+                        ? allowedDimensions.message
+                        : `Image width or height is invalid. Uploaded image can have width up to ${allowedDimensions.width}px and height up to ${allowedDimensions.height}px`,
+                );
+                globalLoadingStore.getState().removeLoader();
+
+                return false;
+            }
+
+            return true;
+        },
+        [validation],
+    );
+
+    const validateMultiple = useCallback(async (files: File[]) => {
+        for (const f of files) {
+            validateSize(f);
+            if (validation?.allowedDimensions) {
+                const valid = await validateDimensions(validation.allowedDimensions, f);
+                if (!valid) return valid;
+            }
+        }
+
+        return true;
     }, []);
 
     useEffect(() => {
         registerWorker();
+        registerMultipleUploads();
 
         handleAlreadyUploadedImage();
     }, []);
@@ -177,7 +336,7 @@ export function FileUploadButton({
                         {...fileButtonProps}
                         resetRef={resetRef}
                         name={name}
-                        onChange={(file) => {
+                        onChange={(file: File | File[] | null) => {
                             if (!file) {
                                 onChange(undefined);
                                 store.getState().removePath(name);
@@ -186,88 +345,70 @@ export function FileUploadButton({
 
                             setError('');
                             globalLoadingStore.getState().addLoader();
-                            const allowedSize = validation?.allowedSize;
-                            const allowedDimensions = validation?.allowedDimensions;
-
-                            if (allowedSize && file.size > allowedSize.size) {
-                                globalLoadingStore.getState().removeLoader();
-
-                                setError(
-                                    allowedSize.message
-                                        ? allowedSize.message
-                                        : `Image size is bigger than allowed size of ${allowedSize.size} bytes`,
-                                );
-                                return;
+                            let isSingleFileUpload = false;
+                            let tempFiles: File[] = [];
+                            if (!Array.isArray(file)) {
+                                tempFiles = [file];
+                                isSingleFileUpload = true;
+                            } else {
+                                tempFiles = file;
                             }
 
-                            if (allowedDimensions) {
-                                const reader = new FileReader();
-                                reader.readAsDataURL(file);
+                            validateMultiple(tempFiles).then((valid) => {
+                                if (!valid) return;
 
-                                const img = new Image();
-                                const objectURL = URL.createObjectURL(file);
-                                img.src = objectURL;
-                                img.onload = () => {
-                                    const w = img.width;
-                                    const h = img.height;
+                                setCurrentlyLoadedFile(isSingleFileUpload ? tempFiles[0] : tempFiles);
+                                setIsCreatingBase64(true);
 
-                                    if (w > allowedDimensions.width || h > allowedDimensions.height) {
-                                        setError(
-                                            allowedDimensions.message
-                                                ? allowedDimensions.message
-                                                : `Image width or height is invalid. Uploaded image can have width up to ${allowedDimensions.width}px and height up to ${allowedDimensions.height}px`,
-                                        );
-                                        globalLoadingStore.getState().removeLoader();
-
-                                        return;
-                                    }
-
-                                    setCurrentlyLoadedFile(file);
-                                    setIsCreatingBase64(true);
-                                    workerHandler.postMessage(file);
-                                };
-
-                                img.onerror = (e) => {
-                                    globalLoadingStore.getState().removeLoader();
-
-                                    if (typeof e === 'string') {
-                                        setError(
-                                            `This file could not be checked for dimensions. The underlying error is: ${e}`,
-                                        );
-                                        return;
-                                    }
-
-                                    setError('This file could not be checked for dimensions');
+                                if (isSingleFileUpload) {
+                                    workerHandler.postMessage(tempFiles[0]);
                                     return;
-                                };
+                                }
 
-                                img.onabort = () => {
-                                    globalLoadingStore.getState().removeLoader();
-                                };
+                                multipleWorkerHandler.postMessage(tempFiles);
+                            });
 
-                                return;
-                            }
-
-                            setCurrentlyLoadedFile(file);
-                            setIsCreatingBase64(true);
-                            workerHandler.postMessage(file);
+                            return;
                         }}>
                         {(props) => (
                             <>
                                 {currentlyLoadedFile && showFileName && (
                                     <div className={css.loadedFileText}>
-                                        <IconX size={16} onClick={onClear} className={css.clearIcon} />
-                                        <p className={css.clippedLoadedContent}>
-                                            {currentlyLoadedFile.name.length > 30
-                                                ? `${currentlyLoadedFile.name.substring(0, 30)}...`
-                                                : currentlyLoadedFile.name}
+                                        <IconX
+                                            size={16}
+                                            onClick={() => {
+                                                setInternalClear(true);
+                                            }}
+                                            className={css.clearIcon}
+                                        />
+                                        {!Array.isArray(currentlyLoadedFile) && (
+                                            <p className={css.clippedLoadedContent}>
+                                                {currentlyLoadedFile.name.length > 30
+                                                    ? `${currentlyLoadedFile.name.substring(0, 30)}...`
+                                                    : currentlyLoadedFile.name}
 
-                                            <Copy
-                                                onClick={() => {
-                                                    navigator.clipboard.writeText(currentlyLoadedFile?.name);
-                                                }}
-                                            />
-                                        </p>
+                                                <Copy
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(currentlyLoadedFile?.name);
+                                                    }}
+                                                />
+                                            </p>
+                                        )}
+
+                                        {Array.isArray(currentlyLoadedFile) &&
+                                            currentlyLoadedFile.map((file, i) => (
+                                                <p key={i} className={css.clippedLoadedContent}>
+                                                    {file.name.length > 30
+                                                        ? `${file.name.substring(0, 30)}...`
+                                                        : file.name}
+
+                                                    <Copy
+                                                        onClick={() => {
+                                                            navigator.clipboard.writeText(file?.name);
+                                                        }}
+                                                    />
+                                                </p>
+                                            ))}
                                     </div>
                                 )}
                                 <Button loading={isCreatingBase64} {...{ ...props, ...buttonProps }}>

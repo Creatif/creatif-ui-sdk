@@ -5,6 +5,8 @@ import { ApartmentForm } from './components/ApartmentForm';
 import css from './css/root.module.css';
 import { StudioForm } from './components/SudioForm';
 import { LandForm } from './components/LandForm';
+import { Cell } from '../../../src/app/layouts/Cell';
+import { File } from '../../../src/app/uiComponents/inputs/fileUpload/File';
 
 export function PropertyForm() {
     return (
@@ -67,7 +69,7 @@ export function PropertyForm() {
                     landSize: null,
                 },
             }}
-            inputs={(submitButton, { watch, inputConnection, inputLocale, inputGroups }) => {
+            inputs={(submitButton, { watch, inputConnection, inputLocale, inputGroups, inputFile }) => {
                 const propertyType = watch('propertyType');
 
                 return (
@@ -142,6 +144,10 @@ export function PropertyForm() {
                                             required: 'Property type is required',
                                         }}
                                     />
+                                </div>
+
+                                <div>
+                                    <File label="Profile image" inputFile={inputFile} name="profileImage" />
                                 </div>
                             </div>
 

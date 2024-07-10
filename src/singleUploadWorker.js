@@ -84,7 +84,6 @@ async function toBase64(url) {
 
         const blob = await response.blob();
 
-        console.log(blob.size, blob.type);
         result.result = await toFileReaderPromise(blob);
         result.size = blob.size;
         result.type = blob.type;

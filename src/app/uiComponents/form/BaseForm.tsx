@@ -36,6 +36,7 @@ import { FileUploadButton } from '@app/uiComponents/inputs/fileUpload/FileUpload
 import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import { SubmitButton } from '@app/uiComponents/form/SubmitButton';
+import { Attachment } from '@root/types/forms/forms';
 
 export interface InputReferenceFieldProps {
     name: string;
@@ -49,6 +50,8 @@ export interface InputFileFieldProps {
     name: string;
     fileButtonProps?: FileButtonProps;
     buttonProps?: ButtonProps;
+    onCleared?: () => void;
+    clear?: boolean;
     buttonText?: string;
     showFileName?: boolean;
     validation?: {
@@ -66,7 +69,7 @@ export interface InputFileFieldProps {
             message?: string;
         };
     };
-    onUploaded?: (base64: string, name: string, size: number, type: string, clearUploaded: () => void) => void;
+    onUploaded?: (attachments: Attachment[]) => void;
 }
 
 export interface InputLocaleFieldProps {

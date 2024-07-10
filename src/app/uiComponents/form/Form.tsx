@@ -168,8 +168,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -230,8 +230,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }

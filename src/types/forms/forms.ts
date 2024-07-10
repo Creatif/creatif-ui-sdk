@@ -24,3 +24,23 @@ export type AfterSaveFn = (result: unknown, e: BaseSyntheticEvent | undefined) =
 
 export type BeforeSaveReturnType = { value: unknown; metadata: unknown };
 export type BeforeSaveFn<T> = (values: T, e: BaseSyntheticEvent | undefined) => BeforeSaveReturnType;
+
+export interface AllowedFileDimensions {
+    width: number;
+    height: number;
+    message?: string;
+}
+
+export type Attachment = {
+    base64: string;
+    name: string;
+    size: string;
+    type: string;
+};
+
+export type ProcessedResult = {
+    result: string;
+    name: string;
+    type: string;
+    size: string;
+};

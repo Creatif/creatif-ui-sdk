@@ -79,7 +79,13 @@ export function AccountForm() {
                         </Cell>
 
                         <Cell span="span 12">
-                            <File label="Profile image" inputFile={inputFile} name="profileImage" />
+                            <File label="Profile image" inputFile={inputFile} name="profileImage" fileButtonProps={{
+                                multiple: true,
+                            }} />
+                        </Cell>
+
+                        <Cell span="span 12">
+                            <File label="Profile image" inputFile={inputFile} name="profileImage1" />
                         </Cell>
                     </Grid>
 

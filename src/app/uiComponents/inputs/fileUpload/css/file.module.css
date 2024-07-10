@@ -9,7 +9,7 @@
     width: 100%;
     border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
     border-radius: 4px;
-    padding: 16px;
+    padding: 16px 0 16px 0;
 }
 
 .label {
@@ -34,10 +34,12 @@
 }
 
 .fileName {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     align-content: center;
+    padding: 0 16px 16px 16px;
 
     margin-bottom: 1rem;
 }
@@ -46,12 +48,32 @@
     cursor: pointer;
 }
 
+.clearUploaded {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 16px;
+}
+
 .uploadSection {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     gap: 16px;
+}
+
+.fileColumn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+
+    border-bottom: 1px solid var(--mantine-color-gray-2);
+    padding-bottom: 16px;
 }
 
 .image {
