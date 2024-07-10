@@ -1,3 +1,66 @@
+onmessage = async (e) => {
+    const files = e.data;
+    let areUrlsOnly = files.every((f) => Object.hasOwn(f, 'id') && Object.hasOwn(f, 'url'));
+
+    let result = {
+        result: [],
+        error: undefined,
+    };
+
+    if (areUrlsOnly) {
+        const results = [];
+        const promises = [];
+        for (const f of files) {
+            promises.push(toBase64(f));
+        }
+
+        try {
+            const resolvedPromises = await Promise.all(promises);
+
+            for (const p of resolvedPromises) {
+                if (p.error) {
+                    return {
+                        error: p.error,
+                    };
+                }
+
+                results.push(p);
+            }
+        } catch (e) {
+            results.push({
+                error: e.message,
+            });
+        }
+
+        postMessage({
+            isUpdate: true,
+            result: results,
+        });
+
+        return;
+    }
+
+    const results = [];
+    for (const file of files) {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+
+        const singleResult = await promisifySingleConversion(file);
+
+        if (singleResult.error) {
+            return {
+                error: singleResult.error,
+            };
+        }
+
+        results.push(singleResult);
+    }
+
+    result.result = results;
+
+    postMessage(result);
+};
+
 function promisifySingleConversion(file) {
     let result = {
         result: undefined,
@@ -33,58 +96,6 @@ function promisifySingleConversion(file) {
         };
     });
 }
-
-onmessage = async (e) => {
-    const files = e.data;
-    let areUrlsOnly = files.every((f) => Object.hasOwn(f, 'id') && Object.hasOwn(f, 'url'));
-
-    let result = {
-        result: [],
-        error: undefined,
-    };
-
-    if (areUrlsOnly) {
-        const results = [];
-        for (const f of files) {
-            const singleResult = await toBase64(f);
-
-            if (singleResult.error) {
-                return {
-                    error: singleResult.error,
-                };
-            }
-
-            results.push(singleResult);
-        }
-
-        postMessage({
-            isUpdate: true,
-            result: results,
-        });
-
-        return;
-    }
-
-    const results = [];
-    for (const file of files) {
-        const reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-
-        const singleResult = await promisifySingleConversion(file);
-
-        if (singleResult.error) {
-            return {
-                error: singleResult.error,
-            };
-        }
-
-        results.push(singleResult);
-    }
-
-    result.result = results;
-
-    postMessage(result);
-};
 
 async function toBase64(url) {
     let result = {
