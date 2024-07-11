@@ -22,7 +22,7 @@
         "build": "npm run compile && npm run pretty && npm run es-lint && vite build --mode production",
         "pretty": "prettier --loglevel='warn' --log-level='error' --write .",
         "es-lint": "eslint --fix .",
-        "compile": "tsc --noEmit",
+        "compile": "tsc --project tsconfig.json --noEmit",
         "preview": "vite preview",
         "npm-publish": "npm run build && npm publish",
         "docs": "docsify serve ./docs"

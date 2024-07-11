@@ -23,7 +23,5 @@
         }
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules", "build",
-      "src/singleUploadWorker.js"
-    ]
+    "exclude": ["node_modules", "build", "src/singleUploadWorker.js"]
 }

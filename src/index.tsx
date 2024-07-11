@@ -25,6 +25,11 @@ export { InputTextareaControlled } from '@root/app/uiComponents/inputs/InputText
 export { InputTextControlled } from '@app/uiComponents/inputs/InputTextControlled';
 export { Form } from '@app/uiComponents/form/Form';
 
+export { Grid } from '@app/layouts/Grid';
+export { Cell } from '@app/layouts/Cell';
+export { FileUploadButton } from '@app/uiComponents/inputs/fileUpload/FileUploadButton';
+export { File } from '@app/uiComponents/inputs/fileUpload/File';
+
 export { Controller as CreatifController } from 'react-hook-form';
 export { useFormContext as useCreatifFormContext } from 'react-hook-form';
 export { useController as useCreatifController } from 'react-hook-form';

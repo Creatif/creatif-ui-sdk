@@ -1,9 +1,8 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import type { InputFileFieldProps } from '@app/uiComponents/form/BaseForm';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import css from '@app/uiComponents/inputs/fileUpload/css/file.module.css';
-import Copy from '@app/components/Copy';
 import { IconFileText, IconFileTypePdf, IconX } from '@tabler/icons-react';
 import type { ButtonProps, FileButtonProps } from '@mantine/core';
 import type { Attachment } from '@root/types/forms/forms';

@@ -36,7 +36,7 @@ import { FileUploadButton } from '@app/uiComponents/inputs/fileUpload/FileUpload
 import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import { SubmitButton } from '@app/uiComponents/form/SubmitButton';
-import { Attachment } from '@root/types/forms/forms';
+import type { Attachment } from '@root/types/forms/forms';
 
 export interface InputReferenceFieldProps {
     name: string;

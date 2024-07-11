@@ -1,7 +1,7 @@
 export function getDimensions(
     url: string,
 ): Promise<{ dimensions?: { width: number; height: number }; error?: string }> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const img = new Image();
         img.src = url;
 
