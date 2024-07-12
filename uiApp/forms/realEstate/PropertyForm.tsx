@@ -5,8 +5,9 @@ import { ApartmentForm } from './components/ApartmentForm';
 import css from './css/root.module.css';
 import { StudioForm } from './components/SudioForm';
 import { LandForm } from './components/LandForm';
-import { Cell } from '../../../src/app/layouts/Cell';
 import { File } from '../../../src/app/uiComponents/inputs/fileUpload/File';
+import { Grid } from '../../../src';
+import { Cell } from '../../../build';
 
 export function PropertyForm() {
     return (
@@ -73,100 +74,112 @@ export function PropertyForm() {
                 const propertyType = watch('propertyType');
 
                 return (
-                    <>
-                        {inputConnection({
-                            structureName: 'Accounts',
-                            name: 'accounts',
-                            structureType: 'map',
-                            label: 'Account',
-                            options: {
-                                required: 'Selecting an owner is required',
-                            },
-                        })}
+                    <Grid>
+                        <Cell span="span 12">
+                            {inputConnection({
+                                structureName: 'Accounts',
+                                name: 'accounts',
+                                structureType: 'map',
+                                label: 'Account',
+                                options: {
+                                    required: 'Selecting an owner is required',
+                                },
+                            })}
+                        </Cell>
 
-                        <div className={css.spacing}>
+                        <Cell span="span 12">
                             {inputLocale()}
-                        </div>
+                        </Cell>
 
-                        <div className={css.spacing}>
+                        <Cell span="span 12">
                             {inputGroups()}
-                        </div>
+                        </Cell>
 
-                        <div>
-                            <div className={css.fieldGrid}>
-                                <div>
-                                    <InputText
-                                        label="Address"
-                                        name="address"
-                                        options={{
-                                            required: 'Address is required',
-                                        }}
-                                    />
-                                </div>
+                        <Cell span="span 4">
+                            <InputText
+                                label="Address"
+                                name="address"
+                                options={{
+                                    required: 'Address is required',
+                                }}
+                            />
+                        </Cell>
 
-                                <div>
-                                    <InputText
-                                        label="City"
-                                        name="city"
-                                        options={{
-                                            required: 'City is required',
-                                        }}
-                                    />
-                                </div>
+                        <Cell span="span 4">
+                            <InputText
+                                label="City"
+                                name="city"
+                                options={{
+                                    required: 'City is required',
+                                }}
+                            />
+                        </Cell>
 
-                                <div>
-                                    <InputText
-                                        label="Postal code"
-                                        name="postalCode"
-                                        options={{
-                                            required: 'Postal code is required',
-                                        }}
-                                    />
-                                </div>
+                        <Cell span="span 4">
+                            <InputText
+                                label="Postal code"
+                                name="postalCode"
+                                options={{
+                                    required: 'Postal code is required',
+                                }}
+                            />
+                        </Cell>
 
-                                <div>
-                                    <InputSelectControlled
-                                        data={['Rent', 'Sell', 'Rent business']}
-                                        label="Property status"
-                                        name="propertyStatus"
-                                        validation={{
-                                            required: 'Property status is required',
-                                        }}
-                                    />
-                                </div>
+                        <Cell span="span 6">
+                            <InputSelectControlled
+                                data={['Rent', 'Sell', 'Rent business']}
+                                label="Property status"
+                                name="propertyStatus"
+                                validation={{
+                                    required: 'Property status is required',
+                                }}
+                            />
+                        </Cell>
 
-                                <div>
-                                    <InputSelectControlled
-                                        data={['House', 'Apartment', 'Studio', 'Land']}
-                                        label="Property type"
-                                        name="propertyType"
-                                        validation={{
-                                            required: 'Property type is required',
-                                        }}
-                                    />
-                                </div>
+                        <Cell span="span 6">
+                            <InputSelectControlled
+                                data={['House', 'Apartment', 'Studio', 'Land']}
+                                label="Property type"
+                                name="propertyType"
+                                validation={{
+                                    required: 'Property type is required',
+                                }}
+                            />
+                        </Cell>
 
-                                <div>
-                                    <File label="Profile image" inputFile={inputFile} name="profileImage" />
-                                </div>
-                            </div>
-
+                        <Cell span="span 12">
                             {propertyType === 'Apartment' && <ApartmentForm />}
-                            {propertyType === 'House' && <HouseForm />}
-                            {propertyType === 'Studio' && <StudioForm />}
-                            {propertyType === 'Land' && <LandForm />}
-                        </div>
+                        </Cell>
 
-                        <div className={css.accountNote}>
+                        <Cell span="span 12">
+                            {propertyType === 'House' && <HouseForm />}
+                        </Cell>
+
+                        <Cell span="span 12">
+                            {propertyType === 'Studio' && <StudioForm />}
+                        </Cell>
+
+                        <Cell span="span 12">
+                            {propertyType === 'Land' && <LandForm />}
+                        </Cell>
+
+                        <Cell span="span 12">
+                            <File inputFile={inputFile} name="propertyImages" label="Property images" description="You can upload as much images as you want" fileButtonProps={{
+                                multiple: true,
+                                accept: "image/jpg,image/jpeg,image/png,image/webp,image/avif"
+                            }} />
+                        </Cell>
+
+                        <Cell span="span 12">
                             <InputTextarea
                                 label="Account note"
                                 name="finalNote"
                                 description="Describe anything that could not be represented in the fields above"
                             />
-                        </div>
+                        </Cell>
 
-                        <div className={css.submitButton}>{submitButton}</div>
-                    </>
+                        <Cell span="span 12">{submitButton}</Cell>
+                    </Grid>
                 );
             }}
         />

@@ -80,12 +80,8 @@ export function AccountForm() {
 
                         <Cell span="span 12">
                             <File label="Profile image" inputFile={inputFile} name="profileImage" fileButtonProps={{
-                                multiple: true,
+                                accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif'
                             }} />
-                        </Cell>
-
-                        <Cell span="span 12">
-                            <File label="Profile image" inputFile={inputFile} name="profileImage1" />
                         </Cell>
                     </Grid>
 

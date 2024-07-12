@@ -1,26 +1,26 @@
 import { InputCheckbox, InputNumberControlled } from '../../../../src';
 import css from '../css/root.module.css';
+import { Grid } from '../../../../src';
+import { Cell } from '../../../../src';
 
 export function LandForm() {
     return (
-        <div>
-            <h1 className={css.houseDetailsHeader}>APARTMENT DETAILS</h1>
+        <Grid cls={[css.spacing]}>
+            <Cell cls={[css.houseDetailsHeader]}>APARTMENT DETAILS</Cell>
 
-            <div className={css.fieldGrid}>
-                <div>
-                    <InputNumberControlled
-                        name="landSize"
-                        label="Size (in meters squared)"
-                        validation={{
-                            required: 'Size is required',
-                        }}
-                    />
-                </div>
+            <Cell span="span 12">
+                <InputNumberControlled
+                    name="landSize"
+                    label="Size (in meters squared)"
+                    validation={{
+                        required: 'Size is required',
+                    }}
+                />
+            </Cell>
 
-                <div>
-                    <InputCheckbox name="hasConstructionPermit" label="Has construction Permit?" />
-                </div>
-            </div>
-        </div>
+            <Cell span="span 12">
+                <InputCheckbox name="hasConstructionPermit" label="Has construction Permit?" />
+            </Cell>
+        </Grid>
     );
 }

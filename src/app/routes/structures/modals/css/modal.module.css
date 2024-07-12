@@ -1,11 +1,11 @@
 .text {
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     line-height: 1.8rem;
     margin-top: 0.8rem;
 }
 
 .header {
-    color: var(--mantine-color-gray-7);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     line-height: 1.4rem;
     margin-top: 3rem;
     font-weight: bolder;
@@ -24,7 +24,7 @@
 .informationParagraph {
     line-height: 1.6rem;
     font-size: 0.9rem;
-    color: var(--mantine-color-gray-9);
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     margin: 0 0 2rem 0;
     padding: 0 0 0 1rem;
 

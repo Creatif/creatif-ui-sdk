@@ -31,12 +31,12 @@ export function Result({ data, curlBlueprint, curlType, versionName }: Props) {
                     id="json-pretty"
                     data={data}
                     style={{
-                        color: 'var(--mantine-color-gray-7)',
+                        color: 'var(--mantine-color-gray-5)',
                         fontWeight: '500',
                     }}
                     space={6}
                     mainStyle="padding: 1rem"
-                    keyStyle="display: inline-block; margin-bottom: 0.5rem; color: var(--mantine-color-gray-7); font-weight: normal"
+                    keyStyle="display: inline-block; margin-bottom: 0.5rem; color: var(--mantine-color-gray-5); font-weight: normal"
                     valueStyle="color: var(--mantine-color-blue-7) !important; font-weight: normal"
                     booleanStyle="color: var(--mantine-color-red-7) !important; font-weight: normal"
                     stringStyle="color: var(--mantine-color-green-8) !important; font-weight: normal"
