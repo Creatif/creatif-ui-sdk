@@ -7,7 +7,7 @@ import { StudioForm } from './components/SudioForm';
 import { LandForm } from './components/LandForm';
 import { File } from '../../../src/app/uiComponents/inputs/fileUpload/File';
 import { Grid } from '../../../src';
-import { Cell } from '../../../build';
+import { Cell } from '../../../src';
 
 export function PropertyForm() {
     return (
@@ -130,7 +130,7 @@ export function PropertyForm() {
                                 data={['Rent', 'Sell', 'Rent business']}
                                 label="Property status"
                                 name="propertyStatus"
-                                validation={{
+                                options={{
                                     required: 'Property status is required',
                                 }}
                             />
@@ -141,7 +141,7 @@ export function PropertyForm() {
                                 data={['House', 'Apartment', 'Studio', 'Land']}
                                 label="Property type"
                                 name="propertyType"
-                                validation={{
+                                options={{
                                     required: 'Property type is required',
                                 }}
                             />

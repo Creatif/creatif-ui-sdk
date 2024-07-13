@@ -16,7 +16,7 @@ export function ApartmentForm() {
                 <InputNumberControlled
                     name="apartmentFloorNumber"
                     label="Floor number"
-                    validation={{
+                    options={{
                         required: 'Floor number is required',
                     }}
                 />
@@ -26,7 +26,7 @@ export function ApartmentForm() {
                 <InputNumberControlled
                     name="apartmentSize"
                     label="Size (in meters squared)"
-                    validation={{
+                    options={{
                         required: 'Size is required',
                     }}
                 />
@@ -36,7 +36,7 @@ export function ApartmentForm() {
                 <InputNumberControlled
                     name="apartmentLocalPrice"
                     label="Local price (in meters squared)"
-                    validation={{
+                    options={{
                         required: 'Local price is required',
                     }}
                 />
@@ -50,7 +50,7 @@ export function ApartmentForm() {
                 <InputNumberControlled
                     name="apartmentBalconySize"
                     label="Balcony size"
-                    validation={{
+                    options={{
                         required: 'Balcony size is required',
                     }}
                 />

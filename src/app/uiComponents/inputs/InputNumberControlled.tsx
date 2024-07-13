@@ -6,16 +6,16 @@ import type { NumberInputProps } from '@mantine/core';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 interface Props extends NumberInputProps {
     name: string;
-    validation?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
+    options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     onInputChange?: (checked: string | number) => void;
 }
-export function InputNumberControlled({ name, onInputChange, validation, ...rest }: Props) {
+export function InputNumberControlled({ name, onInputChange, options, ...rest }: Props) {
     const { control, getValues } = useFormContext();
     const [value, setValue] = useState<string | number>(getValues(name));
 
     return (
         <Controller
-            rules={validation}
+            rules={options}
             control={control}
             name={name}
             render={({ field: { onChange: onChange } }) => (

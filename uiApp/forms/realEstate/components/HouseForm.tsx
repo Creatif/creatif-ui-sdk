@@ -2,7 +2,7 @@ import { InputCheckbox, InputNumberControlled, InputTextarea } from '../../../..
 import { useFormContext } from 'react-hook-form';
 import css from '../css/root.module.css';
 import { Grid } from '../../../../src';
-import { Cell } from '../../../../build';
+import { Cell } from '../../../../src';
 
 export function HouseForm() {
     const { watch } = useFormContext();
