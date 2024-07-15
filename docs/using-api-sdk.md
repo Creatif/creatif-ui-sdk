@@ -62,11 +62,11 @@ export interface CreatifError {
 }
 ```
 
-The API will never throw an error. The `Result` type contains the error, if any and you should check if an
+The API will never throw an error. The `Result` type contains the error 8if any9 and you should check if an
 error exists. If you are using a third-party library that expects an error to be thrown (such as react-query),
 you must throw it yourself.
 
-All the function have an optional `versionName` property with which you can specify the version name to use.
+All the functions have an optional `versionName` property with which you can specify the version name to use.
 If omitted, production enabled version will be used.
 
 ## getVersions()
@@ -80,7 +80,7 @@ function getVersions(): Promise<Result<Version[]>>;
 ```
 
 ```ts
-export interface Version {
+interface Version {
     id: string;
     name: string;
 
@@ -111,7 +111,7 @@ function getListItemById<Value>(blueprint: GetListItemByID): Promise<Result<List
 ```
 
 ```ts
-export interface ListItem<Value> {
+interface ListItem<Value> {
     structureId: string;
     structureShortId: string;
     structureName: string;
@@ -171,7 +171,7 @@ function getMapItemById<Value>(blueprint: GetMapItemByID): Promise<Result<ListIt
 ```
 
 ```ts
-export interface MapItem<Value> {
+interface MapItem<Value> {
     structureId: string;
     structureShortId: string;
     structureName: string;
@@ -233,7 +233,7 @@ function getListItemsByName<Value>(blueprint: GetListItemsByName): Promise<Resul
 Request blueprint:
 
 ```ts
-export interface GetListItemsByName {
+interface GetListItemsByName {
     structureName: string;
     name: string;
     locale: string;
@@ -302,8 +302,8 @@ getMapItemByName({
 
 # Pagination
 
-Two function for pagination are `paginateListItems` and `paginateMapItems`. They are essentially the same and
-only have a different name. Request parameters for one of them, you can use in both.
+Two functions for pagination are `paginateListItems` and `paginateMapItems`. They are essentially the same but with different name. 
+Request parameters for one can be used for both of them.
 
 Request signature for `paginateMapItems` is
 
@@ -324,7 +324,7 @@ interface PaginateMapItems {
 and for a list
 
 ```ts
-export interface PaginateListItems {
+interface PaginateListItems {
     structureName: string;
     page: number;
     versionName?: string;

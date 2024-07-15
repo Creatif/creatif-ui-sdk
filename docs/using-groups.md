@@ -1,8 +1,8 @@
 # Using groups
 
-Groups are a way of groups entries with similar properties. In our tutorial, we created a property with the `PropertyForm`.
-This form included a property type field. You can include create three groups: Rent and Sell. Depending on this properties
-type, assign one of the groups or both of them. You can filter these properties in the _Filters_ side section and
+Groups are a way to group entries with similar properties and query them after you publish the API. In our tutorial, we created the `PropertyForm`.
+This form included a type field called _property_. There can be two properties for this from: Rent and Sell. Depending on these two values, 
+we can group group them by those values. You can filter these properties in the _Filters_ side section and
 using the public API.
 
 Let's see it in action in our tutorial example.
@@ -202,7 +202,7 @@ export function PropertyForm() {
 }
 ```
 
-But if you try to select a group, nothing happens. That is because we haven't selected any groups. Click on the `API`
+But if you try to select a group, nothing happens. That is because we haven't created any groups. Click on the `Groups`
 section in the navigation on the right and create two groups: _Rent_ and _Sell_.
 
 ![Add groups](_images/using_groups_add_groups.gif 'Add groups')
