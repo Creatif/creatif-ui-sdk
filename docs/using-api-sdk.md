@@ -100,6 +100,35 @@ import { initialize, getVersions } from 'creatif-js-sdk';
 getVersions().then(({ result, error }) => {});
 ```
 
+## getFile()
+
+Returns binary representation of the file which can be opened in the browser. This method **does not** return a json
+representation. You will usually use this method after getting a list or item resource and the ID of the file
+will be provided for you in that response.
+
+If you need to access the file without using `getFile()`, you can use the following route:
+
+`/api/v1/public/:projectId/file/:version/:id`
+
+It will have the same effect and result.
+
+Signature:
+
+```ts
+function getFile();
+```
+
+### Usage
+
+```ts
+import { initialize, getVersions } from 'creatif-js-sdk';
+
+getFile({
+    id: '<id of the file>',
+    version: 'v1', // or some other version
+});
+```
+
 ## getListItemById()
 
 Returns a single list item.

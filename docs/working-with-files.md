@@ -120,3 +120,26 @@ If you do that and upload multiple files, it might look something like this:
 
 That is it. There is nothing too complicated about the `File` component. It is very easy to use and I would recommend that
 you use it before trying anything custom. It gives a nice UI out of the box and works well with other components of the UI.
+
+## Getting and displaying files
+
+For versions that are enabled, files are always public. You can access them with this path:
+
+`/api/v1/public/:projectId/file/:version/:id`
+
+Note that you must have a file ID to access the contents of the file. But most of the time you will be using `getFile`
+function to get your files.
+
+For example, you might save a bunch of files as a profile image of some list or map. The response would look like this:
+
+![Accessing files with getFile()](_images/uploading_files_get_files_method.png 'Accessing files with getFile()')
+
+As you can see, under `profileImage`, you have multiple files to choose from. In order to get the file with `getFile()`,
+just call it with version and ID of the file:
+
+```typescript jsx
+getFile({
+    version: 'v1', // or some other version name
+    id: '<your id>',
+});
+```
