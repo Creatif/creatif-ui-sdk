@@ -2,6 +2,7 @@
 -   [Concepts](concepts)
 -   [Get started](installation)
 -   [Tutorial](tutorial)
+-   [Form events](form-events)
 -   [Locales](locales)
 -   [Using groups](using-groups)
 -   [Working with files](working-with-files)
