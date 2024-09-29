@@ -1,9 +1,8 @@
 import React from 'react';
 import { CreatifProvider } from '../src/CreatifProvider';
-import LanguageForm from './forms/LanguageForm';
-import DeckForm from './forms/DeckForm';
-import { AccountForm } from './forms/realEstate/AccountForm';
-import { PropertyForm } from './forms/realEstate/PropertyForm';
+import LanguageForm from './forms/languageBuilder/LanguageForm';
+import DeckForm from './forms/languageBuilder/DeckForm';
+import { NavigationForm } from './forms/landingPage/NavigationForm';
 
 export default function App() {
     return (
@@ -13,14 +12,14 @@ export default function App() {
                 items: [
                     {
                         structureType: 'map',
-                        structureName: 'Accounts',
-                        form: <AccountForm />
+                        structureName: 'Languages',
+                        form: <NavigationForm />
                     },
                     {
-                        structureType: 'list',
-                        structureName: 'Properties',
-                        form: <PropertyForm />
-                    }
+                        structureType: 'map',
+                        structureName: 'Decks',
+                        form: <DeckForm />
+                    },
                 ]
             }}
         />
