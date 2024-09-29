@@ -1,6 +1,6 @@
 {
     "name": "creatif-ui-sdk",
-    "version": "0.0.29",
+    "version": "0.0.30",
     "description": "UI SDK to create Creatif CMS",
     "license": "MIT",
     "type": "module",

@@ -13,9 +13,14 @@ function constructUrl(
     type: string,
     blueprint: GetListItemByID | GetListItemsByName | GetMapItemByID | PaginateListItems,
 ) {
-    if (type === 'getListItemById' || type === 'getMapItemById') {
+    if (type === 'getListItemById') {
         const b = blueprint as GetListItemByID;
         return `${Runtime.instance.baseUrl()}${Routes.GET_LIST_ITEM_BY_ID}/${b.id}${parseQuery(b.options, undefined)}`;
+    }
+
+    if (type === 'getMapItemById') {
+        const b = blueprint as GetListItemByID;
+        return `${Runtime.instance.baseUrl()}${Routes.GET_MAP_ITEM_BY_ID}/${b.id}${parseQuery(b.options, undefined)}`;
     }
 
     if (type === 'getListItemsByName') {

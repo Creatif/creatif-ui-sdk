@@ -45,10 +45,10 @@
     gap: 0.5rem;
     align-items: center;
     padding: 1rem;
-    border: 1px solid var(--mantine-color-gray-2);
+    border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
     border-radius: 8px;
 
-    background-color: var(--mantine-color-gray-0);
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }
 
 .curlOverflowedSection {

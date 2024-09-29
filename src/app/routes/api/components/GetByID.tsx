@@ -23,6 +23,8 @@ export function GetByID({ versionName }: Props) {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
 
+    console.log(structureData);
+
     const [isValueOnly, setIsValueOnly] = useState(false);
 
     const { data, error } = useQuery<ListItem<unknown> | MapItem<unknown> | undefined, ApiError>(
@@ -98,7 +100,7 @@ export function GetByID({ versionName }: Props) {
                 </div>
             </div>
 
-            {id && data && (
+            {id && data && structureData && (
                 <div className={styles.viewSection}>
                     <Result
                         data={data}
@@ -109,7 +111,7 @@ export function GetByID({ versionName }: Props) {
                                 valueOnly: isValueOnly,
                             },
                         }}
-                        curlType="getListItemById"
+                        curlType={structureData.type === 'list' ? 'getListItemById' : 'getMapItemById'}
                     />
                 </div>
             )}
