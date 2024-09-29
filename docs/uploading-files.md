@@ -2,7 +2,7 @@
 
 Lets dig right into the code
 
-````typescript jsx
+```typescript jsx
 import { InputText, Form, Grid, Cell, File } from 'creatif';
 
 export default function LanguageForm() {
@@ -19,7 +19,7 @@ export default function LanguageForm() {
                     shortName: '',
                 },
             }}
-            inputs={(submitButton, {inputFile}) => (
+            inputs={(submitButton, { inputFile }) => (
                 <>
                     <Grid gap="24px">
                         <Cell span="span 6">
@@ -33,9 +33,14 @@ export default function LanguageForm() {
                         </Cell>
 
                         <Cell span="span 12">
-                            <File label="Profile image" inputFile={inputFile} name="profileImage" fileButtonProps={{
-                                accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif',
-                            }} />
+                            <File
+                                label="Profile image"
+                                inputFile={inputFile}
+                                name="profileImage"
+                                fileButtonProps={{
+                                    accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif',
+                                }}
+                            />
                         </Cell>
                     </Grid>
 
@@ -45,7 +50,7 @@ export default function LanguageForm() {
         />
     );
 }
-````
+```
 
 This form has two fields. An image name and the image to upload. This form will look something like this:
 
@@ -55,15 +60,15 @@ Nothing too complicated.
 
 The first thing to notice is this part of the code:
 
-````javascript
+```javascript
 inputs={(submitButton, {inputFile}) => (
-````
+```
 
-``inputFile()`` function is the function with which we upload a file or multiple files. For now, let's keep it aside because
+`inputFile()` function is the function with which we upload a file or multiple files. For now, let's keep it aside because
 this function is a low level function that you will use only if you need fine-grained configuration of your file upload.
 To make it less complicated, the `File` component is here. It accepts these properties:
 
-````typescript
+```typescript
 interface Props {
     inputFile: (props: InputFileFieldProps) => React.ReactNode;
     name: string;
@@ -88,22 +93,26 @@ interface Props {
         maxFiles?: number;
     };
 }
+```
 
-````
+The first one is the `inputFile()` function that we talked about. The others are regular form field properties like
+`name` and label.
 
-The first one is the ``inputFile()`` function that we talked about. The others are regular form field properties like
-``name`` and label. 
-
-The most important of the is the ``fileButtonProps``. This is a proxy to actual file button properties and it accepts
+The most important of the is the `fileButtonProps`. This is a proxy to actual file button properties and it accepts
 the same properties as the `<input type="file"` does, like `multiple` or `accepts`. For example, if you want to upload
 multiple files, add the `multiple` property to the `File` component.
 
-````typescript jsx
-<File label="Profile image" inputFile={inputFile} name="profileImage" fileButtonProps={{
-    accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif',
-    multiple: true,
-}} />
-````
+```typescript jsx
+<File
+    label="Profile image"
+    inputFile={inputFile}
+    name="profileImage"
+    fileButtonProps={{
+        accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif',
+        multiple: true,
+    }}
+/>
+```
 
 If you do that and upload multiple files, it might look something like this:
 
@@ -111,4 +120,3 @@ If you do that and upload multiple files, it might look something like this:
 
 That is it. There is nothing too complicated about the `File` component. It is very easy to use and I would recommend that
 you use it before trying anything custom. It gives a nice UI out of the box and works well with other components of the UI.
-

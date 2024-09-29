@@ -302,7 +302,7 @@ getMapItemByName({
 
 # Pagination
 
-Two functions for pagination are `paginateListItems` and `paginateMapItems`. They are essentially the same but with different name. 
+Two functions for pagination are `paginateListItems` and `paginateMapItems`. They are essentially the same but with different name.
 Request parameters for one can be used for both of them.
 
 Request signature for `paginateMapItems` is

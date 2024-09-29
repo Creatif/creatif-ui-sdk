@@ -1,7 +1,7 @@
 # Using groups
 
 Groups are a way to group entries with similar properties and query them after you publish the API. In our tutorial, we created the `PropertyForm`.
-This form included a type field called _property_. There can be two properties for this from: Rent and Sell. Depending on these two values, 
+This form included a type field called _property_. There can be two properties for this from: Rent and Sell. Depending on these two values,
 we can group group them by those values. You can filter these properties in the _Filters_ side section and
 using the public API.
 
