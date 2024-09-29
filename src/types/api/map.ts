@@ -102,13 +102,12 @@ export interface UpdateMapVariableBlueprint {
     imagePaths: string[];
 }
 
-export interface UpdateMapItemResult<Value = unknown, Metadata = unknown> {
+export interface UpdateMapItemResult<Value = unknown> {
     id: string;
     name: string;
     locale: string;
     behaviour: Behaviour;
     groups: Group[];
-    metadata: Metadata;
     value: Value;
     createdAt: string;
     updatedAt: string;

@@ -105,13 +105,12 @@ export interface UpdateListItemVariableBlueprint {
     value?: unknown;
 }
 
-export interface UpdateListItemResult<Value = unknown, Metadata = unknown> {
+export interface UpdateListItemResult<Value = unknown> {
     id: string;
     name: string;
     locale: string;
     behaviour: Behaviour;
     groups: Group[];
-    metadata: Metadata;
     value: Value;
     createdAt: string;
     updatedAt: string;

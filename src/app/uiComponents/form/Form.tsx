@@ -3,8 +3,6 @@ import useNotification from '@app/systems/notifications/useNotification';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-import valueMetadataValidator from '@app/uiComponents/form/helpers/valueMetadataValidator';
-import { Alert } from '@mantine/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { AfterSaveFn, BeforeSaveFn, Bindings } from '@root/types/forms/forms';
@@ -36,7 +34,6 @@ import BaseForm from '@app/uiComponents/form/BaseForm';
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { useQueryClient } from 'react-query';
-import type { UpdateListItemResult } from '@root/types/api/list';
 import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
@@ -51,6 +48,7 @@ import { resolveBindings } from '@app/uiComponents/form/bindings/bindingResolver
 import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
 import { createImagePathsStore } from '@app/systems/stores/imagePaths';
 import { createGlobalLoadingStore } from '@app/systems/stores/globalLoading';
+import type { UnifiedStructure } from '@root/types/api/shared';
 
 interface Props<T extends FieldValues> {
     bindings: Bindings<T>;
@@ -80,17 +78,11 @@ interface Props<T extends FieldValues> {
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
     beforeFormMount?: (httpData: unknown) => unknown;
-    afterSave?: AfterSaveFn;
+    afterSave?: AfterSaveFn<UnifiedStructure>;
     form?: HTMLAttributes<HTMLFormElement>;
 }
 
-export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>({
-    formProps,
-    bindings,
-    inputs,
-    beforeSave,
-    afterSave,
-}: Props<T>) {
+export function Form<T extends FieldValues>({ formProps, bindings, inputs, beforeSave, afterSave }: Props<T>) {
     const useSpecialFields = createSpecialFields();
     const duplicateFields = useSpecialFields.getState().getDuplicateFields();
 
@@ -109,7 +101,6 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
 
     const { success: successNotification, error: errorNotification } = useNotification();
     const queryClient = useQueryClient();
-    const [beforeSaveError, setBeforeSaveError] = useState(false);
     const navigate = useNavigate();
     const [isSaving, setIsSaving] = useState(false);
 
@@ -151,12 +142,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                 return;
             }
 
-            wrappedBeforeSave<T>(value, e, beforeSave).then(async (result) => {
-                if (!valueMetadataValidator(result)) {
-                    setBeforeSaveError(true);
-                    return;
-                }
-
+            wrappedBeforeSave<T>(value, e, beforeSave).then(async () => {
                 setIsVariableExistsError(false);
                 setIsGenericUpdateError(false);
                 setIsVariableReadonly(false);
@@ -164,8 +150,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
 
                 setIsSaving(true);
 
-                if (!isUpdate && result && structureItem) {
-                    const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
+                if (!isUpdate && value && structureItem) {
+                    const { name, locale, behaviour, groups } = resolveBindings(value as T, bindings);
                     if (!name) {
                         errorNotification(
                             '\'name\' could not be determined',
@@ -174,8 +160,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         return;
                     }
 
-                    deleteBindings(result.value);
-                    removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
+                    deleteBindings(value);
+                    removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
 
                     const addFn = add?.();
                     if (!addFn) return undefined;
@@ -186,8 +172,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         variable: {
                             name: name,
                             behaviour: behaviour,
-                            value: result.value,
-                            metadata: result.metadata,
+                            value: value,
+                            metadata: undefined,
                             groups: groups,
                             locale: locale,
                         },
@@ -218,7 +204,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         );
 
                         queryClient.invalidateQueries(structureItem.id);
-                        afterSave?.(response, e);
+                        afterSave?.(response as UnifiedStructure, e);
                         setIsSaving(false);
                         if (structureItem) {
                             navigate(`${structureItem.navigationListPath}/${structureId}`);
@@ -226,8 +212,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                     }
                 }
 
-                if (isUpdate && result && structureItem && itemId) {
-                    const { name, locale, behaviour, groups } = resolveBindings(result.value as T, bindings);
+                if (isUpdate && value && structureItem && itemId) {
+                    const { name, locale, behaviour, groups } = resolveBindings(value as T, bindings);
                     if (!name) {
                         errorNotification(
                             '\'name\' could not be determined',
@@ -235,13 +221,13 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         );
                         return;
                     }
-                    deleteBindings(result.value);
+                    deleteBindings(value);
 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
 
                     const isReferenceStoreLocked = referenceStore.getState().locked;
 
-                    removeReferencesFromForm(result.value as { [key: string]: unknown }, referenceStore);
+                    removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
 
                     let fields = ['name', 'value', 'metadata'];
                     if (!isReferenceStoreLocked) {
@@ -262,8 +248,8 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
                         itemId: itemId,
                         values: {
                             name: name,
-                            value: result.value,
-                            metadata: result.metadata,
+                            value: value,
+                            metadata: undefined,
                             groups: groups,
                             behaviour: behaviour,
                             locale: locale,
@@ -300,7 +286,7 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
 
                         invalidateQuery();
                         queryClient.invalidateQueries(structureItem.id);
-                        afterSave?.(response as UpdateListItemResult<Value, Metadata>, e);
+                        afterSave?.(response as UnifiedStructure, e);
                         if (structureItem) {
                             navigate(`${structureItem.navigationListPath}/${structureId}`);
                         }
@@ -315,20 +301,6 @@ export function Form<T extends FieldValues, Value = unknown, Metadata = unknown>
 
     return (
         <div className={contentContainerStyles.root}>
-            {beforeSaveError && (
-                <Alert
-                    style={{
-                        marginBottom: '2rem',
-                    }}
-                    color="red"
-                    title="beforeSubmit() error">
-                    <>
-                        Return value of &apos;beforeSave&apos; must be in the form of type:{' '}
-                        {'value: unknown, metadata: unknown'}. Something else was returned
-                    </>
-                </Alert>
-            )}
-
             <Error title="Not found" message="This item could not be found" show={Boolean(getError)} />
             <Error title="Item exists" message="Item with this name already exists" show={isVariableExistsError} />
             <Error

@@ -1,3 +1,6 @@
+import type { UpdateListItemResult } from '@root/types/api/list';
+import type { UpdateMapItemResult } from '@root/types/api/map';
+
 export type Behaviour = 'modifiable' | 'readonly';
 export type PaginationDirection = 'asc' | 'desc';
 
@@ -26,3 +29,5 @@ export interface PaginationResult<Value, Metadata> {
     total: number;
     data: PaginatedVariableResult<Value, Metadata>[];
 }
+
+export type UnifiedStructure = UpdateListItemResult & UpdateMapItemResult;

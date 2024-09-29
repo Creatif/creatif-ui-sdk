@@ -1,5 +1,4 @@
 import { InputText, Form, Grid, Cell, File } from '../../../src';
-import css from '../realEstate/css/root.module.css';
 
 export default function ImageForm() {
     return (
