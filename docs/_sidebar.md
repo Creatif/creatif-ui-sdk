@@ -4,6 +4,7 @@
 -   [Tutorial](tutorial)
 -   [Locales](locales)
 -   [Using groups](using-groups)
+-   [Uploading files](uploading-files)
 -   [UI components](ui-components)
 -   [Using the UI](using-the-ui)
 -   [Working with configuration](working-with-configuration)
