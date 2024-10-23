@@ -5,7 +5,7 @@ You can react to events before and after a form is submitted/saved to the API. T
 
 Consider this simple form that only has one field:
 
-````typescript jsx
+```typescript jsx
 import { InputText, Form, Grid, Cell, File } from 'creatif';
 
 export default function ImageForm() {
@@ -27,7 +27,7 @@ export default function ImageForm() {
                     name: '',
                 },
             }}
-            inputs={(submitButton, {inputFile}) => (
+            inputs={(submitButton, { inputFile }) => (
                 <>
                     <Grid gap="24px">
                         <Cell span="span 6">
@@ -41,20 +41,23 @@ export default function ImageForm() {
                         </Cell>
                     </Grid>
 
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        marginTop: '3rem',
-                    }}>{submitButton}</div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: '3rem',
+                        }}>
+                        {submitButton}
+                    </div>
                 </>
             )}
         />
     );
 }
-````
+```
 
 `beforeSave` will have two parameters: `values` (which are submitted form values) and 'e' (which is Reacts syntetic event).
-`afterSave` is the same expect `values` is the response that you get after the form has been saved. 
+`afterSave` is the same expect `values` is the response that you get after the form has been saved.
 
 Both events return nothing i.e. void. You can use these events to save parts of your data to some other platform like Firebase
-or Supabase or some analytical platform. 
+or Supabase or some analytical platform.
