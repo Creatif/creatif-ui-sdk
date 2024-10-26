@@ -10,6 +10,7 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import { useEffect } from 'react';
 import { IconStackPush } from '@tabler/icons-react';
 import type { ApiError } from '@lib/http/apiError';
+import { BasicInfo } from '@app/components/BasicInfo';
 
 interface Props {
     listLength: number;
@@ -55,40 +56,48 @@ export function PublishForm({ listLength }: Props) {
     }, [error, data]);
 
     return (
-        <FormProvider {...methods}>
-            <form
-                onSubmit={handleSubmit((data) => {
-                    mutate({
-                        versionName: data.versionName,
-                    });
-                })}
-                className={styles.root}>
-                <TextInput
-                    error={
-                        (error &&
-                            error.error &&
-                            error.error.data['versionExists'] &&
-                            'Version with this name already exists') ||
-                        errors.versionName?.message
-                    }
-                    disabled={isLoading || listLength === -1}
-                    placeholder="Version name"
-                    description="Version name is not required. If you choose not give this version a name, a name will be automatically generated for you."
-                    {...register('versionName', {
-                        required: 'Version name is required',
-                    })}
-                />
+        <>
+            <BasicInfo>
+                If there are no other versions created, the only version created will be enabled by default. This is
+                true only when there are no other versions. If you have multiple version and you want to enable one of
+                them, you will have to do it manually.
+            </BasicInfo>
 
-                <div className={styles.buttonGroup}>
-                    <Button
-                        type="submit"
-                        color="green"
+            <FormProvider {...methods}>
+                <form
+                    onSubmit={handleSubmit((data) => {
+                        mutate({
+                            versionName: data.versionName,
+                        });
+                    })}
+                    className={styles.root}>
+                    <TextInput
+                        error={
+                            (error &&
+                                error.error &&
+                                error.error.data['versionExists'] &&
+                                'Version with this name already exists') ||
+                            errors.versionName?.message
+                        }
                         disabled={isLoading || listLength === -1}
-                        leftSection={isLoading ? <Loader color="gray" size={18} /> : <IconStackPush size={24} />}>
-                        {isLoading ? 'Publishing' : 'Publish'}
-                    </Button>
-                </div>
-            </form>
-        </FormProvider>
+                        placeholder="Version name"
+                        description="Version name is not required. If you choose not give this version a name, a name will be automatically generated for you."
+                        {...register('versionName', {
+                            required: 'Version name is required',
+                        })}
+                    />
+
+                    <div className={styles.buttonGroup}>
+                        <Button
+                            type="submit"
+                            color="green"
+                            disabled={isLoading || listLength === -1}
+                            leftSection={isLoading ? <Loader color="gray" size={18} /> : <IconStackPush size={24} />}>
+                            {isLoading ? 'Publishing' : 'Publish'}
+                        </Button>
+                    </div>
+                </form>
+            </FormProvider>
+        </>
     );
 }
