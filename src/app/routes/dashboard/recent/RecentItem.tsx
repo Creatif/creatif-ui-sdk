@@ -1,14 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/routes/dashboard/css/resent.module.css';
-import { IconArrowBigRightLines } from '@tabler/icons-react';
+import { IconArrowNarrowRight } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import type { Activity, ActivityTypes } from '@root/types/api/activity';
 
-export function RecentItem() {
+interface Props {
+    activity: Activity<ActivityTypes>;
+}
+
+export function RecentItem({ activity }: Props) {
     return (
-        <Link to="" className={styles.itemRoot}>
-            <p>Create an account</p>
-            <IconArrowBigRightLines />
+        <Link to={activity.data.path} className={styles.itemRoot}>
+            <p>{activity.data.title}</p>
+            <IconArrowNarrowRight />
         </Link>
     );
 }

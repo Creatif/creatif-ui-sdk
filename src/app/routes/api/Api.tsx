@@ -2,7 +2,7 @@
 // @ts-ignore
 import baseStyles from '@app/routes/api/css/base.module.css';
 import { VersionSelect } from '@app/routes/api/components/VersionSelect';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from '@mantine/core';
 import { GetByID } from '@app/routes/api/components/GetByID';
 import { initialize } from '@lib/publicApi/app/initialize';
@@ -12,6 +12,7 @@ import { GetMapItemByName } from '@app/routes/api/components/GetMapItemByName';
 import { PaginateLists } from '@app/routes/api/components/PaginateLists';
 import { useSearchParams } from 'react-router-dom';
 import { PaginateMaps } from '@app/routes/api/components/PaginateMaps';
+import { useAddActivity } from '@app/systems/activity/useAddActivity';
 
 const httpCalls = [
     {
@@ -37,11 +38,21 @@ const httpCalls = [
 ];
 
 export default function Api() {
+    const { addVisitingActivity } = useAddActivity();
     const [controlledAccordionValue, setControlledAccordionValue] = useState<string | null>('');
     const [params, setParams] = useSearchParams();
     const versionId = params.get('version');
 
     initialize(Runtime.instance.currentProjectCache.getProject().id);
+
+    useEffect(() => {
+        addVisitingActivity({
+            type: 'visit',
+            subType: 'api',
+            title: 'Viewed API',
+            path: location.pathname,
+        });
+    }, []);
 
     const items = useMemo(() => {
         if (!versionId) return null;

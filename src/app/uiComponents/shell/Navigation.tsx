@@ -24,13 +24,11 @@ export default function Navigation({ navItems, logo }: Props) {
     const structures = useMetadataStore((state) => state.structureItems);
 
     return (
-        <div className={styles.navigationGrid}>
+        <Link to={Runtime.instance.rootPath()} className={styles.navigationGrid}>
             {logo && <div className={styles.logo}>{logo}</div>}
 
             <div className={styles.project}>
-                <Link to={Runtime.instance.rootPath()} className={styles.projectLogo}>
-                    {projectName.substring(0, 2).toUpperCase()}
-                </Link>
+                <span className={styles.projectLogo}>{projectName.substring(0, 2).toUpperCase()}</span>
 
                 <div className={styles.projectEnvWithName}>
                     {projectName.length > 10 && (
@@ -153,6 +151,6 @@ export default function Navigation({ navItems, logo }: Props) {
                     Logout
                 </button>
             </nav>
-        </div>
+        </Link>
     );
 }

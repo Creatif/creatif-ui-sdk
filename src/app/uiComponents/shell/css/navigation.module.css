@@ -23,6 +23,7 @@
     min-height: 100vh;
     padding: 1rem;
     border-right: 1px solid light-dark(var(--mantine-color-white), var(--mantine-color-gray-7));
+    text-decoration: none;
 
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
 }

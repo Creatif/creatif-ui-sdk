@@ -20,7 +20,7 @@
 }
 
 .itemHeading {
-    padding: 1rem 0 1rem 1rem;
+    padding: 1rem;
 
     font-weight: bold;
     border-bottom: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-7));
