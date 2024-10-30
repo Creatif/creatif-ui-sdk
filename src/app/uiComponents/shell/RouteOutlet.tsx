@@ -11,7 +11,7 @@ interface Props {
     app: CreatifApp;
 }
 
-export default function Dashboard({ app }: Props) {
+export default function RouteOutlet({ app }: Props) {
     return (
         <div className={styles.root}>
             {app && <Navigation navItems={app.items} logo={app.logo} />}

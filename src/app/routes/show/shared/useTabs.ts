@@ -23,7 +23,7 @@ export default function useTabs(references: QueryReference[]): {
     const tabs = useMemo<Tab[]>(
         () => [
             {
-                label: 'Structure data',
+                label: 'Item data',
                 value: 'structure',
                 type: 'internal',
             },

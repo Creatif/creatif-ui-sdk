@@ -4,9 +4,10 @@ import React, { Suspense } from 'react';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { CreatifApp } from '@root/types/shell/shell';
 import { NoMatchRedirect } from '@app/uiComponents/shell/NoMatchRedirect';
+import RouteOutlet from '@app/uiComponents/shell/RouteOutlet';
 
 const AddGroup = React.lazy(() => import('@app/routes/groups/AddGroup'));
-const Dashboard = React.lazy(() => import('@app/routes/dashboard/Dashboard'));
+const Dashboard = React.lazy(() => import('@app/routes/dashboard/DashboardMain'));
 const PublishingMain = React.lazy(() => import('@app/routes/publishing/PublishingMain'));
 const Api = React.lazy(() => import('@app/routes/api/Api'));
 const ShowItem = React.lazy(() => import('@app/routes/show/Item'));
@@ -25,7 +26,15 @@ export function ShellApp({ config }: Props) {
     return (
         <Container fluid m={0} p={0}>
             <Routes>
-                <Route path="/" element={<Dashboard app={config} />}>
+                <Route path="/" element={<RouteOutlet app={config} />}>
+                    <Route
+                        path="/"
+                        element={
+                            <Suspense fallback={null}>
+                                <Dashboard />
+                            </Suspense>
+                        }
+                    />
                     <Route
                         path="groups"
                         element={

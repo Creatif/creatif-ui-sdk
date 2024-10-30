@@ -1,0 +1,23 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+    gap: 24px;
+}
+
+.heading {
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-7));
+    padding-bottom: 0.3rem;
+}
+
+.versionRoot {
+    margin-top: 4rem;
+}
+
+.versionHeading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -56,7 +56,7 @@ function GridItem({ item, structureType, onStructureRemoved }: Props) {
                 setOpenTruncateModal(false);
             },
             onSuccess() {
-                success('Success', 'Structure has been successfully truncated.');
+                success('Success', 'Item has been successfully truncated.');
                 setOpenTruncateModal(false);
             },
         },
@@ -75,7 +75,7 @@ function GridItem({ item, structureType, onStructureRemoved }: Props) {
                 setOpenDeleteModal(false);
             },
             onSuccess() {
-                success('Success', 'Structure has been successfully removed.');
+                success('Success', 'Item has been successfully removed.');
                 setOpenDeleteModal(false);
                 onStructureRemoved();
             },

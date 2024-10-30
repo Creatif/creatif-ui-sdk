@@ -45,7 +45,7 @@ export default function TruncateModal({ open, onClose, onConfirm, structureName 
 
                 <TextInput
                     className={styles.structureNameInput}
-                    label="Structure name"
+                    label="Item name"
                     value={typedName}
                     onChange={(e) => {
                         setTypedName(e.target.value);
