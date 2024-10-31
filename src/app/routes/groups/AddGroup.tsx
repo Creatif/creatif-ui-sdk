@@ -18,11 +18,8 @@ import useNotification from '@app/systems/notifications/useNotification';
 import { useEffect, useState } from 'react';
 import type { InternalGroup } from '@app/routes/groups/components/MultiSelectNoDropdown';
 import { MultiSelectNoDropdown } from '@app/routes/groups/components/MultiSelectNoDropdown';
-import { useAddActivity } from '@app/systems/activity/useAddActivity';
 
 export default function AddGroup() {
-    const { addVisitingActivity } = useAddActivity();
-
     const methods = useForm<{ groups: InternalGroup[] }>({
         defaultValues: {
             groups: [],
@@ -33,15 +30,6 @@ export default function AddGroup() {
 
     const [isFormDirty, setIsFormDirty] = useState(false);
     const { isFetching, data, error, invalidateQuery } = useGetGroups<TryResult<Group[]>>();
-
-    useEffect(() => {
-        addVisitingActivity({
-            type: 'visit',
-            subType: 'groups',
-            title: 'Viewed groups',
-            path: location.pathname,
-        });
-    }, []);
 
     const {
         isLoading,

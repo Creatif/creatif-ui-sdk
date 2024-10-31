@@ -15,7 +15,6 @@ import type { DashboardStat, DashboardStructure, DashboardVersion } from '@root/
 import { getDashboardStats } from '@lib/api/stats/dashboard';
 import { Runtime } from '@app/systems/runtime/Runtime';
 
-import { ResentMain } from '@app/routes/dashboard/recent/RecentMain';
 import classNames from 'classnames';
 import { Main as StructureMain } from '@app/routes/dashboard/structures/Main';
 import { Main as VersionMain } from '@app/routes/dashboard/versions/Main';
@@ -52,8 +51,6 @@ export default function DashboardMain() {
                 <StructureMain listStructures={listStructures} mapStructures={mapStructures} error={error} />
                 <VersionMain versions={versions} />
             </div>
-
-            <ResentMain />
         </div>
     );
 }
