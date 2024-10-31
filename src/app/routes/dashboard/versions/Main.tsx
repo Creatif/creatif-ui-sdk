@@ -17,9 +17,9 @@ export function Main({ versions }: Props) {
                 VERSIONS <PublishButton />
             </h1>
 
-            {versions.map((s) => (
-                <Item key={s.id} version={s} />
-            ))}
+            {versions.length !== 0 && versions.map((s) => <Item key={s.id} version={s} />)}
+
+            {versions.length === 0 && <p>No versions to show</p>}
         </div>
     );
 }
