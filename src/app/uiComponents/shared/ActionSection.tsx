@@ -18,6 +18,7 @@ import styles from './css/ActionSection.module.css';
 import type { Behaviour } from '@root/types/api/shared';
 import type { CurrentSortType } from '@root/types/components/components';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import classNames from 'classnames';
 interface Props {
     onSearch: (text: string) => void;
     onSelectedGroups: (groups: string[]) => void;
@@ -75,7 +76,7 @@ export default function ActionSection({
                     </div>
                 )}
 
-                <div className={styles.paddingSection}>
+                <div className={classNames(styles.paddingSection, styles.actionSection)}>
                     <div className={styles.leftMenu}>
                         <TextInput
                             styles={{
@@ -85,7 +86,6 @@ export default function ActionSection({
                             value={value}
                             onChange={(e) => setValue(e.currentTarget.value)}
                             placeholder="Search"
-                            leftSection={<IconSearch size={16} />}
                         />
 
                         <Button
