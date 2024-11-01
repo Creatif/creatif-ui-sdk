@@ -1,6 +1,5 @@
 .root {
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
     gap: 1rem;
 }
@@ -27,7 +26,7 @@
 }
 
 .formWrapper {
-    width: 60%;
+    width: 50%;
 }
 
 .form {
@@ -35,4 +34,18 @@
     justify-content: flex-start;
     flex-direction: column;
     gap: 2rem;
+}
+
+@media screen and (max-width: 590px) {
+    .root {
+        flex-direction: column-reverse;
+    }
+
+    .info {
+        width: 100%;
+    }
+
+    .formWrapper {
+        width: 100%;
+    }
 }

@@ -145,7 +145,7 @@ export function MultiSelectNoDropdown({ isLoading, error, name, currentValues, l
                                 error={error}
                                 onClick={() => combobox.openDropdown()}>
                                 <Pill.Group>
-                                    {renderedValues}`
+                                    {renderedValues}
                                     <Combobox.EventsTarget>
                                         <PillsInput.Field
                                             onFocus={() => combobox.openDropdown()}
