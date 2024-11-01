@@ -17,7 +17,7 @@ export default function RouteOutlet({ app }: Props) {
             {app && <Navigation navItems={app.items} logo={app.logo} />}
 
             <div>
-                <Header />
+                <Header navItems={app.items} />
 
                 <div className={styles.content}>{<Outlet />}</div>
             </div>

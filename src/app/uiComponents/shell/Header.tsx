@@ -9,6 +9,13 @@ import type { Locale } from '@lib/api/project/types/SupportedLocales';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { PublishButton } from '@app/uiComponents/shell/PublishButton';
 import { ThemeChange } from '@app/uiComponents/shell/ThemeChange';
+import { ResponsiveMenuButtonDrawer } from '@app/uiComponents/shell/ResponsiveMenuButtonDrawer';
+import type { AppShellItem } from '@root/types/shell/shell';
+
+interface Props {
+    navItems: AppShellItem[];
+}
+
 function localesToSelectOptions(data: Locale[] | undefined) {
     if (!data) return [];
 
@@ -17,7 +24,8 @@ function localesToSelectOptions(data: Locale[] | undefined) {
         label: `${item.name} - ${item.alpha}`,
     }));
 }
-export default function Header() {
+
+export default function Header({ navItems }: Props) {
     const { info } = useNotification();
 
     const [locales, setLocales] = useState<Locale[] | undefined>(undefined);
@@ -31,6 +39,8 @@ export default function Header() {
     return (
         <header className={styles.header}>
             <div className={styles.contentWrapper}>
+                <ResponsiveMenuButtonDrawer navItems={navItems} />
+
                 <div className={styles.actionRoot}>
                     <div>
                         <Select
@@ -66,9 +76,11 @@ export default function Header() {
                         </span>
                     </div>
 
-                    <PublishButton />
+                    <div className={styles.publishButtonAndTheme}>
+                        <PublishButton />
 
-                    <ThemeChange />
+                        <ThemeChange />
+                    </div>
                 </div>
             </div>
 

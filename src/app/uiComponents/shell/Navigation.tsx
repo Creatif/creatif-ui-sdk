@@ -16,18 +16,27 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 interface Props {
     logo?: React.ReactNode;
     navItems: AppShellItem[];
+    displayBlockWhenMobile?: boolean;
 }
 
-export default function Navigation({ navItems, logo }: Props) {
+export default function Navigation({ navItems, logo, displayBlockWhenMobile = false }: Props) {
     const projectName = Runtime.instance.currentProjectCache.getProject().name;
     const useMetadataStore = getProjectMetadataStore();
     const structures = useMetadataStore((state) => state.structureItems);
 
     return (
-        <Link to={Runtime.instance.rootPath()} className={styles.navigationGrid}>
-            {logo && <div className={styles.logo}>{logo}</div>}
+        <div
+            className={classNames(
+                styles.navigationGrid,
+                displayBlockWhenMobile ? styles.hardDisplayBlockWhenInMobile : undefined,
+            )}>
+            {logo && (
+                <Link to={Runtime.instance.rootPath()} className={styles.logo}>
+                    {logo}
+                </Link>
+            )}
 
-            <div className={styles.project}>
+            <Link to={Runtime.instance.rootPath()} className={styles.project}>
                 <span className={styles.projectLogo}>{projectName.substring(0, 2).toUpperCase()}</span>
 
                 <div className={styles.projectEnvWithName}>
@@ -39,7 +48,7 @@ export default function Navigation({ navItems, logo }: Props) {
 
                     {projectName.length < 10 && <p className={styles.projectName}>{projectName}</p>}
                 </div>
-            </div>
+            </Link>
 
             <nav className={styles.root}>
                 {structures.map((item, index) => {
@@ -151,6 +160,6 @@ export default function Navigation({ navItems, logo }: Props) {
                     Logout
                 </button>
             </nav>
-        </Link>
+        </div>
     );
 }

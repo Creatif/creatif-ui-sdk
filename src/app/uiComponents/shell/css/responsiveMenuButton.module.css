@@ -1,0 +1,21 @@
+.root {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+
+    padding: 0.4rem;
+    gap: 8px;
+
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.icon {
+    margin-bottom: 33px;
+}
+
+@media screen and (min-width: 1024px) {
+    .root  {
+        display: none;
+    }
+}

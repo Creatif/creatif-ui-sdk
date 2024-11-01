@@ -1,6 +1,6 @@
 .container {
     display: grid;
-    grid-template-columns: 120px 1fr 100px 100px 1fr 1fr 1fr;
+    grid-template-columns: 120px 140px 100px 100px 1fr 1fr 1fr;
     align-items: center;
     gap: 0.5rem;
 
@@ -18,8 +18,10 @@
 }
 
 .nameRowTitle {
+    width: 140px;
     line-height: 1.3rem;
     font-size: 0.9rem;
+    word-break: break-word;
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
 }
 

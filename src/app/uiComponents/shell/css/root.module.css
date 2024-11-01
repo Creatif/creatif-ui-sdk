@@ -1,8 +1,14 @@
 .root {
-    display: grid;
-    grid-template-columns: 240px 1fr;
+    display: block;
 
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
+}
+
+@media screen and (min-width: 1024px) {
+    .root  {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+    }
 }
 
 .content {

@@ -19,13 +19,21 @@
     background-color: var(--mantine-primary-color-filled);
 }
 
+.logo {
+    text-decoration: none;
+}
+
 .navigationGrid {
     min-height: 100vh;
     padding: 1rem;
-    border-right: 1px solid light-dark(var(--mantine-color-white), var(--mantine-color-gray-7));
+    border-right: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
     text-decoration: none;
 
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-gray-9));
+}
+
+.hardDisplayBlockWhenInMobile {
+    display: block !important;
 }
 
 .innerFlex {
@@ -79,6 +87,7 @@
     display: flex;
     justify-content: flex-start;
     gap: 1rem;
+    text-decoration: none;
 
     margin-top: 2rem;
 }
@@ -199,4 +208,10 @@
 }
 
 .appMenuDropdownButton {
+}
+
+@media screen and (max-width: 1024px) {
+    .navigationGrid  {
+        display: none;
+    }
 }
