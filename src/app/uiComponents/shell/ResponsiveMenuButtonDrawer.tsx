@@ -21,6 +21,9 @@ export function ResponsiveMenuButtonDrawer({ navItems }: Props) {
             </button>
 
             <Drawer
+                size="xl"
+                closeOnEscape={true}
+                closeOnClickOutside={true}
                 styles={{
                     body: {
                         padding: '0px',

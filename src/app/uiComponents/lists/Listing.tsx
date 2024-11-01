@@ -32,6 +32,7 @@ import gridStyles from '@app/uiComponents/lists/css/listGrid.module.css';
 import { Item as GridItem } from '@app/uiComponents/lists/gridItem/Item';
 import classNames from 'classnames';
 import type { ApiError } from '@lib/http/apiError';
+import { createContentResizeEvent } from '@app/systems/listingResize/contentResizeEvent';
 
 export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
     page: number;
@@ -64,6 +65,17 @@ function resolveListing<Value, Metadata>(
 }
 
 export default function Listing<Value, Metadata>() {
+    /**
+     * Checkout app/systems/listingResize for more information.
+     *
+     * This is where this listing gets its size based on the content div two divs above this one. That div
+     * has a constant width, so width is observed from it and then observed here. The size is
+     * then calculated contentSize - 50 in pixels. That way I can make the listing responsive and that it
+     * has an overflow.
+     */
+    const useContentResizeStore = createContentResizeEvent(1280);
+    const contentSize = useContentResizeStore((state) => state.size);
+
     const { queryParams, setParam } = useSearchQuery();
     const { structureId, structureType } = useParams();
     const structureItem = getProjectMetadataStore()
@@ -244,7 +256,12 @@ export default function Listing<Value, Metadata>() {
                         </div>
                     )}
 
-                    <div className={gridStyles.root}>
+                    <div
+                        className={gridStyles.root}
+                        style={{
+                            width: `${contentSize - 50}px`,
+                            overflow: 'scroll',
+                        }}>
                         <div className={gridStyles.columnGrid}>
                             <div className={classNames(gridStyles.column, gridStyles.checkboxColumn)}>
                                 <div className={gridStyles.flexPlaceholder} />
