@@ -5,7 +5,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-    .root  {
+    .root {
         display: grid;
         grid-template-columns: 240px 1fr;
     }

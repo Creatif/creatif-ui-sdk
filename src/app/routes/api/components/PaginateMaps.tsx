@@ -61,6 +61,7 @@ export function PaginateMaps({ versionName }: Props) {
                     versionName: versionName,
                     structureName: structureData.name,
                     page: 1,
+                    limit: 100,
                     search: search,
                     orderBy: sortField,
                     orderDirection: selectedDirection,
@@ -161,6 +162,7 @@ export function PaginateMaps({ versionName }: Props) {
                         versionName={versionName}
                         curlBlueprint={{
                             page: 1,
+                            limit: 100,
                             structureName: structureData.name,
                             locales: [selectedLocale],
                             orderDirection: selectedDirection,

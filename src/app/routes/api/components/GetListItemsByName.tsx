@@ -10,7 +10,6 @@ import type { StructureType } from '@root/types/shell/shell';
 import { useQuery } from 'react-query';
 import { getListItemsByName } from '@lib/publicApi/app/lists/getListItemsByName';
 import UIError from '@app/components/UIError';
-import { IconInfoCircle } from '@tabler/icons-react';
 import { Result } from '@app/routes/api/components/Result';
 
 interface Props {

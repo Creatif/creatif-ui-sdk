@@ -211,7 +211,7 @@
 }
 
 @media screen and (max-width: 1024px) {
-    .navigationGrid  {
+    .navigationGrid {
         display: none;
     }
 }

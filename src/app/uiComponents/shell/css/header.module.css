@@ -41,7 +41,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-    .contentWrapper  {
+    .contentWrapper {
         justify-content: flex-end;
         flex-direction: row;
         align-items: center;
@@ -49,14 +49,14 @@
 }
 
 @media screen and (min-width: 534px) {
-    .contentWrapper  {
+    .contentWrapper {
         flex-direction: row;
         align-items: center;
     }
 }
 
 @media screen and (min-width: 534px) {
-    .actionRoot  {
+    .actionRoot {
         width: 440px;
         display: flex;
         flex-direction: row;
@@ -66,7 +66,7 @@
 }
 
 @media screen and (max-width: 534px) {
-    .publishButtonAndTheme a:first-of-type  {
+    .publishButtonAndTheme a:first-of-type {
         flex-grow: 2;
     }
 }

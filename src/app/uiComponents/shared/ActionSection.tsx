@@ -7,7 +7,6 @@ import {
     IconLanguage,
     IconReplace,
     IconRouteSquare2,
-    IconSearch,
     IconSortAscending,
     IconSortDescending,
 } from '@tabler/icons-react';

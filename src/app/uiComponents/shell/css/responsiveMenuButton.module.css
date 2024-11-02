@@ -15,7 +15,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-    .root  {
+    .root {
         display: none;
     }
 }

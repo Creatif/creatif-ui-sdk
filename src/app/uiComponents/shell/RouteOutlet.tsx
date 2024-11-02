@@ -4,7 +4,7 @@ import styles from '@app/uiComponents/shell/css/root.module.css';
 import Navigation from '@app/uiComponents/shell/Navigation';
 import Header from '@app/uiComponents/shell/Header';
 import { Outlet } from 'react-router-dom';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import type { CreatifApp } from '@root/types/shell/shell';
 import { useSendResizeEvents } from '@app/systems/listingResize/useSendResizeEvents';
 

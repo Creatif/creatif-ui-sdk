@@ -43,6 +43,7 @@ function constructUrl(
         const b = blueprint as PaginateListItems;
         return `${Runtime.instance.baseUrl()}${Routes.GET_LIST_ITEMS}/${b.structureName}${queryConstructor(
             1,
+            100,
             b.groups,
             b.orderBy,
             b.orderDirection,
@@ -55,6 +56,7 @@ function constructUrl(
         const b = blueprint as PaginateMapItems;
         return `${Runtime.instance.baseUrl()}${Routes.GET_MAP_ITEMS}/${b.structureName}${queryConstructor(
             1,
+            100,
             b.groups,
             b.orderBy,
             b.orderDirection,
