@@ -13,7 +13,7 @@ interface Props {
 export function Node({ node: { children, level, type } }: Props) {
     return (
         <div
-            className={classNames(styles.root, type === 'object' ? styles.nodeRoot : undefined)}
+            className={classNames(styles.root, styles.nodeRoot, type === 'object' ? styles.nodeRootObject : undefined)}
             style={{
                 marginLeft: `${level * 8}px`,
             }}>

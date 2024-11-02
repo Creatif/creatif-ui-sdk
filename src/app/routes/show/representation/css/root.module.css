@@ -9,6 +9,9 @@
 
 .nodeRoot {
     width: 100%;
+}
+
+.nodeRootObject {
     border: 1px solid light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-7));
     border-radius: 4px;
     margin-bottom: 1rem;
