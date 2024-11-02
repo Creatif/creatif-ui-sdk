@@ -155,6 +155,7 @@ export function PaginateLists({ versionName }: Props) {
                         versionName={versionName}
                         curlBlueprint={{
                             page: 1,
+                            limit: 100,
                             structureName: structureData.name,
                             locales: [selectedLocale],
                             orderDirection: selectedDirection,
