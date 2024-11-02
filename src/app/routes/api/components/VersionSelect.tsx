@@ -54,8 +54,6 @@ export function VersionSelect({ onVersionChange, currentVersion }: Props) {
             value: item.name,
         }));
 
-    console.log(selectData);
-
     return (
         <Select
             onChange={(item) => {

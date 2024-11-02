@@ -25,7 +25,6 @@ export function createImagePathsStore() {
         removePath(toRemove: string) {
             const current = get();
             const newPaths: string[] = [];
-            //console.log('Current: ', toRemove, current.paths);
             for (const curr of current.paths) {
                 if (curr !== toRemove) {
                     newPaths.push(curr);
