@@ -10,6 +10,7 @@ export async function paginateMapItems<Value>(blueprint: PaginateMapItems): Prom
         'get',
         `${Routes.GET_MAP_ITEMS}/${blueprint.structureName}${queryConstructor(
             blueprint.page,
+            blueprint.limit,
             blueprint.groups,
             blueprint.orderBy,
             blueprint.orderDirection,

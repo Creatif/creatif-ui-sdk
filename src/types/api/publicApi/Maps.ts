@@ -38,6 +38,7 @@ export interface PaginateMapItems {
     structureName: string;
     versionName?: string;
     page: number;
+    limit: 100;
     search: string;
     orderBy: OrderBy;
     orderDirection: OrderDirection;

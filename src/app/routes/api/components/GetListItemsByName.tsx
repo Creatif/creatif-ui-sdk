@@ -62,7 +62,6 @@ export function GetListItemsByName({ versionName }: Props) {
     return (
         <div className={styles.root}>
             <div className={styles.sectionDescription}>
-                <IconInfoCircle size="64px" color="var(--mantine-color-indigo-3)" />
                 <p>
                     If you select the list item from the dropdown, that item will be fetched. If you don&apos;t and just
                     type in the name of your item, all list items with that name will be fetched. If you also select a

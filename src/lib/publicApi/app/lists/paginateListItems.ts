@@ -10,6 +10,7 @@ export async function paginateListItems<Value>(blueprint: PaginateListItems): Pr
         'get',
         `${Routes.GET_LIST_ITEMS}/${blueprint.structureName}${queryConstructor(
             blueprint.page,
+            blueprint.limit,
             blueprint.groups,
             blueprint.orderBy,
             blueprint.orderDirection,

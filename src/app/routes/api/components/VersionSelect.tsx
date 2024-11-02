@@ -46,29 +46,31 @@ export function VersionSelect({ onVersionChange, currentVersion }: Props) {
         }
     }, [isFetching, data]);
 
+    const selectData =
+        data &&
+        data.result &&
+        data.result.map((item) => ({
+            label: `${item.isProductionVersion ? item.name + ' (in production)' : item.name}`,
+            value: item.name,
+        }));
+
+    console.log(selectData);
+
     return (
         <Select
             onChange={(item) => {
                 if (currentVersion === item) return;
 
-                setSelectedVersion(item || '');
-                onVersionChange(item || '');
+                setSelectedVersion(item || currentVersion || '');
+                onVersionChange(item || currentVersion || '');
             }}
-            defaultValue={currentVersion}
             error={componentError}
             description="Select a version to use to make API requests"
             value={selectedVersion}
             disabled={isFetching}
             label="Versions"
             placeholder="Select a version"
-            data={
-                data &&
-                data.result &&
-                data.result.map((item) => ({
-                    label: `${item.isProductionVersion ? item.name + ' (in production)' : item.name}`,
-                    value: item.name,
-                }))
-            }
+            data={selectData}
         />
     );
 }

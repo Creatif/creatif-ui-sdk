@@ -23,8 +23,6 @@ export function GetByID({ versionName }: Props) {
     const [id, setId] = useState<string>('');
     const [structureData, setStructureData] = useState<{ name: string; type: StructureType }>();
 
-    console.log(structureData);
-
     const [isValueOnly, setIsValueOnly] = useState(false);
 
     const { data, error } = useQuery<ListItem<unknown> | MapItem<unknown> | undefined, ApiError>(

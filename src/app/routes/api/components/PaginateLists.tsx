@@ -58,6 +58,7 @@ export function PaginateLists({ versionName }: Props) {
                     versionName: versionName,
                     structureName: structureData.name,
                     page: 1,
+                    limit: 100,
                     search: search,
                     orderBy: sortField,
                     orderDirection: selectedDirection,
