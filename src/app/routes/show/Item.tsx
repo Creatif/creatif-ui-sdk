@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import UIError from '@app/components/UIError';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/routes/show/css/item.module.css';
 import { ActionIcon, Tabs } from '@mantine/core';
-import {
-    IconChevronDown,
-    IconChevronRight,
-    IconClock,
-    IconEdit,
-    IconLanguage,
-    IconRoute,
-    IconTrash,
-} from '@tabler/icons-react';
+import { IconClock, IconEdit, IconLanguage, IconRoute, IconTrash } from '@tabler/icons-react';
 import appDate from '@lib/helpers/appDate';
 import Loading from '@app/components/Loading';
-import type { Column } from '@lib/helpers/useValueFields';
-import useValueFields from '@lib/helpers/useValueFields';
 import classNames from 'classnames';
 import useTabs from '@app/routes/show/shared/useTabs';
 import StructureItem from '@app/routes/show/shared/StructureItem';
@@ -29,54 +19,8 @@ import { EditLocaleWrapperModal } from '@app/routes/show/modals/EditLocaleWrappe
 import { EditGroupsWrapperModal } from '@app/routes/show/modals/EditGroupsWrapperModal';
 import { DeleteItemWrapperModal } from '@app/routes/show/modals/DeleteItemWrapperModal';
 import { Runtime } from '@app/systems/runtime/Runtime';
-
-function ColumnValue({ values, isInnerRow }: { values: Column[] | Column; isInnerRow: boolean }) {
-    const [isInnerExpanded, setIsInnerExpanded] = useState(false);
-    const toggleChevron = isInnerExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />;
-
-    return (
-        <div className={isInnerRow ? styles.columnSpacing : undefined}>
-            {Array.isArray(values) &&
-                values.map((item, i) => {
-                    const isNextInnerColumn = values[i].innerColumn;
-
-                    return (
-                        <React.Fragment key={i}>
-                            {item.column && (
-                                <div
-                                    className={classNames(
-                                        styles.row,
-                                        isNextInnerColumn ? styles.hasExpandableRow : undefined,
-                                    )}>
-                                    <h2
-                                        onClick={() => {
-                                            if (isNextInnerColumn) {
-                                                setIsInnerExpanded((item) => !item);
-                                            }
-                                        }}
-                                        className={isNextInnerColumn ? styles.expandableHeader : undefined}>
-                                        {item.column} {isNextInnerColumn && toggleChevron}
-                                    </h2>
-                                    <div className={styles.textValue}>{item.value}</div>
-                                </div>
-                            )}
-
-                            {item.innerColumn && !Array.isArray(item.innerColumn) && isInnerExpanded && (
-                                <ColumnValue values={item.innerColumn} isInnerRow={true} />
-                            )}
-
-                            {item.innerColumn &&
-                                Array.isArray(item.innerColumn) &&
-                                isInnerExpanded &&
-                                item.innerColumn.map((inner, idx) => (
-                                    <ColumnValue key={idx} values={inner} isInnerRow={true} />
-                                ))}
-                        </React.Fragment>
-                    );
-                })}
-        </div>
-    );
-}
+import { treeBuilder } from '@app/routes/show/representation/treeBuilder';
+import { Root } from '@app/routes/show/representation/Root';
 
 export default function Item() {
     const { structureId, itemId, structureType } = useParams();
@@ -93,7 +37,7 @@ export default function Item() {
     const [internalResult, setInternalResult] = useState(data?.result);
 
     const { tabs, onChange, selected } = useTabs((internalResult && internalResult.references) || []);
-    const values = useValueFields(internalResult?.value);
+    const values = useMemo(() => treeBuilder(internalResult?.value as object[]), [internalResult?.value]);
 
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
@@ -168,7 +112,7 @@ export default function Item() {
                                             )}
                                             {t.value === 'yourData' && values && (
                                                 <div className={styles.contentGrid}>
-                                                    <ColumnValue values={values} isInnerRow={false} />
+                                                    <Root root={values} />
                                                 </div>
                                             )}
 

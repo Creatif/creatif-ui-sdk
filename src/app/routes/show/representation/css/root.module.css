@@ -1,0 +1,53 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.nodeRoot {
+    border: 1px solid light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-7));
+    border-radius: 4px;
+    margin-bottom: 1rem;
+
+    padding: 1rem;
+}
+
+.item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.expandable {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.expandIcon {
+    margin-top: 4px;
+}
+
+.nodeRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stringValue {
+    line-height: 1.6rem;
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
+}
+
+.numberValue {
+    line-height: 1.6rem;
+    color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
+    border-radius: 8px;
+    border: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
+}
