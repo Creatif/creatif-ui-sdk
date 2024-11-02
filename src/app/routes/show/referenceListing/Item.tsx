@@ -17,7 +17,7 @@ interface Props<Value, Metadata> {
 export default function Item<Value, Metadata>({ item, structureItem, isHovered }: Props<Value, Metadata>) {
     return (
         <Link
-            to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}`}
+            to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}?activeTab=structure`}
             className={classNames(styles.item, isHovered ? styles.hovered : undefined)}>
             <div className={styles.visibleSectionWrapper}>
                 <div className={styles.infoColumn}>
