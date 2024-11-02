@@ -1,4 +1,4 @@
-import type { Node as NodeType } from '@app/routes/show/representation/treeBuilder';
+import type { TreeBuilderNode } from '@app/routes/show/representation/treeBuilder';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/routes/show/representation/css/root.module.css';
@@ -7,16 +7,15 @@ import React from 'react';
 import classNames from 'classnames';
 
 interface Props {
-    node: NodeType;
+    node: TreeBuilderNode;
 }
 
-export function Node({ node: { children, level, name, type } }: Props) {
-    console.log(name);
+export function Node({ node: { children, level, type } }: Props) {
     return (
         <div
             className={classNames(styles.root, type === 'object' ? styles.nodeRoot : undefined)}
             style={{
-                marginLeft: `${level * 24}px`,
+                marginLeft: `${level * 8}px`,
             }}>
             {children?.map((child, idx) => {
                 if (child.type === 'string') {

@@ -37,7 +37,75 @@ export default function Item() {
     const [internalResult, setInternalResult] = useState(data?.result);
 
     const { tabs, onChange, selected } = useTabs((internalResult && internalResult.references) || []);
-    const values = useMemo(() => treeBuilder(internalResult?.value as object[]), [internalResult?.value]);
+    console.log(internalResult?.value);
+    const values = useMemo(
+        () =>
+            treeBuilder({
+                name: 'name',
+                lastName: 'lastName',
+                number: 8,
+                boolean: true,
+                booleanFalse: false,
+                array: [
+                    {
+                        name: 'name',
+                        lastName: 'lastName',
+                        number: 8,
+                        boolean: true,
+                        booleanFalse: false,
+                    },
+                ],
+                obj: {
+                    name: 'name',
+                    lastName: 'lastName',
+                    number: 8,
+                    boolean: true,
+                    booleanFalse: false,
+                    array: [
+                        {
+                            name: 'name',
+                            lastName: 'lastName',
+                            number: 8,
+                            boolean: true,
+                            array: [
+                                {
+                                    name: 'name',
+                                    lastName: 'lastName',
+                                    number: 8,
+                                    boolean: true,
+                                    booleanFalse: false,
+                                },
+                                {
+                                    name: 'name',
+                                    lastName: 'lastName',
+                                    number: 8,
+                                    boolean: true,
+                                    booleanFalse: false,
+                                },
+                            ],
+                            booleanFalse: false,
+                            obj: {
+                                name: 'name',
+                                lastName: 'lastName',
+                                number: 8,
+                                boolean: true,
+                                booleanFalse: false,
+                            },
+                        },
+                        {
+                            name: 'name',
+                            lastName: 'lastName',
+                            number: 8,
+                            boolean: true,
+                            booleanFalse: false,
+                        },
+                    ],
+                },
+            } as object),
+        [internalResult?.value],
+    );
+
+    console.log(values);
 
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);

@@ -1,26 +1,23 @@
-import type { Root } from '@app/routes/show/representation/treeBuilder';
+import type { TreeBuilderRoot } from '@app/routes/show/representation/treeBuilder';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/routes/show/representation/css/root.module.css';
-import { Node } from '@app/routes/show/representation/Node';
 import { Badge } from '@mantine/core';
-import React, { useState } from 'react';
-import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import React from 'react';
+import { Expandable } from '@app/routes/show/representation/Expandable';
 
 interface Props {
-    root: Root;
+    root: TreeBuilderRoot;
 }
 
-export function Root({ root: { children, level } }: Props) {
-    const [expand, setExpand] = useState(false);
-
+export function Root({ root }: Props) {
     return (
         <div
             className={styles.root}
             style={{
-                paddingLeft: `${level * 24}px`,
+                paddingLeft: `${root.level * 24}px`,
             }}>
-            {children.map((child, idx) => {
+            {root.children.map((child, idx) => {
                 if (child.type === 'string') {
                     return (
                         <div key={idx} className={styles.item}>
@@ -51,23 +48,11 @@ export function Root({ root: { children, level } }: Props) {
                 }
 
                 if (child.type === 'array') {
-                    return (
-                        <div onClick={() => setExpand((e) => !e)} key={idx}>
-                            <span
-                                className={styles.expandable}
-                                style={{
-                                    marginBottom: `${expand ? '1rem' : 0}`,
-                                }}>
-                                {child.name}{' '}
-                                {expand ? (
-                                    <IconChevronDown className={styles.expandIcon} size={16} />
-                                ) : (
-                                    <IconChevronRight className={styles.expandIcon} size={16} />
-                                )}{' '}
-                            </span>
-                            {expand && <Node key={idx} node={child} />}
-                        </div>
-                    );
+                    return <Expandable key={idx} child={child} />;
+                }
+
+                if (child.type === 'object') {
+                    return <Expandable key={idx} child={child} />;
                 }
 
                 return null;

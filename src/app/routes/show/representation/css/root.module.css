@@ -1,4 +1,5 @@
 .root {
+    width: 60%;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -7,6 +8,7 @@
 }
 
 .nodeRoot {
+    width: 100%;
     border: 1px solid light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-7));
     border-radius: 4px;
     margin-bottom: 1rem;
@@ -20,6 +22,10 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+}
+
+.expandableRoot {
+    width: 100%;
 }
 
 .expandable {
@@ -50,4 +56,10 @@
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
     border-radius: 8px;
     border: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
+}
+
+@media screen and (max-width: 920px) {
+    .root {
+        width: 100%;
+    }
 }

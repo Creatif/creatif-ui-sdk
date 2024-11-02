@@ -1,19 +1,19 @@
 type nodeType = 'root' | 'boolean' | 'array' | 'object' | 'string' | 'number';
 
-export interface Node {
+export interface TreeBuilderNode {
     name: string;
     data: unknown;
     type: nodeType;
     isExpandable?: boolean;
     level: number;
     child: unknown | null;
-    children: Node[] | null;
+    children: TreeBuilderNode[] | null;
 }
 
-export interface Root {
+export interface TreeBuilderRoot {
     type: 'root';
     level: number;
-    children: Node[];
+    children: TreeBuilderNode[];
 }
 
 function newNode(name: string, data: unknown, type: nodeType, level: number) {
@@ -31,8 +31,8 @@ function isFloat(n: unknown) {
     return Number(n) === n && n % 1 !== 0;
 }
 
-export function treeBuilder(values: object[] | undefined): Root {
-    const root: Root = {
+export function treeBuilder(values: object | undefined): TreeBuilderRoot {
+    const root: TreeBuilderRoot = {
         type: 'root',
         children: [],
         level: 0,
@@ -68,7 +68,7 @@ export function treeBuilder(values: object[] | undefined): Root {
 
         if (typeof value === 'object' && !Array.isArray(value)) {
             root.children.push(
-                recursiveTreeBuilder(newNode(name, value, 'array', root.level), 'array', root.level + 1),
+                recursiveTreeBuilder(newNode(name, value, 'object', root.level), 'object', root.level + 1),
             );
         }
     }
@@ -76,7 +76,7 @@ export function treeBuilder(values: object[] | undefined): Root {
     return root;
 }
 
-function recursiveTreeBuilder(parent: Node, nodeType: nodeType, level: number): Node {
+function recursiveTreeBuilder(parent: TreeBuilderNode, nodeType: nodeType, level: number): TreeBuilderNode {
     if (nodeType === 'array' && Array.isArray(parent.data)) {
         parent.children = [];
         for (const column of parent.data) {
@@ -93,14 +93,12 @@ function recursiveTreeBuilder(parent: Node, nodeType: nodeType, level: number): 
             }
 
             if (typeof column === 'object' && !Array.isArray(column)) {
-                console.log('is object: ', parent.name, column, level);
                 parent.children.push(
                     recursiveTreeBuilder(newNode(parent.name, column, 'object', level + 1), 'object', level + 1),
                 );
             }
 
             if (Array.isArray(column)) {
-                console.log('is array: ', parent.name, column, level);
                 parent.children.push(
                     recursiveTreeBuilder(newNode(parent.name, column, 'array', level + 1), 'array', level + 1),
                 );
