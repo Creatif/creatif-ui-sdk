@@ -45,6 +45,7 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
     );
 
     useEffect(() => {
+        onPublishInProgress(false);
         if (error && error.error.data['versionExists']) return;
 
         if (error) {
@@ -58,12 +59,25 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
         }
     }, [error, data]);
 
+    let errorMessage = undefined;
+    if (error && error.error && error.error.data['versionExists']) {
+        errorMessage = 'Version with this name already exists';
+    }
+
+    if (listLength >= 10) {
+        errorMessage = 'You can create up to 10 versions';
+    }
+
+    if (errors.versionName?.message) {
+        errorMessage = errors.versionName.message;
+    }
+
     return (
         <>
             <BasicInfo>
                 In Creatif, any version can be used. The default up to date version is used when you don&apos;t specify
                 what version you want to use with <span className={styles.highlightInfoText}>X-Creatif-Version</span>{' '}
-                header
+                header. You can create up to 10 versions
                 <Tip />
             </BasicInfo>
 
@@ -77,14 +91,8 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
                     })}
                     className={styles.root}>
                     <TextInput
-                        error={
-                            (error &&
-                                error.error &&
-                                error.error.data['versionExists'] &&
-                                'Version with this name already exists') ||
-                            errors.versionName?.message
-                        }
-                        disabled={isLoading || listLength === -1 || isUpdateInProgress}
+                        error={errorMessage}
+                        disabled={isLoading || listLength === -1 || listLength >= 10 || isUpdateInProgress}
                         placeholder="Version name"
                         {...register('versionName', {
                             required: 'Version name is required',
@@ -95,7 +103,7 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
                         <Button
                             type="submit"
                             color="green"
-                            disabled={isLoading || listLength === -1 || isUpdateInProgress}
+                            disabled={isLoading || listLength === -1 || listLength >= 10 || isUpdateInProgress}
                             leftSection={isLoading ? <Loader color="gray" size={18} /> : <IconStackPush size={24} />}>
                             {isLoading ? 'Publishing' : 'Publish'}
                         </Button>

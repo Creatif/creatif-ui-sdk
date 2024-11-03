@@ -108,7 +108,7 @@ export function VersionList({ onListLength, isPublishInProgress, onUpdateInProgr
                             <div>
                                 {results.map((item) => (
                                     <Item
-                                        isUpdateInProgress={isUpdateInProgress}
+                                        isUpdateInProgress={isUpdateInProgress || isPublishInProgress}
                                         onUpdateInProgress={(isInProgress) => setIsUpdateInProgress(isInProgress)}
                                         key={item.id}
                                         version={item}
