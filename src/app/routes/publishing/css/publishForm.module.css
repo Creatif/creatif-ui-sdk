@@ -1,5 +1,11 @@
 .root {
-    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.formRoot {
+    width: 100%;
     margin-top: 2rem;
 }
 
@@ -13,4 +19,11 @@
 
 .highlightInfoText {
     font-weight: bold;
+}
+
+@media screen and (min-width: 520px) {
+    .root {
+        flex-direction: row-reverse;
+        gap: 4rem;
+    }
 }

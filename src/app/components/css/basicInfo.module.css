@@ -1,5 +1,5 @@
 .root {
-    width: 50%;
+    width: 100%;
     line-height: 1.5rem;
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
     word-break: break-word;

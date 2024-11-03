@@ -73,7 +73,7 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
     }
 
     return (
-        <>
+        <div className={styles.root}>
             <BasicInfo>
                 In Creatif, any version can be used. The default up to date version is used when you don&apos;t specify
                 what version you want to use with <span className={styles.highlightInfoText}>X-Creatif-Version</span>{' '}
@@ -89,7 +89,7 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
                             versionName: data.versionName,
                         });
                     })}
-                    className={styles.root}>
+                    className={styles.formRoot}>
                     <TextInput
                         error={errorMessage}
                         disabled={isLoading || listLength === -1 || listLength >= 10 || isUpdateInProgress}
@@ -110,6 +110,6 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
                     </div>
                 </form>
             </FormProvider>
-        </>
+        </div>
     );
 }
