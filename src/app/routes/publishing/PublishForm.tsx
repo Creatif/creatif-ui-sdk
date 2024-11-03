@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { IconStackPush } from '@tabler/icons-react';
 import type { ApiError } from '@lib/http/apiError';
 import { BasicInfo } from '@app/components/BasicInfo';
+import { Tip } from '@app/routes/publishing/Tip';
 
 interface Props {
     listLength: number;
@@ -63,6 +64,7 @@ export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgres
                 In Creatif, any version can be used. The default up to date version is used when you don&apos;t specify
                 what version you want to use with <span className={styles.highlightInfoText}>X-Creatif-Version</span>{' '}
                 header
+                <Tip />
             </BasicInfo>
 
             <FormProvider {...methods}>
