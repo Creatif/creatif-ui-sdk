@@ -7,14 +7,24 @@ import { useState } from 'react';
 
 export default function PublishingMain() {
     const [listLength, setListLength] = useState(-1);
+    const [isPublishInProgress, setIsPublishInProgress] = useState(false);
+    const [isUpdateInProgress, setIsUpdateInProgress] = useState(false);
 
     return (
         <div className={styles.root}>
             <h1 className={styles.heading}>Publish a new version</h1>
 
-            <PublishForm listLength={listLength} />
+            <PublishForm
+                isUpdateInProgress={isUpdateInProgress}
+                onPublishInProgress={(isInProgress) => setIsPublishInProgress(isInProgress)}
+                listLength={listLength}
+            />
 
-            <VersionList onListLength={(l) => setListLength(l)} />
+            <VersionList
+                isPublishInProgress={isPublishInProgress}
+                onUpdateInProgress={(isInProgress) => setIsUpdateInProgress(isInProgress)}
+                onListLength={(l) => setListLength(l)}
+            />
         </div>
     );
 }

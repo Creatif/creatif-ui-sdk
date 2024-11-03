@@ -1,11 +1,11 @@
 .gridRoot {
-    margin-top: 4rem;
     width: 80%;
+    margin-bottom: 4rem;
 }
 
 .columnGrid {
     display: grid;
-    grid-template-columns: 150px 100px 1fr 1fr;
+    grid-template-columns: 150px 100px 1fr;
     gap: 1rem;
     border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
 
@@ -35,7 +35,7 @@
 
 .itemRoot {
     display: grid;
-    grid-template-columns: 150px 100px 1fr 1fr;
+    grid-template-columns: 150px 100px 1fr;
     align-items: center;
     gap: 1rem;
 
@@ -66,6 +66,15 @@
 }
 
 .actionGroup {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    align-content: center;
+}
+
+.actionItemLeft {
     display: flex;
     justify-content: flex-start;
     gap: 1rem;

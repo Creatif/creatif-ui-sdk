@@ -14,9 +14,11 @@ import { BasicInfo } from '@app/components/BasicInfo';
 
 interface Props {
     listLength: number;
+    onPublishInProgress: (isInProgress: boolean) => void;
+    isUpdateInProgress: boolean;
 }
 
-export function PublishForm({ listLength }: Props) {
+export function PublishForm({ listLength, onPublishInProgress, isUpdateInProgress }: Props) {
     const queryClient = useQueryClient();
     const methods = useForm({
         mode: 'onChange',
@@ -58,14 +60,15 @@ export function PublishForm({ listLength }: Props) {
     return (
         <>
             <BasicInfo>
-                If there are no other versions created, the only version created will be enabled by default. This is
-                true only when there are no other versions. If you have multiple version and you want to enable one of
-                them, you will have to do it manually.
+                In Creatif, any version can be used. The default up to date version is used when you don&apos;t specify
+                what version you want to use with <span className={styles.highlightInfoText}>X-Creatif-Version</span>{' '}
+                header
             </BasicInfo>
 
             <FormProvider {...methods}>
                 <form
                     onSubmit={handleSubmit((data) => {
+                        onPublishInProgress(true);
                         mutate({
                             versionName: data.versionName,
                         });
@@ -79,9 +82,8 @@ export function PublishForm({ listLength }: Props) {
                                 'Version with this name already exists') ||
                             errors.versionName?.message
                         }
-                        disabled={isLoading || listLength === -1}
+                        disabled={isLoading || listLength === -1 || isUpdateInProgress}
                         placeholder="Version name"
-                        description="Version name is not required. If you choose not give this version a name, a name will be automatically generated for you."
                         {...register('versionName', {
                             required: 'Version name is required',
                         })}
@@ -91,7 +93,7 @@ export function PublishForm({ listLength }: Props) {
                         <Button
                             type="submit"
                             color="green"
-                            disabled={isLoading || listLength === -1}
+                            disabled={isLoading || listLength === -1 || isUpdateInProgress}
                             leftSection={isLoading ? <Loader color="gray" size={18} /> : <IconStackPush size={24} />}>
                             {isLoading ? 'Publishing' : 'Publish'}
                         </Button>

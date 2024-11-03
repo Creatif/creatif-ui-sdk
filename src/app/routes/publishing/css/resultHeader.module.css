@@ -1,0 +1,13 @@
+.root {
+    width: 100%;
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-7));
+
+    padding-bottom: 0.3rem;
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 0.7rem;
+}

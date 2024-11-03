@@ -5,12 +5,12 @@ export interface PublishBlueprint {
     name: string;
 }
 
-export interface RemoveVersionBlueprint {
-    id: string;
+export interface UpdatePublishedBlueprint {
     projectId: string;
+    name: string;
 }
 
-export interface ToggleProductionBlueprint {
+export interface RemoveVersionBlueprint {
     id: string;
     projectId: string;
 }
