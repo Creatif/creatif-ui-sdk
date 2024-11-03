@@ -2,15 +2,10 @@
 // @ts-ignore
 import versionList from '@app/routes/publishing/css/versionList.module.css';
 import React, { useEffect, useState } from 'react';
-import { Button } from '@mantine/core';
 import { useQuery } from 'react-query';
-import appDate from '@lib/helpers/appDate';
-import Copy from '@app/components/Copy';
-import { DeleteButton } from '@app/routes/publishing/DeleteButton';
 import UIError from '@app/components/UIError';
 import type { ApiError } from '@lib/http/apiError';
 import { IconBox } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
 import type { Version } from '@root/types/api/public';
 import { getVersions } from '@lib/publicApi/app/versions/getVersions';
 import type { Result } from '@root/types/api/publicApi/Http';

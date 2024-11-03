@@ -12,7 +12,6 @@ import React, { useEffect } from 'react';
 import { IconRefresh } from '@tabler/icons-react';
 import { useMutation, useQueryClient } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
-import { publish } from '@lib/api/publishing/publish';
 import { updatePublished } from '@lib/api/publishing/updatePublished';
 import useNotification from '@app/systems/notifications/useNotification';
 
