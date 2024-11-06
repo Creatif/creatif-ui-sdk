@@ -1,0 +1,12 @@
+.root {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+}
+
+.actionIconOverride {
+    background-color: var(--mantine-color-gray-0);
+    border: 1px solid var(--mantine-color-gray-2);
+    transition: background-color 0.4s;
+}

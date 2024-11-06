@@ -1,22 +1,24 @@
 import usePaginateReferences from '@app/routes/show/hooks/usePaginateReferences';
 import type { QueryReference } from '@root/types/api/reference';
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import styles from '@app/uiComponents/lists/css/ListTable.module.css';
-import { Button, Loader } from '@mantine/core';
-import CenteredError from '@app/components/CenteredError';
-import Item from '@app/routes/show/referenceListing/Item';
+import { Button, Loader, Table } from '@mantine/core';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { StructureType } from '@root/types/shell/shell';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
 import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';
 import { IconMistOff } from '@tabler/icons-react';
 import NothingFound from '@app/uiComponents/shared/NothingFound';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import styles from '@app/uiComponents/lists/css/ListTable.module.css';
+import UIError from '@app/components/UIError';
+import Groups from '@app/components/Groups';
+import { ActionRow } from '@app/routes/show/referenceListing/ActionRow';
+import appDate from '@lib/helpers/appDate';
 
 interface Props {
     reference: QueryReference;
@@ -40,7 +42,11 @@ function resolveListing<Value, Metadata>(
 }
 
 export function List<Value, Metadata>({ reference, structureType, relationshipType }: Props) {
+    const [locale, setLocale] = useState<{ itemId: string; locale: string }>();
+    const [groups, setGroups] = useState<{ itemId: string; groups: string[] }>();
+
     const { queryParams, setParam } = useSearchQuery();
+    const pageRef = useRef(1);
     const referenceStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(reference.structureName, structureType);
@@ -63,7 +69,49 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
         fields: ['groups'],
     });
 
-    const listing = resolveListing(data?.pages);
+    const listing = useMemo(() => resolveListing(data?.pages), [data?.pages]);
+
+    useEffect(() => {
+        if (!locale) return;
+
+        for (const item of listing) {
+            if (item.id === locale.itemId) {
+                item.locale = locale.locale;
+            }
+        }
+    }, [locale, listing]);
+
+    useEffect(() => {
+        if (!groups) return;
+
+        for (const item of listing) {
+            if (item.id === groups.itemId) {
+                item.groups = groups.groups;
+            }
+        }
+    }, [groups, listing]);
+
+    const rows = listing.map((element) => (
+        <Table.Tr key={element.id}>
+            <Table.Td>{element.name}</Table.Td>
+            <Table.Td>{element.behaviour}</Table.Td>
+            <Table.Td>{element.locale}</Table.Td>
+            <Table.Td>
+                <Groups groups={element.groups || []} />
+            </Table.Td>
+            <Table.Td>{appDate(element.createdAt)}</Table.Td>
+            <Table.Td>
+                {referenceStructureItem && (
+                    <ActionRow
+                        onGroupsChanged={(groups) => setGroups(groups)}
+                        onLocaleChanged={(locale) => setLocale(locale)}
+                        structureItem={referenceStructureItem}
+                        item={element}
+                    />
+                )}
+            </Table.Td>
+        </Table.Tr>
+    ));
 
     return (
         <>
@@ -101,44 +149,71 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
                 />
             )}
 
+            {referenceStructureItem && (
+                <div className={contentContainerStyles.root}>
+                    <Table.ScrollContainer minWidth={920}>
+                        <Table>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>NAME</Table.Th>
+                                    <Table.Th>BEHAVIOUR</Table.Th>
+                                    <Table.Th>LOCALE</Table.Th>
+                                    <Table.Th>GROUPS</Table.Th>
+                                    <Table.Th>CREATED ON</Table.Th>
+                                    <Table.Th>ACTIONS</Table.Th>
+                                </Table.Tr>
+                            </Table.Thead>
+                            <Table.Tbody>{rows}</Table.Tbody>
+                        </Table>
+                    </Table.ScrollContainer>
+                </div>
+            )}
+
             <div className={contentContainerStyles.root}>
                 {error && (
                     <div className={styles.skeleton}>
-                        <CenteredError title="An error occurred">
-                            Something went wrong when trying to fetch items for{' '}
-                            <span className={styles.bold}>{reference.structureName}</span>. Please, try again later.
-                        </CenteredError>
+                        <UIError title="An error occurred">
+                            Something went wrong when trying to fetch list {referenceStructureItem?.name}. Please, try
+                            again later.
+                        </UIError>
                     </div>
                 )}
 
-                {!isFetching && data && listing.length === 0 && <NothingFound />}
+                {!referenceStructureItem && (
+                    <div className={styles.skeleton}>
+                        <UIError title="Route not found">This route does not seem to exist</UIError>
+                    </div>
+                )}
 
-                {data && listing.length !== 0 && referenceStructureItem && (
-                    <div className={styles.container}>
-                        {listing.map((item) => (
-                            <Item structureItem={referenceStructureItem} isHovered={false} key={item.id} item={item} />
-                        ))}
+                {!isFetching && listing && listing.length === 0 && (
+                    <NothingFound
+                        createNewPath={
+                            (referenceStructureItem &&
+                                `${referenceStructureItem.navigationCreatePath}/${referenceStructureItem.id}`) ||
+                            ''
+                        }
+                    />
+                )}
 
-                        {Boolean(listing.length) && (
-                            <div className={styles.pagination}>
-                                {hasNextPage && (
-                                    <Button
-                                        variant="outline"
-                                        disabled={isFetchingNextPage}
-                                        rightSection={isFetchingNextPage ? <Loader size={12} /> : undefined}
-                                        onClick={() => {
-                                            fetchNextPage();
-                                        }}>
-                                        LOAD MORE
-                                    </Button>
-                                )}
+                {Boolean(listing.length) && (
+                    <div className={styles.pagination}>
+                        {hasNextPage && (
+                            <Button
+                                variant="outline"
+                                disabled={isFetchingNextPage}
+                                rightSection={isFetchingNextPage ? <Loader size={12} /> : undefined}
+                                onClick={() => {
+                                    pageRef.current = pageRef.current + 1;
+                                    fetchNextPage();
+                                }}>
+                                LOAD MORE
+                            </Button>
+                        )}
 
-                                {!hasNextPage && (
-                                    <p className={styles.paginationEmpty}>
-                                        <IconMistOff size={16} /> No more items
-                                    </p>
-                                )}
-                            </div>
+                        {!hasNextPage && (
+                            <p className={styles.paginationEmpty}>
+                                <IconMistOff size={16} /> No more items
+                            </p>
                         )}
                     </div>
                 )}
