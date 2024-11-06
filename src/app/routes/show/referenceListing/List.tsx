@@ -152,7 +152,13 @@ export function List<Value, Metadata>({ reference, structureType, relationshipTy
             {referenceStructureItem && (
                 <div className={contentContainerStyles.root}>
                     <Table.ScrollContainer minWidth={920}>
-                        <Table>
+                        <Table
+                            verticalSpacing="md"
+                            styles={{
+                                th: {
+                                    fontWeight: 'bold',
+                                },
+                            }}>
                             <Table.Thead>
                                 <Table.Tr>
                                     <Table.Th>NAME</Table.Th>

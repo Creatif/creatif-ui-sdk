@@ -5,7 +5,7 @@ import styles from '@app/routes/show/css/row.module.css';
 import { Link } from 'react-router-dom';
 import { IconEdit, IconEye, IconLanguage, IconRoute } from '@tabler/icons-react';
 import type { MouseEvent } from 'react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import useUpdateVariable from '@app/uiComponents/lists/hooks/useUpdateVariable';

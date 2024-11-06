@@ -11,7 +11,7 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/ListTable.module.css';
-import { Button, Checkbox, Loader } from '@mantine/core';
+import { Button, Checkbox, Loader, Table } from '@mantine/core';
 import type { MouseEvent } from 'react';
 import React, { useCallback, useRef, useState } from 'react';
 import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
@@ -25,14 +25,8 @@ import UIError from '@app/components/UIError';
 import type { StructureType } from '@root/types/shell/shell';
 import useMapVariablesPagination from '@app/uiComponents/lists/hooks/useMapVariablesPagination';
 import { IconMistOff } from '@tabler/icons-react';
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import gridStyles from '@app/uiComponents/lists/css/listGrid.module.css';
 import { Item as GridItem } from '@app/uiComponents/lists/gridItem/Item';
-import classNames from 'classnames';
 import type { ApiError } from '@lib/http/apiError';
-import { createContentResizeEvent } from '@app/systems/listingResize/contentResizeEvent';
 
 export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
     page: number;
@@ -65,17 +59,6 @@ function resolveListing<Value, Metadata>(
 }
 
 export default function Listing<Value, Metadata>() {
-    /**
-     * Checkout app/systems/listingResize for more information.
-     *
-     * This is where this listing gets its size based on the content div two divs above this one. That div
-     * has a constant width, so width is observed from it and then observed here. The size is
-     * then calculated contentSize - 50 in pixels. That way I can make the listing responsive and that it
-     * has an overflow.
-     */
-    const useContentResizeStore = createContentResizeEvent(1280);
-    const contentSize = useContentResizeStore((state) => state.size);
-
     const { queryParams, setParam } = useSearchQuery();
     const { structureId, structureType } = useParams();
     const structureItem = getProjectMetadataStore()
@@ -237,7 +220,7 @@ export default function Listing<Value, Metadata>() {
             )}
 
             {data && data.length !== 0 && structureItem && structureType && (
-                <div className={gridStyles.container}>
+                <div className={contentContainerStyles.root}>
                     {checkedItems.length > 0 && (
                         <div className={styles.stickyFooter}>
                             <div className={styles.selectedItemsContainer}>
@@ -256,31 +239,32 @@ export default function Listing<Value, Metadata>() {
                         </div>
                     )}
 
-                    <div
-                        className={gridStyles.root}
-                        style={{
-                            width: `${contentSize - 50}px`,
-                            overflow: 'scroll',
-                        }}>
-                        <div className={gridStyles.columnGrid}>
-                            <div className={classNames(gridStyles.column, gridStyles.checkboxColumn)}>
-                                <div className={gridStyles.flexPlaceholder} />
-                                <Checkbox
-                                    onClick={(e) => {
-                                        checkedRef.current = !checkedRef.current;
-                                        onCheckAll(e);
-                                    }}
-                                />
-                            </div>
-                            <p className={gridStyles.column}>NAME</p>
-                            <p className={gridStyles.column}>BEHAVIOUR</p>
-                            <p className={gridStyles.column}>LOCALE</p>
-                            <p className={gridStyles.column}>GROUPS</p>
-                            <p className={gridStyles.column}>CREATED ON</p>
-                            <p className={gridStyles.column}>ACTIONS</p>
-                        </div>
-
-                        <div className={gridStyles.row}>
+                    <Table.ScrollContainer minWidth={920}>
+                        <Table
+                            verticalSpacing="md"
+                            styles={{
+                                th: {
+                                    fontWeight: 'bold',
+                                },
+                            }}>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>
+                                        <Checkbox
+                                            onClick={(e) => {
+                                                checkedRef.current = !checkedRef.current;
+                                                onCheckAll(e);
+                                            }}
+                                        />
+                                    </Table.Th>
+                                    <Table.Th>NAME</Table.Th>
+                                    <Table.Th>BEHAVIOUR</Table.Th>
+                                    <Table.Th>LOCALE</Table.Th>
+                                    <Table.Th>GROUPS</Table.Th>
+                                    <Table.Th>CREATED ON</Table.Th>
+                                    <Table.Th>ACTIONS</Table.Th>
+                                </Table.Tr>
+                            </Table.Thead>
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
                                     data={data}
@@ -289,7 +273,7 @@ export default function Listing<Value, Metadata>() {
                                     structureType={structureType as StructureType}
                                     onRearrange={rearrange}
                                     renderItems={(onDrop, onMove, list, hoveredId, movingSource, movingDestination) => (
-                                        <>
+                                        <Table.Tbody>
                                             {list.map((item, i) => (
                                                 <GridItem
                                                     onMove={onMove}
@@ -309,12 +293,12 @@ export default function Listing<Value, Metadata>() {
                                                     structureItem={structureItem}
                                                 />
                                             ))}
-                                        </>
+                                        </Table.Tbody>
                                     )}
                                 />
                             </DndProvider>
-                        </div>
-                    </div>
+                        </Table>
+                    </Table.ScrollContainer>
                 </div>
             )}
 

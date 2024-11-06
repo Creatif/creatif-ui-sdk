@@ -4,10 +4,10 @@ import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/listGridItem.module.css';
-import { ActionIcon, Checkbox, Tooltip } from '@mantine/core';
+import { ActionIcon, Checkbox, Table, Tooltip } from '@mantine/core';
 import { IconEdit, IconEye, IconGripVertical, IconLanguage, IconRoute, IconTrash } from '@tabler/icons-react';
 import classNames from 'classnames';
-import { type MouseEvent, useCallback, useRef, useState, memo } from 'react';
+import React, { type MouseEvent, useCallback, useRef, useState, memo, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { PaginatedVariableResult } from '@root/types/api/list';
 import type { DragSourceMonitor } from 'react-dnd';
@@ -33,6 +33,12 @@ interface Props<Value, Metadata> {
     isHovered: boolean;
     index: number;
 }
+
+const TableRow = forwardRef<HTMLTableRowElement, React.ComponentPropsWithoutRef<'tr'>>((props, ref) => (
+    <Table.Tr {...props} ref={ref} />
+));
+TableRow.displayName = 'TableRow';
+
 function GridItem<Value, Metadata>({
     item,
     structureItem,
@@ -140,19 +146,22 @@ function GridItem<Value, Metadata>({
     );
 
     return (
-        <div
+        <TableRow
+            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+            /*
+// @ts-ignore */
             ref={ref}
             data-handler-id={handlerId}
             onClick={preventClickEventOnModal}
             style={{ opacity: opacity }}
             className={classNames(
-                styles.container,
+                styles.root,
                 isDeleting ? styles.itemDisabled : undefined,
                 isHovered ? styles.hovered : undefined,
             )}>
             {(isDeleting || disabled) && <div className={styles.disabled} />}
 
-            <div className={styles.checkboxWrapper}>
+            <Table.Td className={styles.checkboxWrapper}>
                 <IconGripVertical className={styles.dragAndDropIcon} color="gray" size={18} />
 
                 <Checkbox
@@ -162,23 +171,25 @@ function GridItem<Value, Metadata>({
                         onChecked(item.id, e.currentTarget.checked);
                     }}
                 />
-            </div>
+            </Table.Td>
 
-            <h2 className={styles.nameRowTitle}>{item.name}</h2>
+            <Table.Td className={styles.nameRowTitle}>{item.name}</Table.Td>
 
-            <div className={styles.behaviour}>
+            <Table.Td className={styles.behaviour}>
                 <p>{item.behaviour === 'modifiable' ? 'Modifiable' : 'Readonly'}</p>
-            </div>
+            </Table.Td>
 
-            <div className={styles.behaviour}>
+            <Table.Td className={styles.behaviour}>
                 <span className={styles.localeStrong}>{item.locale}</span>
-            </div>
+            </Table.Td>
 
-            <Groups groups={item.groups || []} />
+            <Table.Td>
+                <Groups groups={item.groups || []} />
+            </Table.Td>
 
-            <div className={styles.createdAt}>{appDate(item.createdAt)}</div>
+            <Table.Td className={styles.createdAt}>{appDate(item.createdAt)}</Table.Td>
 
-            <div className={styles.actionRow}>
+            <Table.Td className={styles.actionRow}>
                 {structureItem && (
                     <Tooltip label="Edit">
                         <ActionIcon
@@ -254,7 +265,7 @@ function GridItem<Value, Metadata>({
                         <IconTrash color="var(--mantine-color-red-9)" size={16} />
                     </ActionIcon>
                 </Tooltip>
-            </div>
+            </Table.Td>
 
             {structureItem && (
                 <DeleteModal
@@ -309,7 +320,7 @@ function GridItem<Value, Metadata>({
                     }}
                 />
             )}
-        </div>
+        </TableRow>
     );
 }
 
