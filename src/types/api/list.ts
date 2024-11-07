@@ -136,6 +136,7 @@ export interface RearrangeBlueprint {
     source: string;
     destination: string;
     projectId: string;
+    orderDirection: string;
 }
 
 export interface PaginateListStructureBlueprint {

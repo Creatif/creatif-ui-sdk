@@ -34,6 +34,7 @@ export default function DraggableList<Value, Metadata>({
     structureType,
     renderItems,
     onRearrange,
+    sortingDirection,
 }: Props<Value, Metadata>) {
     const [list, setList] = useState<PaginationDataWithPage<Value, Metadata>[]>(data);
     const [hoveredId, setHoveredId] = useState<string>('');
@@ -46,6 +47,10 @@ export default function DraggableList<Value, Metadata>({
 
     const onDrop = useCallback(
         (source: DragItem, destination: DragItem) => {
+            // there must always be a sorting direction
+            // because the backend relies on it
+            if (!sortingDirection) return;
+
             if (source.index === destination.index) {
                 setHoveredId('');
                 setMovingItems(undefined);
@@ -61,6 +66,7 @@ export default function DraggableList<Value, Metadata>({
                     name: structureItem.id,
                     source: source.id,
                     destination: destination.id,
+                    orderDirection: sortingDirection,
                 },
                 structureType,
             ).then(({ result, error }) => {
@@ -82,18 +88,26 @@ export default function DraggableList<Value, Metadata>({
                         const t = tempList[sourceIdx];
 
                         t.index = result;
-                        tempList.sort((a, b) => b.index - a.index);
+                        if (sortingDirection === 'desc') {
+                            tempList.sort((a, b) => b.index - a.index);
+                            setList(tempList);
+                            return;
+                        }
 
+                        tempList.sort((a, b) => a.index - b.index);
                         setList(tempList);
+                        return;
                     }
                 }
             });
         },
-        [list],
+        [list, sortingDirection],
     );
 
     const onMove = useCallback(
         (dragIndex: number, hoverIndex: number) => {
+            console.log(dragIndex, hoverIndex);
+
             if (list[hoverIndex]) {
                 setHoveredId(list[hoverIndex].id);
                 setMovingItems(undefined);
