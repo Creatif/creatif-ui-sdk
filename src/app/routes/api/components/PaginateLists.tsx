@@ -31,8 +31,6 @@ export function PaginateLists({ versionName }: Props) {
     const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const firstRenderingRef = useRef(false);
-
     let errorMessage = '';
     if (isError && isError === 'notFound') {
         errorMessage = 'Item is not found';
@@ -40,8 +38,17 @@ export function PaginateLists({ versionName }: Props) {
         errorMessage = 'Something went wrong. Please try again later.';
     }
 
-    const { isFetching, data, refetch } = useQuery(
-        ['paginate_public_api_lists', structureData],
+    const { data } = useQuery(
+        [
+            'paginate_public_api_lists',
+            structureData,
+            isValueOnly,
+            search,
+            sortField,
+            groups,
+            selectedLocale,
+            selectedDirection,
+        ],
         async () => {
             if (!structureData) return;
 
@@ -69,7 +76,6 @@ export function PaginateLists({ versionName }: Props) {
             }
         },
         {
-            enabled: firstRenderingRef.current,
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: Infinity,
@@ -87,56 +93,34 @@ export function PaginateLists({ versionName }: Props) {
     return (
         <div className={styles.root}>
             <div className={styles.selectWrapper}>
-                <form
-                    className={styles.singleColumnWrapper}
-                    onSubmit={(env) => {
-                        env.preventDefault();
-                        env.stopPropagation();
-                        firstRenderingRef.current = true;
-                        refetch();
-                    }}>
-                    <div className={styles.fieldsGrid}>
-                        <StructureSelect
-                            structureToShow="list"
-                            onSelected={(name, structureType) => {
-                                setStructureData({ name: name, type: structureType });
-                            }}
-                        />
-                        <TextInput
-                            description="Search"
-                            placeholder="Search"
-                            onChange={(e) => {
-                                setSearch(e.target.value);
-                            }}
-                        />
-                        <LocaleSelect onSelected={setSelectedLocale} />
-                        <DirectionSelect onChange={setSelectedDirection} />
-                        <SortFields onChange={setSortField} />
-                        <GroupsSelect onSelectedGroups={setGroups} />
+                <div className={styles.fieldsGrid}>
+                    <StructureSelect
+                        structureToShow="list"
+                        onSelected={(name, structureType) => {
+                            setStructureData({ name: name, type: structureType });
+                        }}
+                    />
+                    <TextInput
+                        description="Search"
+                        placeholder="Search"
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                        }}
+                    />
+                    <LocaleSelect onSelected={setSelectedLocale} />
+                    <DirectionSelect onChange={setSelectedDirection} />
+                    <SortFields onChange={setSortField} />
+                    <GroupsSelect onSelectedGroups={setGroups} />
 
-                        <Checkbox
-                            className={styles.valueOnlyCheckbox}
-                            checked={isValueOnly}
-                            onChange={(env) => {
-                                setIsValueOnly(env.target.checked);
-                            }}
-                            label="Value only"
-                        />
-                    </div>
-
-                    <div className={styles.buttonWrapper}>
-                        <Button
-                            loading={isFetching}
-                            loaderProps={{
-                                size: 16,
-                            }}
-                            type="submit"
-                            className={styles.findButton}
-                            variant="outline">
-                            Find
-                        </Button>
-                    </div>
-                </form>
+                    <Checkbox
+                        className={styles.valueOnlyCheckbox}
+                        checked={isValueOnly}
+                        onChange={(env) => {
+                            setIsValueOnly(env.target.checked);
+                        }}
+                        label="Value only"
+                    />
+                </div>
             </div>
 
             {structureData && data && (
