@@ -31,8 +31,6 @@ export function PaginateMaps({ versionName }: Props) {
     const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
-
     let errorMessage = '';
     if (isError && isError === 'notFound') {
         errorMessage = 'Item is not found';
@@ -40,17 +38,15 @@ export function PaginateMaps({ versionName }: Props) {
         errorMessage = 'Something went wrong. Please try again later.';
     }
 
-    const { isFetching, data } = useQuery(
+    const { data } = useQuery(
         [
-            'paginate_public_api_lists',
+            'paginate_public_api_maps',
             structureData,
             selectedLocale,
             sortField,
             selectedDirection,
             groups,
-            submitQueryEnabled,
             isValueOnly,
-            versionName,
             search,
         ],
         async () => {
@@ -80,7 +76,6 @@ export function PaginateMaps({ versionName }: Props) {
             }
         },
         {
-            enabled: submitQueryEnabled,
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: Infinity,
@@ -91,12 +86,9 @@ export function PaginateMaps({ versionName }: Props) {
                 } else {
                     setIsError('generalError');
                 }
-
-                setSubmitQueryEnabled(false);
             },
             onSuccess() {
                 setIsError(undefined);
-                setSubmitQueryEnabled(false);
             },
         },
     );
@@ -104,55 +96,34 @@ export function PaginateMaps({ versionName }: Props) {
     return (
         <div className={styles.root}>
             <div className={styles.selectWrapper}>
-                <form
-                    className={styles.singleColumnWrapper}
-                    onSubmit={(env) => {
-                        env.preventDefault();
-                        env.stopPropagation();
-                        setSubmitQueryEnabled(true);
-                    }}>
-                    <div className={styles.fieldsGrid}>
-                        <StructureSelect
-                            structureToShow="map"
-                            onSelected={(name, structureType) => {
-                                setStructureData({ name: name, type: structureType });
-                            }}
-                        />
-                        <TextInput
-                            description="Search"
-                            placeholder="Search"
-                            onChange={(e) => {
-                                setSearch(e.target.value);
-                            }}
-                        />
-                        <LocaleSelect onSelected={setSelectedLocale} />
-                        <DirectionSelect onChange={setSelectedDirection} />
-                        <SortFields onChange={setSortField} />
-                        <GroupsSelect onSelectedGroups={setGroups} />
+                <div className={styles.fieldsGrid}>
+                    <StructureSelect
+                        structureToShow="map"
+                        onSelected={(name, structureType) => {
+                            setStructureData({ name: name, type: structureType });
+                        }}
+                    />
+                    <TextInput
+                        description="Search"
+                        placeholder="Search"
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                        }}
+                    />
+                    <LocaleSelect onSelected={setSelectedLocale} />
+                    <DirectionSelect onChange={setSelectedDirection} />
+                    <SortFields onChange={setSortField} />
+                    <GroupsSelect onSelectedGroups={setGroups} />
 
-                        <Checkbox
-                            className={styles.valueOnlyCheckbox}
-                            checked={isValueOnly}
-                            onChange={(env) => {
-                                setIsValueOnly(env.target.checked);
-                            }}
-                            label="Value only"
-                        />
-                    </div>
-
-                    <div className={styles.buttonWrapper}>
-                        <Button
-                            loading={isFetching}
-                            loaderProps={{
-                                size: 16,
-                            }}
-                            type="submit"
-                            className={styles.findButton}
-                            variant="outline">
-                            Find
-                        </Button>
-                    </div>
-                </form>
+                    <Checkbox
+                        className={styles.valueOnlyCheckbox}
+                        checked={isValueOnly}
+                        onChange={(env) => {
+                            setIsValueOnly(env.target.checked);
+                        }}
+                        label="Value only"
+                    />
+                </div>
             </div>
 
             {structureData && data && (
