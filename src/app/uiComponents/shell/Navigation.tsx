@@ -6,7 +6,14 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import type { AppShellItem } from '@root/types/shell/shell';
 import { Tooltip } from '@mantine/core';
-import { IconApiApp, IconChevronRight, IconLogout, IconStack3, IconTopologyBus } from '@tabler/icons-react';
+import {
+    IconApiApp,
+    IconChevronRight,
+    IconLogout,
+    IconStack3,
+    IconStackPush,
+    IconTopologyBus,
+} from '@tabler/icons-react';
 import logout from '@lib/api/auth/logout';
 import NavigationIcon from '@app/uiComponents/shell/NavigationIcon';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
@@ -81,6 +88,23 @@ export default function Navigation({ navItems, logo, displayBlockWhenMobile = fa
             <div className={styles.divider} />
 
             <nav className={styles.appMenu}>
+                <NavLink
+                    to="publishing"
+                    className={({ isActive }) => {
+                        if (isActive) return classNames(styles.appMenuButton, styles.active);
+
+                        return styles.appMenuButton;
+                    }}>
+                    <IconStackPush
+                        className="navItemIcon"
+                        style={{
+                            alignSelf: 'center',
+                        }}
+                        size={20}
+                    />
+                    Publishing
+                </NavLink>
+
                 <NavLink
                     to="groups"
                     className={({ isActive }) => {
