@@ -59,6 +59,7 @@ export function VersionList({ onListLength, isPublishInProgress, onUpdateInProgr
     let defaultVersion: Version | undefined;
     let results: Version[] = [];
     let hasVersions = false;
+    let hasOtherVersions = false;
     if (!isLoading && data && data.result && data.result) {
         results = data.result;
         hasVersions = data.result.length !== 0;
@@ -67,6 +68,7 @@ export function VersionList({ onListLength, isPublishInProgress, onUpdateInProgr
             const copy = [...results];
             defaultVersion = copy.shift();
             results = copy;
+            hasOtherVersions = results.length !== 0;
         }
     }
 
@@ -87,8 +89,9 @@ export function VersionList({ onListLength, isPublishInProgress, onUpdateInProgr
                 </div>
             )}
 
-            {hasVersions && <ResultHeader title="OTHER VERSIONS" />}
-            {hasVersions && (
+            <ResultHeader title="OTHER VERSIONS" />
+            {!hasOtherVersions && <p className={versionList.noOtherVersions}>There are no other versions</p>}
+            {hasOtherVersions && (
                 <div className={versionList.gridRoot}>
                     <div className={versionList.columnGrid}>
                         <p className={versionList.column}>NAME</p>

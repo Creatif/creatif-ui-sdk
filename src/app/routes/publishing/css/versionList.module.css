@@ -96,3 +96,8 @@
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-2));
     font-size: 0.9rem;
 }
+
+.noOtherVersions {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}

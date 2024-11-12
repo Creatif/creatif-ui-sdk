@@ -4,7 +4,7 @@ import styles from '@app/routes/api/css/apiBase.module.css';
 import { LocaleSelect } from '@app/routes/api/components/LocaleSelect';
 import { StructureSelect } from '@app/routes/api/components/StructureSelect';
 import { Checkbox, Button, TextInput } from '@mantine/core';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { useQuery } from 'react-query';
 import UIError from '@app/components/UIError';
@@ -31,7 +31,7 @@ export function PaginateLists({ versionName }: Props) {
     const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
-    const [submitQueryEnabled, setSubmitQueryEnabled] = useState(false);
+    const firstRenderingRef = useRef(false);
 
     let errorMessage = '';
     if (isError && isError === 'notFound') {
@@ -40,16 +40,8 @@ export function PaginateLists({ versionName }: Props) {
         errorMessage = 'Something went wrong. Please try again later.';
     }
 
-    const { isFetching, data } = useQuery(
-        [
-            'paginate_public_api_lists',
-            structureData,
-            selectedLocale,
-            submitQueryEnabled,
-            isValueOnly,
-            versionName,
-            search,
-        ],
+    const { isFetching, data, refetch } = useQuery(
+        ['paginate_public_api_lists', structureData],
         async () => {
             if (!structureData) return;
 
@@ -77,7 +69,7 @@ export function PaginateLists({ versionName }: Props) {
             }
         },
         {
-            enabled: submitQueryEnabled,
+            enabled: firstRenderingRef.current,
             refetchOnWindowFocus: false,
             keepPreviousData: true,
             staleTime: Infinity,
@@ -88,8 +80,6 @@ export function PaginateLists({ versionName }: Props) {
                 } else {
                     setIsError('generalError');
                 }
-
-                setSubmitQueryEnabled(false);
             },
         },
     );
@@ -102,7 +92,8 @@ export function PaginateLists({ versionName }: Props) {
                     onSubmit={(env) => {
                         env.preventDefault();
                         env.stopPropagation();
-                        setSubmitQueryEnabled(true);
+                        firstRenderingRef.current = true;
+                        refetch();
                     }}>
                     <div className={styles.fieldsGrid}>
                         <StructureSelect
