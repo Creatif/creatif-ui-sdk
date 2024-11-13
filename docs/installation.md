@@ -14,7 +14,7 @@ installed.
 After you install docker, you can install Creatif with
 
 ```javascript
-npm create creatif-app
+npm create creatif-app@latest
 ```
 
 This installation script will ask you to create the app directory and weather you
@@ -27,7 +27,9 @@ docker compose up
 ```
 
 Creatif ships with its own backend so this might take a while but this is the only
-thing that you have to do to start using Creatif.
+thing that you have to do to start using Creatif. There is also some kind of issues 
+that makes `npm install` very slow so if that happens to you, just be patient. Everything
+should be working properly. 
 
 If you decide to not create Creatif with a starter project, a runtime error will be
 thrown. This is because Creatif cannot be used without configuration. Head over to

@@ -1,5 +1,5 @@
 # Fetching the latest node image on alpine linux
-FROM node:alpine AS development
+FROM node:23-alpine AS development
 
 WORKDIR /app
 
