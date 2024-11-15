@@ -29,7 +29,7 @@ export function InputReference({
     name,
     store,
 }: Props) {
-    const { control, setValue: setFormValue } = useFormContext();
+    const { control } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
@@ -82,11 +82,8 @@ export function InputReference({
                                 const ref = {
                                     name: name,
                                     structureType: value.structureType,
-                                    structureName: structureName,
                                     variableId: value.id,
                                 };
-
-                                setFormValue(name, ref);
 
                                 if (hasReference(name)) {
                                     updateReference(ref as ReferenceStoreItem);

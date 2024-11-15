@@ -10,6 +10,7 @@ import { queryItemById, searchAndCreateOptions } from '@app/uiComponents/inputs/
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { IntersectionObserverOption } from '@app/uiComponents/inputs/fields/IntersectionObserverOption';
 import { IconX } from '@tabler/icons-react';
+import { useFormContext } from 'react-hook-form';
 
 export interface ReferenceSearchInputOption {
     label: string;
@@ -43,6 +44,7 @@ export default function ReferenceSearchInput({
     const componentMountedRef = useRef(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, runTransition] = useTransition();
+    const { getValues, setValue } = useFormContext();
 
     const scrollAreaViewportRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,28 +70,20 @@ export default function ReferenceSearchInput({
 
     useEffect(() => {
         if (reference) {
-            queryItemById(reference.parentStructureId, reference.parentId, reference.parentType).then((data) => {
-                if (data) {
-                    const { result, error } = data;
-                    if (error) {
-                        setInternalError(error);
-                    }
+            const connection = getValues(reference.name);
+            const option = {
+                label: connection.name,
+                value: JSON.stringify({
+                    id: connection.variableId,
+                    structureType: connection.structureType,
+                }),
+            };
 
-                    if (result) {
-                        const option = {
-                            label: result.name,
-                            value: JSON.stringify({
-                                id: result.id,
-                                structureType: reference.parentType,
-                            }),
-                        };
+            setValue(reference.name, option);
 
-                        selectedRef.current = true;
-                        setSearch(option.label);
-                        onDefaultOptionLoaded(option);
-                    }
-                }
-            });
+            selectedRef.current = true;
+            setSearch(connection.name);
+            onDefaultOptionLoaded(option);
         }
     }, []);
 
