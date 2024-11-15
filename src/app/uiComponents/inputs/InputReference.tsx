@@ -10,6 +10,7 @@ import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStor
 import type { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
 import ReferenceSearchInput from '@app/uiComponents/inputs/fields/ReferenceSearchInput';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
+import type { ConnectionStore, ConnectionStoreItem } from '@app/systems/stores/inputConnectionStore';
 
 interface Props {
     name: string;
@@ -18,7 +19,7 @@ interface Props {
     structureType: StructureType;
     label?: string;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
-    store: UseBoundStore<StoreApi<ReferencesStore>>;
+    store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputReference({
     parentStructureItem,
@@ -33,7 +34,7 @@ export function InputReference({
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
-    const reference = store.getState().get(name);
+    const connection = store.getState().get(name);
     const [isEqualStructureNameError, setIsEqualStructureNameError] = useState(false);
 
     const hasReference = store((state) => state.has);
@@ -75,7 +76,7 @@ export function InputReference({
                     render={({ field: { onChange } }) => (
                         <ReferenceSearchInput
                             inputError={useFirstError(name)}
-                            reference={reference}
+                            connection={connection}
                             referenceStructureItem={internalStructureItem}
                             onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
                                 const value = JSON.parse(selected.value);
@@ -86,12 +87,12 @@ export function InputReference({
                                 };
 
                                 if (hasReference(name)) {
-                                    updateReference(ref as ReferenceStoreItem);
+                                    updateReference(ref as ConnectionStoreItem);
 
                                     return;
                                 }
 
-                                addReference(ref as ReferenceStoreItem);
+                                addReference(ref as ConnectionStoreItem);
                             }}
                             onOptionSelected={(item) => {
                                 if (item) {
@@ -99,18 +100,17 @@ export function InputReference({
                                     const ref = {
                                         name: name,
                                         structureType: value.structureType,
-                                        structureName: structureName,
                                         variableId: value.id,
                                     };
 
                                     onChange(ref);
 
                                     if (hasReference(name)) {
-                                        updateReference(ref as ReferenceStoreItem);
+                                        updateReference(ref as ConnectionStoreItem);
                                         return;
                                     }
 
-                                    addReference(ref as ReferenceStoreItem);
+                                    addReference(ref as ConnectionStoreItem);
                                     return;
                                 }
 

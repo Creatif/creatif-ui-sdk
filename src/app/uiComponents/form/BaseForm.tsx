@@ -28,7 +28,6 @@ import { InputReference } from '@app/uiComponents/inputs/InputReference';
 import type { StructureType } from '@root/types/shell/shell';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { QueriedMapItem } from '@root/types/api/map';
-import type { ReferencesStore } from '@app/systems/stores/inputReferencesStore';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
@@ -37,8 +36,9 @@ import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import { SubmitButton } from '@app/uiComponents/form/SubmitButton';
 import type { Attachment } from '@root/types/forms/forms';
+import type { ConnectionStore } from '@app/systems/stores/inputConnectionStore';
 
-export interface InputReferenceFieldProps {
+export interface InputConnectionFieldProps {
     name: string;
     structureName: string;
     structureType: StructureType;
@@ -87,7 +87,7 @@ interface Props<T extends FieldValues> {
     structureType: string;
     formProps?: UseFormProps<T>;
     isUpdate: boolean;
-    referenceStore: UseBoundStore<StoreApi<ReferencesStore>>;
+    connectionStore: UseBoundStore<StoreApi<ConnectionStore>>;
     imagePathsStore: UseBoundStore<StoreApi<ImagePathsStoreData>>;
     globalLoadingStore: GlobalLoadingStore;
     inputs: (
@@ -110,7 +110,7 @@ interface Props<T extends FieldValues> {
             inputLocale: (props?: InputLocaleFieldProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsFieldProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
-            inputConnection: (props: InputReferenceFieldProps) => React.ReactNode;
+            inputConnection: (props: InputConnectionFieldProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     onSubmit: (value: T, e: BaseSyntheticEvent | undefined) => void;
@@ -120,7 +120,7 @@ interface Props<T extends FieldValues> {
 export default function BaseForm<T extends FieldValues>({
     structureItem,
     formProps,
-    referenceStore,
+    connectionStore,
     imagePathsStore,
     useSpecialFields,
     inputs,
@@ -135,7 +135,7 @@ export default function BaseForm<T extends FieldValues>({
     const setBehaviour = useSpecialFields((state) => state.setBehaviour);
     formProps = formProps || {};
 
-    const assignReferences = referenceStore((state) => state.assign);
+    const assignReferences = connectionStore((state) => state.assign);
 
     if (isUpdate && currentData) {
         setLocale(currentData.locale);
@@ -222,8 +222,12 @@ export default function BaseForm<T extends FieldValues>({
                                 <InputGroups store={useSpecialFields} {...props} />
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
-                            inputConnection: (props: InputReferenceFieldProps) => (
-                                <InputReference {...props} store={referenceStore} parentStructureItem={structureItem} />
+                            inputConnection: (props: InputConnectionFieldProps) => (
+                                <InputReference
+                                    {...props}
+                                    store={connectionStore}
+                                    parentStructureItem={structureItem}
+                                />
                             ),
                         },
                     )}

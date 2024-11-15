@@ -27,16 +27,14 @@ import type {
     InputGroupsFieldProps,
     InputFileFieldProps,
     InputLocaleFieldProps,
-    InputReferenceFieldProps,
+    InputConnectionFieldProps,
 } from '@app/uiComponents/form/BaseForm';
 import BaseForm from '@app/uiComponents/form/BaseForm';
 
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { useQueryClient } from 'react-query';
-import { createInputReferenceStore } from '@app/systems/stores/inputReferencesStore';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import removeReferencesFromForm from '@app/uiComponents/shared/hooks/removeReferencesFromForm';
 import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { Error } from '@app/uiComponents/shared/Error';
@@ -49,6 +47,7 @@ import deleteBindings from '@app/uiComponents/form/bindings/deleteBindings';
 import { createImagePathsStore } from '@app/systems/stores/imagePaths';
 import { createGlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import type { UnifiedStructure } from '@root/types/api/shared';
+import { createInputConnectionStore } from '@app/systems/stores/inputConnectionStore';
 
 interface Props<T extends FieldValues> {
     bindings: Bindings<T>;
@@ -73,7 +72,7 @@ interface Props<T extends FieldValues> {
             inputLocale: (props?: InputLocaleFieldProps) => React.ReactNode;
             inputGroups: (props?: InputGroupsFieldProps) => React.ReactNode;
             inputBehaviour: () => React.ReactNode;
-            inputConnection: (props: InputReferenceFieldProps) => React.ReactNode;
+            inputConnection: (props: InputConnectionFieldProps) => React.ReactNode;
         },
     ) => React.ReactNode;
     beforeSave?: BeforeSaveFn<T>;
@@ -95,7 +94,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
     const isCreateRoute = location.pathname.includes('/create/');
     const isUpdateRoute = location.pathname.includes('/update/');
 
-    const referenceStore = useMemo(() => createInputReferenceStore(), []);
+    const connectionStore = useMemo(() => createInputConnectionStore(), []);
     const imagePathsStore = useMemo(() => createImagePathsStore(), []);
     const globalLoadingStore = useMemo(() => createGlobalLoadingStore(), []);
 
@@ -154,14 +153,14 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     const { name, locale, behaviour, groups } = resolveBindings(value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
 
                     deleteBindings(value);
-                    removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
+                    //removeReferencesFromForm(value as { [key: string]: unknown }, connectionStore);
 
                     const addFn = add?.();
                     if (!addFn) return undefined;
@@ -177,8 +176,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             groups: groups,
                             locale: locale,
                         },
-                        references: referenceStore.getState().references.map((item) => ({
-                            structureName: item.structureName,
+                        references: connectionStore.getState().references.map((item) => ({
                             structureType: item.structureType,
                             name: item.name,
                             variableId: item.variableId,
@@ -216,8 +214,8 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     const { name, locale, behaviour, groups } = resolveBindings(value as T, bindings);
                     if (!name) {
                         errorNotification(
-                            '\'name\' could not be determined',
-                            '\'name\' is required and you have to create a binding for it that returns a string.',
+                            "'name' could not be determined",
+                            "'name' is required and you have to create a binding for it that returns a string.",
                         );
                         return;
                     }
@@ -225,9 +223,9 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
 
-                    const isReferenceStoreLocked = referenceStore.getState().locked;
+                    const isReferenceStoreLocked = connectionStore.getState().locked;
 
-                    removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
+                    //removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
 
                     let fields = ['name', 'value', 'metadata'];
                     if (!isReferenceStoreLocked) {
@@ -255,8 +253,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             locale: locale,
                         },
                         references: !isReferenceStoreLocked
-                            ? (referenceStore.getState().references.map((item) => ({
-                                  structureName: item.structureName,
+                            ? (connectionStore.getState().references.map((item) => ({
                                   name: item.name,
                                   structureType: item.structureType,
                                   variableId: item.variableId,
@@ -350,7 +347,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                         inputs={inputs}
                         globalLoadingStore={globalLoadingStore}
                         imagePathsStore={imagePathsStore}
-                        referenceStore={referenceStore}
+                        connectionStore={connectionStore}
                         onSubmit={onInternalSubmit}
                         isSaving={isSaving}
                         currentData={currentData}

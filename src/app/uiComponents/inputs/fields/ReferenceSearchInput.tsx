@@ -11,6 +11,7 @@ import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { IntersectionObserverOption } from '@app/uiComponents/inputs/fields/IntersectionObserverOption';
 import { IconX } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
+import type { ConnectionStoreItem } from '@app/systems/stores/inputConnectionStore';
 
 export interface ReferenceSearchInputOption {
     label: string;
@@ -24,7 +25,7 @@ interface Props {
     referenceStructureItem: StructureItem;
     disabled?: boolean;
     inputError: string | undefined;
-    reference: ReferenceStoreItem | undefined;
+    connection: ConnectionStoreItem | undefined;
 }
 
 export default function ReferenceSearchInput({
@@ -33,7 +34,7 @@ export default function ReferenceSearchInput({
     inputError,
     onDefaultOptionLoaded,
     referenceStructureItem,
-    reference,
+    connection,
     disabled,
 }: Props) {
     const [isSearching, setIsSearching] = useState(false);
@@ -69,20 +70,20 @@ export default function ReferenceSearchInput({
     }, [disabled]);
 
     useEffect(() => {
-        if (reference) {
-            const connection = getValues(reference.name);
+        if (connection) {
+            const conn = getValues(connection.name);
             const option = {
-                label: connection.name,
+                label: conn.name,
                 value: JSON.stringify({
-                    id: connection.variableId,
-                    structureType: connection.structureType,
+                    id: conn.variableId,
+                    structureType: conn.structureType,
                 }),
             };
 
-            setValue(reference.name, option);
+            setValue(conn.name, option);
 
             selectedRef.current = true;
-            setSearch(connection.name);
+            setSearch(conn.name);
             onDefaultOptionLoaded(option);
         }
     }, []);
