@@ -1,5 +1,5 @@
 import usePaginateReferences from '@app/routes/show/hooks/usePaginateReferences';
-import type { QueryReference } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/reference';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -21,7 +21,7 @@ import { ActionRow } from '@app/routes/show/referenceListing/ActionRow';
 import appDate from '@lib/helpers/appDate';
 
 interface Props {
-    reference: QueryReference;
+    reference: QueryConnection;
     structureType: StructureType;
     relationshipType: string;
 }

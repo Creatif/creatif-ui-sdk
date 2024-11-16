@@ -1,10 +1,10 @@
-import type { QueryReference } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/reference';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-type Tab = { label: string; value: string; type: 'internal' | 'reference'; reference?: QueryReference };
+type Tab = { label: string; value: string; type: 'internal' | 'reference'; reference?: QueryConnection };
 
-function createTabsFromReferences(references: QueryReference[]): Tab[] {
+function createTabsFromReferences(references: QueryConnection[]): Tab[] {
     return references.map((ref) => ({
         label: ref.structureName,
         value: ref.id,
@@ -13,7 +13,7 @@ function createTabsFromReferences(references: QueryReference[]): Tab[] {
     }));
 }
 
-export default function useTabs(references: QueryReference[]): {
+export default function useTabs(references: QueryConnection[]): {
     selected: Tab;
     tabs: Tab[];
     onChange: (value: string | null) => void;

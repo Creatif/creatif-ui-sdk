@@ -1,5 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
-import type { QueryReference } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/reference';
 export interface CreateVariableBlueprint {
     name: string;
     behaviour?: Behaviour;
@@ -39,11 +39,7 @@ export interface UpdateableVariableValuesBlueprint<Value = unknown, Metadata = u
     groups?: string[];
     locale?: string;
 }
-export interface GetVariableBlueprint {
-    name: string;
-    locale?: string;
-    projectId: string;
-}
+
 export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
     id: string;
     name: string;
@@ -53,7 +49,7 @@ export interface GetVariableResponse<Value = unknown, Metadata = unknown> {
     metadata?: Value;
     value?: Metadata;
     locale: string;
-    references: QueryReference[];
+    connections: QueryConnection[];
 
     createdAt: string;
     updatedAt: string;

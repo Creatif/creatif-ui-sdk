@@ -3,7 +3,6 @@ import type { StructureType } from '@root/types/shell/shell';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
-import type { ReferencesStore, ReferenceStoreItem } from '@app/systems/stores/inputReferencesStore';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';

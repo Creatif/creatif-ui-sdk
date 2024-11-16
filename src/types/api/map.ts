@@ -1,5 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
-import type { QueryReference } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/reference';
 import type { StructureType } from '@root/types/shell/shell';
 import type { Group } from '@root/types/api/groups';
 
@@ -20,7 +20,7 @@ export interface AddToMapVariable {
     metadata: unknown;
 }
 
-export interface Reference {
+export interface Connection {
     name: string;
     structureName: string;
     structureType: StructureType;
@@ -31,7 +31,7 @@ export interface AddToMapBlueprint {
     name: string;
     projectId: string;
     variable: AddToMapVariable;
-    references?: Reference[];
+    connections?: Connection[];
     imagePaths: string[];
 }
 
@@ -64,7 +64,7 @@ export interface QueriedMapItem<Value = unknown, Metadata = unknown> {
     groups: string[];
     metadata: Metadata;
     value: Value;
-    references: QueryReference[];
+    connections: QueryConnection[];
 
     createdAt: string;
     updatedAt: string;
@@ -85,7 +85,7 @@ export interface UpdateMapItemVariableBlueprint {
     value?: unknown;
 }
 
-export interface UpdateMapVariableReferenceBlueprint {
+export interface UpdateMapVariableConnectionBlueprint {
     name: string;
     structureName: string;
     structureType: string;
@@ -98,7 +98,7 @@ export interface UpdateMapVariableBlueprint {
     projectId: string;
     fields?: string[];
     values: UpdateMapItemVariableBlueprint;
-    references: UpdateMapVariableReferenceBlueprint[];
+    connections: UpdateMapVariableConnectionBlueprint[];
     imagePaths: string[];
 }
 

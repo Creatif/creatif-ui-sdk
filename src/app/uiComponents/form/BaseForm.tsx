@@ -143,17 +143,10 @@ export default function BaseForm<T extends FieldValues>({
         setBehaviour(currentData.behaviour);
 
         assignReferences(
-            currentData.references.map((item) => ({
-                name: item.name,
-                parentType: item.parentType,
-                childType: item.childType,
-                parentId: item.parentId,
-                childId: item.childId,
-                parentStructureId: item.parentStructureId,
-                childStructureId: item.childStructureId,
-                structureType: item.parentType,
-                structureName: item.parentId,
-                variableId: item.parentId,
+            currentData.connections.map((item) => ({
+                name: item.path,
+                variableId: item.childVariableId,
+                structureType: item.childStructureType,
             })),
         );
 

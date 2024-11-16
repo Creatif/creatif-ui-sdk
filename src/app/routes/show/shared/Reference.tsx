@@ -1,8 +1,8 @@
-import type { QueryReference } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/reference';
 import { List } from '@app/routes/show/referenceListing/List';
 
 interface Props {
-    reference: QueryReference;
+    reference: QueryConnection;
     itemId: string;
 }
 

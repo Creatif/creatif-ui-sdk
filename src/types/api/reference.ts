@@ -1,16 +1,13 @@
 import type { Behaviour } from '@root/types/api/shared';
 import type { StructureType } from '@root/types/shell/shell';
 
-export interface QueryReference {
-    id: string;
-    name: string;
-    structureName: string;
-    parentType: StructureType;
-    childType: StructureType;
-    childStructureId: string;
-    parentStructureId: string;
-    parentId: string;
-    childId: string;
+export interface QueryConnection {
+    path: string;
+    childVariableId: string;
+    childStructureType: StructureType;
+    parentVariableId: string;
+    parentStructureType: StructureType;
+    createdAt: string;
 }
 
 export interface PaginateReferencesBlueprint {

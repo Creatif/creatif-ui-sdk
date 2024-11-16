@@ -1,5 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
-import type { QueryReference } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/reference';
 import type { StructureType } from '@root/types/shell/shell';
 import type { Group } from '@root/types/api/groups';
 export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown> {
@@ -26,7 +26,7 @@ export interface QueriedListItem<Value = unknown, Metadata = unknown> {
     groups: string[];
     metadata: Metadata;
     value: Value;
-    references: QueryReference[];
+    connections: QueryConnection[];
 
     createdAt: string;
     updatedAt: string;
@@ -65,9 +65,8 @@ export interface PaginationResult<Value, Metadata> {
     data: PaginatedVariableResult<Value, Metadata>[];
 }
 
-export interface Reference {
+export interface Connection {
     name: string;
-    structureName: string;
     structureType: StructureType;
     variableId: string;
 }
@@ -76,7 +75,7 @@ export interface AddToListBlueprint<Value = unknown, Metadata = unknown> {
     name: string;
     variable: AppendingVariableBlueprint<Value, Metadata>;
     projectId: string;
-    references: Reference[];
+    connections: Connection[];
     imagePaths: string[];
 }
 export interface UpdateListItemBlueprint {
@@ -85,13 +84,12 @@ export interface UpdateListItemBlueprint {
     projectId: string;
     fields?: string[];
     values: UpdateListItemVariableBlueprint;
-    references: UpdateMapVariableReferenceBlueprint[];
+    connections: UpdateMapVariableConnectionBlueprint[];
     imagePaths: string[];
 }
 
-export interface UpdateMapVariableReferenceBlueprint {
+export interface UpdateMapVariableConnectionBlueprint {
     name: string;
-    structureName: string;
     structureType: string;
     variableId: string;
 }

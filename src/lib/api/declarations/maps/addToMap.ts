@@ -12,7 +12,7 @@ export default function addToMap(blueprint: AddToMapBlueprint) {
             value: blueprint.variable.value ? JSON.stringify(blueprint.variable.value) : null,
             metadata: blueprint.variable.metadata ? JSON.stringify(blueprint.variable.metadata) : null,
         },
-        references: blueprint.references,
+        connections: blueprint.connections,
         imagePaths: blueprint.imagePaths,
     });
 }

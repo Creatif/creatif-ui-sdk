@@ -35,7 +35,7 @@ import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import { wrappedBeforeSave } from '@app/uiComponents/util';
 import { useQueryClient } from 'react-query';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import type { Reference, UpdateMapVariableReferenceBlueprint } from '@root/types/api/map';
+import type { Connection, UpdateMapVariableConnectionBlueprint } from '@root/types/api/map';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { Error } from '@app/uiComponents/shared/Error';
 import { useHttpActions } from '@app/uiComponents/form/hooks/useHttpActions';
@@ -176,11 +176,11 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             groups: groups,
                             locale: locale,
                         },
-                        references: connectionStore.getState().references.map((item) => ({
+                        connections: connectionStore.getState().references.map((item) => ({
                             structureType: item.structureType,
                             name: item.name,
                             variableId: item.variableId,
-                        })) as Reference[],
+                        })) as Connection[],
                         imagePaths: imagePathsStore.getState().paths,
                     });
 
@@ -223,13 +223,13 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
 
-                    const isReferenceStoreLocked = connectionStore.getState().locked;
+                    const isConnectionStoreLocked = connectionStore.getState().locked;
 
                     //removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
 
                     let fields = ['name', 'value', 'metadata'];
-                    if (!isReferenceStoreLocked) {
-                        fields.push('references');
+                    if (!isConnectionStoreLocked) {
+                        fields.push('connections');
                     }
 
                     if (specialFields.length > 0) {
@@ -252,12 +252,12 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             behaviour: behaviour,
                             locale: locale,
                         },
-                        references: !isReferenceStoreLocked
+                        connections: !isConnectionStoreLocked
                             ? (connectionStore.getState().references.map((item) => ({
                                   name: item.name,
                                   structureType: item.structureType,
                                   variableId: item.variableId,
-                              })) as UpdateMapVariableReferenceBlueprint[])
+                              })) as UpdateMapVariableConnectionBlueprint[])
                             : [],
                         imagePaths: imagePathsStore.getState().paths,
                     });
