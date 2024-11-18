@@ -29,7 +29,10 @@ function InputReferenceBlueprint({
     name,
     store,
 }: Props) {
-    const { control } = useFormContext();
+    const {
+        control,
+        formState: { errors },
+    } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);

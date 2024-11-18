@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function ManagersArrayInput({name, inputConnection}: Props) {
-    const { control } = useCreatifFormContext();
+    const { control, formState: {errors} } = useCreatifFormContext();
     const store = useConnectionStore();
     const { fields, append, remove } = useCreatifFieldArray({
         control,
