@@ -34,3 +34,27 @@
 
     margin-top: 3rem;
 }
+
+.managersArray {
+    padding: 1rem 1rem 1rem 1rem;
+    border: 1px solid var(--mantine-color-gray-7);
+}
+
+.managersInput {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.managersInput > div:first-of-type {
+    flex-grow: 2;
+}
+
+.managersAddButton {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+

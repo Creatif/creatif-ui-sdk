@@ -94,7 +94,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
     const isCreateRoute = location.pathname.includes('/create/');
     const isUpdateRoute = location.pathname.includes('/update/');
 
-    const connectionStore = useMemo(() => createInputConnectionStore(), []);
+    const useConnectionStore = useMemo(() => createInputConnectionStore(), []);
     const imagePathsStore = useMemo(() => createImagePathsStore(), []);
     const globalLoadingStore = useMemo(() => createGlobalLoadingStore(), []);
 
@@ -107,6 +107,9 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
     const [isGenericUpdateError, setIsGenericUpdateError] = useState(false);
     const [isVariableReadonly, setIsVariableReadonly] = useState(false);
     const [isNotFoundError, setIsNotFoundError] = useState(!(add && update));
+
+    // reset the connection store so that next form can use it
+    useEffect(() => () => useConnectionStore.getState().reset(), []);
 
     const {
         isFetching,
@@ -176,7 +179,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             groups: groups,
                             locale: locale,
                         },
-                        connections: connectionStore.getState().references.map((item) => ({
+                        connections: useConnectionStore.getState().references.map((item) => ({
                             structureType: item.structureType,
                             name: item.name,
                             variableId: item.variableId,
@@ -223,7 +226,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
 
-                    const isConnectionStoreLocked = connectionStore.getState().locked;
+                    const isConnectionStoreLocked = useConnectionStore.getState().locked;
 
                     //removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
 
@@ -253,7 +256,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             locale: locale,
                         },
                         connections: !isConnectionStoreLocked
-                            ? (connectionStore.getState().references.map((item) => ({
+                            ? (useConnectionStore.getState().references.map((item) => ({
                                   name: item.name,
                                   structureType: item.structureType,
                                   variableId: item.variableId,
@@ -347,7 +350,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                         inputs={inputs}
                         globalLoadingStore={globalLoadingStore}
                         imagePathsStore={imagePathsStore}
-                        connectionStore={connectionStore}
+                        connectionStore={useConnectionStore}
                         onSubmit={onInternalSubmit}
                         isSaving={isSaving}
                         currentData={currentData}

@@ -1,8 +1,11 @@
+import type { UseBoundStore } from 'zustand';
 import { create } from 'zustand';
 import type { StructureType } from '@root/types/shell/shell';
+import type { StoreApi } from 'zustand/esm';
 
 export interface ConnectionStoreItem {
     name: string;
+    path: string;
     structureType: StructureType;
     variableId: string;
 }
@@ -18,10 +21,18 @@ export interface ConnectionStore {
     unlock: () => void;
     all: () => ConnectionStoreItem[];
     update: (ref: ConnectionStoreItem) => void;
+    reset: () => void;
+    remove: (name: string) => void;
 }
 
+export type Store = UseBoundStore<StoreApi<ConnectionStore>>;
+
+let store: Store;
+
 export function createInputConnectionStore() {
-    return create<ConnectionStore>((set, get) => ({
+    if (store) return store;
+
+    const createdStore = create<ConnectionStore>((set, get) => ({
         references: [],
         locked: true,
         unlock: () => {
@@ -55,5 +66,48 @@ export function createInputConnectionStore() {
 
                 return store;
             }),
+        remove: (name: string) => {
+            const connections = get().references;
+            console.info('old connections: ', name, connections);
+            const newConnections: ConnectionStoreItem[] = [];
+            for (const item of connections) {
+                if (item.name !== name) {
+                    newConnections.push(item);
+                }
+            }
+
+            console.info('new connections: ', newConnections);
+
+            for (let i = 0; i < newConnections.length; i++) {
+                const conn = newConnections[i];
+                const parts = conn.name.split('.');
+                if (parts.length > 0) {
+                    conn.name = `${parts[0]}.${i}.${parts[2]}`;
+                }
+            }
+
+            set((current) => ({ ...current, references: newConnections }));
+        },
+        reset: () => {
+            set((current) => ({
+                ...current,
+                ...{
+                    references: [],
+                    locked: true,
+                },
+            }));
+        },
     }));
+
+    if (!store) {
+        store = createdStore;
+    }
+
+    return store;
+}
+
+export function useConnectionStore(): Store {
+    if (!store) throw new Error('Internal error. Connection store should exists');
+
+    return store;
 }

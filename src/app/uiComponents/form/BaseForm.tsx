@@ -48,7 +48,7 @@ export interface InputConnectionFieldProps {
 
 export interface InputFileFieldProps {
     name: string;
-    fileButtonProps?: FileButtonProps;
+    fileButtonProps?: Omit<FileButtonProps, 'onChange' | 'children'>;
     buttonProps?: ButtonProps;
     onCleared?: () => void;
     clear?: boolean;
@@ -218,6 +218,7 @@ export default function BaseForm<T extends FieldValues>({
                             inputConnection: (props: InputConnectionFieldProps) => (
                                 <InputReference
                                     {...props}
+                                    key={props.name}
                                     store={connectionStore}
                                     parentStructureItem={structureItem}
                                 />

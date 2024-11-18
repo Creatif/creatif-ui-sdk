@@ -15,7 +15,7 @@ interface Props {
     name: string;
     label?: string;
     description?: string;
-    fileButtonProps?: FileButtonProps;
+    fileButtonProps?: Omit<FileButtonProps, 'onChange' | 'children'>;
     buttonProps?: ButtonProps;
     validation?: {
         allowedSize?: {

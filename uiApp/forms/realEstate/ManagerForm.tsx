@@ -4,7 +4,8 @@ import { InputText } from '../../../src';
 import { Grid } from '../../../src/app/layouts/Grid';
 import { Cell } from '../../../src/app/layouts/Cell';
 import { File } from '../../../src/app/uiComponents/inputs/fileUpload/File';
-export function AccountForm() {
+import { ManagersArrayInput } from './ManagersArrayInput';
+export function ManagerForm() {
     return (
         <Form<{
             name: string;
@@ -14,7 +15,7 @@ export function AccountForm() {
             postalCode: string;
         }>
             bindings={{
-                name: (values) => `${values.name}-${values.lastName}`,
+                name: (values) => `${values.name}-${values.lastName}-${values.address}-${values.city}`,
             }}
             formProps={{
                 defaultValues: {
@@ -25,7 +26,7 @@ export function AccountForm() {
                     postalCode: '',
                 },
             }}
-            inputs={(submitButton, {inputFile}) => (
+            inputs={(submitButton, {inputFile, inputConnection}) => (
                 <>
                     <Grid>
                         <Cell span="span 6">
@@ -52,6 +53,9 @@ export function AccountForm() {
                             <InputText
                                 label="Address"
                                 name="address"
+                                options={{
+                                    required: 'Last name is required',
+                                }}
                             />
                         </Cell>
 
@@ -59,6 +63,9 @@ export function AccountForm() {
                             <InputText
                                 label="City"
                                 name="city"
+                                options={{
+                                    required: 'Last name is required',
+                                }}
                             />
                         </Cell>
 
@@ -66,7 +73,14 @@ export function AccountForm() {
                             <InputText
                                 label="Postal code"
                                 name="postalCode"
+                                options={{
+                                    required: 'Last name is required',
+                                }}
                             />
+                        </Cell>
+
+                        <Cell span="span 12">
+                            <ManagersArrayInput name="managers" inputConnection={inputConnection} />
                         </Cell>
 
                         <Cell span="span 12">

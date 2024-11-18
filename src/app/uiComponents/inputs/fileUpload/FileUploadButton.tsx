@@ -24,7 +24,7 @@ interface Props {
     clear?: boolean;
     onCleared?: () => void;
     store: ImagePathsStore;
-    fileButtonProps?: FileButtonProps;
+    fileButtonProps?: Omit<FileButtonProps, 'onChange' | 'children'>;
     buttonProps?: ButtonProps;
     buttonText?: string;
     globalLoadingStore: GlobalLoadingStore;

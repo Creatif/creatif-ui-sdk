@@ -70,8 +70,11 @@ export default function ReferenceSearchInput({
     }, [disabled]);
 
     useEffect(() => {
-        if (connection) {
+        console.log('values: ', getValues());
+        console.log('found connection: ', connection);
+        if (connection && getValues(connection.name)) {
             const conn = getValues(connection.name);
+            console.log('form connection: ', conn);
             const option = {
                 label: conn.name,
                 value: JSON.stringify({
