@@ -6,7 +6,7 @@ export default function useFirstError(name: string): string | undefined {
     const arrayError = name.split('.');
     let fieldError = errors[name];
     // this is a useFieldArray error and should be handled differently
-    if (arrayError.length !== 0 && errors) {
+    if (arrayError.length > 1 && errors) {
         const partOne = arrayError[0];
         const partTwo = arrayError[1];
         const partThree = arrayError[2];
