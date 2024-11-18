@@ -144,6 +144,7 @@ export default function BaseForm<T extends FieldValues>({
 
         assignReferences(
             currentData.connections.map((item) => ({
+                path: item.path,
                 name: item.path,
                 variableId: item.childVariableId,
                 structureType: item.childStructureType,

@@ -76,7 +76,7 @@ export default function ReferenceSearchInput({
             const conn = getValues(connection.name);
             console.log('form connection: ', conn);
             const option = {
-                label: conn.name,
+                label: conn.value,
                 value: JSON.stringify({
                     id: conn.variableId,
                     structureType: conn.structureType,

@@ -80,7 +80,7 @@ export function InputReference({
                             onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
                                 const value = JSON.parse(selected.value);
                                 const ref = {
-                                    name: name,
+                                    name: selected.label,
                                     structureType: value.structureType,
                                     variableId: value.id,
                                 };
@@ -93,7 +93,8 @@ export function InputReference({
 
                                 addReference(ref as ConnectionStoreItem);
                             }}
-                            onOptionSelected={(item) => {
+                            onOptionSelected={(item: ReferenceSearchInputOption | undefined) => {
+                                console.log('onOptionSelected: ', item);
                                 if (item) {
                                     const value = JSON.parse(item.value);
                                     const ref = {
