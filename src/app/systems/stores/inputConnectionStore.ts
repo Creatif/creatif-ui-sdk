@@ -76,8 +76,6 @@ export function createInputConnectionStore() {
                 }
             }
 
-            console.info('new connections: ', newConnections);
-
             for (let i = 0; i < newConnections.length; i++) {
                 const conn = newConnections[i];
                 const parts = conn.name.split('.');
@@ -85,6 +83,8 @@ export function createInputConnectionStore() {
                     conn.name = `${parts[0]}.${i}.${parts[2]}`;
                 }
             }
+
+            console.info('new connections: ', newConnections);
 
             set((current) => ({ ...current, references: newConnections }));
         },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
@@ -20,7 +20,7 @@ interface Props {
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
-export function InputReference({
+function InputReferenceBlueprint({
     parentStructureItem,
     structureName,
     structureType,
@@ -80,7 +80,7 @@ export function InputReference({
                             onDefaultOptionLoaded={(selected: ReferenceSearchInputOption) => {
                                 const value = JSON.parse(selected.value);
                                 const ref = {
-                                    name: selected.label,
+                                    name: value.name,
                                     structureType: value.structureType,
                                     variableId: value.id,
                                 };
@@ -125,3 +125,5 @@ export function InputReference({
         </>
     );
 }
+
+export const InputReference = memo(InputReferenceBlueprint);

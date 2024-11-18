@@ -41,6 +41,7 @@ import type { ConnectionStore } from '@app/systems/stores/inputConnectionStore';
 export interface InputConnectionFieldProps {
     name: string;
     structureName: string;
+    key: string;
     structureType: StructureType;
     label?: string;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
@@ -219,7 +220,8 @@ export default function BaseForm<T extends FieldValues>({
                             inputConnection: (props: InputConnectionFieldProps) => (
                                 <InputReference
                                     {...props}
-                                    key={props.name}
+                                    key={props.key}
+                                    name={props.name}
                                     store={connectionStore}
                                     parentStructureItem={structureItem}
                                 />

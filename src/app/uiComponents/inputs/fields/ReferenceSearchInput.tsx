@@ -72,21 +72,23 @@ export default function ReferenceSearchInput({
     useEffect(() => {
         console.log('values: ', getValues());
         console.log('found connection: ', connection);
-        if (connection && getValues(connection.name)) {
-            const conn = getValues(connection.name);
-            console.log('form connection: ', conn);
+        if (connection) {
+            const valueConnection = getValues(connection.name);
+            if (!valueConnection) return;
+
+            console.log('form value connection: ', valueConnection);
             const option = {
-                label: conn.value,
+                label: valueConnection.value,
                 value: JSON.stringify({
-                    id: conn.variableId,
-                    structureType: conn.structureType,
+                    id: valueConnection.variableId,
+                    structureType: valueConnection.structureType,
                 }),
             };
 
-            setValue(conn.name, option);
+            setValue(valueConnection.name, option);
 
             selectedRef.current = true;
-            setSearch(conn.name);
+            setSearch(valueConnection.value);
             onDefaultOptionLoaded(option);
         }
     }, []);

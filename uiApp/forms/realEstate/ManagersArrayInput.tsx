@@ -38,6 +38,7 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
                 {inputConnection({
                     structureName: 'Accounts',
                     name: inputName,
+                    key: field.id,
                     structureType: 'map',
                     label: 'Account',
                     options: {
