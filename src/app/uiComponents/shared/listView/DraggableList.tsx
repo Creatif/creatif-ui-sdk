@@ -106,8 +106,6 @@ export default function DraggableList<Value, Metadata>({
 
     const onMove = useCallback(
         (dragIndex: number, hoverIndex: number) => {
-            console.log(dragIndex, hoverIndex);
-
             if (list[hoverIndex]) {
                 setHoveredId(list[hoverIndex].id);
                 setMovingItems(undefined);

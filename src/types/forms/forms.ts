@@ -1,5 +1,6 @@
 import type { Behaviour } from '@root/types/api/shared';
 import type { BaseSyntheticEvent } from 'react';
+import type { StructureType } from '@root/types/shell/shell';
 
 export type Bindings<T> = {
     name: NameBinding<T>;
@@ -34,6 +35,13 @@ export type Attachment = {
     name: string;
     size: string;
     type: string;
+};
+
+export type InputConnectionItem = {
+    name: string;
+    structureType: StructureType;
+    variableId: string;
+    creatif_special_variable: boolean;
 };
 
 export type ProcessedResult = {

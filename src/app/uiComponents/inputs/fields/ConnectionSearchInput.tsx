@@ -5,13 +5,12 @@ import React, { useEffect, useRef, useState, useTransition } from 'react';
 import styles from '@app/uiComponents/inputs/css/InputGroups.module.css';
 import { useDebouncedValue } from '@mantine/hooks';
 import type { ApiError } from '@lib/http/apiError';
-import type { ReferenceStoreItem } from '@app/systems/stores/inputReferencesStore';
-import { queryItemById, searchAndCreateOptions } from '@app/uiComponents/inputs/fields/searchHelper';
+import { searchAndCreateOptions } from '@app/uiComponents/inputs/fields/searchHelper';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { IntersectionObserverOption } from '@app/uiComponents/inputs/fields/IntersectionObserverOption';
 import { IconX } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
 import type { ConnectionStoreItem } from '@app/systems/stores/inputConnectionStore';
+import { useConnectionStore } from '@app/systems/stores/inputConnectionStore';
 
 export interface ReferenceSearchInputOption {
     label: string;
@@ -20,21 +19,19 @@ export interface ReferenceSearchInputOption {
 
 interface Props {
     onOptionSelected: (option: ReferenceSearchInputOption | undefined) => void;
-    onDefaultOptionLoaded: (option: ReferenceSearchInputOption) => void;
     label: string;
+    defaultValue: ReferenceSearchInputOption;
     referenceStructureItem: StructureItem;
     disabled?: boolean;
     inputError: string | undefined;
-    connection: ConnectionStoreItem | undefined;
 }
 
-export default function ReferenceSearchInput({
+export default function ConnectionSearchInput({
     label,
     onOptionSelected,
+    defaultValue,
     inputError,
-    onDefaultOptionLoaded,
     referenceStructureItem,
-    connection,
     disabled,
 }: Props) {
     const [isSearching, setIsSearching] = useState(false);
@@ -45,7 +42,6 @@ export default function ReferenceSearchInput({
     const componentMountedRef = useRef(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, runTransition] = useTransition();
-    const { getValues, setValue } = useFormContext();
 
     const scrollAreaViewportRef = useRef<HTMLDivElement | null>(null);
 
@@ -64,34 +60,18 @@ export default function ReferenceSearchInput({
     });
 
     useEffect(() => {
+        if (defaultValue) {
+            selectedRef.current = true;
+            setSearch(defaultValue.label);
+            onOptionSelected(defaultValue);
+        }
+    }, []);
+
+    useEffect(() => {
         if (disabled) {
             combobox.closeDropdown();
         }
     }, [disabled]);
-
-    useEffect(() => {
-        console.log('values: ', getValues());
-        console.log('found connection: ', connection);
-        if (connection) {
-            const valueConnection = getValues(connection.name);
-            if (!valueConnection) return;
-
-            console.log('form value connection: ', valueConnection);
-            const option = {
-                label: valueConnection.value,
-                value: JSON.stringify({
-                    id: valueConnection.variableId,
-                    structureType: valueConnection.structureType,
-                }),
-            };
-
-            setValue(valueConnection.name, option);
-
-            selectedRef.current = true;
-            setSearch(valueConnection.value);
-            onDefaultOptionLoaded(option);
-        }
-    }, []);
 
     useEffect(() => {
         setIsSearching(true);

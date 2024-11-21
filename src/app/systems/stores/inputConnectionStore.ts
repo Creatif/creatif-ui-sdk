@@ -11,14 +11,12 @@ export interface ConnectionStoreItem {
 }
 
 export interface ConnectionStore {
-    locked: boolean;
     references: ConnectionStoreItem[];
     add: (item: ConnectionStoreItem) => void;
     get: (name: string) => ConnectionStoreItem | undefined;
     assign: (references: ConnectionStoreItem[]) => void;
     has: (name: string) => boolean;
     keys: () => string[];
-    unlock: () => void;
     all: () => ConnectionStoreItem[];
     update: (ref: ConnectionStoreItem) => void;
     reset: () => void;
@@ -34,10 +32,6 @@ export function createInputConnectionStore() {
 
     const createdStore = create<ConnectionStore>((set, get) => ({
         references: [],
-        locked: true,
-        unlock: () => {
-            set((current) => ({ ...current, locked: false }));
-        },
         add: (item: ConnectionStoreItem) =>
             set((current) => ({ ...current, references: [...current.references, item] })),
         keys: () => get().references.map((item) => item.name),

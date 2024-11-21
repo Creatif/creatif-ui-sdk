@@ -26,7 +26,6 @@ export default function useFirstError(name: string): string | undefined {
         }
     }
 
-    //console.log(errors, fieldError, name);
     if (!fieldError) return undefined;
 
     if (fieldError.message && typeof fieldError?.message === 'string') {

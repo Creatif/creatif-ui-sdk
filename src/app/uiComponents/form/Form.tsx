@@ -48,6 +48,7 @@ import { createImagePathsStore } from '@app/systems/stores/imagePaths';
 import { createGlobalLoadingStore } from '@app/systems/stores/globalLoading';
 import type { UnifiedStructure } from '@root/types/api/shared';
 import { createInputConnectionStore } from '@app/systems/stores/inputConnectionStore';
+import { extractConnections } from '@app/uiComponents/form/connections/extractConnections';
 
 interface Props<T extends FieldValues> {
     bindings: Bindings<T>;
@@ -151,6 +152,11 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                 setIsNotFoundError(false);
 
                 setIsSaving(true);
+                useConnectionStore.getState().reset();
+                extractConnections(useConnectionStore, value);
+
+                console.log('FOUND CONNECTIONS: ', useConnectionStore.getState().references);
+                console.log('CHANGED VALUE: ', value);
 
                 if (!isUpdate && value && structureItem) {
                     const { name, locale, behaviour, groups } = resolveBindings(value as T, bindings);
@@ -226,14 +232,9 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
 
-                    const isConnectionStoreLocked = useConnectionStore.getState().locked;
-
                     //removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
 
-                    let fields = ['name', 'value', 'metadata'];
-                    if (!isConnectionStoreLocked) {
-                        fields.push('connections');
-                    }
+                    let fields = ['name', 'value', 'metadata', 'connections'];
 
                     if (specialFields.length > 0) {
                         fields = [...fields, ...specialFields.map((item) => item.replace('creatif_', ''))];
@@ -242,6 +243,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     const updateFn = update?.();
                     if (!updateFn) return undefined;
 
+                    console.log('CONNECTIONS BEFORE UPDATE: ', useConnectionStore.getState().references);
                     const { result: response, error } = await updateFn({
                         fields: fields,
                         name: structureItem.id,
@@ -255,13 +257,11 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             behaviour: behaviour,
                             locale: locale,
                         },
-                        connections: !isConnectionStoreLocked
-                            ? (useConnectionStore.getState().references.map((item) => ({
-                                  name: item.name,
-                                  structureType: item.structureType,
-                                  variableId: item.variableId,
-                              })) as UpdateMapVariableConnectionBlueprint[])
-                            : [],
+                        connections: useConnectionStore.getState().references.map((item) => ({
+                            name: item.name,
+                            structureType: item.structureType,
+                            variableId: item.variableId,
+                        })) as UpdateMapVariableConnectionBlueprint[],
                         imagePaths: imagePathsStore.getState().paths,
                     });
 
@@ -344,7 +344,6 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     <BaseForm
                         useSpecialFields={useSpecialFields}
                         structureType={structureItem.structureType}
-                        structureItem={structureItem}
                         formProps={formProps}
                         isUpdate={isUpdate}
                         inputs={inputs}

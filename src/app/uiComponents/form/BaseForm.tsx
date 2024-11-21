@@ -24,7 +24,7 @@ import type { GetVariableResponse } from '@root/types/api/variable';
 import { InputGroups } from '@app/uiComponents/inputs/InputGroups';
 import { InputBehaviour } from '@app/uiComponents/inputs/InputBehaviour';
 import type { QueriedListItem } from '@root/types/api/list';
-import { InputReference } from '@app/uiComponents/inputs/InputReference';
+import { InputConnection } from '@app/uiComponents/inputs/InputConnection';
 import type { StructureType } from '@root/types/shell/shell';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { QueriedMapItem } from '@root/types/api/map';
@@ -41,7 +41,7 @@ import type { ConnectionStore } from '@app/systems/stores/inputConnectionStore';
 export interface InputConnectionFieldProps {
     name: string;
     structureName: string;
-    key: string;
+    key?: string | number;
     structureType: StructureType;
     label?: string;
     options?: Omit<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>;
@@ -83,7 +83,6 @@ export interface InputGroupsFieldProps {
 }
 
 interface Props<T extends FieldValues> {
-    structureItem: StructureItem;
     useSpecialFields: UseBoundStore<StoreApi<SpecialFieldsStore>>;
     structureType: string;
     formProps?: UseFormProps<T>;
@@ -119,7 +118,6 @@ interface Props<T extends FieldValues> {
     currentData: GetVariableResponse | QueriedListItem | QueriedMapItem | undefined;
 }
 export default function BaseForm<T extends FieldValues>({
-    structureItem,
     formProps,
     connectionStore,
     imagePathsStore,
@@ -218,12 +216,11 @@ export default function BaseForm<T extends FieldValues>({
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputConnection: (props: InputConnectionFieldProps) => (
-                                <InputReference
+                                <InputConnection
                                     {...props}
-                                    key={props.key}
+                                    key={props.key ? props.key : props.name}
                                     name={props.name}
                                     store={connectionStore}
-                                    parentStructureItem={structureItem}
                                 />
                             ),
                         },

@@ -7,6 +7,7 @@ import { Button } from '@mantine/core';
 import { InputCheckbox } from '../../../src';
 import { useConnectionStore } from '../../../src/app/systems/stores/inputConnectionStore';
 import { useCreatifWatch } from '../../../src';
+import { useWatch } from 'react-hook-form';
 
 interface Props {
     name: string;
@@ -14,9 +15,14 @@ interface Props {
 }
 
 export function ManagersArrayInput({name, inputConnection}: Props) {
-    const { control, formState: {errors} } = useCreatifFormContext();
-    const store = useConnectionStore();
+    const { control } = useCreatifFormContext();
     const { fields, append, remove } = useCreatifFieldArray({
+        control,
+        name: name,
+        shouldUnregister: true,
+    });
+
+    const watchedArray = useWatch({
         control,
         name: name,
     });
@@ -37,7 +43,9 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
 
         {fields.map((field, index) => {
             const accountInputName = `${name}.${index}.account`;
-            const supervisorInputName = `${name}.${index}.supervisor`
+            const supervisorInputName = `${name}.${index}.supervisor`;
+            const checkboxName = `${name}.${index}.isSupervised`;
+
             return <div className={css.managersInputWrapper} key={field.id}>
                 <div className={css.managersInput}>
                     {inputConnection({
@@ -51,23 +59,23 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
                         },
                     })}
 
-                    <InputCheckbox onClick={() => setShouldBeSupervised(index)} name={`${name}.${index}.isSupervised`} label="Should be supervised?" />
+                    <InputCheckbox  name={checkboxName} label="Should be supervised?" />
 
-                    {Number.isInteger(shouldBeSupervised) && inputConnection({
-                        structureName: 'Managers',
-                        name: supervisorInputName,
-                        key: field.id,
-                        structureType: 'map',
-                        label: 'Managers',
-                        options: {
-                            required: 'Selecting a supervisor is required',
-                        },
-                    })}
+                    {watchedArray && watchedArray[index] && watchedArray[index].isSupervised && <div className={css.supervisorConnection}>
+                        {inputConnection({
+                            structureName: 'Managers',
+                            name: supervisorInputName,
+                            structureType: 'map',
+                            label: 'Managers',
+                            options: {
+                                required: 'Selecting a supervisor is required',
+                            },
+                        })}
+                    </div>}
                 </div>
 
                 {fields.length >= 2 && <Button color="red" size="xs" variant="outline" onClick={() => {
                     remove(index);
-                    store.getState().remove(accountInputName);
                 }}>Remove</Button>}
             </div>
         })}
