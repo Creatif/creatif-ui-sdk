@@ -216,12 +216,7 @@ export default function BaseForm<T extends FieldValues>({
                             ),
                             inputBehaviour: () => <InputBehaviour store={useSpecialFields} />,
                             inputConnection: (props: InputConnectionFieldProps) => (
-                                <InputConnection
-                                    {...props}
-                                    key={props.key ? props.key : props.name}
-                                    name={props.name}
-                                    store={connectionStore}
-                                />
+                                <InputConnection {...props} name={props.name} store={connectionStore} />
                             ),
                         },
                     )}

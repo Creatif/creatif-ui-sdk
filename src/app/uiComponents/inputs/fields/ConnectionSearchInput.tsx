@@ -9,18 +9,16 @@ import { searchAndCreateOptions } from '@app/uiComponents/inputs/fields/searchHe
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { IntersectionObserverOption } from '@app/uiComponents/inputs/fields/IntersectionObserverOption';
 import { IconX } from '@tabler/icons-react';
-import type { ConnectionStoreItem } from '@app/systems/stores/inputConnectionStore';
-import { useConnectionStore } from '@app/systems/stores/inputConnectionStore';
 
-export interface ReferenceSearchInputOption {
+export interface ConnectionSearchInputOption {
     label: string;
     value: string;
 }
 
 interface Props {
-    onOptionSelected: (option: ReferenceSearchInputOption | undefined) => void;
+    onOptionSelected: (option: ConnectionSearchInputOption | undefined) => void;
     label: string;
-    defaultValue: ReferenceSearchInputOption;
+    defaultValue: ConnectionSearchInputOption | undefined;
     referenceStructureItem: StructureItem;
     disabled?: boolean;
     inputError: string | undefined;
@@ -36,7 +34,7 @@ export default function ConnectionSearchInput({
 }: Props) {
     const [isSearching, setIsSearching] = useState(false);
     const [search, setSearch] = useState('');
-    const [searchedOptions, setSearchedOptions] = useState<ReferenceSearchInputOption[]>([]);
+    const [searchedOptions, setSearchedOptions] = useState<ConnectionSearchInputOption[]>([]);
     const [debouncedValue] = useDebouncedValue(search, 300);
     const [internalError, setInternalError] = useState<ApiError | undefined>();
     const componentMountedRef = useRef(true);

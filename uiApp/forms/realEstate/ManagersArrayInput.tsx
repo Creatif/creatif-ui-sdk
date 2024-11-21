@@ -27,8 +27,6 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
         name: name,
     });
 
-    const [shouldBeSupervised, setShouldBeSupervised] = useState<number>();
-
     useEffect(() => {
         if (fields.length !== 0) return;
 
@@ -51,7 +49,6 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
                     {inputConnection({
                         structureName: 'Accounts',
                         name: accountInputName,
-                        key: field.id,
                         structureType: 'map',
                         label: 'Account',
                         options: {
@@ -68,7 +65,7 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
                             structureType: 'map',
                             label: 'Managers',
                             options: {
-                                required: 'Selecting a supervisor is required',
+                                required: 'If checked, selecting a supervisor is required',
                             },
                         })}
                     </div>}

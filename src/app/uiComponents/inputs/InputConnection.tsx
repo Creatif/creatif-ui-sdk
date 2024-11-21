@@ -5,7 +5,7 @@ import type { StoreApi, UseBoundStore } from 'zustand';
 import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import RuntimeErrorModal from '@app/uiComponents/shared/RuntimeErrorModal';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
-import type { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
+import type { ConnectionSearchInputOption } from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
 import ConnectionSearchInput from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import type { ConnectionStore } from '@app/systems/stores/inputConnectionStore';
@@ -20,19 +20,14 @@ interface Props {
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputConnection({ structureName, structureType, label, options, name }: Props) {
-    const { control, setValue, getValues } = useFormContext();
+    const { control, setValue, getValues, unregister } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
 
-    const connStore = useConnectionStore();
-    const connection = connStore.getState().get(name);
     const internalVariable = getValues(name);
 
-    let defaultValue = {
-        label: '',
-        value: '',
-    };
+    let defaultValue: ConnectionSearchInputOption | undefined = undefined;
 
     if (internalVariable) {
         defaultValue = {
@@ -44,28 +39,21 @@ export function InputConnection({ structureName, structureType, label, options, 
         };
     }
 
-    useEffect(() => {
-        if (!connection) {
-            const ref = {
-                name: name,
-                creatif_special_variable: false,
-            };
-
-            setValue(name, ref);
-
-            return;
-        }
-
-        const ref = {
-            name: connection.name,
-            path: connection.path,
-            structureType: connection.structureType,
-            variableId: connection.variableId,
-            creatif_special_variable: true,
-        };
-
-        setValue(name, ref);
-    }, []);
+    useEffect(
+        () => () => {
+            unregister(name, {
+                keepDirty: false,
+                keepError: false,
+                keepValue: false,
+                keepTouched: false,
+                keepIsValid: false,
+                keepDefaultValue: false,
+                keepDirtyValues: false,
+                keepIsSubmitSuccessful: false,
+            });
+        },
+        [],
+    );
 
     return (
         <>
@@ -87,9 +75,8 @@ export function InputConnection({ structureName, structureType, label, options, 
                             inputError={useFirstError(name)}
                             defaultValue={defaultValue}
                             referenceStructureItem={internalStructureItem}
-                            onOptionSelected={(item: ReferenceSearchInputOption | undefined) => {
+                            onOptionSelected={(item: ConnectionSearchInputOption | undefined) => {
                                 if (item) {
-                                    console.log(item);
                                     const value = JSON.parse(item.value);
                                     const ref = {
                                         name: name,

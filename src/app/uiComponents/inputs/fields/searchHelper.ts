@@ -4,7 +4,7 @@ import { Runtime } from '@app/systems/runtime/Runtime';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
-import type { ReferenceSearchInputOption } from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
+import type { ConnectionSearchInputOption } from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
 import { ApiError } from '@lib/http/apiError';
 
 export async function searchAndCreateOptions(
@@ -14,7 +14,7 @@ export async function searchAndCreateOptions(
     page: number,
     limit = 100,
 ): Promise<{
-    options: ReferenceSearchInputOption[] | undefined;
+    options: ConnectionSearchInputOption[] | undefined;
     error: ApiError | undefined;
 }> {
     if (structureType === 'list') {

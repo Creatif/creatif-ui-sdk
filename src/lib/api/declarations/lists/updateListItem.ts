@@ -7,8 +7,6 @@ export async function updateListItem(blueprint: UpdateListItemBlueprint) {
         fields = blueprint.fields.join('|');
     }
 
-    console.log(blueprint.connections, fields);
-
     return tryHttp<UpdateListItemResult>(
         declarations(),
         'post',
