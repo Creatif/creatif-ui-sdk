@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { StructureType } from '@root/types/shell/shell';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { StoreApi, UseBoundStore } from 'zustand';
@@ -20,24 +20,29 @@ interface Props {
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputConnection({ structureName, structureType, label, options, name }: Props) {
-    const { control, setValue, getValues, unregister } = useFormContext();
+    const { control, getValues, unregister } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
 
-    const internalVariable = getValues(name);
+    const [defaultValue, setDefaultValue] = useState<ConnectionSearchInputOption>();
 
-    let defaultValue: ConnectionSearchInputOption | undefined = undefined;
+    useEffect(() => {
+        const internalVariable = getValues(name);
 
-    if (internalVariable) {
-        defaultValue = {
-            label: internalVariable.value,
-            value: JSON.stringify({
-                id: internalVariable.variableId,
-                structureType: internalVariable.structureType,
-            }),
-        };
-    }
+        if (internalVariable) {
+            console.log('INTERNAL VARIABLE INPUT CONNECTION: ', internalVariable);
+            setDefaultValue({
+                label: internalVariable.value,
+                value: JSON.stringify({
+                    id: internalVariable.variableId,
+                    structureType: internalVariable.structureType,
+                }),
+            });
+
+            return;
+        }
+    }, []);
 
     useEffect(
         () => () => {
@@ -79,7 +84,7 @@ export function InputConnection({ structureName, structureType, label, options, 
                                 if (item) {
                                     const value = JSON.parse(item.value);
                                     const ref = {
-                                        name: name,
+                                        path: name,
                                         structureType: value.structureType,
                                         variableId: value.id,
                                         creatif_special_variable: true,

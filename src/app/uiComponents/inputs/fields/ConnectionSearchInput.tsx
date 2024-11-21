@@ -33,7 +33,7 @@ export default function ConnectionSearchInput({
     disabled,
 }: Props) {
     const [isSearching, setIsSearching] = useState(false);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(defaultValue ? defaultValue.label : '');
     const [searchedOptions, setSearchedOptions] = useState<ConnectionSearchInputOption[]>([]);
     const [debouncedValue] = useDebouncedValue(search, 300);
     const [internalError, setInternalError] = useState<ApiError | undefined>();
@@ -59,11 +59,12 @@ export default function ConnectionSearchInput({
 
     useEffect(() => {
         if (defaultValue) {
+            console.log('DEFAULT VALUE: ', defaultValue);
             selectedRef.current = true;
             setSearch(defaultValue.label);
             onOptionSelected(defaultValue);
         }
-    }, []);
+    }, [defaultValue]);
 
     useEffect(() => {
         if (disabled) {

@@ -34,7 +34,7 @@ export default function useUpdateVariable(
                             projectId: Runtime.instance.currentProjectCache.getProject().id,
                             values: body.values,
                             fields: body.fields,
-                            references: [],
+                            connections: [],
                             imagePaths: [],
                         });
                     }
@@ -45,7 +45,7 @@ export default function useUpdateVariable(
                         projectId: Runtime.instance.currentProjectCache.getProject().id,
                         values: body.values,
                         fields: body.fields,
-                        references: [],
+                        connections: [],
                         imagePaths: [],
                     });
                 }),

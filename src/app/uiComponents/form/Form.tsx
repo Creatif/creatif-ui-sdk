@@ -187,7 +187,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                         },
                         connections: useConnectionStore.getState().references.map((item) => ({
                             structureType: item.structureType,
-                            name: item.name,
+                            name: item.path,
                             variableId: item.variableId,
                         })) as Connection[],
                         imagePaths: imagePathsStore.getState().paths,
@@ -258,7 +258,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             locale: locale,
                         },
                         connections: useConnectionStore.getState().references.map((item) => ({
-                            name: item.name,
+                            name: item.path,
                             structureType: item.structureType,
                             variableId: item.variableId,
                         })) as UpdateMapVariableConnectionBlueprint[],

@@ -30,7 +30,6 @@ function recursiveExtractConnections(store: Store, path: string, value: unknown[
                     }
 
                     store.getState().add({
-                        name: possibleConnection.name,
                         variableId: possibleConnection.variableId,
                         structureType: possibleConnection.structureType,
                         path: `${currentPath}.${key}`,
@@ -56,7 +55,6 @@ export function extractConnections(store: Store, value: { [key: string]: unknown
     for (const [key, val] of Object.entries(value)) {
         if (isInputConnectionItem(val)) {
             store.getState().add({
-                name: val.name,
                 variableId: val.variableId,
                 structureType: val.structureType,
                 path: key,
@@ -74,6 +72,7 @@ export function extractConnections(store: Store, value: { [key: string]: unknown
         const name = allConnections[i].path;
         const split = name.split('.');
 
-        allConnections[i].name = `${split[0]}.${i}.${split[2]}`;
+        allConnections[i].path = `${split[0]}.${i}.${split[2]}`;
     }
+    console.log('ALL CONNECTIONS AFTER CHANGE: ', allConnections);
 }

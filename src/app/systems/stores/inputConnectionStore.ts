@@ -4,7 +4,6 @@ import type { StructureType } from '@root/types/shell/shell';
 import type { StoreApi } from 'zustand/esm';
 
 export interface ConnectionStoreItem {
-    name: string;
     path: string;
     structureType: StructureType;
     variableId: string;
@@ -20,7 +19,6 @@ export interface ConnectionStore {
     all: () => ConnectionStoreItem[];
     update: (ref: ConnectionStoreItem) => void;
     reset: () => void;
-    remove: (name: string) => void;
 }
 
 export type Store = UseBoundStore<StoreApi<ConnectionStore>>;
@@ -34,22 +32,22 @@ export function createInputConnectionStore() {
         references: [],
         add: (item: ConnectionStoreItem) =>
             set((current) => ({ ...current, references: [...current.references, item] })),
-        keys: () => get().references.map((item) => item.name),
+        keys: () => get().references.map((item) => item.path),
         all: () => get().references,
         get: (name: string) => {
             const store = get();
             const references = store.references;
-            return references.find((item) => item.name === name);
+            return references.find((item) => item.path === name);
         },
         assign: (refs: ConnectionStoreItem[]) => set((current) => ({ ...current, references: refs })),
         has: (name: string) => {
             const store = get();
-            return Boolean(store.references.find((item) => item.name === name));
+            return Boolean(store.references.find((item) => item.path === name));
         },
         update: (ref: ConnectionStoreItem) =>
             set((current) => {
                 const store = get();
-                const idx = store.references.findIndex((item) => item.name === ref.name);
+                const idx = store.references.findIndex((item) => item.path === ref.path);
                 if (idx !== -1) {
                     const refs = [...store.references];
                     refs.splice(idx, 1);
@@ -60,28 +58,6 @@ export function createInputConnectionStore() {
 
                 return store;
             }),
-        remove: (name: string) => {
-            const connections = get().references;
-            console.info('old connections: ', name, connections);
-            const newConnections: ConnectionStoreItem[] = [];
-            for (const item of connections) {
-                if (item.name !== name) {
-                    newConnections.push(item);
-                }
-            }
-
-            for (let i = 0; i < newConnections.length; i++) {
-                const conn = newConnections[i];
-                const parts = conn.name.split('.');
-                if (parts.length > 0) {
-                    conn.name = `${parts[0]}.${i}.${parts[2]}`;
-                }
-            }
-
-            console.info('new connections: ', newConnections);
-
-            set((current) => ({ ...current, references: newConnections }));
-        },
         reset: () => {
             set((current) => ({
                 ...current,
