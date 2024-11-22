@@ -184,7 +184,11 @@ export default function BaseForm<T extends FieldValues>({
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <form
+                onSubmit={methods.handleSubmit((values, e) => {
+                    console.log('VALUES DIRECTLY FROM ON SUBMIT: ', values);
+                    onSubmit(values, e);
+                })}>
                 {!isLoading &&
                     inputs(
                         <SubmitButton

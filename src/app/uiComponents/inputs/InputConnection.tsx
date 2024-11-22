@@ -25,13 +25,17 @@ export function InputConnection({ structureName, structureType, label, options, 
         .getState()
         .getStructureItemByName(structureName, structureType);
 
-    const [defaultValue, setDefaultValue] = useState<ConnectionSearchInputOption>();
+    const [defaultValue, setDefaultValue] = useState<ConnectionSearchInputOption>({
+        label: '',
+        value: '{}',
+    });
+
+    console.log('VALUES IN INPUT: ', getValues());
 
     useEffect(() => {
         const internalVariable = getValues(name);
 
         if (internalVariable) {
-            console.log('INTERNAL VARIABLE INPUT CONNECTION: ', internalVariable);
             setDefaultValue({
                 label: internalVariable.value,
                 value: JSON.stringify({
@@ -47,17 +51,17 @@ export function InputConnection({ structureName, structureType, label, options, 
     useEffect(
         () => () => {
             unregister(name, {
-                keepDirty: false,
                 keepError: false,
+                keepDirty: false,
                 keepValue: false,
                 keepTouched: false,
-                keepIsValid: false,
-                keepDefaultValue: false,
                 keepDirtyValues: false,
+                keepDefaultValue: false,
+                keepIsValid: false,
                 keepIsSubmitSuccessful: false,
             });
         },
-        [],
+        [name],
     );
 
     return (
@@ -75,6 +79,7 @@ export function InputConnection({ structureName, structureType, label, options, 
                 <Controller
                     control={control}
                     rules={options}
+                    name={name}
                     render={({ field: { onChange } }) => (
                         <ConnectionSearchInput
                             inputError={useFirstError(name)}
@@ -85,6 +90,7 @@ export function InputConnection({ structureName, structureType, label, options, 
                                     const value = JSON.parse(item.value);
                                     const ref = {
                                         path: name,
+                                        value: '',
                                         structureType: value.structureType,
                                         variableId: value.id,
                                         creatif_special_variable: true,
@@ -100,7 +106,6 @@ export function InputConnection({ structureName, structureType, label, options, 
                             label={label ? label : structureName}
                         />
                     )}
-                    name={name}
                 />
             )}
         </>

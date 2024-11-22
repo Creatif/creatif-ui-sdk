@@ -152,11 +152,12 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                 setIsNotFoundError(false);
 
                 setIsSaving(true);
+                console.log('VALUE: ', value);
                 useConnectionStore.getState().reset();
                 extractConnections(useConnectionStore, value);
+                console.log('VALUE AFTER EXTRACTION: ', value);
 
-                console.log('FOUND CONNECTIONS: ', useConnectionStore.getState().references);
-                console.log('CHANGED VALUE: ', value);
+                setIsSaving(false);
 
                 if (!isUpdate && value && structureItem) {
                     const { name, locale, behaviour, groups } = resolveBindings(value as T, bindings);
@@ -243,7 +244,6 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     const updateFn = update?.();
                     if (!updateFn) return undefined;
 
-                    console.log('CONNECTIONS BEFORE UPDATE: ', useConnectionStore.getState().references);
                     const { result: response, error } = await updateFn({
                         fields: fields,
                         name: structureItem.id,

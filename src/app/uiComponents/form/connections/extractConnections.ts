@@ -14,8 +14,7 @@ function isInputConnectionItem(value: unknown): value is InputConnectionItem {
     return isObject(value) && Object.hasOwn(value, 'creatif_special_variable');
 }
 
-function recursiveExtractConnections(store: Store, path: string, value: unknown[]): unknown[] {
-    let filteredValues: unknown[] = [];
+function recursiveExtractConnections(store: Store, path: string, value: unknown[]) {
     for (let i = 0; i < value.length; i++) {
         const val = value[i];
 
@@ -34,21 +33,14 @@ function recursiveExtractConnections(store: Store, path: string, value: unknown[
                         structureType: possibleConnection.structureType,
                         path: `${currentPath}.${key}`,
                     });
-
-                    filteredValues.push(value[i]);
                 }
 
                 if (Array.isArray(possibleConnection)) {
-                    const filtered = recursiveExtractConnections(store, currentPath, possibleConnection);
-                    if (filtered) {
-                        filteredValues = [...filteredValues, ...filtered];
-                    }
+                    recursiveExtractConnections(store, currentPath, possibleConnection);
                 }
             }
         }
     }
-
-    return filteredValues;
 }
 
 export function extractConnections(store: Store, value: { [key: string]: unknown }) {
@@ -62,17 +54,20 @@ export function extractConnections(store: Store, value: { [key: string]: unknown
         }
 
         if (Array.isArray(val)) {
-            value[key] = recursiveExtractConnections(store, key, val);
+            recursiveExtractConnections(store, key, val);
         }
     }
 
-    const allConnections = store.getState().references;
+    /*    const allConnections = store.getState().references;
     console.log('ALL CONNECTIONS BEFORE CHANGE: ', allConnections);
     for (let i = 0; i < allConnections.length; i++) {
         const name = allConnections[i].path;
         const split = name.split('.');
 
-        allConnections[i].path = `${split[0]}.${i}.${split[2]}`;
+        if (split.length > 0) {
+            allConnections[i].path = `${split[0]}.${i}.${split[2]}`;
+        }
+
     }
-    console.log('ALL CONNECTIONS AFTER CHANGE: ', allConnections);
+    console.log('ALL CONNECTIONS AFTER CHANGE: ', allConnections);*/
 }

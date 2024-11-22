@@ -59,10 +59,8 @@ export default function ConnectionSearchInput({
 
     useEffect(() => {
         if (defaultValue) {
-            console.log('DEFAULT VALUE: ', defaultValue);
             selectedRef.current = true;
             setSearch(defaultValue.label);
-            onOptionSelected(defaultValue);
         }
     }, [defaultValue]);
 

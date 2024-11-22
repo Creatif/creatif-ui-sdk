@@ -33,6 +33,7 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
         append({
             account: undefined,
             isSupervised: false,
+            supervisor: undefined,
         });
     }, [fields.length]);
 
@@ -78,7 +79,11 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
         })}
 
         <div className={css.managersAddButton}>
-            <Button size="xs" variant="outline" onClick={() => append({})}>Add manager</Button>
+            <Button size="xs" variant="outline" onClick={() => append({
+                account: undefined,
+                supervisor: undefined,
+                isSupervised: false,
+            })}>Add manager</Button>
         </div>
     </fieldset>
 }
