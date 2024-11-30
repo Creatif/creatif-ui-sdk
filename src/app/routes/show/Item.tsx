@@ -36,7 +36,7 @@ export default function Item() {
 
     const [internalResult, setInternalResult] = useState(data?.result);
 
-    const { tabs, onChange, selected } = useTabs((internalResult && internalResult.references) || []);
+    const { tabs, onChange, selected } = useTabs((internalResult && internalResult.connections) || []);
     const values = useMemo(() => treeBuilder(internalResult?.value as object), [internalResult?.value]);
 
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);

@@ -57,17 +57,4 @@ export function extractConnections(store: Store, value: { [key: string]: unknown
             recursiveExtractConnections(store, key, val);
         }
     }
-
-    /*    const allConnections = store.getState().references;
-    console.log('ALL CONNECTIONS BEFORE CHANGE: ', allConnections);
-    for (let i = 0; i < allConnections.length; i++) {
-        const name = allConnections[i].path;
-        const split = name.split('.');
-
-        if (split.length > 0) {
-            allConnections[i].path = `${split[0]}.${i}.${split[2]}`;
-        }
-
-    }
-    console.log('ALL CONNECTIONS AFTER CHANGE: ', allConnections);*/
 }

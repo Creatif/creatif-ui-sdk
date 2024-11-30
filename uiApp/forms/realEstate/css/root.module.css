@@ -36,6 +36,7 @@
 }
 
 .managersArray {
+    width: 100%;
     padding: 1rem 1rem 1rem 1rem;
     border: 1px solid var(--mantine-color-gray-7);
 }
@@ -59,6 +60,14 @@
     gap: 1rem;
 }
 
+.removableConnection {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
 .managersInput > div:first-of-type {
     flex-grow: 2;
 }
@@ -67,6 +76,23 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+}
+
+.supervisorWrapper {
+    width: 100%;
+    margin-left: 2rem;
+}
+
+.singleSupervisorEntry {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.supervisorWrapper > div:first-of-type {
+    width: 100%;
 }
 
 

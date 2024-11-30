@@ -3,7 +3,7 @@ import { ApiError } from '@lib/http/apiError';
 export function handleError<T>(e: TypeError): TryResult<T> {
     return {
         result: undefined,
-        error: new ApiError('Someting went wrong', { data: { message: e.message } }, 500),
+        error: new ApiError('Something went wrong', { data: { message: e.message } }, 500),
         status: 500,
     };
 }

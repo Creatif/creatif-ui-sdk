@@ -8,6 +8,7 @@ import { InputCheckbox } from '../../../src';
 import { useConnectionStore } from '../../../src/app/systems/stores/inputConnectionStore';
 import { useCreatifWatch } from '../../../src';
 import { useWatch } from 'react-hook-form';
+import { SupervisorsArrayInput } from './SupervisorsArrayInput';
 
 interface Props {
     name: string;
@@ -33,7 +34,7 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
         append({
             account: undefined,
             isSupervised: false,
-            supervisor: undefined,
+            supervisors: [],
         });
     }, [fields.length]);
 
@@ -42,46 +43,40 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
 
         {fields.map((field, index) => {
             const accountInputName = `${name}.${index}.account`;
-            const supervisorInputName = `${name}.${index}.supervisor`;
             const checkboxName = `${name}.${index}.isSupervised`;
 
             return <div className={css.managersInputWrapper} key={field.id}>
                 <div className={css.managersInput}>
-                    {inputConnection({
-                        structureName: 'Accounts',
-                        name: accountInputName,
-                        structureType: 'map',
-                        label: 'Account',
-                        options: {
-                            required: 'Selecting an account to manage is required',
-                        },
-                    })}
+                    <div className={css.removableConnection}>
+                        {inputConnection({
+                            structureName: 'Accounts',
+                            name: accountInputName,
+                            structureType: 'map',
+                            label: 'Account',
+                        })}
+
+                        {fields.length >= 2 && <Button styles={{
+                            root: {
+                                marginTop: '2.3rem',
+                            }
+                        }} color="red" size="xs" variant="outline" onClick={() => {
+                            remove(index);
+                        }}>Remove</Button>}
+                    </div>
 
                     <InputCheckbox  name={checkboxName} label="Should be supervised?" />
 
-                    {watchedArray && watchedArray[index] && watchedArray[index].isSupervised && <div className={css.supervisorConnection}>
-                        {inputConnection({
-                            structureName: 'Managers',
-                            name: supervisorInputName,
-                            structureType: 'map',
-                            label: 'Managers',
-                            options: {
-                                required: 'If checked, selecting a supervisor is required',
-                            },
-                        })}
+                    {watchedArray && watchedArray[index] && watchedArray[index].isSupervised && <div className={css.supervisorWrapper}>
+                        <SupervisorsArrayInput index={index} control={control} parentName={name} inputConnection={inputConnection} />
                     </div>}
                 </div>
-
-                {fields.length >= 2 && <Button color="red" size="xs" variant="outline" onClick={() => {
-                    remove(index);
-                }}>Remove</Button>}
             </div>
         })}
 
         <div className={css.managersAddButton}>
             <Button size="xs" variant="outline" onClick={() => append({
                 account: undefined,
-                supervisor: undefined,
+                supervisors: [],
                 isSupervised: false,
             })}>Add manager</Button>
         </div>

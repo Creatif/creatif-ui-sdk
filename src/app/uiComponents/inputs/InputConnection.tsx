@@ -20,7 +20,7 @@ interface Props {
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputConnection({ structureName, structureType, label, options, name }: Props) {
-    const { control, getValues, unregister } = useFormContext();
+    const { control, getValues, unregister, setValue } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
@@ -30,20 +30,20 @@ export function InputConnection({ structureName, structureType, label, options, 
         value: '{}',
     });
 
-    console.log('VALUES IN INPUT: ', getValues());
-
     useEffect(() => {
         const internalVariable = getValues(name);
 
         if (internalVariable) {
-            setDefaultValue({
+            const defaultRef = {
                 label: internalVariable.value,
                 value: JSON.stringify({
                     id: internalVariable.variableId,
                     structureType: internalVariable.structureType,
                 }),
-            });
+            };
 
+            setDefaultValue(defaultRef);
+            setValue(name, defaultRef);
             return;
         }
     }, []);
@@ -60,6 +60,24 @@ export function InputConnection({ structureName, structureType, label, options, 
                 keepIsValid: false,
                 keepIsSubmitSuccessful: false,
             });
+        },
+        [name],
+    );
+
+    const onOptionSelectedCallback = useCallback(
+        (item: ConnectionSearchInputOption | undefined) => {
+            if (item) {
+                const value = JSON.parse(item.value);
+                const ref = {
+                    path: name,
+                    value: '',
+                    structureType: value.structureType,
+                    variableId: value.id,
+                    creatif_special_variable: true,
+                };
+
+                return ref;
+            }
         },
         [name],
     );
@@ -86,22 +104,11 @@ export function InputConnection({ structureName, structureType, label, options, 
                             defaultValue={defaultValue}
                             referenceStructureItem={internalStructureItem}
                             onOptionSelected={(item: ConnectionSearchInputOption | undefined) => {
-                                if (item) {
-                                    const value = JSON.parse(item.value);
-                                    const ref = {
-                                        path: name,
-                                        value: '',
-                                        structureType: value.structureType,
-                                        variableId: value.id,
-                                        creatif_special_variable: true,
-                                    };
+                                const ref = onOptionSelectedCallback(item);
 
-                                    onChange(ref);
+                                if (!ref) return;
 
-                                    return;
-                                }
-
-                                onChange(undefined);
+                                onChange(ref);
                             }}
                             label={label ? label : structureName}
                         />
