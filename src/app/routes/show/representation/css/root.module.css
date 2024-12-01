@@ -14,7 +14,6 @@
 .nodeRootObject {
     border: 1px solid light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-7));
     border-radius: 4px;
-    margin-bottom: 1rem;
 
     padding: 1rem;
 }
@@ -26,10 +25,15 @@
     align-items: center;
     gap: 1rem;
     padding: 0.2rem;
+
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
 }
 
 .expandableRoot {
     width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    margin-left: 1rem;
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
 }
 
 .expandable {

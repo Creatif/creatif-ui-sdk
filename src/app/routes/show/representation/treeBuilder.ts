@@ -88,7 +88,9 @@ export function treeBuilder(values: object | undefined): TreeBuilderRoot {
 function recursiveTreeBuilder(parent: TreeBuilderNode, nodeType: nodeType, level: number): TreeBuilderNode {
     if (nodeType === 'array' && Array.isArray(parent.data)) {
         parent.children = [];
-        for (const column of parent.data) {
+
+        for (let i = 0; i < parent.data.length; i++) {
+            const column = parent.data[i];
             if (Number.isInteger(column) || isFloat(column)) {
                 parent.children.push(newNode(parent.name, column.value, 'number', parent.level + 1));
             }
@@ -112,13 +114,21 @@ function recursiveTreeBuilder(parent: TreeBuilderNode, nodeType: nodeType, level
 
             if (typeof column === 'object' && !Array.isArray(column)) {
                 parent.children.push(
-                    recursiveTreeBuilder(newNode(parent.name, column, 'object', level + 1), 'object', level + 1),
+                    recursiveTreeBuilder(
+                        newNode(`${parent.name}[${i}]`, column, 'object', parent.level + 1),
+                        'object',
+                        level + 1,
+                    ),
                 );
             }
 
             if (Array.isArray(column)) {
                 parent.children.push(
-                    recursiveTreeBuilder(newNode(parent.name, column, 'array', level + 1), 'array', level + 1),
+                    recursiveTreeBuilder(
+                        newNode(parent.name, column, 'array', parent.level + 1),
+                        'array',
+                        parent.level + 1,
+                    ),
                 );
             }
         }

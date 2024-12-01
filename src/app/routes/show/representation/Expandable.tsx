@@ -13,6 +13,8 @@ interface Props {
 export function Expandable({ child }: Props) {
     const [expand, setExpand] = useState(false);
 
+    console.log(child);
+
     return (
         <div
             className={styles.expandableRoot}
