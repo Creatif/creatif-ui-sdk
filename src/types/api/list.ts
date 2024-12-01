@@ -1,4 +1,4 @@
-import type { Behaviour, ChildStructure } from '@root/types/api/shared';
+import type { Behaviour, ChildStructure, ConnectionViewType } from '@root/types/api/shared';
 import type { QueryConnection } from '@root/types/api/connections';
 import type { StructureType } from '@root/types/shell/shell';
 import type { Group } from '@root/types/api/groups';
@@ -15,6 +15,7 @@ export interface QueryListItemByIDBlueprint {
     structureId: string;
     itemId: string;
     projectId: string;
+    connectionViewType?: ConnectionViewType;
 }
 
 export interface QueriedListItem<Value = unknown, Metadata = unknown> {

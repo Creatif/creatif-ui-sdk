@@ -5,11 +5,13 @@ import { ApiError } from '@lib/http/apiError';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import type { StructureType } from '@root/types/shell/shell';
 import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
+import type { ConnectionViewType } from '@root/types/api/shared';
 export default function useQueryVariable<Value, Metadata>(
     name: string | undefined,
     itemId: string | undefined,
     structureType: StructureType,
     enabled: boolean,
+    connectionViewType: ConnectionViewType = 'connection',
 ) {
     const queryClient = useQueryClient();
     const key = ['get_list_or_map', name, itemId];
@@ -35,6 +37,7 @@ export default function useQueryVariable<Value, Metadata>(
                             structureId: name,
                             itemId: itemId,
                             projectId: Runtime.instance.currentProjectCache.getProject().id,
+                            connectionViewType: connectionViewType,
                         });
                     }
 
@@ -42,6 +45,7 @@ export default function useQueryVariable<Value, Metadata>(
                         structureId: name,
                         itemId: itemId,
                         projectId: Runtime.instance.currentProjectCache.getProject().id,
+                        connectionViewType: connectionViewType,
                     });
                 }),
             {

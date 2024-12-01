@@ -122,6 +122,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
         itemId,
         structureType as StructureType,
         Boolean(isUpdate && structureItem && itemId),
+        'connection',
     );
 
     useEffect(() => {

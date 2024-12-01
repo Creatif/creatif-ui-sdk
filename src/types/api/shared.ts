@@ -12,6 +12,8 @@ export interface GetGroupsBlueprint {
     itemId: string;
 }
 
+export type ConnectionViewType = 'value' | 'variable' | 'connection';
+
 export interface ChildStructure {
     structureName: string;
     structureType: StructureType;

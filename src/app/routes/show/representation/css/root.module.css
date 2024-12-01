@@ -55,6 +55,12 @@
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));
 }
 
+.emptyStringValue {
+    line-height: 1.6rem;
+    font-style: italic;
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+}
+
 .numberValue {
     line-height: 1.6rem;
     color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-white));

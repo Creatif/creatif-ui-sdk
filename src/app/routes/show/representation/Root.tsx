@@ -22,7 +22,10 @@ export function Root({ root }: Props) {
                     return (
                         <div key={idx} className={styles.item}>
                             <h2>{child.name}</h2>
-                            <div className={styles.stringValue}>{child.data as string}</div>
+                            {typeof child.data === 'string' && child.data && (
+                                <div className={styles.stringValue}>{child.data as string}</div>
+                            )}
+                            {!child.data && <div className={styles.emptyStringValue}>empty</div>}
                         </div>
                     );
                 }

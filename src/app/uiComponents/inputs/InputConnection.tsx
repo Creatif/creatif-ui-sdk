@@ -106,8 +106,6 @@ export function InputConnection({ structureName, structureType, label, options, 
                             onOptionSelected={(item: ConnectionSearchInputOption | undefined) => {
                                 const ref = onOptionSelectedCallback(item);
 
-                                if (!ref) return;
-
                                 onChange(ref);
                             }}
                             label={label ? label : structureName}

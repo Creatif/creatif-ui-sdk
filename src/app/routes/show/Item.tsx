@@ -29,6 +29,7 @@ export default function Item() {
         itemId,
         structureType as StructureType,
         Boolean(structureId && itemId),
+        'value',
     );
     const navigate = useNavigate();
     const store = getProjectMetadataStore();

@@ -6,7 +6,9 @@ export default function queryMapVariable<Value = unknown, Metadata = unknown>(bl
     return tryHttp<QueriedMapItem<Value, Metadata>>(
         declarations(),
         'get',
-        `/map/query-id/${blueprint.projectId}/${blueprint.structureId}/${blueprint.itemId}`,
+        `/map/query-id/${blueprint.projectId}/${blueprint.structureId}/${blueprint.itemId}?connectionViewType=${
+            blueprint.connectionViewType ? blueprint.connectionViewType : 'connection'
+        }`,
         null,
     );
 }

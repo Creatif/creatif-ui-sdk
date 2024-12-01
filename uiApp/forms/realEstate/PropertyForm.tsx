@@ -82,7 +82,7 @@ export function PropertyForm() {
                                 structureType: 'map',
                                 label: 'Account',
                                 options: {
-                                    required: 'Selecting an owner is required',
+                                    required: 'Selecting an account is required',
                                 },
                             })}
                         </Cell>
