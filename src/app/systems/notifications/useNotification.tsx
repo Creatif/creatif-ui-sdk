@@ -44,7 +44,7 @@ export default function useNotification() {
 
             if (clean) notifications.clean();
         },
-        info: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
+        info: (title: string, description: React.ReactNode, autoClose: number | boolean = 3000, clean = false) => {
             notifications.show({
                 withCloseButton: true,
                 autoClose: autoClose,
@@ -57,7 +57,7 @@ export default function useNotification() {
 
             if (clean) notifications.clean();
         },
-        success: (title: string, description: React.ReactNode, autoClose: number | boolean = 5000, clean = false) => {
+        success: (title: string, description: React.ReactNode, autoClose: number | boolean = 3000, clean = false) => {
             notifications.show({
                 withCloseButton: true,
                 autoClose: autoClose,

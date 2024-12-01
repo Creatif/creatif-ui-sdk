@@ -44,7 +44,7 @@ export function CreatifProvider({ app }: Props & PropsWithChildren) {
     return (
         <MantineProvider theme={theme}>
             <ColorSchemeScript defaultColorScheme="auto" forceColorScheme="dark" />
-            <Notifications limit={5} />
+            <Notifications position="top-right" limit={5} />
 
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter basename="/">
