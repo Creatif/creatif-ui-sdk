@@ -1,5 +1,5 @@
 import usePaginateReferences from '@app/routes/show/hooks/usePaginateReferences';
-import type { QueryConnection } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/connections';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

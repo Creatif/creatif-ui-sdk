@@ -1,5 +1,5 @@
 import type { Behaviour } from '@root/types/api/shared';
-import type { QueryConnection } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/connections';
 export interface CreateVariableBlueprint {
     name: string;
     behaviour?: Behaviour;

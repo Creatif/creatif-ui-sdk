@@ -1,4 +1,4 @@
-type nodeType = 'root' | 'boolean' | 'array' | 'object' | 'string' | 'number';
+type nodeType = 'root' | 'boolean' | 'array' | 'object' | 'string' | 'number' | 'undefined' | 'null';
 
 export interface TreeBuilderNode {
     name: string;
@@ -60,13 +60,22 @@ export function treeBuilder(values: object | undefined): TreeBuilderRoot {
             root.children.push(newNode(name, value, 'string', root.level));
         }
 
-        if (Array.isArray(value)) {
+        // value is null or undefined
+        if (value === null) {
+            root.children.push(newNode(name, value, 'null', root.level));
+        }
+
+        if (typeof value === 'undefined') {
+            root.children.push(newNode(name, value, 'undefined', root.level));
+        }
+
+        if (value && Array.isArray(value)) {
             root.children.push(
                 recursiveTreeBuilder(newNode(name, value, 'array', root.level), 'array', root.level + 1),
             );
         }
 
-        if (typeof value === 'object' && !Array.isArray(value)) {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
             root.children.push(
                 recursiveTreeBuilder(newNode(name, value, 'object', root.level), 'object', root.level + 1),
             );

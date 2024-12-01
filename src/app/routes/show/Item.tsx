@@ -36,8 +36,12 @@ export default function Item() {
 
     const [internalResult, setInternalResult] = useState(data?.result);
 
-    const { tabs, onChange, selected } = useTabs((internalResult && internalResult.connections) || []);
-    const values = useMemo(() => treeBuilder(internalResult?.value as object), [internalResult?.value]);
+    const { tabs, onChange, selected } = useTabs((internalResult && internalResult.childStructures) || []);
+    const values = useMemo(() => {
+        if (!internalResult?.value) return;
+
+        return treeBuilder(internalResult?.value as object);
+    }, [internalResult?.value]);
 
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
@@ -116,9 +120,9 @@ export default function Item() {
                                                 </div>
                                             )}
 
-                                            {t.type === 'reference' && t.reference && internalResult && (
+                                            {/*                                            {t.type === 'reference' && t.reference && internalResult && (
                                                 <Reference reference={t.reference} itemId={internalResult.id} />
-                                            )}
+                                            )}*/}
                                         </Tabs.Panel>
                                     ))}
                                 </Tabs>

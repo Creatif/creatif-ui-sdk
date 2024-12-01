@@ -47,6 +47,18 @@ export function Root({ root }: Props) {
                     );
                 }
 
+                if (child.type === 'null' || child.type === 'undefined') {
+                    return (
+                        <div key={idx} className={styles.item}>
+                            <h2>{child.name}</h2>
+                            <div className={styles.numberValue}>
+                                {typeof child.data === 'undefined' && <Badge color="gray">undefined</Badge>}
+                                {child.data === null && <Badge color="gray">null</Badge>}
+                            </div>
+                        </div>
+                    );
+                }
+
                 if (child.type === 'array') {
                     return <Expandable key={idx} child={child} />;
                 }

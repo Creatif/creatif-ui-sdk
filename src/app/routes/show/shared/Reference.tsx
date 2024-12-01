@@ -1,4 +1,4 @@
-import type { QueryConnection } from '@root/types/api/reference';
+import type { QueryConnection } from '@root/types/api/connections';
 import { List } from '@app/routes/show/referenceListing/List';
 
 interface Props {

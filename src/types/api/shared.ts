@@ -1,5 +1,6 @@
 import type { UpdateListItemResult } from '@root/types/api/list';
 import type { UpdateMapItemResult } from '@root/types/api/map';
+import type { StructureType } from '@root/types/shell/shell';
 
 export type Behaviour = 'modifiable' | 'readonly';
 export type PaginationDirection = 'asc' | 'desc';
@@ -9,6 +10,12 @@ export interface GetGroupsBlueprint {
     structureId: string;
     projectId: string;
     itemId: string;
+}
+
+export interface ChildStructure {
+    structureName: string;
+    structureType: StructureType;
+    structureId: string;
 }
 
 export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {

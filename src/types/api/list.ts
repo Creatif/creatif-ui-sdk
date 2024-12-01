@@ -1,5 +1,5 @@
-import type { Behaviour } from '@root/types/api/shared';
-import type { QueryConnection } from '@root/types/api/reference';
+import type { Behaviour, ChildStructure } from '@root/types/api/shared';
+import type { QueryConnection } from '@root/types/api/connections';
 import type { StructureType } from '@root/types/shell/shell';
 import type { Group } from '@root/types/api/groups';
 export interface AppendingVariableBlueprint<Value = unknown, Metadata = unknown> {
@@ -27,7 +27,7 @@ export interface QueriedListItem<Value = unknown, Metadata = unknown> {
     metadata: Metadata;
     value: Value;
     connections: QueryConnection[];
-
+    childStructures: ChildStructure[];
     createdAt: string;
     updatedAt: string;
 }

@@ -1,19 +1,19 @@
-import type { QueryConnection } from '@root/types/api/reference';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import type { ChildStructure } from '@root/types/api/shared';
+import type { StructureType } from '@root/types/shell/shell';
 
-type Tab = { label: string; value: string; type: 'internal' | 'reference'; reference?: QueryConnection };
+type Tab = { label: string; value: string; type: StructureType | 'internal' };
 
-function createTabsFromReferences(references: QueryConnection[]): Tab[] {
-    return references.map((ref) => ({
-        label: ref.structureName,
-        value: ref.id,
-        type: 'reference',
-        reference: references.find((r) => r.id === ref.id),
+function createTabsFromChildStructures(structures: ChildStructure[]) {
+    return structures.map((structure) => ({
+        label: structure.structureName,
+        value: structure.structureId,
+        type: structure.structureType,
     }));
 }
 
-export default function useTabs(references: QueryConnection[]): {
+export default function useTabs(childStructures: ChildStructure[]): {
     selected: Tab;
     tabs: Tab[];
     onChange: (value: string | null) => void;
@@ -32,9 +32,9 @@ export default function useTabs(references: QueryConnection[]): {
                 value: 'yourData',
                 type: 'internal',
             },
-            ...createTabsFromReferences(references),
+            ...createTabsFromChildStructures(childStructures),
         ],
-        [references],
+        [childStructures],
     );
 
     const activeTab = params.get('activeTab');
@@ -45,15 +45,15 @@ export default function useTabs(references: QueryConnection[]): {
     useEffect(() => {
         const activeTab = params.get('activeTab');
 
-        for (const ref of references) {
-            if (ref.id === activeTab) {
-                const foundTab = tabs.find((tab) => tab.value === ref.id);
+        for (const ref of childStructures) {
+            if (ref.structureId === activeTab) {
+                const foundTab = tabs.find((tab) => tab.value === ref.structureId);
                 if (foundTab) {
                     setSelectedTab(foundTab);
                 }
             }
         }
-    }, [references]);
+    }, [childStructures]);
 
     useEffect(() => {
         if (selectedTab.value !== activeTab) {
