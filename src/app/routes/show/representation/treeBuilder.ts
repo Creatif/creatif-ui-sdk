@@ -158,7 +158,7 @@ function recursiveTreeBuilder(parent: TreeBuilderNode, nodeType: nodeType, level
             }
 
             if (typeof value === 'object' && !Array.isArray(value)) {
-                parent.children.push(recursiveTreeBuilder(newNode(name, value, 'array', level), 'array', level + 1));
+                parent.children.push(recursiveTreeBuilder(newNode(name, value, 'object', level), 'object', level + 1));
             }
         }
     }

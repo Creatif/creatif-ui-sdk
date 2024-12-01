@@ -5,6 +5,7 @@ import styles from '@app/routes/show/representation/css/root.module.css';
 import { Badge } from '@mantine/core';
 import React from 'react';
 import classNames from 'classnames';
+import { Expandable } from '@app/routes/show/representation/Expandable';
 
 interface Props {
     node: TreeBuilderNode;
@@ -47,12 +48,24 @@ export function Node({ node: { children, level, type } }: Props) {
                     );
                 }
 
+                if (child.type === 'null' || child.type === 'undefined') {
+                    return (
+                        <div key={idx} className={styles.item}>
+                            <h2>{child.name}</h2>
+                            <div className={styles.numberValue}>
+                                {typeof child.data === 'undefined' && <Badge color="gray">undefined</Badge>}
+                                {child.data === null && <Badge color="gray">null</Badge>}
+                            </div>
+                        </div>
+                    );
+                }
+
                 if (child.type === 'array') {
-                    return <Node key={idx} node={child} />;
+                    return <Expandable key={idx} child={child} />;
                 }
 
                 if (child.type === 'object') {
-                    return <Node key={idx} node={child} />;
+                    return <Expandable key={idx} child={child} />;
                 }
 
                 return null;

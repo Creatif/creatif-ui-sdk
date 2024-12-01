@@ -14,7 +14,13 @@ export function Expandable({ child }: Props) {
     const [expand, setExpand] = useState(false);
 
     return (
-        <div className={styles.expandableRoot} onClick={() => setExpand((e) => !e)}>
+        <div
+            className={styles.expandableRoot}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setExpand((e) => !e);
+            }}>
             <span
                 className={styles.expandable}
                 style={{

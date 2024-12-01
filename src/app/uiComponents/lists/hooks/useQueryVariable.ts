@@ -14,7 +14,7 @@ export default function useQueryVariable<Value, Metadata>(
     connectionViewType: ConnectionViewType = 'connection',
 ) {
     const queryClient = useQueryClient();
-    const key = ['get_list_or_map', name, itemId];
+    const key = ['get_list_or_map', name, itemId, connectionViewType];
 
     return {
         ...useQuery(
