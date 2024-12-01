@@ -101,6 +101,15 @@ function recursiveTreeBuilder(parent: TreeBuilderNode, nodeType: nodeType, level
                 parent.children.push(newNode(parent.name, column, 'string', parent.level + 1));
             }
 
+            // value is null or undefined
+            if (column === null) {
+                parent.children.push(newNode(parent.name, column, 'null', parent.level + 1));
+            }
+
+            if (typeof column === 'undefined') {
+                parent.children.push(newNode(parent.name, column, 'undefined', parent.level + 1));
+            }
+
             if (typeof column === 'object' && !Array.isArray(column)) {
                 parent.children.push(
                     recursiveTreeBuilder(newNode(parent.name, column, 'object', level + 1), 'object', level + 1),
@@ -133,6 +142,15 @@ function recursiveTreeBuilder(parent: TreeBuilderNode, nodeType: nodeType, level
 
             if (typeof value === 'string') {
                 parent.children.push(newNode(name, value, 'string', level));
+            }
+
+            // value is null or undefined
+            if (value === null) {
+                parent.children.push(newNode(name, value, 'null', level));
+            }
+
+            if (typeof value === 'undefined') {
+                parent.children.push(newNode(name, value, 'undefined', level));
             }
 
             if (Array.isArray(value)) {
