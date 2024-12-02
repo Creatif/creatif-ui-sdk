@@ -2,13 +2,8 @@ import { useCreatifFormContext } from '../../../src/index';
 import { useCreatifFieldArray } from '../../../src/index';
 import css from './css/root.module.css';
 import { InputConnectionFieldProps } from '../../../src/app/uiComponents/form/BaseForm';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@mantine/core';
-import { InputCheckbox } from '../../../src';
-import { useConnectionStore } from '../../../src/app/systems/stores/inputConnectionStore';
-import { useCreatifWatch } from '../../../src';
-import { useWatch } from 'react-hook-form';
-import { SupervisorsArrayInput } from './SupervisorsArrayInput';
 
 interface Props {
     name: string;
@@ -16,14 +11,8 @@ interface Props {
 }
 
 export function ManagersArrayInput({name, inputConnection}: Props) {
-    const { control } = useCreatifFormContext();
+    const { control, getValues } = useCreatifFormContext();
     const { fields, append, remove } = useCreatifFieldArray({
-        control,
-        name: name,
-        shouldUnregister: true,
-    });
-
-    const watchedArray = useWatch({
         control,
         name: name,
     });
@@ -33,8 +22,6 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
 
         append({
             account: undefined,
-            isSupervised: false,
-            supervisors: [],
         });
     }, [fields.length]);
 
@@ -43,7 +30,6 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
 
         {fields.map((field, index) => {
             const accountInputName = `${name}.${index}.account`;
-            const checkboxName = `${name}.${index}.isSupervised`;
 
             return <div className={css.managersInputWrapper} key={field.id}>
                 <div className={css.managersInput}>
@@ -63,12 +49,6 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
                             remove(index);
                         }}>Remove</Button>}
                     </div>
-
-                    <InputCheckbox  name={checkboxName} label="Should be supervised?" />
-
-                    {watchedArray && watchedArray[index] && watchedArray[index].isSupervised && <div className={css.supervisorWrapper}>
-                        <SupervisorsArrayInput index={index} control={control} parentName={name} inputConnection={inputConnection} />
-                    </div>}
                 </div>
             </div>
         })}
@@ -76,8 +56,6 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
         <div className={css.managersAddButton}>
             <Button size="xs" variant="outline" onClick={() => append({
                 account: undefined,
-                supervisors: [],
-                isSupervised: false,
             })}>Add manager</Button>
         </div>
     </fieldset>

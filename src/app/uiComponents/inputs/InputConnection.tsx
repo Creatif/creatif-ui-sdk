@@ -20,7 +20,7 @@ interface Props {
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputConnection({ structureName, structureType, label, options, name }: Props) {
-    const { control, getValues, unregister, setValue } = useFormContext();
+    const { control, getValues, setValue } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
@@ -47,22 +47,6 @@ export function InputConnection({ structureName, structureType, label, options, 
             return;
         }
     }, []);
-
-    useEffect(
-        () => () => {
-            unregister(name, {
-                keepError: false,
-                keepDirty: false,
-                keepValue: false,
-                keepTouched: false,
-                keepDirtyValues: false,
-                keepDefaultValue: false,
-                keepIsValid: false,
-                keepIsSubmitSuccessful: false,
-            });
-        },
-        [name],
-    );
 
     const onOptionSelectedCallback = useCallback(
         (item: ConnectionSearchInputOption | undefined) => {

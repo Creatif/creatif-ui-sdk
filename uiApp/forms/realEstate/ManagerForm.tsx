@@ -13,6 +13,7 @@ export function ManagerForm() {
             address: string;
             city: string;
             postalCode: string;
+            managers: unknown[];
         }>
             bindings={{
                 name: (values) => `${values.name}-${values.lastName}-${values.address}-${values.city}`,
@@ -24,6 +25,7 @@ export function ManagerForm() {
                     address: '',
                     city: '',
                     postalCode: '',
+                    managers: [],
                 },
             }}
             inputs={(submitButton, {inputFile, inputConnection}) => (

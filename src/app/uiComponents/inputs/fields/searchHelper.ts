@@ -2,8 +2,6 @@ import type { StructureType } from '@root/types/shell/shell';
 import paginateList from '@lib/api/declarations/lists/paginateList';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
-import queryListItemByID from '@lib/api/declarations/lists/queryListItemByID';
-import queryMapVariable from '@lib/api/declarations/maps/queryMapVariable';
 import type { ConnectionSearchInputOption } from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
 import { ApiError } from '@lib/http/apiError';
 
@@ -119,22 +117,4 @@ export async function searchAndCreateOptions(
             400,
         ),
     };
-}
-
-export async function queryItemById(structureId: string, id: string, structureType: StructureType) {
-    if (structureType === 'list') {
-        return await queryListItemByID({
-            structureId: structureId,
-            itemId: id,
-            projectId: Runtime.instance.currentProjectCache.getProject().id,
-        });
-    }
-
-    if (structureType === 'map') {
-        return await queryMapVariable({
-            structureId: structureId,
-            itemId: id,
-            projectId: Runtime.instance.currentProjectCache.getProject().id,
-        });
-    }
 }
