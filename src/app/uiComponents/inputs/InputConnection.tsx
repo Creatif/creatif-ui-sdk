@@ -9,7 +9,6 @@ import type { ConnectionSearchInputOption } from '@app/uiComponents/inputs/field
 import ConnectionSearchInput from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
 import useFirstError from '@app/uiComponents/inputs/helpers/useFirstError';
 import type { ConnectionStore } from '@app/systems/stores/inputConnectionStore';
-import { useConnectionStore } from '@app/systems/stores/inputConnectionStore';
 
 interface Props {
     name: string;
@@ -20,7 +19,7 @@ interface Props {
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputConnection({ structureName, structureType, label, options, name }: Props) {
-    const { control, getValues, setValue } = useFormContext();
+    const { control, getValues, setValue, unregister } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
@@ -37,8 +36,11 @@ export function InputConnection({ structureName, structureType, label, options, 
             const defaultRef = {
                 label: internalVariable.value,
                 value: JSON.stringify({
-                    id: internalVariable.variableId,
+                    path: name,
+                    value: internalVariable.value,
+                    variableId: internalVariable.variableId,
                     structureType: internalVariable.structureType,
+                    creatif_special_variable: true,
                 }),
             };
 
@@ -48,13 +50,29 @@ export function InputConnection({ structureName, structureType, label, options, 
         }
     }, []);
 
+    /*    useEffect(
+        () => () => {
+            unregister(name, {
+                keepError: false,
+                keepDirty: false,
+                keepValue: false,
+                keepTouched: false,
+                keepDirtyValues: false,
+                keepDefaultValue: false,
+                keepIsValid: false,
+                keepIsSubmitSuccessful: false,
+            });
+        },
+        [name],
+    );*/
+
     const onOptionSelectedCallback = useCallback(
         (item: ConnectionSearchInputOption | undefined) => {
             if (item) {
                 const value = JSON.parse(item.value);
                 const ref = {
                     path: name,
-                    value: '',
+                    value: item.label,
                     structureType: value.structureType,
                     variableId: value.id,
                     creatif_special_variable: true,
@@ -90,7 +108,15 @@ export function InputConnection({ structureName, structureType, label, options, 
                             onOptionSelected={(item: ConnectionSearchInputOption | undefined) => {
                                 const ref = onOptionSelectedCallback(item);
 
-                                onChange(ref);
+                                if (!ref) {
+                                    onChange(undefined);
+                                    return;
+                                }
+
+                                onChange({
+                                    label: ref.value,
+                                    value: JSON.stringify(ref),
+                                });
                             }}
                             label={label ? label : structureName}
                         />

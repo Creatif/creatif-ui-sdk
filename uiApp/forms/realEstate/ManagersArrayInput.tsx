@@ -15,6 +15,7 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
     const { fields, append, remove } = useCreatifFieldArray({
         control,
         name: name,
+        shouldUnregister: true,
     });
 
     useEffect(() => {

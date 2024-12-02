@@ -8,10 +8,26 @@ function isObject(value: unknown): value is { [key: string]: unknown } {
     return typeof value === 'object' && !Array.isArray(value);
 }
 
-function isInputConnectionItem(value: unknown): value is InputConnectionItem {
+function unpackInputConnection(value: { value: string; label: string }): InputConnectionItem {
+    return JSON.parse(value.value);
+}
+
+function checkIsInputConnectionAndReturnVariable(value: unknown): value is { label: string; value: string } {
     if (!value) return false;
 
-    return isObject(value) && Object.hasOwn(value, 'creatif_special_variable');
+    try {
+        if (isObject(value) && Object.hasOwn(value, 'label') && Object.hasOwn(value, 'value')) {
+            if (typeof value.value === 'string') {
+                const parsedValue = JSON.parse(value.value);
+
+                return isObject(parsedValue) && Object.hasOwn(parsedValue, 'creatif_special_variable');
+            }
+        }
+    } catch (e) {
+        return false;
+    }
+
+    return false;
 }
 
 function recursiveExtractConnections(store: Store, path: string, value: unknown[]) {
@@ -23,14 +39,16 @@ function recursiveExtractConnections(store: Store, path: string, value: unknown[
             for (const key of keys) {
                 const currentPath = `${path}.${i}`;
                 const possibleConnection = val[key];
-                if (isInputConnectionItem(possibleConnection)) {
-                    if (!possibleConnection.creatif_special_variable) {
+                if (checkIsInputConnectionAndReturnVariable(possibleConnection)) {
+                    const inputConnectionItem = unpackInputConnection(possibleConnection);
+
+                    if (!inputConnectionItem.creatif_special_variable) {
                         continue;
                     }
 
                     store.getState().add({
-                        variableId: possibleConnection.variableId,
-                        structureType: possibleConnection.structureType,
+                        variableId: inputConnectionItem.variableId,
+                        structureType: inputConnectionItem.structureType,
                         path: `${currentPath}.${key}`,
                     });
                 }
@@ -45,10 +63,12 @@ function recursiveExtractConnections(store: Store, path: string, value: unknown[
 
 export function extractConnections(store: Store, value: { [key: string]: unknown }) {
     for (const [key, val] of Object.entries(value)) {
-        if (isInputConnectionItem(val)) {
+        if (checkIsInputConnectionAndReturnVariable(val)) {
+            const inputConnectionItem = unpackInputConnection(val);
+
             store.getState().add({
-                variableId: val.variableId,
-                structureType: val.structureType,
+                variableId: inputConnectionItem.variableId,
+                structureType: inputConnectionItem.structureType,
                 path: key,
             });
         }
