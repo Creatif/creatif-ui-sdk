@@ -12,7 +12,7 @@ function unpackInputConnection(value: { value: string; label: string }): InputCo
     return JSON.parse(value.value);
 }
 
-function checkIsInputConnectionAndReturnVariable(value: unknown): value is { label: string; value: string } {
+function isInputConnection(value: unknown): value is { label: string; value: string } {
     if (!value) return false;
 
     try {
@@ -39,7 +39,7 @@ function recursiveExtractConnections(store: Store, path: string, value: unknown[
             for (const key of keys) {
                 const currentPath = `${path}.${i}`;
                 const possibleConnection = val[key];
-                if (checkIsInputConnectionAndReturnVariable(possibleConnection)) {
+                if (isInputConnection(possibleConnection)) {
                     const inputConnectionItem = unpackInputConnection(possibleConnection);
 
                     if (!inputConnectionItem.creatif_special_variable) {
@@ -62,8 +62,10 @@ function recursiveExtractConnections(store: Store, path: string, value: unknown[
 }
 
 export function extractConnections(store: Store, value: { [key: string]: unknown }) {
+    store.getState().reset();
+
     for (const [key, val] of Object.entries(value)) {
-        if (checkIsInputConnectionAndReturnVariable(val)) {
+        if (isInputConnection(val)) {
             const inputConnectionItem = unpackInputConnection(val);
 
             store.getState().add({

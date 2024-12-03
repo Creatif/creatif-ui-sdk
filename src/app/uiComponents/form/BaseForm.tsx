@@ -133,20 +133,10 @@ export default function BaseForm<T extends FieldValues>({
     const setBehaviour = useSpecialFields((state) => state.setBehaviour);
     formProps = formProps || {};
 
-    const assignReferences = connectionStore((state) => state.assign);
-
     if (isUpdate && currentData) {
         setLocale(currentData.locale);
         setGroups(currentData.groups || []);
         setBehaviour(currentData.behaviour);
-
-        assignReferences(
-            currentData.connections.map((item) => ({
-                path: item.path,
-                variableId: item.childVariableId,
-                structureType: item.childStructureType,
-            })),
-        );
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

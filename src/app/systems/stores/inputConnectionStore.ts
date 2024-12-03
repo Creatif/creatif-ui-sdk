@@ -13,7 +13,6 @@ export interface ConnectionStore {
     connections: ConnectionStoreItem[];
     add: (item: ConnectionStoreItem) => void;
     get: (name: string) => ConnectionStoreItem | undefined;
-    assign: (references: ConnectionStoreItem[]) => void;
     has: (name: string) => boolean;
     keys: () => string[];
     all: () => ConnectionStoreItem[];
@@ -35,10 +34,9 @@ export function createInputConnectionStore() {
         all: () => get().connections,
         get: (name: string) => {
             const store = get();
-            const references = store.connections;
-            return references.find((item) => item.path === name);
+            const connections = store.connections;
+            return connections.find((item) => item.path === name);
         },
-        assign: (refs: ConnectionStoreItem[]) => set((current) => ({ ...current, connections: refs })),
         has: (name: string) => {
             const store = get();
             return Boolean(store.connections.find((item) => item.path === name));
@@ -47,7 +45,7 @@ export function createInputConnectionStore() {
             set((current) => ({
                 ...current,
                 ...{
-                    references: [],
+                    connections: [],
                     locked: true,
                 },
             }));
