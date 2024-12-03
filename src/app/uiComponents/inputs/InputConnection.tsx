@@ -50,22 +50,6 @@ export function InputConnection({ structureName, structureType, label, options, 
         }
     }, []);
 
-    /*    useEffect(
-        () => () => {
-            unregister(name, {
-                keepError: false,
-                keepDirty: false,
-                keepValue: false,
-                keepTouched: false,
-                keepDirtyValues: false,
-                keepDefaultValue: false,
-                keepIsValid: false,
-                keepIsSubmitSuccessful: false,
-            });
-        },
-        [name],
-    );*/
-
     const onOptionSelectedCallback = useCallback(
         (item: ConnectionSearchInputOption | undefined) => {
             if (item) {
