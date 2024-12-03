@@ -10,14 +10,13 @@ export interface ConnectionStoreItem {
 }
 
 export interface ConnectionStore {
-    references: ConnectionStoreItem[];
+    connections: ConnectionStoreItem[];
     add: (item: ConnectionStoreItem) => void;
     get: (name: string) => ConnectionStoreItem | undefined;
     assign: (references: ConnectionStoreItem[]) => void;
     has: (name: string) => boolean;
     keys: () => string[];
     all: () => ConnectionStoreItem[];
-    update: (ref: ConnectionStoreItem) => void;
     reset: () => void;
 }
 
@@ -29,35 +28,21 @@ export function createInputConnectionStore() {
     if (store) return store;
 
     const createdStore = create<ConnectionStore>((set, get) => ({
-        references: [],
+        connections: [],
         add: (item: ConnectionStoreItem) =>
-            set((current) => ({ ...current, references: [...current.references, item] })),
-        keys: () => get().references.map((item) => item.path),
-        all: () => get().references,
+            set((current) => ({ ...current, connections: [...current.connections, item] })),
+        keys: () => get().connections.map((item) => item.path),
+        all: () => get().connections,
         get: (name: string) => {
             const store = get();
-            const references = store.references;
+            const references = store.connections;
             return references.find((item) => item.path === name);
         },
-        assign: (refs: ConnectionStoreItem[]) => set((current) => ({ ...current, references: refs })),
+        assign: (refs: ConnectionStoreItem[]) => set((current) => ({ ...current, connections: refs })),
         has: (name: string) => {
             const store = get();
-            return Boolean(store.references.find((item) => item.path === name));
+            return Boolean(store.connections.find((item) => item.path === name));
         },
-        update: (ref: ConnectionStoreItem) =>
-            set((current) => {
-                const store = get();
-                const idx = store.references.findIndex((item) => item.path === ref.path);
-                if (idx !== -1) {
-                    const refs = [...store.references];
-                    refs.splice(idx, 1);
-                    refs.push(ref);
-
-                    return { ...current, references: [...refs] };
-                }
-
-                return store;
-            }),
         reset: () => {
             set((current) => ({
                 ...current,

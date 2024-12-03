@@ -182,7 +182,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             groups: groups,
                             locale: locale,
                         },
-                        connections: useConnectionStore.getState().references.map((item) => ({
+                        connections: useConnectionStore.getState().connections.map((item) => ({
                             structureType: item.structureType,
                             name: item.path,
                             variableId: item.variableId,
@@ -250,7 +250,7 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                             behaviour: behaviour,
                             locale: locale,
                         },
-                        connections: useConnectionStore.getState().references.map((item) => ({
+                        connections: useConnectionStore.getState().connections.map((item) => ({
                             name: item.path,
                             structureType: item.structureType,
                             variableId: item.variableId,

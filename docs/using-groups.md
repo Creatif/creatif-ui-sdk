@@ -223,7 +223,7 @@ one or more groups. You will see that the listing is updated based on chosen gro
 
 ![Group filters](_images/using_groups_group_filters.gif 'Group filters')
 
-Useful references:
+Useful connections:
 
 -   [Using UI](using-the-ui.md)
 -   [Using API SDK](using-api-sdk.md)
