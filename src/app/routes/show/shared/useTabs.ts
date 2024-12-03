@@ -3,13 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import type { ChildStructure } from '@root/types/api/shared';
 import type { StructureType } from '@root/types/shell/shell';
 
-type Tab = { label: string; value: string; type: StructureType | 'internal' };
+type Tab = { label: string; value: string; type: 'structure' | 'internal'; structureType?: StructureType };
 
-function createTabsFromChildStructures(structures: ChildStructure[]) {
+function createTabsFromChildStructures(structures: ChildStructure[]): Tab[] {
     return structures.map((structure) => ({
         label: structure.structureName,
         value: structure.structureId,
-        type: structure.structureType,
+        type: 'structure',
+        structureType: structure.structureType,
     }));
 }
 

@@ -21,6 +21,8 @@ import { DeleteItemWrapperModal } from '@app/routes/show/modals/DeleteItemWrappe
 import { Runtime } from '@app/systems/runtime/Runtime';
 import { treeBuilder } from '@app/routes/show/representation/treeBuilder';
 import { Root } from '@app/routes/show/representation/Root';
+import { ConnectionRepresentation } from '@app/routes/show/connections/ConnectionRepresentation';
+import type { ChildStructure } from '@root/types/api/shared';
 
 export default function Item() {
     const { structureId, itemId, structureType } = useParams();
@@ -53,6 +55,8 @@ export default function Item() {
             setInternalResult(data.result);
         }
     }, [data]);
+
+    console.log(internalResult);
 
     return (
         <>
@@ -121,22 +125,36 @@ export default function Item() {
                                         ))}
                                     </Tabs.List>
 
-                                    {tabs.map((t) => (
-                                        <Tabs.Panel key={t.value} value={t.value}>
-                                            {t.value === 'structure' && internalResult && (
-                                                <StructureItem variable={internalResult} />
-                                            )}
-                                            {t.value === 'yourData' && values && (
-                                                <div className={styles.contentGrid}>
-                                                    <Root root={values} />
-                                                </div>
-                                            )}
+                                    {internalResult &&
+                                        tabs.map((t) => (
+                                            <Tabs.Panel key={t.value} value={t.value}>
+                                                {t.value === 'structure' && internalResult && (
+                                                    <StructureItem variable={internalResult} />
+                                                )}
+                                                {t.value === 'yourData' && values && (
+                                                    <div className={styles.contentGrid}>
+                                                        <Root root={values} />
+                                                    </div>
+                                                )}
 
-                                            {/*                                            {t.type === 'reference' && t.reference && internalResult && (
+                                                {t.type === 'structure' &&
+                                                    internalResult.childStructures.find(
+                                                        (structure) => structure.structureId === t.value,
+                                                    ) && (
+                                                        <ConnectionRepresentation
+                                                            structure={
+                                                                internalResult.childStructures.find(
+                                                                    (structure) => structure.structureId === t.value,
+                                                                ) as ChildStructure
+                                                            }
+                                                            variableId={internalResult.id}
+                                                        />
+                                                    )}
+                                                {/*                                            {t.type === 'reference' && t.reference && internalResult && (
                                                 <Reference reference={t.reference} itemId={internalResult.id} />
                                             )}*/}
-                                        </Tabs.Panel>
-                                    ))}
+                                            </Tabs.Panel>
+                                        ))}
                                 </Tabs>
                             </div>
                         </>
