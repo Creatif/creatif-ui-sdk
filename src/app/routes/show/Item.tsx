@@ -44,8 +44,6 @@ export default function Item() {
         return treeBuilder(internalResult?.value as object);
     }, [internalResult?.value]);
 
-    console.log(values);
-
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);
     const [isEditGroupsOpen, setIsEditGroupsOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);

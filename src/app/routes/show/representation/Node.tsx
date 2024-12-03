@@ -16,7 +16,7 @@ export function Node({ node: { children, level, type } }: Props) {
         <div
             className={classNames(styles.root, styles.nodeRoot, type === 'object' ? styles.nodeRootObject : undefined)}
             style={{
-                marginLeft: `${level * 8}px`,
+                paddingLeft: `${level * 8}px`,
             }}>
             {children?.map((child, idx) => {
                 if (child.type === 'string') {
