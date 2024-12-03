@@ -167,7 +167,6 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     }
 
                     deleteBindings(value);
-                    //removeReferencesFromForm(value as { [key: string]: unknown }, connectionStore);
 
                     const addFn = add?.();
                     if (!addFn) return undefined;
@@ -229,9 +228,6 @@ export function Form<T extends FieldValues>({ formProps, bindings, inputs, befor
                     deleteBindings(value);
 
                     const specialFields = useSpecialFields.getState().fieldsUsed;
-
-                    //removeReferencesFromForm(value as { [key: string]: unknown }, referenceStore);
-
                     let fields = ['name', 'value', 'metadata', 'connections'];
 
                     if (specialFields.length > 0) {

@@ -30,7 +30,6 @@ import type { RegisterOptions } from 'react-hook-form/dist/types/validator';
 import type { QueriedMapItem } from '@root/types/api/map';
 import type { StoreApi, UseBoundStore } from 'zustand';
 import { Runtime } from '@app/systems/runtime/Runtime';
-import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { FileUploadButton } from '@app/uiComponents/inputs/fileUpload/FileUploadButton';
 import type { ImagePathsStoreData } from '@app/systems/stores/imagePaths';
 import type { GlobalLoadingStore } from '@app/systems/stores/globalLoading';
