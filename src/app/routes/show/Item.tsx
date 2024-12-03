@@ -4,7 +4,7 @@ import UIError from '@app/components/UIError';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/routes/show/css/item.module.css';
-import { ActionIcon, Tabs } from '@mantine/core';
+import { ActionIcon, Tabs, Tooltip } from '@mantine/core';
 import { IconClock, IconEdit, IconLanguage, IconRoute, IconTrash } from '@tabler/icons-react';
 import appDate from '@lib/helpers/appDate';
 import Loading from '@app/components/Loading';
@@ -65,22 +65,33 @@ export default function Item() {
 
                         {internalResult && (
                             <ActionIcon.Group>
+                                <Tooltip label="Edit">
+                                    <ActionIcon
+                                        size={36}
+                                        to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${internalResult.id}`}
+                                        component={Link}
+                                        variant="default">
+                                        <IconEdit size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
+
+                                <Tooltip label="Change groups">
+                                    <ActionIcon size={36} onClick={() => setIsEditGroupsOpen(true)} variant="default">
+                                        <IconRoute size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
+
+                                <Tooltip label="Change locale">
+                                    <ActionIcon size={36} onClick={() => setIsEditLocaleOpen(true)} variant="default">
+                                        <IconLanguage size={16} />
+                                    </ActionIcon>
+                                </Tooltip>
+
                                 <ActionIcon
-                                    to={`${structureItem.navigationUpdatePath}/${structureItem.id}/${internalResult.id}`}
-                                    component={Link}
-                                    variant="default">
-                                    <IconEdit size={16} />
-                                </ActionIcon>
-
-                                <ActionIcon onClick={() => setIsEditGroupsOpen(true)} variant="default">
-                                    <IconRoute size={16} />
-                                </ActionIcon>
-
-                                <ActionIcon onClick={() => setIsEditLocaleOpen(true)} variant="default">
-                                    <IconLanguage size={16} />
-                                </ActionIcon>
-
-                                <ActionIcon onClick={() => setIsDeleteModalOpen(true)} color="red" variant="filled">
+                                    size={36}
+                                    onClick={() => setIsDeleteModalOpen(true)}
+                                    color="red"
+                                    variant="filled">
                                     <IconTrash size={16} />
                                 </ActionIcon>
                             </ActionIcon.Group>
