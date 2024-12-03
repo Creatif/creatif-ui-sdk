@@ -95,24 +95,6 @@ export default function ConnectionSearchInput({
     }, [page]);
 
     useEffect(() => {
-        if (!debouncedValue && !componentMountedRef.current) {
-            runTransition(() => {
-                searchAndCreateOptions(referenceStructureItem.id, referenceStructureItem.structureType, '', page).then(
-                    ({ options, error }) => {
-                        if (error) {
-                            setInternalError(error);
-                        }
-
-                        if (options) {
-                            setSearchedOptions(options);
-                        }
-
-                        setIsSearching(false);
-                    },
-                );
-            });
-        }
-
         if (debouncedValue && !selectedRef.current && !componentMountedRef.current) {
             setIsSearching(true);
             runTransition(() => {
