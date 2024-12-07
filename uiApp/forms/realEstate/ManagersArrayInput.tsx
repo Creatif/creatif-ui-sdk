@@ -1,4 +1,4 @@
-import { useCreatifFormContext } from '../../../src/index';
+import { File, useCreatifFormContext } from '../../../src/index';
 import { useCreatifFieldArray } from '../../../src/index';
 import css from './css/root.module.css';
 import { InputConnectionFieldProps } from '../../../src/app/uiComponents/form/BaseForm';
@@ -8,9 +8,10 @@ import { Button } from '@mantine/core';
 interface Props {
     name: string;
     inputConnection: (props: InputConnectionFieldProps) => React.ReactNode;
+    inputFile: any;
 }
 
-export function ManagersArrayInput({name, inputConnection}: Props) {
+export function ManagersArrayInput({name, inputConnection, inputFile}: Props) {
     const { control, getValues } = useCreatifFormContext();
     const { fields, append, remove } = useCreatifFieldArray({
         control,
@@ -31,6 +32,7 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
 
         {fields.map((field, index) => {
             const accountInputName = `${name}.${index}.account`;
+            const profileImageInputName = `${name}.${index}.profileImage`;
 
             return <div className={css.managersInputWrapper} key={field.id}>
                 <div className={css.managersInput}>
@@ -41,6 +43,11 @@ export function ManagersArrayInput({name, inputConnection}: Props) {
                             structureType: 'map',
                             label: 'Account',
                         })}
+
+                        <File label="Profile image" inputFile={inputFile} name={profileImageInputName} fileButtonProps={{
+                            accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif',
+                            multiple: true,
+                        }} />
 
                         {fields.length >= 2 && <Button styles={{
                             root: {

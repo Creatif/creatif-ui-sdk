@@ -82,7 +82,7 @@ export function ManagerForm() {
                         </Cell>
 
                         <Cell span="span 12">
-                            <ManagersArrayInput name="managers" inputConnection={inputConnection} />
+                            <ManagersArrayInput name="managers" inputConnection={inputConnection} inputFile={inputFile} />
                         </Cell>
 
                         <Cell span="span 12">

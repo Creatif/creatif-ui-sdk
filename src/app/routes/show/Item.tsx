@@ -56,8 +56,6 @@ export default function Item() {
         }
     }, [data]);
 
-    console.log(internalResult);
-
     return (
         <>
             {!structureItem && <UIError title="Route not found">This route does not exist</UIError>}
