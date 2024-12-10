@@ -17,7 +17,7 @@ interface Props {
     fields?: string[];
     enabled?: boolean;
 }
-export default function useMapVariablesPagination<Response>({
+export default function useMapVariablesInfinitePagination<Response>({
     name,
     search = '',
     limit = '25',

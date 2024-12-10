@@ -4,7 +4,7 @@ import type rearrange from '@lib/api/declarations/lists/rearrange';
 import useNotification from '@app/systems/notifications/useNotification';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
 import { Runtime } from '@app/systems/runtime/Runtime';
-import type { PaginationDataWithPage } from '@app/uiComponents/lists/Listing';
+import type { PaginatedVariableResult } from '@root/types/api/list';
 
 type OnDrop = (source: DragItem, destination: DragItem) => void;
 type OnMove = (dragIndex: number, hoverIdx: number) => void;
@@ -14,7 +14,7 @@ export interface DragItem {
     name: string;
 }
 interface Props<Value, Metadata> {
-    data: PaginationDataWithPage<Value, Metadata>[];
+    data: PaginatedVariableResult<Value, Metadata>[];
     structureItem: StructureItem;
     structureType: 'list' | 'map';
     onRearrange: typeof rearrange;
@@ -22,7 +22,7 @@ interface Props<Value, Metadata> {
     renderItems: (
         onDrop: OnDrop,
         onMove: OnMove,
-        list: PaginationDataWithPage<Value, Metadata>[],
+        list: PaginatedVariableResult<Value, Metadata>[],
         hoveredId: string,
         movingSource: string | undefined,
         movingDestination: string | undefined,
@@ -36,7 +36,7 @@ export default function DraggableList<Value, Metadata>({
     onRearrange,
     sortingDirection,
 }: Props<Value, Metadata>) {
-    const [list, setList] = useState<PaginationDataWithPage<Value, Metadata>[]>(data);
+    const [list, setList] = useState<PaginatedVariableResult<Value, Metadata>[]>(data);
     const [hoveredId, setHoveredId] = useState<string>('');
     const [movingItems, setMovingItems] = useState<string[] | undefined>(undefined);
     const { error: errorNotification } = useNotification();

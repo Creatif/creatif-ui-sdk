@@ -26,23 +26,6 @@
     font-weight: 600;
 }
 
-.totalInfo span {
-    font-weight: 600;
-}
-
-.container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.errorContainer {
-    width: 100%;
-    position: relative;
-    height: 300px;
-}
-
 .pagination {
     display: flex;
     justify-content: center;

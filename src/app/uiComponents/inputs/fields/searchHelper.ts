@@ -1,5 +1,5 @@
 import type { StructureType } from '@root/types/shell/shell';
-import paginateList from '@lib/api/declarations/lists/paginateList';
+import paginateListVariables from '@lib/api/declarations/lists/paginateListVariables';
 import { Runtime } from '@app/systems/runtime/Runtime';
 import paginateMapVariables from '@lib/api/declarations/maps/paginateMapVariables';
 import type { ConnectionSearchInputOption } from '@app/uiComponents/inputs/fields/ConnectionSearchInput';
@@ -16,7 +16,7 @@ export async function searchAndCreateOptions(
     error: ApiError | undefined;
 }> {
     if (structureType === 'list') {
-        const { result, error } = await paginateList({
+        const { result, error } = await paginateListVariables({
             search: search,
             name: structureId,
             limit: limit,

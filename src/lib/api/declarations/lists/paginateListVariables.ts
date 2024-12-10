@@ -2,7 +2,7 @@ import type { PaginateListBlueprint, PaginationResult } from '@root/types/api/li
 import { tryHttp } from '@lib/http/tryHttp';
 import { declarations } from '@lib/http/fetchInstance';
 import { queryConstructor } from '@lib/api/declarations/queryConstructor';
-export default function paginateList<Value = unknown, Metadata = unknown>(blueprint: PaginateListBlueprint) {
+export default function paginateListVariables<Value = unknown, Metadata = unknown>(blueprint: PaginateListBlueprint) {
     return tryHttp<PaginationResult<Value, Metadata>>(
         declarations(),
         'get',

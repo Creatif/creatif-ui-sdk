@@ -2,7 +2,6 @@
 // @ts-ignore
 import contentContainerStyles from '@app/uiComponents/css/ContentContainer.module.css';
 import useDeleteRange from '@app/uiComponents/lists/hooks/useDeleteRange';
-import useListVariablesPagination from '@app/uiComponents/lists/hooks/useListVariablesPagination';
 import useSearchQuery from '@app/uiComponents/shared/hooks/useSearchQuery';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import DeleteModal from '@app/uiComponents/shared/modals/DeleteModal';
@@ -11,10 +10,10 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/ListTable.module.css';
-import { Button, Checkbox, Loader, Table } from '@mantine/core';
+import { Button, Checkbox, Pagination, Table } from '@mantine/core';
 import type { MouseEvent } from 'react';
 import React, { useCallback, useRef, useState } from 'react';
-import type { PaginatedVariableResult, PaginationResult } from '@root/types/api/list';
+import type { PaginationResult } from '@root/types/api/list';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import rearrange from '@lib/api/declarations/lists/rearrange';
@@ -23,40 +22,12 @@ import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStor
 import useNotification from '@app/systems/notifications/useNotification';
 import UIError from '@app/components/UIError';
 import type { StructureType } from '@root/types/shell/shell';
-import useMapVariablesPagination from '@app/uiComponents/lists/hooks/useMapVariablesPagination';
-import { IconMistOff } from '@tabler/icons-react';
 import { Item as GridItem } from '@app/uiComponents/lists/gridItem/Item';
 import type { ApiError } from '@lib/http/apiError';
+import { useMapVariablePagination } from '@app/uiComponents/lists/hooks/useMapVariablePagination';
+import { useListVariablePagination } from '@app/uiComponents/lists/hooks/useListVariablePagination';
 
-export interface PaginationDataWithPage<Value, Metadata> extends PaginatedVariableResult<Value, Metadata> {
-    page: number;
-}
-
-function resolveListing<Value, Metadata>(
-    mapPages: PaginationResult<Value, Metadata>[] | undefined,
-    listPages: PaginationResult<Value, Metadata>[] | undefined,
-    currentPage: number,
-): PaginationDataWithPage<Value, Metadata>[] {
-    if (mapPages && mapPages.length > 0) {
-        let data: PaginationDataWithPage<Value, Metadata>[] = [];
-        for (const page of mapPages) {
-            data = [...data, ...page.data.map((item) => ({ ...item, page: currentPage }))];
-        }
-
-        return data;
-    }
-
-    if (listPages && listPages.length > 0) {
-        let data: PaginationDataWithPage<Value, Metadata>[] = [];
-        for (const page of listPages) {
-            data = [...data, ...page.data.map((item) => ({ ...item, page: currentPage }))];
-        }
-
-        return data;
-    }
-
-    return [];
-}
+const LIMIT = 25;
 
 export default function Listing<Value, Metadata>() {
     const { queryParams, setParam } = useSearchQuery();
@@ -65,9 +36,9 @@ export default function Listing<Value, Metadata>() {
         .getState()
         .getStructureItemByID(structureId || '');
 
-    const pageRef = useRef(1);
     const checkedRef = useRef(false);
     const { error: errorNotification, success: successNotification } = useNotification();
+    const [page, setPage] = useState(1);
 
     const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
@@ -77,12 +48,11 @@ export default function Listing<Value, Metadata>() {
         data: mapData,
         error: mapError,
         invalidateQuery: mapInvalidate,
-        fetchNextPage: fetchNextMapPage,
         isFetching: isMapFetching,
-        hasNextPage: hasNextMapPage,
-        isFetchingNextPage: isFetchingNextMapPage,
-    } = useMapVariablesPagination<PaginationResult<Value, Metadata>>({
+    } = useMapVariablePagination<PaginationResult<Value, Metadata>>({
         name: structureItem?.id || '',
+        limit: LIMIT,
+        page: page,
         locales: queryParams.locales,
         groups: queryParams.groups,
         direction: queryParams.direction,
@@ -97,12 +67,11 @@ export default function Listing<Value, Metadata>() {
         data: listData,
         error: listError,
         invalidateQuery: listInvalidate,
-        fetchNextPage: fetchNextListPage,
         isFetching: isListFetching,
-        hasNextPage: hasNextListPage,
-        isFetchingNextPage: isFetchingNextListPage,
-    } = useListVariablesPagination<PaginationResult<Value, Metadata>>({
+    } = useListVariablePagination<PaginationResult<Value, Metadata>>({
         name: structureItem?.id || '',
+        limit: LIMIT,
+        page: page,
         locales: queryParams.locales,
         groups: queryParams.groups,
         direction: queryParams.direction,
@@ -113,14 +82,11 @@ export default function Listing<Value, Metadata>() {
         enabled: Boolean(structureItem) && structureType === 'list',
     });
 
-    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, invalidateQuery, isFetching } = {
-        data: resolveListing<Value, Metadata>(mapData?.pages, listData?.pages, pageRef.current),
+    const { data, error, invalidateQuery, isFetching } = {
+        data: mapData ? mapData : listData,
         error: structureType === 'list' ? listError : mapError,
         isFetching: structureType === 'list' ? isListFetching : isMapFetching,
         invalidateQuery: structureType === 'list' ? listInvalidate : mapInvalidate,
-        isFetchingNextPage: structureType === 'list' ? isFetchingNextListPage : isFetchingNextMapPage,
-        fetchNextPage: structureType === 'list' ? fetchNextListPage : fetchNextMapPage,
-        hasNextPage: structureType === 'list' ? hasNextListPage : hasNextMapPage,
     };
 
     const { mutate: deleteItemsByRange, invalidateQueries } = useDeleteRange(
@@ -180,7 +146,9 @@ export default function Listing<Value, Metadata>() {
                 return;
             }
 
-            setCheckedItems(data.map((item) => item.id));
+            if (!data) return;
+
+            setCheckedItems(data.data.map((item) => item.id));
         },
         [data, checkedItems],
     );
@@ -219,7 +187,7 @@ export default function Listing<Value, Metadata>() {
                 />
             )}
 
-            {data && data.length !== 0 && structureItem && structureType && (
+            {data && data.data.length !== 0 && structureItem && structureType && (
                 <div className={contentContainerStyles.root}>
                     {checkedItems.length > 0 && (
                         <div className={styles.stickyFooter}>
@@ -267,7 +235,7 @@ export default function Listing<Value, Metadata>() {
                             </Table.Thead>
                             <DndProvider backend={HTML5Backend}>
                                 <DraggableList<Value, Metadata>
-                                    data={data}
+                                    data={data.data}
                                     sortingDirection={queryParams.direction}
                                     structureItem={structureItem}
                                     structureType={structureType as StructureType}
@@ -302,6 +270,12 @@ export default function Listing<Value, Metadata>() {
                 </div>
             )}
 
+            {data && data.total > LIMIT && (
+                <div className={styles.pagination}>
+                    <Pagination total={data.total} radius="xl" value={page} onChange={setPage} />
+                </div>
+            )}
+
             <div className={contentContainerStyles.root}>
                 {error && (
                     <div className={styles.skeleton}>
@@ -318,35 +292,12 @@ export default function Listing<Value, Metadata>() {
                     </div>
                 )}
 
-                {!isFetching && data && data.length === 0 && (
+                {!isFetching && data && data.data.length === 0 && (
                     <NothingFound
                         createNewPath={
                             (structureItem && `${structureItem.navigationCreatePath}/${structureItem.id}`) || ''
                         }
                     />
-                )}
-
-                {Boolean(data.length) && (
-                    <div className={styles.pagination}>
-                        {hasNextPage && (
-                            <Button
-                                variant="outline"
-                                disabled={isFetchingNextPage}
-                                rightSection={isFetchingNextPage ? <Loader size={12} /> : undefined}
-                                onClick={() => {
-                                    pageRef.current = pageRef.current + 1;
-                                    fetchNextPage();
-                                }}>
-                                LOAD MORE
-                            </Button>
-                        )}
-
-                        {!hasNextPage && (
-                            <p className={styles.paginationEmpty}>
-                                <IconMistOff size={16} /> No more items
-                            </p>
-                        )}
-                    </div>
                 )}
             </div>
 
