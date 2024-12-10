@@ -2,16 +2,16 @@ import type { PaginationResult } from '@root/types/api/list';
 import { tryHttp } from '@lib/http/tryHttp';
 import { declarations } from '@lib/http/fetchInstance';
 import { queryConstructor } from '@lib/api/declarations/queryConstructor';
-import type { PaginateReferencesBlueprint } from '@root/types/api/connections';
-export default function paginateReferences<Value = unknown, Metadata = unknown>(
-    blueprint: PaginateReferencesBlueprint,
+import type { PaginateConnectionsBlueprint } from '@root/types/api/connections';
+export default function paginateConnections<Value = unknown, Metadata = unknown>(
+    blueprint: PaginateConnectionsBlueprint,
 ) {
     return tryHttp<PaginationResult<Value, Metadata>>(
         declarations(),
         'get',
-        `/references/${blueprint.projectId}/${blueprint.parentId}/${blueprint.childId}/${blueprint.structureType}/${
-            blueprint.relationshipType
-        }/${blueprint.childStructureId}/${blueprint.parentStructureId}${queryConstructor(
+        `/connections/${blueprint.projectId}/${blueprint.structureId}/${blueprint.structureType}/${
+            blueprint.parentVariableId
+        }${queryConstructor(
             blueprint.page,
             blueprint.limit as string,
             blueprint.groups,

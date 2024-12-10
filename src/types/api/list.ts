@@ -46,6 +46,7 @@ export interface PaginateListBlueprint {
     locales?: string[];
     fields?: string[];
 }
+
 export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
     id: string;
     name: string;

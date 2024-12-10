@@ -5,11 +5,17 @@ import { Table } from '@mantine/core';
 import React from 'react';
 import { Item } from '@app/routes/show/connections/Item';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
+import { useQuery } from 'react-query';
+import paginateConnections from '@lib/api/declarations/connections/paginateConnections';
+import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';
+import { Runtime } from '@app/systems/runtime/Runtime';
+import type { PaginationResult } from '@root/types/api/shared';
 
 interface Props {
     structureItem: StructureItem;
+    items: PaginationResult<unknown, unknown>;
 }
-export function List({ structureItem }: Props) {
+export function List({ structureItem, items }: Props) {
     return (
         <div className={contentContainerStyles.root}>
             <Table.ScrollContainer minWidth={920}>
@@ -31,107 +37,9 @@ export function List({ structureItem }: Props) {
                     </Table.Thead>
 
                     <Table.Tbody>
-                        <Item
-                            structureItem={structureItem}
-                            item={{
-                                id: 'id',
-                                shortId: 'shortId',
-                                index: 5,
-                                behaviour: 'modifiable',
-                                value: 'value',
-                                metadata: null,
-                                name: 'name',
-                                locale: 'eng',
-                                groups: ['one', 'two', 'three'],
-                                createdAt: new Date().toDateString(),
-                                updatedAt: new Date().toDateString(),
-                            }}
-                        />
-
-                        <Item
-                            structureItem={structureItem}
-                            item={{
-                                id: 'id',
-                                shortId: 'shortId',
-                                index: 5,
-                                behaviour: 'modifiable',
-                                value: 'value',
-                                metadata: null,
-                                name: 'name',
-                                locale: 'eng',
-                                groups: ['one', 'two', 'three'],
-                                createdAt: new Date().toDateString(),
-                                updatedAt: new Date().toDateString(),
-                            }}
-                        />
-
-                        <Item
-                            structureItem={structureItem}
-                            item={{
-                                id: 'id',
-                                shortId: 'shortId',
-                                index: 5,
-                                behaviour: 'modifiable',
-                                value: 'value',
-                                metadata: null,
-                                name: 'name',
-                                locale: 'eng',
-                                groups: ['one', 'two', 'three'],
-                                createdAt: new Date().toDateString(),
-                                updatedAt: new Date().toDateString(),
-                            }}
-                        />
-
-                        <Item
-                            structureItem={structureItem}
-                            item={{
-                                id: 'id',
-                                shortId: 'shortId',
-                                index: 5,
-                                behaviour: 'modifiable',
-                                value: 'value',
-                                metadata: null,
-                                name: 'name',
-                                locale: 'eng',
-                                groups: ['one', 'two', 'three'],
-                                createdAt: new Date().toDateString(),
-                                updatedAt: new Date().toDateString(),
-                            }}
-                        />
-
-                        <Item
-                            structureItem={structureItem}
-                            item={{
-                                id: 'id',
-                                shortId: 'shortId',
-                                index: 5,
-                                behaviour: 'modifiable',
-                                value: 'value',
-                                metadata: null,
-                                name: 'name',
-                                locale: 'eng',
-                                groups: ['one', 'two', 'three'],
-                                createdAt: new Date().toDateString(),
-                                updatedAt: new Date().toDateString(),
-                            }}
-                        />
-
-                        <Item
-                            structureItem={structureItem}
-                            item={{
-                                id: 'id',
-                                shortId: 'shortId',
-                                index: 5,
-                                behaviour: 'modifiable',
-                                value: 'value',
-                                metadata: null,
-                                name: 'name',
-                                locale: 'eng',
-                                groups: ['one', 'two', 'three'],
-                                createdAt: new Date().toDateString(),
-                                updatedAt: new Date().toDateString(),
-                            }}
-                        />
+                        {items.data.map((item) => (
+                            <Item key={item.id} item={item} structureItem={structureItem} />
+                        ))}
                     </Table.Tbody>
                 </Table>
             </Table.ScrollContainer>

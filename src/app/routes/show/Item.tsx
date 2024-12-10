@@ -11,7 +11,6 @@ import Loading from '@app/components/Loading';
 import classNames from 'classnames';
 import useTabs from '@app/routes/show/shared/useTabs';
 import StructureItem from '@app/routes/show/shared/StructureItem';
-import Reference from '@app/routes/show/shared/Reference';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import useQueryVariable from '@app/uiComponents/lists/hooks/useQueryVariable';
 import type { StructureType } from '@root/types/shell/shell';

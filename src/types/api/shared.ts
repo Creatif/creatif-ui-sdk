@@ -36,6 +36,7 @@ export interface PaginatedVariableResult<Value = unknown, Metadata = unknown> {
 }
 export interface PaginationResult<Value, Metadata> {
     total: number;
+    page: number;
     data: PaginatedVariableResult<Value, Metadata>[];
 }
 

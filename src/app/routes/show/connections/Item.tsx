@@ -110,7 +110,7 @@ function ConnectionItem<Value, Metadata>({ item, structureItem }: Props<Value, M
                 <Tooltip label="View item">
                     <ActionIcon
                         component={Link}
-                        to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}`}
+                        to={`${structureItem.navigationShowPath}/${structureItem.id}/${item.id}?activeTab=structure`}
                         variant="filled"
                         classNames={{
                             root: styles.actionIconOverride,

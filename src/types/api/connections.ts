@@ -1,5 +1,5 @@
-import type { Behaviour } from '@root/types/api/shared';
 import type { StructureType } from '@root/types/shell/shell';
+import type { Behaviour } from '@root/types/api/shared';
 
 export interface QueryConnection {
     path: string;
@@ -10,14 +10,11 @@ export interface QueryConnection {
     createdAt: string;
 }
 
-export interface PaginateReferencesBlueprint {
+export interface PaginateConnectionsBlueprint {
+    structureId: string;
+    parentVariableId: string;
+    structureType: StructureType;
     projectId: string;
-    parentId: string;
-    childId: string;
-    structureType: string;
-    relationshipType: string;
-    parentStructureId: string;
-    childStructureId: string;
     search: string;
     limit: string | number;
     page: number;

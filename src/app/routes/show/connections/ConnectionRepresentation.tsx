@@ -1,9 +1,14 @@
-import type { ChildStructure } from '@root/types/api/shared';
+import type { ChildStructure, PaginationResult } from '@root/types/api/shared';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import React from 'react';
 import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import { List } from '@app/routes/show/connections/List';
+import { useQuery } from 'react-query';
+import paginateConnections from '@lib/api/declarations/connections/paginateConnections';
+import { Runtime } from '@app/systems/runtime/Runtime';
+import UIError from '@app/components/UIError';
+import type { ApiError } from '@lib/http/apiError';
 
 interface Props {
     structure: ChildStructure;
@@ -15,6 +20,35 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
     const connectionStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structure.structureName, structure.structureType);
+
+    const { isFetching, data, error } = useQuery<unknown, ApiError, PaginationResult<unknown, unknown>>(
+        ['paginate_connections'],
+        async () => {
+            if (!connectionStructureItem) return;
+
+            const { result, error } = await paginateConnections({
+                projectId: Runtime.instance.currentProjectCache.getProject().id,
+                structureId: connectionStructureItem.id,
+                parentVariableId: variableId,
+                structureType: structure.structureType,
+                locales: queryParams.locales,
+                groups: queryParams.groups,
+                direction: queryParams.direction,
+                behaviour: queryParams.behaviour,
+                orderBy: queryParams.orderBy,
+                search: queryParams.search || '',
+                fields: ['groups'],
+                limit: 100,
+                page: 1,
+            });
+
+            if (error) throw error;
+
+            return result;
+        },
+    );
+
+    console.log(data);
 
     return (
         <>
@@ -52,11 +86,9 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
                 />
             )}
 
-            {connectionStructureItem && <List structureItem={connectionStructureItem} />}
-            <p>{structure.structureType}</p>
-            <p>{structure.structureName}</p>
-            <p>{structure.structureId}</p>
-            <p>{variableId}</p>
+            {error && <UIError title="Something went wrong. Please, try again later" />}
+
+            {connectionStructureItem && data && <List structureItem={connectionStructureItem} items={data} />}
         </>
     );
 }
