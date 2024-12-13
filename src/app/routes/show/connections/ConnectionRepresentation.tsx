@@ -9,6 +9,7 @@ import paginateConnections from '@lib/api/declarations/connections/paginateConne
 import { Runtime } from '@app/systems/runtime/Runtime';
 import UIError from '@app/components/UIError';
 import type { ApiError } from '@lib/http/apiError';
+import Loading from '@app/components/Loading';
 
 interface Props {
     structure: ChildStructure;
@@ -21,8 +22,14 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
         .getState()
         .getStructureItemByName(structure.structureName, structure.structureType);
 
+    const locales = queryParams.locales;
+    const groups = queryParams.groups;
+    const direction = queryParams.direction;
+    const orderBy = queryParams.orderBy;
+    const search = queryParams.search;
+
     const { isFetching, data, error } = useQuery<unknown, ApiError, PaginationResult<unknown, unknown>>(
-        ['paginate_connections'],
+        ['paginate_connections', locales, groups, direction, orderBy, search],
         async () => {
             if (!connectionStructureItem) return;
 
@@ -39,7 +46,7 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
                 search: queryParams.search || '',
                 fields: ['groups'],
                 limit: 100,
-                page: 1,
+                page: parseInt(queryParams.page) || 1,
             });
 
             if (error) throw error;
@@ -47,8 +54,6 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
             return result;
         },
     );
-
-    console.log(data);
 
     return (
         <>
@@ -88,7 +93,9 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
 
             {error && <UIError title="Something went wrong. Please, try again later" />}
 
-            {connectionStructureItem && data && <List structureItem={connectionStructureItem} items={data} />}
+            {!isFetching && connectionStructureItem && data && (
+                <List structureItem={connectionStructureItem} items={data} />
+            )}
         </>
     );
 }

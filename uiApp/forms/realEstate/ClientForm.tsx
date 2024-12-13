@@ -4,7 +4,7 @@ import { InputText } from '../../../src';
 import { Grid } from '../../../src/app/layouts/Grid';
 import { Cell } from '../../../src/app/layouts/Cell';
 import { File } from '../../../src/app/uiComponents/inputs/fileUpload/File';
-export function AccountForm() {
+export function ClientForm() {
     return (
         <Form<{
             name: string;

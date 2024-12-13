@@ -3,6 +3,7 @@ import type { CurrentSortType } from '@root/types/components/components';
 import type { Behaviour } from '@root/types/api/shared';
 
 class QueryParams {
+    public readonly page: string = '1';
     public readonly groups: string[] = [];
     public readonly direction: 'desc' | 'asc' | undefined = 'desc';
     public readonly behaviour: Behaviour | undefined = undefined;
@@ -10,6 +11,7 @@ class QueryParams {
     public readonly locales: string[] = [];
 
     constructor(
+        private readonly hiddenPage: string | null,
         private readonly hiddenLocales: string | undefined,
         private readonly hiddenDirection: string | undefined,
         private readonly hiddenOrderBy: CurrentSortType | undefined,
@@ -18,6 +20,10 @@ class QueryParams {
         readonly search: string | undefined,
         readonly activeTab: string,
     ) {
+        if (this.hiddenPage) {
+            this.page = this.hiddenPage + '';
+        }
+
         if (!hiddenGroups) {
             this.groups = [];
         } else if (hiddenGroups) {
@@ -53,6 +59,7 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
     const [params, setParams] = useSearchParams();
 
     const q = new QueryParams(
+        params.get('page'),
         params.get('locales') || '',
         params.get('direction') || 'desc',
         (params.get('orderBy') as CurrentSortType | undefined) || orderBy,
@@ -67,6 +74,7 @@ export default function useSearchQuery(orderBy: CurrentSortType = 'created_at') 
         setParam: (key: string, value: string) => {
             setParams({
                 ...params,
+                page: q.page,
                 locales: Array.isArray(q.locales) ? q.locales.join(',') : '',
                 groups: Array.isArray(q.groups) ? q.groups.join(',') : '',
                 direction: q.direction ? q.direction : '',

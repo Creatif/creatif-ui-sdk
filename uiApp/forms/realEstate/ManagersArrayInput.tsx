@@ -23,31 +23,26 @@ export function ManagersArrayInput({name, inputConnection, inputFile}: Props) {
         if (fields.length !== 0) return;
 
         append({
-            account: undefined,
+            client: undefined,
         });
     }, [fields.length]);
 
     return <fieldset className={css.managersArray}>
-        <legend>Choose managers</legend>
+        <legend>Choose clients</legend>
 
         {fields.map((field, index) => {
-            const accountInputName = `${name}.${index}.account`;
+            const clientInputName = `${name}.${index}.client`;
             const profileImageInputName = `${name}.${index}.profileImage`;
 
             return <div className={css.managersInputWrapper} key={field.id}>
                 <div className={css.managersInput}>
                     <div className={css.removableConnection}>
                         {inputConnection({
-                            structureName: 'Accounts',
-                            name: accountInputName,
+                            structureName: 'Clients',
+                            name: clientInputName,
                             structureType: 'map',
-                            label: 'Account',
+                            label: 'Client',
                         })}
-
-                        <File label="Profile image" inputFile={inputFile} name={profileImageInputName} fileButtonProps={{
-                            accept: 'image/png,image/jpeg,image/jpg,image/gif,image/webp,image/avif',
-                            multiple: true,
-                        }} />
 
                         {fields.length >= 2 && <Button styles={{
                             root: {
@@ -63,7 +58,7 @@ export function ManagersArrayInput({name, inputConnection, inputFile}: Props) {
 
         <div className={css.managersAddButton}>
             <Button size="xs" variant="outline" onClick={() => append({
-                account: undefined,
+                client: undefined,
             })}>Add manager</Button>
         </div>
     </fieldset>

@@ -77,10 +77,10 @@ export function PropertyForm() {
                     <Grid>
                         <Cell span="span 12">
                             {inputConnection({
-                                structureName: 'Accounts',
-                                name: 'accounts',
+                                structureName: 'Clients',
+                                name: 'clients',
                                 structureType: 'map',
-                                label: 'Account',
+                                label: 'Client',
                             })}
                         </Cell>
 

@@ -21,14 +21,14 @@ Creatif concepts will be explained later.
 
 # Setting up Accounts form
 
-Let's create the Accounts form. Create a file named `AccountForm.tsx` and copy/paste this
+Let's create the Accounts form. Create a file named `ClientForm.tsx` and copy/paste this
 code into it.
 
 ```tsx
 import { Form, InputText } from 'creatif-ui-sdk';
 import css from './css/root.module.css';
 
-export function AccountForm() {
+export function ClientForm() {
     return (
         <Form<{
             name: string;
@@ -155,7 +155,7 @@ and copy/paste this code:
 ```tsx
 import React from 'react';
 import { CreatifProvider } from 'creatif-ui-sdk';
-import { AccountForm } from './AccountForm';
+import { ClientForm } from './ClientForm';
 
 export default function App() {
     return (
@@ -167,7 +167,7 @@ export default function App() {
                     {
                         structureType: 'map',
                         structureName: 'Accounts',
-                        form: <AccountForm />,
+                        form: <ClientForm />,
                     },
                 ],
             }}
@@ -186,7 +186,7 @@ enough to just be used out of the box.
 
 # Let's examine what we created
 
-If you look at the `AccountForm.tsx`, you would notice that we import `InputText` and `Form`
+If you look at the `ClientForm.tsx`, you would notice that we import `InputText` and `Form`
 components from `creatif-ui-sdk` package. This package **is** Creatif. Creatif allows you to
 create any form you want. When you are ready to save the form, Creatif saves it for you. The form
 can contain 'everything UI'. You can use modals, sidebars, progress components, wizards... Basically any form
@@ -614,7 +614,7 @@ export function RichTextEditor({ name, placeholder }: Props) {
 ```
 
 After you created all of these components, create `PropertyForm.tsx` and put it into the `src` directory
-where `AccountForm.tsx` is.
+where `ClientForm.tsx` is.
 
 > NOTE
 >
@@ -796,7 +796,7 @@ All we have to do now is update the configuration. Add the property form configu
 import React from 'react';
 import { CreatifProvider } from 'creatif-ui-sdk';
 import { PropertyForm } from './PropertyForm';
-import { AccountForm } from './AccountForm';
+import { ClientForm } from './ClientForm';
 
 export default function App() {
     return (
@@ -813,7 +813,7 @@ export default function App() {
                     {
                         structureType: 'map',
                         structureName: 'Accounts',
-                        form: <AccountForm />,
+                        form: <ClientForm />,
                     },
                 ],
             }}

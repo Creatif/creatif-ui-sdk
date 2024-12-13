@@ -1,6 +1,6 @@
 import React from 'react';
 import { CreatifProvider } from '../src/CreatifProvider';
-import { AccountForm } from './forms/realEstate/AccountForm';
+import { ClientForm } from './forms/realEstate/ClientForm';
 import { PropertyForm } from './forms/realEstate/PropertyForm';
 import { ManagerForm } from './forms/realEstate/ManagerForm';
 
@@ -12,8 +12,8 @@ export default function App() {
                 items: [
                     {
                         structureType: 'map',
-                        structureName: 'Accounts',
-                        form: <AccountForm />
+                        structureName: 'Clients',
+                        form: <ClientForm />
                     },
                     {
                         structureType: 'map',
