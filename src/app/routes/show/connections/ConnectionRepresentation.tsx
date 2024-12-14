@@ -1,4 +1,4 @@
-import type { ChildStructure, PaginationResult } from '@root/types/api/shared';
+import type { ChildStructure, PaginatedVariableResult, PaginationResult } from '@root/types/api/shared';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import React from 'react';
 import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';
@@ -9,7 +9,6 @@ import paginateConnections from '@lib/api/declarations/connections/paginateConne
 import { Runtime } from '@app/systems/runtime/Runtime';
 import UIError from '@app/components/UIError';
 import type { ApiError } from '@lib/http/apiError';
-import Loading from '@app/components/Loading';
 
 interface Props {
     structure: ChildStructure;
@@ -28,7 +27,7 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
     const orderBy = queryParams.orderBy;
     const search = queryParams.search;
 
-    const { isFetching, data, error } = useQuery<unknown, ApiError, PaginationResult<unknown, unknown>>(
+    const { isFetching, data, error } = useQuery<unknown, ApiError, PaginatedVariableResult[]>(
         ['paginate_connections', locales, groups, direction, orderBy, search],
         async () => {
             if (!connectionStructureItem) return;
@@ -46,7 +45,6 @@ export function ConnectionRepresentation({ structure, variableId }: Props) {
                 search: queryParams.search || '',
                 fields: ['groups'],
                 limit: 100,
-                page: parseInt(queryParams.page) || 1,
             });
 
             if (error) throw error;

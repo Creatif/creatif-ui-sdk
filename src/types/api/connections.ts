@@ -17,7 +17,6 @@ export interface PaginateConnectionsBlueprint {
     projectId: string;
     search: string;
     limit: string | number;
-    page: number;
     groups?: string[];
     orderBy?: string;
     direction?: 'desc' | 'asc';

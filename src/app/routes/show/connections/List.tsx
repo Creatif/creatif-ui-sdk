@@ -5,15 +5,11 @@ import { Table } from '@mantine/core';
 import React from 'react';
 import { Item } from '@app/routes/show/connections/Item';
 import type { StructureItem } from '@app/systems/stores/projectMetadataStore';
-import { useQuery } from 'react-query';
-import paginateConnections from '@lib/api/declarations/connections/paginateConnections';
-import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';
-import { Runtime } from '@app/systems/runtime/Runtime';
-import type { PaginationResult } from '@root/types/api/shared';
+import type { PaginatedVariableResult } from '@root/types/api/shared';
 
 interface Props {
     structureItem: StructureItem;
-    items: PaginationResult<unknown, unknown>;
+    items: PaginatedVariableResult[];
 }
 export function List({ structureItem, items }: Props) {
     return (
@@ -37,7 +33,7 @@ export function List({ structureItem, items }: Props) {
                     </Table.Thead>
 
                     <Table.Tbody>
-                        {items.data.map((item) => (
+                        {items.map((item) => (
                             <Item key={item.id} item={item} structureItem={structureItem} />
                         ))}
                     </Table.Tbody>

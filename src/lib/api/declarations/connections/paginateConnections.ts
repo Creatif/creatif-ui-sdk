@@ -12,7 +12,7 @@ export default function paginateConnections<Value = unknown, Metadata = unknown>
         `/connections/${blueprint.projectId}/${blueprint.structureId}/${blueprint.structureType}/${
             blueprint.parentVariableId
         }${queryConstructor(
-            blueprint.page,
+            1,
             blueprint.limit as string,
             blueprint.groups,
             blueprint.orderBy,

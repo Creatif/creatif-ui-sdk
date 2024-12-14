@@ -38,7 +38,6 @@ export function VersionList({ onListLength, isPublishInProgress, onUpdateInProgr
         },
         {
             keepPreviousData: true,
-            staleTime: Infinity,
         },
     );
 
