@@ -28,6 +28,8 @@ export function PaginateMaps({ versionName }: Props) {
     const [groups, setGroups] = useState<string[]>([]);
     const [search, setSearch] = useState('');
 
+    console.log(structureData);
+
     const [isError, setIsError] = useState<'notFound' | 'generalError' | undefined>(undefined);
     const [isValueOnly, setIsValueOnly] = useState(false);
 
@@ -57,7 +59,7 @@ export function PaginateMaps({ versionName }: Props) {
                     versionName: versionName,
                     structureName: structureData.name,
                     page: 1,
-                    limit: 100,
+                    limit: 15,
                     search: search,
                     orderBy: sortField,
                     orderDirection: selectedDirection,

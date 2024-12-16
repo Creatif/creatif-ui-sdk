@@ -79,6 +79,7 @@ export function GetListItemsByName({ versionName }: Props) {
                     <ComboboxIDSelect
                         versionName={versionName}
                         toSelect="name"
+                        selectedLocale={selectedLocale}
                         structureData={structureData}
                         onSelected={(id) => {
                             setId(id);

@@ -12,10 +12,11 @@ interface Props {
     versionName: string;
     onSelected: (id: string) => void;
     toSelect?: 'name';
+    selectedLocale?: string;
     structureData: { name: string; type: StructureType } | undefined;
 }
 
-export function ComboboxIDSelect({ versionName, onSelected, structureData, toSelect }: Props) {
+export function ComboboxIDSelect({ versionName, onSelected, structureData, toSelect, selectedLocale = 'eng' }: Props) {
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
     });
@@ -51,7 +52,7 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
         : undefined;
 
     const { isFetching: areListsFetching, data: listData } = useQuery(
-        ['paginate_list_items', structureData, searchCriteria, searchCriteria, versionName],
+        ['paginate_list_items', structureData, searchCriteria, searchCriteria, versionName, selectedLocale],
         async () => {
             if (!structureData) return;
 
@@ -64,7 +65,7 @@ export function ComboboxIDSelect({ versionName, onSelected, structureData, toSel
                 orderBy: 'index',
                 orderDirection: 'desc',
                 search: searchCriteria,
-                locales: [],
+                locales: [selectedLocale],
             });
 
             initialFetchRef.current = true;
