@@ -127,10 +127,12 @@ export default function Listing<Value, Metadata>() {
             return;
         }
 
+        console.log(error);
+
         if (error && error.error && error.error.data['isParent']) {
             errorNotification(
-                'Item is a parent reference',
-                'This item is a reference to another item(s). If you wish to delete this item, you must delete the items where you used it as a reference first.',
+                'Item is a parent connection',
+                'This item is a connection to another item(s). If you wish to delete this item, you must delete the items where you used it as a connection first.',
                 15000,
             );
 
