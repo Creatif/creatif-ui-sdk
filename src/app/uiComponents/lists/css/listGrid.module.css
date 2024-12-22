@@ -22,7 +22,6 @@
     color: var(--mantine-color-gray-6);
     line-height: 1.4rem;
 
-
     background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-9));
     padding: 1rem 1rem 1rem 0.5rem;
     border-radius: 8px;

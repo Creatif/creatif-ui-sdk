@@ -5,10 +5,10 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/ListTable.module.css';
-import { Button, Loader, Table } from '@mantine/core';
+import { Table } from '@mantine/core';
 import React, { useRef } from 'react';
 import UIError from '@app/components/UIError';
-import { IconInfoCircle, IconMistOff } from '@tabler/icons-react';
+import { IconInfoCircle } from '@tabler/icons-react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import gridStyles from '@app/uiComponents/lists/css/listGrid.module.css';
