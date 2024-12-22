@@ -63,10 +63,7 @@ export function Listing({ structureType }: Props) {
         data: mapData,
         error: mapError,
         invalidateQuery: mapInvalidate,
-        fetchNextPage: fetchNextMapPage,
         isFetching: isMapFetching,
-        hasNextPage: hasNextMapPage,
-        isFetchingNextPage: isFetchingNextMapPage,
     } = useMapPagination<StructurePaginationResult<MapStructure>>({
         direction: queryParams.direction,
         orderBy: queryParams.orderBy,
@@ -78,10 +75,7 @@ export function Listing({ structureType }: Props) {
         data: listData,
         error: listError,
         invalidateQuery: listInvalidate,
-        fetchNextPage: fetchNextListPage,
         isFetching: isListFetching,
-        hasNextPage: hasNextListPage,
-        isFetchingNextPage: isFetchingNextListPage,
     } = useListPagination<StructurePaginationResult<ListStructure>>({
         direction: queryParams.direction,
         orderBy: queryParams.orderBy,
@@ -89,14 +83,11 @@ export function Listing({ structureType }: Props) {
         enabled: structureType === 'list',
     });
 
-    const { data, isFetchingNextPage, hasNextPage, fetchNextPage, error, isFetching, invalidateQuery } = {
+    const { data, error, isFetching, invalidateQuery } = {
         data: resolveListing(structureType, mapData?.pages, listData?.pages, pageRef.current),
         error: structureType === 'list' ? listError : mapError,
         isFetching: structureType === 'list' ? isListFetching : isMapFetching,
         invalidateQuery: structureType === 'list' ? listInvalidate : mapInvalidate,
-        isFetchingNextPage: structureType === 'list' ? isFetchingNextListPage : isFetchingNextMapPage,
-        fetchNextPage: structureType === 'list' ? fetchNextListPage : fetchNextMapPage,
-        hasNextPage: structureType === 'list' ? hasNextListPage : hasNextMapPage,
     };
 
     return (
@@ -119,17 +110,18 @@ export function Listing({ structureType }: Props) {
                 }}
             />
 
+            <div className={gridStyles.sectionDescription}>
+                <IconInfoCircle size="82px" color="var(--mantine-color-indigo-3)" />
+                <p>
+                    When a list or map exists in your code configuration, it is displayed and you can work with it in
+                    the app. But when it is not, that means that it exists in the CMS and in the database but you cannot
+                    interact with it. The only way to interact with a structure is to enable it in the you code
+                    configuration.
+                </p>
+            </div>
+
             {data && data.length !== 0 && (
                 <div className={gridStyles.container}>
-                    <div className={gridStyles.sectionDescription}>
-                        <IconInfoCircle size="82px" color="var(--mantine-color-indigo-3)" />
-                        <p>
-                            When a list or map exists in your code configuration, it is displayed and you can work with
-                            it in the app. But when it is not, that means that it exists in the CMS and in the database
-                            but you cannot interact with it. The only way to interact with a structure is to enable it
-                            in the you code configuration.
-                        </p>
-                    </div>
                     <Table.ScrollContainer minWidth={920}>
                         <Table
                             verticalSpacing="md"
@@ -174,29 +166,6 @@ export function Listing({ structureType }: Props) {
                 )}
 
                 {!isFetching && data && data.length === 0 && <NothingFound />}
-
-                {Boolean(data.length) && (
-                    <div className={styles.pagination}>
-                        {hasNextPage && (
-                            <Button
-                                variant="outline"
-                                disabled={isFetchingNextPage}
-                                rightSection={isFetchingNextPage ? <Loader size={12} /> : undefined}
-                                onClick={() => {
-                                    pageRef.current = pageRef.current + 1;
-                                    fetchNextPage();
-                                }}>
-                                LOAD MORE
-                            </Button>
-                        )}
-
-                        {!hasNextPage && (
-                            <p className={styles.paginationEmpty}>
-                                <IconMistOff size={16} /> No more items
-                            </p>
-                        )}
-                    </div>
-                )}
             </div>
         </>
     );
