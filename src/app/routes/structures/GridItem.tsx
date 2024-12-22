@@ -26,6 +26,7 @@ interface Props {
 const TableRow = forwardRef<HTMLTableRowElement, React.ComponentPropsWithoutRef<'tr'>>((props, ref) => (
     <Table.Tr {...props} ref={ref} />
 ));
+TableRow.displayName = 'TableRow';
 
 function GridItem({ item, structureType, onStructureRemoved }: Props) {
     const ref = useRef<HTMLDivElement>(null);
