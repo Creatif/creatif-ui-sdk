@@ -1,14 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/listGridItem.module.css';
-import classNames from 'classnames';
-import { useRef, memo, useState } from 'react';
+import React, { useRef, memo, useState, forwardRef } from 'react';
 import appDate from '@lib/helpers/appDate';
 import type { ListStructure, MapStructure } from '@root/types/api/structures';
 import { IconCheck, IconCircleX, IconEraser, IconTrash } from '@tabler/icons-react';
 import { getProjectMetadataStore } from '@app/systems/stores/projectMetadataStore';
 import type { StructureType } from '@root/types/shell/shell';
-import { ActionIcon, Tooltip } from '@mantine/core';
+import { ActionIcon, Tooltip, Table } from '@mantine/core';
 import TruncateModal from '@app/routes/structures/modals/TruncateModal';
 import { useMutation } from 'react-query';
 import type { ApiError } from '@lib/http/apiError';
@@ -23,6 +22,10 @@ interface Props {
     structureType: StructureType;
     onStructureRemoved: () => void;
 }
+
+const TableRow = forwardRef<HTMLTableRowElement, React.ComponentPropsWithoutRef<'tr'>>((props, ref) => (
+    <Table.Tr {...props} ref={ref} />
+));
 
 function GridItem({ item, structureType, onStructureRemoved }: Props) {
     const ref = useRef<HTMLDivElement>(null);
@@ -83,17 +86,20 @@ function GridItem({ item, structureType, onStructureRemoved }: Props) {
     );
 
     return (
-        <div ref={ref} className={classNames(styles.container, styles.pointerContainer)}>
-            <h2 className={styles.nameRowTitle}>{item.name}</h2>
+        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+        /*
+// @ts-ignore */
+        <TableRow ref={ref}>
+            <Table.Td className={styles.nameRowTitle}>{item.name}</Table.Td>
 
-            <div>
+            <Table.Td>
                 {!existsInConfig && <IconCircleX color="var(--mantine-color-red-7)" size={18} />}
                 {existsInConfig && <IconCheck color="var(--mantine-color-green-7)" size={18} />}
-            </div>
+            </Table.Td>
 
-            <div className={styles.createdAt}>{appDate(item.createdAt)}</div>
+            <Table.Td className={styles.createdAt}>{appDate(item.createdAt)}</Table.Td>
 
-            <div className={styles.actionRow}>
+            <Table.Td className={styles.actionRow}>
                 <Tooltip
                     multiline
                     w={!existsInConfig ? 120 : 200}
@@ -165,7 +171,7 @@ function GridItem({ item, structureType, onStructureRemoved }: Props) {
                         <IconTrash color={iconColor} size={16} />
                     </ActionIcon>
                 </Tooltip>
-            </div>
+            </Table.Td>
 
             <TruncateModal
                 structureName={item.name}
@@ -184,7 +190,7 @@ function GridItem({ item, structureType, onStructureRemoved }: Props) {
                     remove();
                 }}
             />
-        </div>
+        </TableRow>
     );
 }
 

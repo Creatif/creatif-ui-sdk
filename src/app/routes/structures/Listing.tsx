@@ -5,7 +5,7 @@ import NothingFound from '@app/uiComponents/shared/NothingFound';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import styles from '@app/uiComponents/lists/css/ListTable.module.css';
-import { Button, Loader } from '@mantine/core';
+import { Button, Loader, Table } from '@mantine/core';
 import React, { useRef } from 'react';
 import UIError from '@app/components/UIError';
 import { IconInfoCircle, IconMistOff } from '@tabler/icons-react';
@@ -130,30 +130,39 @@ export function Listing({ structureType }: Props) {
                             in the you code configuration.
                         </p>
                     </div>
+                    <Table.ScrollContainer minWidth={920}>
+                        <Table
+                            verticalSpacing="md"
+                            styles={{
+                                th: {
+                                    fontWeight: 'bold',
+                                },
+                            }}>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>NAME</Table.Th>
+                                    <Table.Th>EXISTS IN CONFIG</Table.Th>
+                                    <Table.Th>DATE CREATED</Table.Th>
+                                    <Table.Th>ACTIONS</Table.Th>
+                                </Table.Tr>
+                            </Table.Thead>
 
-                    <div className={gridStyles.root}>
-                        <div className={gridStyles.columnGrid}>
-                            <p className={gridStyles.column}>NAME</p>
-                            <p className={gridStyles.column}>EXISTS IN CONFIG</p>
-                            <p className={gridStyles.column}>DATE CREATED</p>
-                            <p className={gridStyles.column}>ACTIONS</p>
-                        </div>
-
-                        <div className={gridStyles.row}>
-                            <>
-                                {data.map((item) => (
-                                    <GridItem
-                                        structureType={structureType}
-                                        key={item.id}
-                                        item={item}
-                                        onStructureRemoved={() => {
-                                            invalidateQuery();
-                                        }}
-                                    />
-                                ))}
-                            </>
-                        </div>
-                    </div>
+                            <Table.Tbody>
+                                <>
+                                    {data.map((item) => (
+                                        <GridItem
+                                            structureType={structureType}
+                                            key={item.id}
+                                            item={item}
+                                            onStructureRemoved={() => {
+                                                invalidateQuery();
+                                            }}
+                                        />
+                                    ))}
+                                </>
+                            </Table.Tbody>
+                        </Table>
+                    </Table.ScrollContainer>
                 </div>
             )}
 
