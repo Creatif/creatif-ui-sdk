@@ -1,5 +1,5 @@
 import ucFirst from '@lib/helpers/ucFirst';
-import { FieldError, useFormState } from 'react-hook-form';
+import { useFormState } from 'react-hook-form';
 
 export default function useFirstError(name: string): string | undefined {
     const { errors } = useFormState();

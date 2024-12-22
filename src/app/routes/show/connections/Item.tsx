@@ -1,4 +1,3 @@
-import useNotification from '@app/systems/notifications/useNotification';
 import EditLocaleModal from '@app/uiComponents/shared/modals/EditLocaleModal';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -25,8 +24,6 @@ const TableRow = forwardRef<HTMLTableRowElement, React.ComponentPropsWithoutRef<
 TableRow.displayName = 'TableRow';
 
 function ConnectionItem<Value, Metadata>({ item, structureItem }: Props<Value, Metadata>) {
-    const { success } = useNotification();
-
     const { mutate, data } = useUpdateVariable(structureItem.structureType, structureItem.id || '', item.id, item.name);
 
     const [isEditLocaleOpen, setIsEditLocaleOpen] = useState(false);

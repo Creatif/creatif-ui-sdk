@@ -1,4 +1,4 @@
-import type { ChildStructure, PaginatedVariableResult, PaginationResult } from '@root/types/api/shared';
+import type { ChildStructure, PaginatedVariableResult } from '@root/types/api/shared';
 import ActionSection from '@app/uiComponents/shared/ActionSection';
 import React from 'react';
 import useSearchQuery from '@app/routes/show/hooks/useSearchQuery';

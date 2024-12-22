@@ -19,7 +19,7 @@ interface Props {
     store: UseBoundStore<StoreApi<ConnectionStore>>;
 }
 export function InputConnection({ structureName, structureType, label, options, name }: Props) {
-    const { control, getValues, setValue, unregister } = useFormContext();
+    const { control, getValues, setValue } = useFormContext();
     const internalStructureItem = getProjectMetadataStore()
         .getState()
         .getStructureItemByName(structureName, structureType);
